@@ -6,23 +6,6 @@
     <title>{{ page.title }}</title>
     <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&family=Fira+Code&display=swap" rel="stylesheet">
-    <script>
-        function applyTheme(theme) {
-            document.documentElement.setAttribute('data-theme', theme);
-            const btn = document.getElementById('theme-btn');
-            if (btn) btn.innerHTML = theme === 'dark' ? '☀️' : '🌙';
-        }
-
-        function toggleTheme() {
-            const current = document.documentElement.getAttribute('data-theme');
-            const next = current === 'dark' ? 'light' : 'dark';
-            localStorage.setItem('theme', next);
-            applyTheme(next);
-        }
-
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-    </script>
 </head>
 <body>
     <header class="main-header container">
@@ -35,7 +18,20 @@
     {{ content }}
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => applyTheme(localStorage.getItem('theme') || 'dark'));
+        // Gestione Tema
+        function toggleTheme() {
+            const html = document.documentElement;
+            const current = html.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            document.getElementById('theme-btn').innerHTML = next === 'dark' ? '☀️' : '🌙';
+        }
+
+        // Inizializzazione
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        document.getElementById('theme-btn').innerHTML = savedTheme === 'dark' ? '☀️' : '🌙';
     </script>
 </body>
 </html>
