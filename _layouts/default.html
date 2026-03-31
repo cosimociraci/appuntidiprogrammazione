@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&family=Fira+Code&display=swap" rel="stylesheet">
     <script>
-        // Gestione Tema immediata per evitare flash bianchi
         function applyTheme(theme) {
             document.documentElement.setAttribute('data-theme', theme);
             const btn = document.getElementById('theme-btn');
@@ -32,9 +31,10 @@
         </div>
         <button onclick="toggleTheme()" id="theme-btn" class="theme-toggle">☀️</button>
     </header>
+
     {{ content }}
+
     <script>
-        // Sincronizza l'icona al caricamento
         document.addEventListener('DOMContentLoaded', () => applyTheme(localStorage.getItem('theme') || 'dark'));
     </script>
 </body>
