@@ -16,7 +16,6 @@ url: "https://cosimociraci.github.io"
 # ==========================================
 # 3. BACKEND & AUTENTICAZIONE (Decap CMS)
 # ==========================================
-# Questa sezione permette al CMS di parlare con GitHub tramite il proxy
 backend:
   name: github
   repo: cosimociraci/appuntidiprogrammazione
@@ -24,9 +23,8 @@ backend:
   base_url: https://api.staticcms.org
   auth_endpoint: /auth
 
-# Consente di lavorare in locale col comando: npx decap-server
 local_backend: true
-publish_mode: editorial_workflow # Opzionale: permette di salvare bozze
+publish_mode: editorial_workflow
 
 # ==========================================
 # 4. GESTIONE CONTENUTI (Collections)
@@ -36,7 +34,7 @@ collections:
     output: true
     permalink: /articoli/:title/
 
-# Impostazioni di default per i nuovi file creati
+# Impostazioni di default per i file nella cartella _articoli
 defaults:
   - scope:
       path: ""
@@ -50,19 +48,18 @@ defaults:
 markdown: kramdown
 highlighter: rouge
 kramdown:
-  input: GFM                    # Abilita GitHub Flavored Markdown
+  input: GFM
   syntax_highlighter: rouge
   syntax_highlighter_opts:
     span:
       line_numbers: false
     block:
-      line_numbers: true        # Utile per il codice lungo
-      wrap: true                # Forza il wrapping se Rouge lo supporta
+      line_numbers: true
+      wrap: true
 
 # ==========================================
 # 6. ESCLUSIONI (File ignorati da Jekyll)
 # ==========================================
-# NOTA: La cartella 'admin/' NON deve essere qui, altrimenti GitHub Pages dà 404
 exclude:
   - Gemfile
   - Gemfile.lock
@@ -71,5 +68,5 @@ exclude:
   - vendor/cache/
   - vendor/gems/
   - vendor/ruby/
-  - .github/          # Escludiamo i workflow dalla build del sito finale
+  - .github/
   - .jekyll-cache/
