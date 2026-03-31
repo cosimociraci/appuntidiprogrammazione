@@ -1,29 +1,32 @@
 ---
 layout: default
-title: Appunti di Programmazione - Home
+title: Home - Appunti di Programmazione
 ---
 
 <div class="container">
     <nav class="tag-nav">
-        <button class="tag-btn active" data-tag="tutti" onclick="filterByTag('tutti', this)">Tutti</button>
+        <button class="tag-btn active" onclick="filterByTag('tutti', this)">Tutti</button>
         
-        {% assign all_tags = "" | split: "," %}
+        {% comment %} Estrazione dinamica e pulita dei tag {% endcomment %}
+        {% assign raw_tags = "" %}
         {% for post in site.posts %}
             {% for tag in post.tags %}
-                {% assign all_tags = all_tags | push: tag %}
+                {% assign raw_tags = raw_tags | append: tag | append: "," %}
             {% endfor %}
         {% endfor %}
-        {% assign unique_tags = all_tags | sort | uniq %}
+        {% assign unique_tags = raw_tags | split: "," | sort | uniq %}
 
         {% for tag in unique_tags %}
-            <button class="tag-btn" data-tag="{{ tag | slugify }}" onclick="filterByTag('{{ tag | slugify }}', this)">
+            {% if tag != "" %}
+            <button class="tag-btn" onclick="filterByTag('{{ tag | slugify }}', this)">
                 {{ tag | upcase }}
             </button>
+            {% endif %}
         {% endfor %}
     </nav>
 
     <section class="search-container">
-        <input type="text" id="searchInput" placeholder="Cerca tra gli appunti (es. 'Postgres', 'JNI')..." onkeyup="applyFilters()">
+        <input type="text" id="searchInput" placeholder="Cerca tra gli appunti..." onkeyup="applyFilters()">
     </section>
     
     <main class="bento-grid">
@@ -35,7 +38,7 @@ title: Appunti di Programmazione - Home
                 <h2 class="article-title">
                     <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
                 </h2>
-                <p class="sintesi">{{ post.sintesi | truncate: 120 }}</p>
+                <p class="sintesi">{{ post.sintesi }}</p>
             </div>
             
             {% if post.codice_mini %}
@@ -53,11 +56,8 @@ title: Appunti di Programmazione - Home
 
     function filterByTag(tag, element) {
         activeTag = tag.toLowerCase().trim();
-        
-        // Aggiorna classi bottoni
         document.querySelectorAll('.tag-btn').forEach(btn => btn.classList.remove('active'));
         element.classList.add('active');
-
         applyFilters();
     }
 
@@ -68,11 +68,8 @@ title: Appunti di Programmazione - Home
         articles.forEach(article => {
             const title = article.getAttribute('data-title') || "";
             const tags = (article.getAttribute('data-tags') || "").split(',');
-            const sintesi = article.querySelector('.sintesi').textContent.toLowerCase();
-
-            // Logica: Il post deve soddisfare SIA il tag SIA la ricerca (AND logic)
             const matchesTag = (activeTag === 'tutti' || tags.includes(activeTag));
-            const matchesSearch = title.includes(searchTerm) || sintesi.includes(searchTerm);
+            const matchesSearch = title.includes(searchTerm);
 
             if (matchesTag && matchesSearch) {
                 article.style.display = 'flex';
