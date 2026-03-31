@@ -1,34 +1,54 @@
 :root {
-    --bg: #ffffff; --text: #000000; --accent: #007BFF; --border: 3px solid #000000;
-}
-[data-theme="dark"] {
-    --bg: #121212; --text: #ffffff; --border: 3px solid #ffffff;
-}
-
-body { font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--text); margin: 0; }
-.container { max-width: 900px; margin: 0 auto; padding: 2rem; }
-
-/* Neo-Brutalism */
-.article-card { 
-    border: var(--border); padding: 1.5rem; margin-bottom: 2rem; 
-    box-shadow: 8px 8px 0px var(--text); transition: 0.2s;
-}
-.article-card:hover { transform: translate(-2px, -2px); box-shadow: 12px 12px 0px var(--accent); }
-
-.tag-btn { 
-    border: var(--border); background: var(--bg); color: var(--text); 
-    padding: 0.5rem 1rem; font-weight: 900; cursor: pointer; margin-right: 0.5rem;
-}
-.tag-btn.active { background: var(--accent); color: white; }
-
-#search-bar { 
-    width: 100%; padding: 1rem; border: var(--border); font-size: 1.2rem; 
-    margin-bottom: 2rem; box-sizing: border-box;
+    --bg-color: #f0f0f0;
+    --card-bg: #ffffff;
+    --text-color: #000000;
+    --accent-yellow: #ffde03;
+    --accent-blue: #00d4ff;
+    --accent-green: #00ff00;
+    --accent-orange: #ff4e00;
+    --neo-shadow: 8px 8px 0px #000000;
 }
 
-.main-header { 
-    display: flex; justify-content: space-between; align-items: center; 
-    padding: 1.5rem 2rem; border-bottom: var(--border);
+/* Stile Card e Articolo */
+.article-card {
+    background: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border: 4px solid #000;
+    padding: 2rem;
+    box-shadow: var(--neo-shadow);
+    margin-bottom: 3rem;
 }
-.logo { font-weight: 900; font-size: 2rem; }
-.logo span { color: var(--accent); }
+
+/* Punto 3: Tag leggibili sempre (Nero su Giallo/Bianco) */
+.tag-btn {
+    background: var(--accent-yellow) !important;
+    color: #000 !important;
+    border: 2px solid #000;
+    padding: 5px 12px;
+    font-weight: 900;
+    box-shadow: 3px 3px 0px #000;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: 0.1s;
+}
+
+.tag-btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0px #000;
+}
+
+/* Punto 2: Codice leggibile (Sfondo scuro fisso) */
+.code-block.neo-code {
+    background: #1e1e1e !important; /* Grigio scuro fisso */
+    color: #d4d4d4 !important;    /* Testo chiaro fisso */
+    border: 3px solid #000;
+    padding: 1.5rem;
+    box-shadow: 6px 6px 0px #000;
+    overflow-x: auto;
+}
+
+.neo-code pre, .neo-code code {
+    background: transparent !important;
+    color: inherit !important;
+    font-family: 'Consolas', 'Monaco', monospace;
+}

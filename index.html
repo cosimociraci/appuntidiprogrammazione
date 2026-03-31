@@ -65,20 +65,17 @@ title: DevLog - Appunti di Programmazione
     /**
      * Filtra gli articoli cliccando sui pulsanti dei Tag
      */
+    // Nella logica di filtraggio dell'index
     function filterByTag(tag) {
-        const articles = document.querySelectorAll('.article-card');
-        const buttons = document.querySelectorAll('.tag-btn');
-
-        // Aggiorna stato attivo dei bottoni
-        buttons.forEach(btn => btn.classList.remove('active'));
-        event.target.classList.add('active');
+        const articles = document.querySelectorAll('.post-item');
+        const cleanTag = tag.toLowerCase().trim();
 
         articles.forEach(article => {
-            if (tag === 'all') {
-                article.style.display = "block";
+            const articleTags = article.getAttribute('data-tags').toLowerCase();
+            if (cleanTag === 'tutti' || articleTags.includes(cleanTag)) {
+                article.style.display = 'block';
             } else {
-                const articleTags = article.getAttribute('data-tags').split(',');
-                article.style.display = articleTags.includes(tag) ? "block" : "none";
+                article.style.display = 'none';
             }
         });
     }
