@@ -11,27 +11,38 @@ layout: default
     {% endfor %}
   </div>
 
+  {% if page.sintesi %}
   <section>
     <span class="section-label">SINTESI DEL PROBLEMA</span>
     <p>{{ page.sintesi }}</p>
   </section>
+  {% endif %}
 
+  {% if page.esigenza %}
   <section>
     <span class="section-label">ESIGENZA REALE</span>
     <p>{{ page.esigenza }}</p>
   </section>
+  {% endif %}
 
-  <section>
+  <section class="analysis">
     <span class="section-label">ANALISI TECNICA</span>
-    {{ content }}
+    <div class="content">
+      {{ content }}
+    </div>
   </section>
 
+  {% if page.codice %}
   <section>
     <span class="section-label">ESEMPIO IMPLEMENTATIVO</span>
     <div class="code-block">
-      {% highlight {{ page.codice.language }} %}
-      {{ page.codice.code }}
-      {% endhighlight %}
+      {% comment %}
+        Usiamo il backtick o il tag pre per evitare l'errore di sintassi di Liquid
+      {% endcomment %}
+      <pre><code class="language-{{ page.tech | default: 'java' }}">
+{{ page.codice }}
+      </code></pre>
     </div>
   </section>
+  {% endif %}
 </article>

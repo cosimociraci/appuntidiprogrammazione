@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 import re
-import textwrap
+import yaml
 from pathlib import Path
 
 # --- CONFIGURAZIONE ---
@@ -9,73 +9,75 @@ INPUT_DIR = "excel_input"
 OUTPUT_DIR = "_articoli"
 
 def sanitize_filename(text):
-    """Trasforma il titolo in un nome file valido per Jekyll"""
-    s = text.lower().replace(" ", "-")
-    return re.sub(r'[^a-z0-9\-]', '', s)
-
-def format_markdown_body(row, tech, sheet):
-    """Costruisce il corpo dell'articolo unendo analisi e codice"""
-    # 1. Recupero Analisi
-    analisi = str(row.get('ANALISI TECNICA', row.get('SINTESI DEL PROBLEMA', '')))
-    analisi = analisi.replace("\\n", "\n")
-    
-    # 2. Recupero ed unione di tutte le colonne ESEMPIO
-    code_cols = [col for col in row.index if 'ESEMPIO' in col and pd.notna(row[col])]
-    full_code = "\n".join([str(row[col]) for col in code_cols]).replace("\\n", "\n")
-    
-    # 3. Composizione Markdown
-    md_content = f"## Esigenza Reale\n{row.get('ESIGENZA REALE', 'N/A')}\n\n"
-    md_content += f"## Analisi Tecnica\n{analisi}\n\n"
-    
-    if full_code.strip():
-        # Determiniamo il linguaggio per il syntax highlighting
-        lang = "sql" if tech.lower() == "db" else tech.lower()
-        md_content += f"## Esempio Implementativo\n\n```{lang}\n{full_code}\n```"
-    
-    return md_content
+    """Genera un nome file pulito per Jekyll"""
+    s = str(text).lower()
+    s = re.sub(r'[^a-z0-9\s-]', '', s)
+    return re.sub(r'[\s-]+', '-', s).strip('-')
 
 def process_excels():
-    Path(OUTPUT_DIR).mkdir(parents=True, exist_ok=True)
+    # Creazione cartella output se non esiste
+    out_path = Path(OUTPUT_DIR)
+    out_path.mkdir(parents=True, exist_ok=True)
     
-    # Cerchiamo tutti i file .xlsx nella cartella input
-    for file in Path(INPUT_DIR).glob("*.xlsx"):
-        tech_name = file.stem.lower() # es: java
-        print(f"📦 Elaborazione tecnologia: {tech_name}")
+    # Pulizia articoli vecchi per evitare duplicati sporchi
+    for old_file in out_path.glob("*.md"):
+        old_file.unlink()
+
+    # Scansione file Excel
+    excel_files = list(Path(INPUT_DIR).glob("*.xlsx"))
+    if not excel_files:
+        print(f"⚠️ Nessun file trovato in {INPUT_DIR}")
+        return
+
+    for file in excel_files:
+        tech_name = file.stem.lower()
+        print(f"📦 Elaborazione: {tech_name}")
         
         xls = pd.ExcelFile(file)
         for sheet_name in xls.sheet_names:
             df = pd.read_excel(file, sheet_name=sheet_name)
-            # Pulizia nomi colonne
+            # Normalizzazione colonne in UPPERCASE
             df.columns = [str(c).strip().upper() for c in df.columns]
             
-            for _, row in df.iterrows():
-                titolo = str(row.get('TITOLO', 'Senza Titolo'))
-                filename = f"{pd.Timestamp.now().strftime('%Y-%m-%d')}-{sanitize_filename(titolo)}.md"
+            for idx, row in df.iterrows():
+                titolo = str(row.get('TITOLO', f'Topic-{idx}'))
+                date_str = pd.Timestamp.now().strftime('%Y-%m-%d')
+                filename = f"{date_str}-{sanitize_filename(titolo)}.md"
                 
-                # Creazione Frontmatter (Meta-dati per Jekyll)
-                # Qui aggiungiamo i tag base: tech e sheet
+                # 1. Raccolta Codice (Concatena tutte le colonne ESEMPIO_X)
+                code_cols = [col for col in df.columns if 'ESEMPIO' in col and pd.notna(row[col])]
+                full_code = "\n".join([str(row[col]) for col in code_cols]).replace("\\n", "\n")
+                
+                # 2. Formattazione Analisi Tecnica (Markdown-friendly)
+                analisi = str(row.get('ANALISI TECNICA', '')).replace("\\n", "\n")
+                
+                # 3. Preparazione Tag (Base)
                 tags = [tech_name, sheet_name.lower().replace("_", " ")]
+
+                # 4. Costruzione Frontmatter con YAML sicuro
+                # Questo evita gli errori "did not find expected key" su GitHub
+                frontmatter_data = {
+                    "layout": "post",
+                    "title": titolo,
+                    "date": pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S %z'),
+                    "sintesi": str(row.get('SINTESI DEL PROBLEMA', ''))[:200],
+                    "esigenza": str(row.get('ESIGENZA REALE', 'N/A')),
+                    "tech": tech_name,
+                    "tags": tags,
+                    "codice": full_code.strip()
+                }
+
+                # 5. Scrittura File
+                with open(out_path / filename, "w", encoding="utf-8") as f:
+                    f.write("---\n")
+                    # allow_unicode=True permette di mantenere accenti e caratteri ITA
+                    yaml.dump(frontmatter_data, f, allow_unicode=True, sort_keys=False)
+                    f.write("---\n\n")
+                    # Il corpo dell'articolo contiene solo l'Analisi Tecnica
+                    # Il resto è gestito dal layout tramite i campi sopra
+                    f.write(analisi)
                 
-                frontmatter = [
-                    "---",
-                    f"layout: post",
-                    f"title: \"{titolo}\"",
-                    f"date: {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')} +0200",
-                    f"sintesi: \"{str(row.get('SINTESI DEL PROBLEMA', ''))[:150]}...\"",
-                    f"tech: {tech_name}",
-                    f"tags: {tags}",
-                    "---",
-                    ""
-                ]
-                
-                body = format_markdown_body(row, tech_name, sheet_name)
-                
-                # Scrittura file finale
-                with open(Path(OUTPUT_DIR) / filename, "w", encoding="utf-8") as f:
-                    f.write("\n".join(frontmatter))
-                    f.write(body)
-                
-                print(f"  ✅ Generato: {filename}")
+                print(f"  ✅ {filename}")
 
 if __name__ == "__main__":
     process_excels()
