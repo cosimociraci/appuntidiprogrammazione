@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Explicit Table Locking (SHARE/EXCLUSIVE)"
-date: 2026-03-31 18:54:56 
+date: 2026-03-31 19:00:39 
 sintesi: "Sebbene il locking automatico di Postgres sia eccellente, a volte è necessario un controllo manuale tramite il comando LOCK TABLE. Esistono diversi modi: SHARE (permette letture, blocca scritture) o EXCLUSIVE (blocca tutto). L'uso di lock espliciti è"
 tech: db
 tags: [db, "concorrenza e locking approfond"]

@@ -1,8 +1,8 @@
 ---
 layout: post
 title: "Locking su Partizioni"
-date: 2026-03-31 18:54:55 
-sintesi: "Quando si usano tabelle partizionate, i lock possono propagarsi in modo gerarchico. Un lock sulla tabella "padre" (es. per una manutenzione dello schema) si propaga a tutte le partizioni "figlie". Tuttavia, nelle query DML standard (SELECT, UPDATE), "
+date: 2026-03-31 19:00:39 
+sintesi: "Quando si usano tabelle partizionate, i lock possono propagarsi in modo gerarchico. Un lock sulla tabella padre (es. per una manutenzione dello schema) si propaga a tutte le partizioni figlie. Tuttavia, nelle query DML standard (SELECT, UPDATE), Post"
 tech: db
 tags: [db, "concorrenza e locking approfond"]
 pdf_file: "locking-su-partizioni.pdf"

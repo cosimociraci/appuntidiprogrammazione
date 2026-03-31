@@ -1,8 +1,8 @@
 ---
 layout: post
 title: "Thymeleaf Reactive (Data-Driven)"
-date: 2026-03-31 18:54:47 
-sintesi: "Caricare una lista enorme blocca il thread finché tutto il template non è pronto. IReactiveDataDriverContextVariable, in stack WebFlux, permette a Thymeleaf di renderizzare il template in modo "chunked". Non appena un elemento della lista è disponibi"
+date: 2026-03-31 19:00:30 
+sintesi: "Caricare una lista enorme blocca il thread finché tutto il template non è pronto. IReactiveDataDriverContextVariable, in stack WebFlux, permette a Thymeleaf di renderizzare il template in modo chunked. Non appena un elemento della lista è disponibile"
 tech: thymeleaf
 tags: [thymeleaf, "performance tuning & caching"]
 pdf_file: "thymeleaf-reactive-data-driven.pdf"

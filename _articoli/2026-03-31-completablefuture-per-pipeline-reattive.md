@@ -1,8 +1,8 @@
 ---
 layout: post
 title: "CompletableFuture per Pipeline Reattive"
-date: 2026-03-31 18:54:10 
-sintesi: "Gestire callback annidate (callback hell) rende il codice multithread illeggibile. CompletableFuture permette di costruire pipeline funzionali: "fai questo, poi quello, se fallisce gestisci così". Il vantaggio tecnico è la possibilità di comporre ris"
+date: 2026-03-31 18:59:53 
+sintesi: "Gestire callback annidate (callback hell) rende il codice multithread illeggibile. CompletableFuture permette di costruire pipeline funzionali: fai questo, poi quello, se fallisce gestisci così. Il vantaggio tecnico è la possibilità di comporre risul"
 tech: java
 tags: [java, "concurrency & multithreading"]
 pdf_file: "completablefuture-per-pipeline-reattive.pdf"

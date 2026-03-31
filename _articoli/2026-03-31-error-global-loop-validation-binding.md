@@ -1,8 +1,8 @@
 ---
 layout: post
 title: "Error Global Loop & Validation Binding"
-date: 2026-03-31 18:54:53 
-sintesi: "L'oggetto #fields di Thymeleaf permette di catturare errori che non appartengono a un campo specifico (es. "Credenziali non valide" o "Password non corrispondenti") tramite th:each="err : ${#fields.errors('global')}". L'attributo th:errorclass applic"
+date: 2026-03-31 19:00:36 
+sintesi: "L'oggetto #fields di Thymeleaf permette di catturare errori che non appartengono a un campo specifico (es. Credenziali non valide o Password non corrispondenti) tramite th:each=err : ${#fields.errors('global')}. L'attributo th:errorclass applica clas"
 tech: thymeleaf
 tags: [thymeleaf, "spring integration & flow archi"]
 pdf_file: "error-global-loop-validation-binding.pdf"

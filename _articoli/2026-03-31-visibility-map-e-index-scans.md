@@ -1,8 +1,8 @@
 ---
 layout: post
 title: "Visibility Map e Index Scans"
-date: 2026-03-31 18:55:10 
-sintesi: "La Visibility Map (VM) è un file che indica a Postgres quali blocchi contengono solo tuple visibili a tutti. Senza una VM aggiornata, gli "Index-Only Scans" non funzionano: il DB deve comunque leggere la tabella per verificare la visibilità. Il Vacuu"
+date: 2026-03-31 19:00:53 
+sintesi: "La Visibility Map (VM) è un file che indica a Postgres quali blocchi contengono solo tuple visibili a tutti. Senza una VM aggiornata, gli Index-Only Scans non funzionano: il DB deve comunque leggere la tabella per verificare la visibilità. Il Vacuum "
 tech: db
 tags: [db, "vacuum & storage"]
 pdf_file: "visibility-map-e-index-scans.pdf"

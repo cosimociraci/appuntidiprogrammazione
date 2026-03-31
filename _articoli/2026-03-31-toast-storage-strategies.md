@@ -1,8 +1,8 @@
 ---
 layout: post
 title: "TOAST Storage Strategies"
-date: 2026-03-31 18:55:10 
-sintesi: "Quando una colonna supera i 2KB (es. testi lunghi o JSONB), Postgres usa il sistema TOAST (The Oversized-Attribute Storage Technique) per spostarla in una tabella separata "fuori riga". Esistono diverse strategie: EXTENDED (compressione + fuori riga)"
+date: 2026-03-31 19:00:54 
+sintesi: "Quando una colonna supera i 2KB (es. testi lunghi o JSONB), Postgres usa il sistema TOAST (The Oversized-Attribute Storage Technique) per spostarla in una tabella separata fuori riga. Esistono diverse strategie: EXTENDED (compressione + fuori riga) o"
 tech: db
 tags: [db, "vacuum & storage"]
 pdf_file: "toast-storage-strategies.pdf"

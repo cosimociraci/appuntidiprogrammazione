@@ -1,8 +1,8 @@
 ---
 layout: post
 title: "Class Data Sharing (CDS)"
-date: 2026-03-31 18:54:22 
-sintesi: "Il caricamento delle classi (parsing dei byte, verifica, creazione metadati) è un costo fisso allo startup. AppCDS permette di scattare una "fotografia" (archivio .jsa) delle classi già caricate e mapparle direttamente in memoria ai successivi avvii."
+date: 2026-03-31 19:00:04 
+sintesi: "Il caricamento delle classi (parsing dei byte, verifica, creazione metadati) è un costo fisso allo startup. AppCDS permette di scattare una fotografia (archivio .jsa) delle classi già caricate e mapparle direttamente in memoria ai successivi avvii. Q"
 tech: java
 tags: [java, "advanced reflection & metaprogr"]
 pdf_file: "class-data-sharing-cds.pdf"

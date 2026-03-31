@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Multiversion Concurrency Control (MVCC) Internals"
-date: 2026-03-31 18:54:55 
+date: 2026-03-31 19:00:38 
 sintesi: "MVCC è il cuore di PostgreSQL: permette ai lettori di non bloccare gli scrittori e viceversa. Ogni riga ha dei metadati nascosti (xmin, xmax) che determinano la visibilità per una specifica transazione. Quando si esegue un UPDATE, Postgres non sovras"
 tech: db
 tags: [db, "concorrenza e locking approfond"]

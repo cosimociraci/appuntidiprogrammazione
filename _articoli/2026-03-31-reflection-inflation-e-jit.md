@@ -1,8 +1,8 @@
 ---
 layout: post
 title: "Reflection Inflation e JIT"
-date: 2026-03-31 18:54:24 
-sintesi: "La JVM ha un'ottimizzazione interna: per le prime 15 chiamate a un metodo via reflection, usa il codice nativo (lento), poi genera una classe bytecode dedicata (veloce). Questo processo si chiama "Inflation". Non bisogna preoccuparsi troppo della len"
+date: 2026-03-31 19:00:07 
+sintesi: "La JVM ha un'ottimizzazione interna: per le prime 15 chiamate a un metodo via reflection, usa il codice nativo (lento), poi genera una classe bytecode dedicata (veloce). Questo processo si chiama Inflation. Non bisogna preoccuparsi troppo della lente"
 tech: java
 tags: [java, "advanced reflection & metaprogr"]
 pdf_file: "reflection-inflation-e-jit.pdf"

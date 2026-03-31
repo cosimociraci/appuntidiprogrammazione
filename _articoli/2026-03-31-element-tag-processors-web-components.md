@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Element Tag Processors (Web Components)"
-date: 2026-03-31 18:54:46 
+date: 2026-03-31 19:00:29 
 sintesi: "Sostituire interi tag custom (es. <app:navbar>) con markup generato lato server permette di incapsulare logiche di navigazione complesse che appaiono come semplici tag nel file HTML. IElementTagProcessor, combinato con IModelFactory, permette di cost"
 tech: thymeleaf
 tags: [thymeleaf, "custom dialects & processors"]

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "CSRF Token Injection in AJAX"
-date: 2026-03-31 18:54:51 
+date: 2026-03-31 19:00:34 
 sintesi: "I form standard di Thymeleaf gestiscono i token CSRF automaticamente, ma le chiamate AJAX/VanillaJS no. Le espressioni ${_csrf.parameterName} e ${_csrf.token} permettono di iniettare i valori nei tag meta. Questo permette agli script lato client di l"
 tech: thymeleaf
 tags: [thymeleaf, "security & spel expressions"]

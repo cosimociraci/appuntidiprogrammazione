@@ -1,8 +1,8 @@
 ---
 layout: post
 title: "Monitoring Replication Lag (LSN Algebra)"
-date: 2026-03-31 18:55:09 
-sintesi: "Il "Replication Lag" non si misura solo in secondi, ma in byte di scarto tramite i Log Sequence Numbers (LSN). Sottraendo l'LSN di ricezione della replica dall'LSN di scrittura del Master si ottiene la distanza reale tra i due nodi. Se la differenza "
+date: 2026-03-31 19:00:52 
+sintesi: "Il Replication Lag non si misura solo in secondi, ma in byte di scarto tramite i Log Sequence Numbers (LSN). Sottraendo l'LSN di ricezione della replica dall'LSN di scrittura del Master si ottiene la distanza reale tra i due nodi. Se la differenza è "
 tech: db
 tags: [db, "advanced replication & ha"]
 pdf_file: "monitoring-replication-lag-lsn-algebra.pdf"

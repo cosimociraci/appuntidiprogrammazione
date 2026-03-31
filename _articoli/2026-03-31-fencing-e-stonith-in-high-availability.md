@@ -1,8 +1,8 @@
 ---
 layout: post
 title: "Fencing e STONITH in High Availability"
-date: 2026-03-31 18:55:09 
-sintesi: "In sistemi HA con failover automatico (es. Patroni), il rischio peggiore è lo "Split Brain", dove due nodi credono di essere entrambi il Master. Il "Fencing" isola il vecchio master mentre "STONITH" (Shoot The Other Node In The Head) ne interrompe fi"
+date: 2026-03-31 19:00:52 
+sintesi: "In sistemi HA con failover automatico (es. Patroni), il rischio peggiore è lo Split Brain, dove due nodi credono di essere entrambi il Master. Il Fencing isola il vecchio master mentre STONITH (Shoot The Other Node In The Head) ne interrompe fisicame"
 tech: db
 tags: [db, "advanced replication & ha"]
 pdf_file: "fencing-e-stonith-in-high-availability.pdf"

@@ -1,8 +1,8 @@
 ---
 layout: post
 title: "Extended Statistics (CREATE STATISTICS)"
-date: 2026-03-31 18:55:00 
-sintesi: "Il Planner assume solitamente che le colonne siano indipendenti tra loro. Se interroghiamo una tabella filtrando per "Marca" e "Modello", Postgres moltiplica le selettività singole, spesso sottostimando il numero di righe risultanti. CREATE STATISTIC"
+date: 2026-03-31 19:00:43 
+sintesi: "Il Planner assume solitamente che le colonne siano indipendenti tra loro. Se interroghiamo una tabella filtrando per Marca e Modello, Postgres moltiplica le selettività singole, spesso sottostimando il numero di righe risultanti. CREATE STATISTICS pe"
 tech: db
 tags: [db, "query opt. & planner"]
 pdf_file: "extended-statistics-create-statistics.pdf"

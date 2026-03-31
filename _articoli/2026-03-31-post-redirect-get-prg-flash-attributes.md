@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Post-Redirect-Get (PRG) & Flash Attributes"
-date: 2026-03-31 18:54:52 
+date: 2026-03-31 19:00:36 
 sintesi: "Il refresh della pagina dopo un invio form causa il re-invio dei dati (doppio ordine). Il pattern PRG usa RedirectAttributes.addFlashAttribute(): gli attributi vengono salvati temporaneamente nella sessione e rimossi automaticamente dopo il primo ren"
 tech: thymeleaf
 tags: [thymeleaf, "spring integration & flow archi"]

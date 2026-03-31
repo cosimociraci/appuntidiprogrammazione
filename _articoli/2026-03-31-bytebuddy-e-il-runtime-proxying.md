@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "ByteBuddy e il Runtime Proxying"
-date: 2026-03-31 18:54:19 
+date: 2026-03-31 19:00:02 
 sintesi: "I proxy dinamici di Java (JDK Proxy) funzionano solo per le interfacce. ByteBuddy permette di sottoclassare classi concrete a runtime per iniettare logica (es. @Transactional). ByteBuddy genera direttamente bytecode invece di usare la reflection per "
 tech: java
 tags: [java, "advanced reflection & metaprogr"]

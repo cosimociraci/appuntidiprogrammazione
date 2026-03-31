@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Timing Attacks e Constant-Time Comparison"
-date: 2026-03-31 18:54:43 
+date: 2026-03-31 19:00:26 
 sintesi: "Un attaccante può indovinare una password o un token misurando quanto tempo impiega il server a rispondere. Il confronto if (a === b) termina non appena trova un carattere diverso (early exit). Il metodo crypto.timingSafeEqual confronta tutti i byte "
 tech: js
 tags: [js, "security & cryptography"]

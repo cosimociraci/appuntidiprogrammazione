@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "HashMap e il carico di collisione"
-date: 2026-03-31 18:54:29 
+date: 2026-03-31 19:00:11 
 sintesi: "Quando molti oggetti hanno lo stesso hashCode, le performance della HashMap degradano da O(1) a O(n) (o O(log n) in Java 8+ grazie ai TreeNode). Monitorare la distribuzione dei bucket nelle mappe critiche è essenziale. Per chiavi custom, l'hashCode d"
 tech: java
 tags: [java, "memory & performance"]

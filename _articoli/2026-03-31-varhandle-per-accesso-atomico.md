@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "VarHandle per Accesso Atomico"
-date: 2026-03-31 18:54:22 
+date: 2026-03-31 19:00:05 
 sintesi: "Prima di Java 9, per l'accesso low-level alla memoria si usava sun.misc.Unsafe, una API interna e pericolosa. VarHandle offre la stessa potenza di Unsafe (operazioni CAS, memory fences) ma in modo sicuro e standard. Un VarHandle permette di manipolar"
 tech: java
 tags: [java, "advanced reflection & metaprogr"]

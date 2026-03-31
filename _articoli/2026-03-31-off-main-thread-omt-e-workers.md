@@ -1,8 +1,8 @@
 ---
 layout: post
 title: "Off-Main-Thread (OMT) e Workers"
-date: 2026-03-31 18:54:37 
-sintesi: "JS è single-threaded, ma il parsing di grandi JSON o il calcolo pesante bloccano l'Event Loop, causando "jank" (scatti) nella UI. Worker Threads (Node) e Web Workers (Browser) permettono di spostare il lavoro CPU-bound su thread isolati. L'uso di Tra"
+date: 2026-03-31 19:00:20 
+sintesi: "JS è single-threaded, ma il parsing di grandi JSON o il calcolo pesante bloccano l'Event Loop, causando jank (scatti) nella UI. Worker Threads (Node) e Web Workers (Browser) permettono di spostare il lavoro CPU-bound su thread isolati. L'uso di Trans"
 tech: js
 tags: [js, "v8 engine & runtime performance"]
 pdf_file: "off-main-thread-omt-e-workers.pdf"
