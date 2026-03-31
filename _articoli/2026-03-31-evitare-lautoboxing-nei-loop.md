@@ -1,11 +1,10 @@
 ---
 layout: post
 title: "Evitare l'Autoboxing nei Loop"
-date: 2026-03-31 17:04:41 
+date: 2026-03-31 17:07:09 
 sintesi: "Java converte automaticamente i tipi primitivi (int) nei loro wrapper (Integer). All'interno di un loop critico, questo causa l'allocazione di milioni di oggetti inutili, saturando l'Eden space e innescando il GC. La soluzione è usare collezioni prim"
 tech: java
 tags: ['java', 'memory & performance']
-pdf_file: "evitare-lautoboxing-nei-loop.pdf"
 ---
 
 ## Esigenza Reale

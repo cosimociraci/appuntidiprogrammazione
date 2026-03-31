@@ -1,11 +1,10 @@
 ---
 layout: post
 title: "Fencing e STONITH in High Availability"
-date: 2026-03-31 17:04:42 
+date: 2026-03-31 17:07:56 
 sintesi: "In sistemi HA con failover automatico (es. Patroni), il rischio peggiore è lo "Split Brain", dove due nodi credono di essere entrambi il Master. Il "Fencing" isola il vecchio master mentre "STONITH" (Shoot The Other Node In The Head) ne interrompe fi"
 tech: db
 tags: ['db', 'advanced replication & ha']
-pdf_file: "fencing-e-stonith-in-high-availability.pdf"
 ---
 
 ## Esigenza Reale
@@ -17,5 +16,16 @@ Problema: Due istanze Master attive contemporaneamente scrivono dati diversi, re
 ## Esempio Implementativo
 
 ```db
-/* patroni.yml — configurazione TTL e loop */ scope: pg-cluster; ttl: 30; loop_wait: 10; maximum_lag_on_failover: 1048576; /* Verifica del leader via etcd */ # etcdctl get /service/pg-cluster/leader /* Script STONITH chiamato da Patroni prima della promozione */ aws ec2 revoke-security-group-ingress --group-id sg-xxx --protocol tcp --port 5432 --source-group sg-app-servers; /* Stato post-failover */ # patronictl -c /etc/patroni/patroni.yml list
+/* patroni.yml — configurazione TTL e loop */ scope:pg -
+CLUSTER;
+
+ttl:30;
+
+loop_wait:10;
+
+maximum_lag_on_failover:1048576;
+
+/* Verifica del leader via etcd */ # etcdctl get / service / pg -
+CLUSTER / leader /* Script STONITH chiamato da Patroni prima della promozione */ aws ec2
+REVOKE - security - GROUP - ingress --group-id sg-xxx --protocol tcp --port 5432 --source-group sg-app-servers; /* Stato post-failover */ # patronictl -c /etc/patroni/patroni.yml list
 ```

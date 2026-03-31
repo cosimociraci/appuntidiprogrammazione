@@ -1,11 +1,10 @@
 ---
 layout: post
 title: "Monitoring Replication Lag (LSN Algebra)"
-date: 2026-03-31 17:04:42 
+date: 2026-03-31 17:07:55 
 sintesi: "Il "Replication Lag" non si misura solo in secondi, ma in byte di scarto tramite i Log Sequence Numbers (LSN). Sottraendo l'LSN di ricezione della replica dall'LSN di scrittura del Master si ottiene la distanza reale tra i due nodi. Se la differenza "
 tech: db
 tags: ['db', 'advanced replication & ha']
-pdf_file: "monitoring-replication-lag-lsn-algebra.pdf"
 ---
 
 ## Esigenza Reale
@@ -17,5 +16,21 @@ Problema: I secondi di lag sono una metrica ingannevole: una replica può essere
 ## Esempio Implementativo
 
 ```db
-/* Query completa di analisi lag sul Master */ SELECT application_name, pg_wal_lsn_diff(pg_current_wal_lsn(), sent_lsn) AS network_lag_bytes, pg_wal_lsn_diff(sent_lsn, write_lsn) AS write_lag_bytes, pg_wal_lsn_diff(flush_lsn, replay_lsn) AS apply_lag_bytes, pg_wal_lsn_diff(pg_current_wal_lsn(), replay_lsn) AS total_lag_bytes, round(pg_wal_lsn_diff(pg_current_wal_lsn(), replay_lsn) / 1024.0 / 1024.0, 2) AS total_lag_mb FROM pg_stat_replication ORDER BY total_lag_bytes DESC; /* Soglia di allerta pre-deploy: blocca se lag > 5 MB */ DO $$ DECLARE lag_mb NUMERIC; BEGIN SELECT round(pg_wal_lsn_diff(pg_current_wal_lsn(), replay_lsn) / 1024.0 / 1024.0, 2) INTO lag_mb FROM pg_stat_replication WHERE application_name = 'dr_replica'; IF lag_mb > 5 THEN RAISE EXCEPTION 'Deploy bloccato: replica DR ha % MB di lag', lag_mb; ELSE RAISE NOTICE 'Replica allineata: % MB. Deploy autorizzato.', lag_mb; END IF; END $$;
+/* Query completa di analisi lag sul Master */
+SELECT
+  application_name,
+  pg_wal_lsn_diff(pg_current_wal_lsn(), sent_lsn) AS network_lag_bytes,
+  pg_wal_lsn_diff(sent_lsn, write_lsn) AS write_lag_bytes,
+  pg_wal_lsn_diff(flush_lsn, replay_lsn) AS apply_lag_bytes,
+  pg_wal_lsn_diff(pg_current_wal_lsn(), replay_lsn) AS total_lag_bytes,
+  round(
+    pg_wal_lsn_diff(pg_current_wal_lsn(), replay_lsn) / 1024.0 / 1024.0,
+    2
+  ) AS total_lag_mb
+FROM
+  pg_stat_replication
+ORDER BY
+  total_lag_bytes DESC;
+
+/* Soglia di allerta pre-deploy: blocca se lag > 5 MB */ DO $$ DECLARE lag_mb NUMERIC; BEGIN SELECT round(pg_wal_lsn_diff(pg_current_wal_lsn(), replay_lsn) / 1024.0 / 1024.0, 2) INTO lag_mb FROM pg_stat_replication WHERE application_name = 'dr_replica'; IF lag_mb > 5 THEN RAISE EXCEPTION 'Deploy bloccato: replica DR ha % MB di lag', lag_mb; ELSE RAISE NOTICE 'Replica allineata: % MB. Deploy autorizzato.', lag_mb; END IF; END $$;
 ```

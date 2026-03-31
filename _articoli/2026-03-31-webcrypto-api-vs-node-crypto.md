@@ -1,11 +1,10 @@
 ---
 layout: post
 title: "WebCrypto API vs Node Crypto"
-date: 2026-03-31 17:04:41 
+date: 2026-03-31 17:07:21 
 sintesi: "Storicamente, la crittografia nel browser era lenta e insicura. La WebCrypto API espone operazioni hardware-accelerate e isolate. La differenza fondamentale è tra CryptoKey (oggetti non estraibili dalla memoria JS) e i buffer grezzi: usare chiavi "no"
 tech: js
 tags: ['js', 'security & cryptography']
-pdf_file: "webcrypto-api-vs-node-crypto.pdf"
 ---
 
 ## Esigenza Reale

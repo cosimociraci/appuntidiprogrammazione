@@ -1,11 +1,10 @@
 ---
 layout: post
 title: "Backpressure in Stream Pipeline"
-date: 2026-03-31 17:04:41 
+date: 2026-03-31 17:07:19 
 sintesi: "Leggere dati più velocemente di quanto si riesca a scriverli causa il riempimento del buffer (RAM). Il segnale di "backpressure" indica al readable di fermarsi finché il writable non ha svuotato il suo buffer. L'uso di stream.pipeline() invece di .pi"
 tech: js
 tags: ['js', 'node.js internals & libuv']
-pdf_file: "backpressure-in-stream-pipeline.pdf"
 ---
 
 ## Esigenza Reale

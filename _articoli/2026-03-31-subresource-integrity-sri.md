@@ -1,11 +1,10 @@
 ---
 layout: post
 title: "Subresource Integrity (SRI)"
-date: 2026-03-31 17:04:41 
+date: 2026-03-31 17:07:23 
 sintesi: "Caricare librerie da CDN esterne è un rischio: se la CDN viene compromessa, lo script può essere sostituito con malware. Lo standard SRI richiede l'aggiunta dell'attributo integrity con l'hash crittografico del file. Il browser scaricherà il file, ne"
 tech: js
 tags: ['js', 'security & cryptography']
-pdf_file: "subresource-integrity-sri.pdf"
 ---
 
 ## Esigenza Reale

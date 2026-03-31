@@ -1,11 +1,10 @@
 ---
 layout: post
 title: "FSM e VM: Gestione dello spazio libero"
-date: 2026-03-31 17:04:42 
+date: 2026-03-31 17:08:00 
 sintesi: "La Free Space Map (FSM) tiene traccia di dove c'è spazio libero nelle pagine esistenti per nuovi inserimenti. Se la FSM è corrotta o insufficiente, Postgres inizierà a creare nuove pagine anche se c'è spazio disponibile, gonfiando la tabella inutilme"
 tech: db
 tags: ['db', 'vacuum & storage']
-pdf_file: "fsm-e-vm-gestione-dello-spazio-libero.pdf"
 ---
 
 ## Esigenza Reale
@@ -17,5 +16,35 @@ Problema: Il database chiede nuovo spazio al sistema operativo anche se sono sta
 ## Esempio Implementativo
 
 ```db
-/* Analizzo lo spazio libero medio nelle pagine della tabella */ SELECT * FROM pg_freespace('my_table') ORDER BY avail DESC LIMIT 20; /* Se le pagine mostrano avail = 0 nonostante recenti DELETE, la FSM non è aggiornata */ /* Forzo un vacuum per aggiornare la FSM immediatamente */ VACUUM my_table; /* Aumento la memoria dedicata alla manutenzione per gestire FSM di tabelle grandi */ ALTER SYSTEM SET maintenance_work_mem = '512MB'; SELECT pg_reload_conf(); /* Verifico che i nuovi INSERT riutilizzino le pagine libere invece di allocarne di nuove */ SELECT relpages, pg_size_pretty(pg_relation_size('my_table')) AS table_size FROM pg_class WHERE relname = 'my_table'; /* Confronto relpages prima e dopo un ciclo delete+insert+vacuum: deve restare stabile */
+/* Analizzo lo spazio libero medio nelle pagine della tabella */
+SELECT
+  *
+FROM
+  pg_freespace ('my_table')
+ORDER BY
+  avail DESC
+LIMIT
+  20;
+
+/* Se le pagine mostrano avail = 0 nonostante recenti DELETE, la FSM non è aggiornata */ /* Forzo un vacuum per aggiornare la FSM immediatamente */
+VACUUM my_table;
+
+/* Aumento la memoria dedicata alla manutenzione per gestire FSM di tabelle grandi */
+ALTER SYSTEM
+SET
+  maintenance_work_mem = '512MB';
+
+SELECT
+  pg_reload_conf();
+
+/* Verifico che i nuovi INSERT riutilizzino le pagine libere invece di allocarne di nuove */
+SELECT
+  relpages,
+  pg_size_pretty(pg_relation_size('my_table')) AS table_size
+FROM
+  pg_class
+WHERE
+  relname = 'my_table';
+
+/* Confronto relpages prima e dopo un ciclo delete+insert+vacuum: deve restare stabile */
 ```

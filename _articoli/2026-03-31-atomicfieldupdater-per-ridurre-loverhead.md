@@ -1,11 +1,10 @@
 ---
 layout: post
 title: "AtomicFieldUpdater per ridurre l'overhead"
-date: 2026-03-31 17:04:41 
+date: 2026-03-31 17:07:00 
 sintesi: "Creare migliaia di oggetti AtomicInteger ha un costo in termini di memoria (overhead dell'oggetto wrapper). AtomicIntegerFieldUpdater permette di eseguire operazioni atomiche su un normale campo volatile di una classe. L'updater è statico e unico per"
 tech: java
 tags: ['java', 'concurrency & multithreading']
-pdf_file: "atomicfieldupdater-per-ridurre-loverhead.pdf"
 ---
 
 ## Esigenza Reale

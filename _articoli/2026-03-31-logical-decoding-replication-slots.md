@@ -1,11 +1,10 @@
 ---
 layout: post
 title: "Logical Decoding & Replication Slots"
-date: 2026-03-31 17:04:42 
+date: 2026-03-31 17:07:52 
 sintesi: "La replica logica permette di trasmettere solo le modifiche ai dati (INSERT/UPDATE/DELETE) invece di interi blocchi di disco. Il problema principale sorge quando il ricevente (subscriber) si disconnette: il mittente (publisher) deve conservare tutti "
 tech: db
 tags: ['db', 'advanced replication & ha']
-pdf_file: "logical-decoding-replication-slots.pdf"
 ---
 
 ## Esigenza Reale
