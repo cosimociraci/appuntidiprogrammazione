@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Fragment Caching (JCache/Redis)"
-date: 2026-03-31 17:02:46 
+date: 2026-03-31 17:04:41 
 sintesi: "Elaborare lo stesso menu o footer per ogni utente è uno spreco di risorse. Wrappando i TemplateResolver con sistemi di caching (Redis o Ehcache) per i frammenti statici è possibile servire pezzi di HTML pre-renderizzati direttamente dalla RAM, bypass"
 tech: thymeleaf
 tags: ['thymeleaf', 'performance tuning & caching']

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Type Conversion & Formatter System"
-date: 2026-03-31 17:02:46 
+date: 2026-03-31 17:04:41 
 sintesi: "Visualizzare oggetti complessi (es. Money, Coordinate, Entità) nei form richiede conversioni bidirezionali. Annotando i campi del DTO con @DateTimeFormat o @NumberFormat, Thymeleaf delega automaticamente la formattazione al sistema di conversione di "
 tech: thymeleaf
 tags: ['thymeleaf', 'spring integration & flow archi']

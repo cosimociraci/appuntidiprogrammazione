@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "FOR UPDATE NOWAIT"
-date: 2026-03-31 17:02:46 
+date: 2026-03-31 17:04:42 
 sintesi: "Quando un'applicazione deve acquisire un lock su una riga per modificarla, il comportamento standard è aspettare se la riga è già bloccata. In scenari interattivi (es. un utente che apre una scheda per modifica), l'attesa può sembrare un blocco del s"
 tech: db
 tags: ['db', 'concorrenza e locking approfond']

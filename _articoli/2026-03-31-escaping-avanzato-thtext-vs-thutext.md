@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Escaping Avanzato: th:text vs th:utext"
-date: 2026-03-31 17:02:46 
+date: 2026-03-31 17:04:41 
 sintesi: "L'uso di th:utext (unescaped) per renderizzare contenuti HTML salvati nel DB è la causa principale di XSS. Prima di passare una stringa HTML alla view, questa deve essere processata nel Service layer con un parser come OWASP Java HTML Sanitizer per r"
 tech: thymeleaf
 tags: ['thymeleaf', 'security & spel expressions']

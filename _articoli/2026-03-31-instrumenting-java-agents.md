@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Instrumenting Java Agents"
-date: 2026-03-31 17:02:46 
+date: 2026-03-31 17:04:41 
 sintesi: "I Java Agent, tramite l'API Instrumentation, possono intercettare il caricamento di ogni classe e modificarne il bytecode prima che venga eseguito. Questa è la tecnica usata dai tool di monitoraggio APM (NewRelic, Dynatrace) per iniettare sonde di te"
 tech: java
 tags: ['java', 'advanced reflection & metaprogr']

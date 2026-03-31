@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Serializable Snapshot Isolation (SSI)"
-date: 2026-03-31 17:02:46 
+date: 2026-03-31 17:04:42 
 sintesi: "Il livello di isolamento SERIALIZABLE in PostgreSQL non si limita a bloccare le righe, ma monitora le dipendenze tra le transazioni per prevenire anomalie di "vizio di scrittura" (write skew). Mentre REPEATABLE READ garantisce che i dati letti non ca"
 tech: db
 tags: ['db', 'concorrenza e locking approfond']

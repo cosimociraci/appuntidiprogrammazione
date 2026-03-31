@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Restrizione Type Reference in SpEL"
-date: 2026-03-31 17:02:46 
+date: 2026-03-31 17:04:41 
 sintesi: "SpEL permette di accedere a classi Java statiche via T(java.lang.Runtime). In ambienti CMS dove gli utenti possono modificare parzialmente i template, è fondamentale configurare lo StandardEvaluationContext per limitare i pacchetti accessibili, disab"
 tech: thymeleaf
 tags: ['thymeleaf', 'security & spel expressions']

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Jackson Afterburner per il Parsing JSON"
-date: 2026-03-31 17:02:46 
+date: 2026-03-31 17:04:41 
 sintesi: "La reflection standard usata dai parser JSON è lenta. I moduli jackson-module-afterburner (Java 8) e jackson-module-blackbird (Java 11+) usano la generazione di bytecode a runtime per creare "accessori" diretti ai campi della classe, eliminando l'ove"
 tech: java
 tags: ['java', 'memory & performance']

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "B-Tree Index Bloat & Fillfactor"
-date: 2026-03-31 17:02:46 
+date: 2026-03-31 17:04:42 
 sintesi: "Gli indici B-Tree tendono a frammentarsi (bloat) a causa di frequenti update e delete, poiché PostgreSQL non può riutilizzare immediatamente lo spazio delle pagine degli indici fino al passaggio del Vacuum. Un B-Tree "gonfio" aumenta il numero di liv"
 tech: db
 tags: ['db', 'indexing internals']

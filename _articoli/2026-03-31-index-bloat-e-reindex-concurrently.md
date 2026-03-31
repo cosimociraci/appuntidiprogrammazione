@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Index Bloat e REINDEX CONCURRENTLY"
-date: 2026-03-31 17:02:46 
+date: 2026-03-31 17:04:42 
 sintesi: "Anche gli indici soffrono di bloat, spesso più delle tabelle. Un indice frammentato rallenta tutte le query di ricerca. Postgres 12+ permette il comando REINDEX CONCURRENTLY che ricostruisce l'indice da zero senza bloccare le scritture sulla tabella."
 tech: db
 tags: ['db', 'vacuum & storage']

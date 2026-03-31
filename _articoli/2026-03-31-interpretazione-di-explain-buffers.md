@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Interpretazione di EXPLAIN BUFFERS"
-date: 2026-03-31 17:02:46 
+date: 2026-03-31 17:04:42 
 sintesi: "La metrica più onesta per misurare una query non è il tempo (che dipende dal carico del server), ma i blocchi letti (BUFFERS). La differenza tra shared hit (dati in RAM), read (dati letti dal disco) e dirtied (pagine modificate) rivela l'impatto real"
 tech: db
 tags: ['db', 'query opt. & planner']

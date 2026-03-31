@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "JIT Compilation Tuning"
-date: 2026-03-31 17:02:46 
+date: 2026-03-31 17:04:42 
 sintesi: "La Just-In-Time (JIT) compilation trasforma parte della query in codice macchina nativo. Sebbene sembri un vantaggio, ha un costo di "startup" non indifferente. Per query OLTP veloci (che durano millisecondi), il tempo speso per compilare il codice J"
 tech: db
 tags: ['db', 'query opt. & planner']

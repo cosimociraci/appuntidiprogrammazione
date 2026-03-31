@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "G1GC e Humongous Objects"
-date: 2026-03-31 17:02:46 
+date: 2026-03-31 17:04:41 
 sintesi: "G1 divide l'heap in regioni. Se un oggetto occupa più del 50% di una regione, viene considerato "Humongous" e allocato direttamente nella Old Generation, saltando l'Eden. Troppi Humongous objects causano frammentazione e pause pesanti. Aumentare G1He"
 tech: java
 tags: ['java', 'jvm tuning & garbage collection']

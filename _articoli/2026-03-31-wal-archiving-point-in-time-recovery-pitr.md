@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "WAL Archiving & Point-In-Time Recovery (PITR)"
-date: 2026-03-31 17:02:46 
+date: 2026-03-31 17:04:42 
 sintesi: "Il PITR permette di riportare il database a un istante preciso nel passato (es. un secondo prima di un DROP TABLE accidentale). Il flusso si basa su due componenti: un base backup periodico unito a una catena ininterrotta di file WAL archiviati. L'af"
 tech: db
 tags: ['db', 'advanced replication & ha']

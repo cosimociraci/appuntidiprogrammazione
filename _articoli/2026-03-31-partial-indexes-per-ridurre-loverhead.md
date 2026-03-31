@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Partial Indexes per ridurre l'overhead"
-date: 2026-03-31 17:02:46 
+date: 2026-03-31 17:04:42 
 sintesi: "Un errore comune è indicizzare l'intera tabella quando le query filtrano sempre per una condizione specifica (es. solo i record "attivi"). I Partial Indexes includono solo le righe che soddisfano un predicato WHERE. Questo li rende minuscoli, velocis"
 tech: db
 tags: ['db', 'indexing internals']

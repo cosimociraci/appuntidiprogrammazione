@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Dynamic Proxy e Interface Invocation"
-date: 2026-03-31 17:02:46 
+date: 2026-03-31 17:04:41 
 sintesi: "I proxy dinamici sono il cuore di @Mapper in MyBatis o FeignClient. Quando si chiama un metodo su un'interfaccia "magica", si sta invocando un InvocationHandler. Ogni chiamata passa per un array di Object[] per gli argomenti, con relativo boxing. Per"
 tech: java
 tags: ['java', 'advanced reflection & metaprogr']

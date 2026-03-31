@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Security Dialect: sec:authorize"
-date: 2026-03-31 17:02:46 
+date: 2026-03-31 17:04:41 
 sintesi: "Nascondere elementi via CSS (display:none) non è sicurezza: l'HTML è visibile nel sorgente. L'attributo sec:authorize="hasRole(...)" impedisce fisicamente al server di generare e inviare il markup al browser se l'utente non ha i permessi. Questo ridu"
 tech: thymeleaf
 tags: ['thymeleaf', 'security & spel expressions']
