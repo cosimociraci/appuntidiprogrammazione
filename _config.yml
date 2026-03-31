@@ -1,23 +1,41 @@
-# Informazioni Generali
+# ==========================================
+# 1. INFORMAZIONI GENERALI
+# ==========================================
 title: DevLog
-email: tua_email@esempio.com
+email: cosimociraci@gmail.com
 description: >-
   Hub tecnico per appunti di programmazione, analisi di problemi reali 
   e soluzioni implementative in ambito Spring Boot, Java e Web Dev.
 
-# Configurazione URL (Fondamentale per GitHub Pages)
-# Se il tuo sito è cosimociraci.github.io/appuntidiprogrammazione, 
-# allora baseurl deve essere "/appuntidiprogrammazione"
-baseurl: "/appuntidiprogrammazione" 
+# ==========================================
+# 2. CONFIGURAZIONE URL (GitHub Pages)
+# ==========================================
+baseurl: "/appuntidiprogrammazione"
 url: "https://cosimociraci.github.io"
 
-# Gestione dei Contenuti (Collections)
+# ==========================================
+# 3. BACKEND & AUTENTICAZIONE (Decap CMS)
+# ==========================================
+# Questa sezione permette al CMS di parlare con GitHub tramite il proxy
+backend:
+  name: github
+  repo: cosimociraci/appuntidiprogrammazione
+  branch: main
+  base_url: https://api.staticcms.org
+  auth_endpoint: /auth
+
+# Consente di lavorare in locale col comando: npx decap-server
+local_backend: true
+
+# ==========================================
+# 4. GESTIONE CONTENUTI (Collections)
+# ==========================================
 collections:
   articoli:
     output: true
     permalink: /articoli/:title/
 
-# Impostazioni di Default per i file
+# Impostazioni di default per i nuovi file creati
 defaults:
   - scope:
       path: ""
@@ -25,14 +43,19 @@ defaults:
     values:
       layout: "post"
 
-# Markdown e Syntax Highlighting
+# ==========================================
+# 5. MOTORE DI RENDERING & HIGHLIGHTING
+# ==========================================
 markdown: kramdown
 highlighter: rouge
 kramdown:
   input: GFM
   syntax_highlighter: rouge
 
-# Esclusioni (File che Jekyll non deve processare)
+# ==========================================
+# 6. ESCLUSIONI (File ignorati da Jekyll)
+# ==========================================
+# NOTA: La cartella 'admin/' NON deve essere qui, altrimenti GitHub Pages dà 404
 exclude:
   - Gemfile
   - Gemfile.lock
@@ -41,3 +64,5 @@ exclude:
   - vendor/cache/
   - vendor/gems/
   - vendor/ruby/
+  - .github/          # Escludiamo i workflow dalla build del sito finale
+  - .jekyll-cache/
