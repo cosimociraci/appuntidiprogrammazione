@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Component-Based Architecture (Fragment Parameters)"
-date: 2026-03-31 19:00:31 
+date: 2026-03-31 19:21:48 
 sintesi: "Passare dati semplici ai frammenti non permette di creare componenti veramente isolati. Passando interi oggetti, classi CSS e fallback ai frammenti, e usando il no-op token _, è possibile definire un valore predefinito nel mockup HTML che viene mante"
 tech: thymeleaf
 tags: [thymeleaf, "advanced layout & templating"]
@@ -18,7 +18,10 @@ Problema: Frammenti troppo rigidi che forzano a passare parametri vuoti o nulli,
 
 ```thymeleaf
 <!-- DEFINIZIONE DEL COMPONENTE: fragments/components.html -->
-<!-- Il componente Button accetta label, variant, icon e disabled come parametri. Il token _ come valore default garantisce che il template sia apribile nel browser senza server: il designer vede "Salva" con classe "btn-primary". -->
+<!-- Il componente Button accetta label, variant, icon e disabled come
+parametri. Il token _ come valore default garantisce che il template sia
+apribile nel browser senza server: il designer vede "Salva" con classe "btn-
+primary". -->
 <div th:fragment="button(label, variant, icon, disabled)" th:remove="tag">
     <button
         th:type="'button'"
@@ -26,8 +29,12 @@ Problema: Frammenti troppo rigidi che forzano a passare parametri vuoti o nulli,
         th:disabled="${disabled ?: false}"
         th:attr="aria-label=${label ?: 'Azione'}"
     >
-        <!-- Icona opzionale: se icon è _ o null, il tag span non viene renderizzato -->
-        <span th:if="${icon != null and icon != _}" th:class="'icon icon-' + ${icon}"></span>
+        <!-- Icona opzionale: se icon è _ o null, il tag span non viene
+renderizzato -->
+        <span
+            th:if="${icon != null and icon != _}"
+            th:class="'icon icon-' + ${icon}"
+        ></span>
         <span th:text="${label ?: 'Salva'}">Salva</span>
     </button>
 </div>
@@ -38,7 +45,9 @@ Problema: Frammenti troppo rigidi che forzano a passare parametri vuoti o nulli,
     th:remove="tag"
 >
     <div class="card-header">
-        <h5 class="card-title" th:text="${title ?: 'Titolo Card'}">Titolo Card</h5>
+        <h5 class="card-title" th:text="${title ?: 'Titolo Card'}">
+            Titolo Card
+        </h5>
         <p
             th:if="${subtitle != null and subtitle != _}"
             class="card-subtitle"
@@ -57,7 +66,8 @@ Problema: Frammenti troppo rigidi che forzano a passare parametri vuoti o nulli,
         </button>
     </div>
     <div class="card-body">
-        <!-- Layout placeholder (slot): il contenuto viene iniettato dal chiamante -->
+        <!-- Layout placeholder (slot): il contenuto viene iniettato dal
+chiamante -->
         <th:block th:replace="~{::card-content}">
             <p>Contenuto di default visibile nel browser senza server.</p>
         </th:block>
@@ -66,13 +76,17 @@ Problema: Frammenti troppo rigidi che forzano a passare parametri vuoti o nulli,
 <!-- UTILIZZO DEI COMPONENTI nel template pagina: -->
 <!-- Button con tutti i parametri -->
 <th:block
-    th:replace="~{fragments/components :: button('Elimina', 'danger', 'trash', false)}"
+    th:replace="~{fragments/components :: button('Elimina', 'danger', 'trash',
+false)}"
 ></th:block>
 <!-- Button con solo label: gli altri parametri usano il default -->
-<th:block th:replace="~{fragments/components :: button('Salva', _, _, _)}"></th:block>
+<th:block
+    th:replace="~{fragments/components :: button('Salva', _, _, _)}"
+></th:block>
 <!-- Card completa con contenuto iniettato -->
 <th:block
-    th:replace="~{fragments/components :: card('Ordini Recenti', 'Ultimi 30 giorni', 'shadow-sm', true)}"
+    th:replace="~{fragments/components :: card('Ordini Recenti', 'Ultimi 30
+giorni', 'shadow-sm', true)}"
 >
     <th:block th:fragment="card-content">
         <table class="table">
@@ -83,5 +97,4 @@ Problema: Frammenti troppo rigidi che forzano a passare parametri vuoti o nulli,
         </table>
     </th:block>
 </th:block>
-
 ```

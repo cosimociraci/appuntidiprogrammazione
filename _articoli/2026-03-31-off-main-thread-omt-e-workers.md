@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Off-Main-Thread (OMT) e Workers"
-date: 2026-03-31 19:00:20 
+date: 2026-03-31 19:21:36 
 sintesi: "JS è single-threaded, ma il parsing di grandi JSON o il calcolo pesante bloccano l'Event Loop, causando jank (scatti) nella UI. Worker Threads (Node) e Web Workers (Browser) permettono di spostare il lavoro CPU-bound su thread isolati. L'uso di Trans"
 tech: js
 tags: [js, "v8 engine & runtime performance"]
@@ -17,6 +17,54 @@ Problema: Blocco dell'Event Loop dovuto a task sincroni CPU-bound che impediscon
 ## Esempio Implementativo
 
 ```js
-/* MAIN THREAD (main.js): delego il parsing CSV al Worker con trasferimento zero-copy del buffer. */ import { Worker } from 'worker_threads'; import { readFile } from 'fs/promises'; async function parseLargeCsv(filePath) { // Leggo il file come Buffer (ArrayBuffer sotto il cofano) const fileBuffer = await readFile(filePath); // Creo il Worker e gli trasferisco l'ownership del buffer: ZERO copia in memoria return new Promise((resolve, reject) => { const worker = new Worker('./csv-parser.worker.js', { workerData: { buffer: fileBuffer.buffer } // Passo l'ArrayBuffer }); // Trasferisco l'ownership: fileBuffer non è più accessibile nel main thread worker.postMessage( { buffer: fileBuffer.buffer, filePath }, [fileBuffer.buffer] // Lista dei Transferable: trasferiti, non copiati ); worker.on('message', (result) => { resolve(result); worker.terminate(); }); worker.on('error', reject); }); } /* WORKER THREAD (csv-parser.worker.js): esegue il parsing CPU-bound in isolamento. */ import { parentPort, workerData } from 'worker_threads'; // Ricevo il buffer trasferito: ho l'ownership completa, zero contesa con il main thread const buffer = Buffer.from(workerData.buffer); const csvText = buffer.toString('utf-8'); function parseCsv(text) { const lines = text.split('
-'); const headers = lines[0].split(','); const rows = []; // Parsing CPU-bound: non blocca più l'Event Loop del main thread for (let i = 1; i < lines.length; i++) { if (lines[i].trim() === '') continue; const values = lines[i].split(','); const row = {}; headers.forEach((header, idx) => { row[header.trim()] = values[idx]?.trim(); }); rows.push(row); // Invio aggiornamenti di progresso ogni 10000 righe senza aspettare la fine if (i % 10_000 === 0) { parentPort.postMessage({ type: 'progress', processed: i, total: lines.length }); } } return rows; } const result = parseCsv(csvText); // Ritrasferisco i dati risultanti come ArrayBuffer per evitare la copia const resultJson = JSON.stringify(result); const resultBuffer = Buffer.from(resultJson).buffer; parentPort.postMessage( { type: 'result', buffer: resultBuffer }, [resultBuffer] // Zero-copy transfer del risultato ); /* Per browser, uso Web Workers con la stessa logica di trasferimento: */ // main.js (browser) function parseCsvInWorker(file) { return new Promise((resolve, reject) => { const worker = new Worker('/workers/csv-parser.js'); file.arrayBuffer().then(buffer => { worker.postMessage({ buffer }, [buffer]); // Transferable: zero copy }); worker.onmessage = (e) => { if (e.data.type === 'progress') { updateProgressBar(e.data.processed / e.data.total * 100); } else if (e.data.type === 'result') { const result = JSON.parse(Buffer.from(e.data.buffer).toString()); resolve(result); worker.terminate(); } }; worker.onerror = reject; }); } /* Per task CPU-bound ripetitivi, uso un Worker Pool per evitare il costo di creazione del Worker: */ class WorkerPool { constructor(workerScript, poolSize = navigator.hardwareConcurrency) { this.workers = Array.from({ length: poolSize }, () => new Worker(workerScript)); this.queue = []; this.idle = [...this.workers]; this.workers.forEach(w => { w.onmessage = (e) => { const resolve = w._currentResolve; w._currentResolve = null; this.idle.push(w); this._processQueue(); resolve(e.data); }; }); } submit(data, transferables = []) { return new Promise((resolve) => { this.queue.push({ data, transferables, resolve }); this._processQueue(); }); } _processQueue() { if (this.queue.length > 0 && this.idle.length > 0) { const worker = this.idle.pop(); const { data, transferables, resolve } = this.queue.shift(); worker._currentResolve = resolve; worker.postMessage(data, transferables); } } }
+/* MAIN THREAD (main.js): delego il parsing CSV al Worker con trasferimento zero-
+* copy del buffer. */ import { Worker } from 'worker_threads'; import { readFile
+* } from 'fs/promises'; async function parseLargeCsv(filePath) { // Leggo il
+* file come Buffer (ArrayBuffer sotto il cofano) const fileBuffer = await
+* readFile(filePath); // Creo il Worker e gli trasferisco l'ownership del
+* buffer: ZERO copia in memoria return new Promise((resolve, reject) => { const
+* worker = new Worker('./csv-parser.worker.js', { workerData: { buffer:
+* fileBuffer.buffer } // Passo l'ArrayBuffer }); // Trasferisco l'ownership:
+* fileBuffer non è più accessibile nel main thread worker.postMessage( { buffer:
+* fileBuffer.buffer, filePath }, [fileBuffer.buffer] // Lista dei Transferable:
+* trasferiti, non copiati ); worker.on('message', (result) => { resolve(result);
+* worker.terminate(); }); worker.on('error', reject); }); } /* WORKER THREAD
+* (csv-parser.worker.js): esegue il parsing CPU-bound in isolamento. */ import {
+* parentPort, workerData } from 'worker_threads'; // Ricevo il buffer
+* trasferito: ho l'ownership completa, zero contesa con il main thread const
+* buffer = Buffer.from(workerData.buffer); const csvText =
+* buffer.toString('utf-8'); function parseCsv(text) { const lines = text.split('
+'); const headers = lines[0].split(','); const rows = []; // Parsing CPU-bound:
+non blocca più l'Event Loop del main thread for (let i = 1; i < lines.length;
+i++) { if (lines[i].trim() === '') continue; const values = lines[i].split(',');
+const row = {}; headers.forEach((header, idx) => { row[header.trim()] =
+values[idx]?.trim(); }); rows.push(row); // Invio aggiornamenti di progresso
+ogni 10000 righe senza aspettare la fine if (i % 10_000 === 0) {
+parentPort.postMessage({ type: 'progress', processed: i, total: lines.length });
+} } return rows; } const result = parseCsv(csvText); // Ritrasferisco i dati
+risultanti come ArrayBuffer per evitare la copia const resultJson =
+JSON.stringify(result); const resultBuffer = Buffer.from(resultJson).buffer;
+parentPort.postMessage( { type: 'result', buffer: resultBuffer }, [resultBuffer]
+// Zero-copy transfer del risultato ); /* Per browser, uso Web Workers con la
+stessa logica di trasferimento: */ // main.js (browser) function
+parseCsvInWorker(file) { return new Promise((resolve, reject) => { const worker
+= new Worker('/workers/csv-parser.js'); file.arrayBuffer().then(buffer => {
+worker.postMessage({ buffer }, [buffer]); // Transferable: zero copy });
+worker.onmessage = (e) => { if (e.data.type === 'progress') {
+updateProgressBar(e.data.processed / e.data.total * 100); } else if (e.data.type
+=== 'result') { const result =
+JSON.parse(Buffer.from(e.data.buffer).toString()); resolve(result);
+worker.terminate(); } }; worker.onerror = reject; }); } /* Per task CPU-bound
+ripetitivi, uso un Worker Pool per evitare il costo di creazione del Worker: */
+class WorkerPool { constructor(workerScript, poolSize =
+navigator.hardwareConcurrency) { this.workers = Array.from({ length: poolSize },
+() => new Worker(workerScript)); this.queue = []; this.idle = [...this.workers];
+this.workers.forEach(w => { w.onmessage = (e) => { const resolve =
+w._currentResolve; w._currentResolve = null; this.idle.push(w);
+this._processQueue(); resolve(e.data); }; }); } submit(data, transferables = [])
+{ return new Promise((resolve) => { this.queue.push({ data, transferables,
+resolve }); this._processQueue(); }); } _processQueue() { if (this.queue.length
+> 0 && this.idle.length > 0) { const worker = this.idle.pop(); const { data,
+transferables, resolve } = this.queue.shift(); worker._currentResolve = resolve;
+worker.postMessage(data, transferables); } } }
 ```

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Autovacuum Tuning (Cost-Based)"
-date: 2026-03-31 19:00:53 
+date: 2026-03-31 19:22:12 
 sintesi: "L'Autovacuum è fondamentale per recuperare lo spazio delle tuple morte, ma se non configurato correttamente può essere troppo timido o troppo aggressivo. PostgreSQL usa un sistema a punti (costo) per limitare l'impatto dell'I/O: ogni operazione consu"
 tech: db
 tags: [db, "vacuum & storage"]
@@ -17,5 +17,16 @@ Problema: Il Vacuum è troppo lento rispetto alla velocità di generazione delle
 ## Esempio Implementativo
 
 ```db
-/* Regolo i parametri per rendere il vacuum più aggressivo sulla tabella critica, senza toccare i default dell'intero cluster */ ALTER TABLE high_traffic_table SET (autovacuum_vacuum_cost_limit = 1000, autovacuum_vacuum_cost_delay = 10); /* Verifico che i nuovi parametri siano applicati */ SELECT reloptions FROM pg_class WHERE relname = 'high_traffic_table'; /* Monitoro il progresso in tempo reale durante un vacuum manuale */ VACUUM (VERBOSE, ANALYZE) high_traffic_table; /* Controllo quante dead tuples si accumulano nel tempo: se n_dead_tup cresce più veloce del vacuum, alzo ancora il limite */ SELECT relname, n_live_tup, n_dead_tup, last_autovacuum, last_autoanalyze FROM pg_stat_user_tables WHERE relname = 'high_traffic_table'; /* Se necessario, forzo un vacuum manuale fuori orario di punta */ VACUUM ANALYZE high_traffic_table;
+/* Regolo i parametri per rendere il vacuum più aggressivo sulla tabella critica,
+* senza toccare i default dell'intero cluster */ ALTER TABLE high_traffic_table
+* SET (autovacuum_vacuum_cost_limit = 1000, autovacuum_vacuum_cost_delay = 10);
+* /* Verifico che i nuovi parametri siano applicati */ SELECT reloptions FROM
+* pg_class WHERE relname = 'high_traffic_table'; /* Monitoro il progresso in
+* tempo reale durante un vacuum manuale */ VACUUM (VERBOSE, ANALYZE)
+* high_traffic_table; /* Controllo quante dead tuples si accumulano nel tempo:
+* se n_dead_tup cresce più veloce del vacuum, alzo ancora il limite */ SELECT
+* relname, n_live_tup, n_dead_tup, last_autovacuum, last_autoanalyze FROM
+* pg_stat_user_tables WHERE relname = 'high_traffic_table'; /* Se necessario,
+* forzo un vacuum manuale fuori orario di punta */ VACUUM ANALYZE
+* high_traffic_table;
 ```

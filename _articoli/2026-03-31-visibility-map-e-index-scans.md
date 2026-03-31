@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Visibility Map e Index Scans"
-date: 2026-03-31 19:00:53 
+date: 2026-03-31 19:22:12 
 sintesi: "La Visibility Map (VM) è un file che indica a Postgres quali blocchi contengono solo tuple visibili a tutti. Senza una VM aggiornata, gli Index-Only Scans non funzionano: il DB deve comunque leggere la tabella per verificare la visibilità. Il Vacuum "
 tech: db
 tags: [db, "vacuum & storage"]
@@ -17,5 +17,15 @@ Problema: Query che dovrebbero usare solo l'indice risultano lente perché devon
 ## Esempio Implementativo
 
 ```db
-/* Controllo la percentuale di pagine visibili: se è bassa, l'Index-Only Scan non sarà efficace */ SELECT relname, relpages, relallvisible, round((relallvisible::float / NULLIF(relpages::float, 0)) * 100, 2) AS visibility_pct FROM pg_class WHERE relname = 'orders'; /* Se visibility_pct < 90, forzo un vacuum per aggiornare la VM */ VACUUM (ANALYZE) orders; /* Verifico con EXPLAIN che il piano usi effettivamente un Index-Only Scan */ EXPLAIN (ANALYZE, BUFFERS) SELECT COUNT(*) FROM orders WHERE status = 'completed'; /* Dopo il vacuum, il piano deve mostrare "Index Only Scan" e "Heap Fetches: 0" */ /* Monitoro nel tempo: se visibility_pct scende di nuovo rapidamente, l'autovacuum è ancora troppo lento */ SELECT relname, last_autovacuum, n_dead_tup FROM pg_stat_user_tables WHERE relname = 'orders';
+/* Controllo la percentuale di pagine visibili: se è bassa, l'Index-Only Scan non
+* sarà efficace */ SELECT relname, relpages, relallvisible,
+* round((relallvisible::float / NULLIF(relpages::float, 0)) * 100, 2) AS
+* visibility_pct FROM pg_class WHERE relname = 'orders'; /* Se visibility_pct <
+* 90, forzo un vacuum per aggiornare la VM */ VACUUM (ANALYZE) orders; /*
+* Verifico con EXPLAIN che il piano usi effettivamente un Index-Only Scan */
+* EXPLAIN (ANALYZE, BUFFERS) SELECT COUNT(*) FROM orders WHERE status =
+* 'completed'; /* Dopo il vacuum, il piano deve mostrare "Index Only Scan" e
+* "Heap Fetches: 0" */ /* Monitoro nel tempo: se visibility_pct scende di nuovo
+* rapidamente, l'autovacuum è ancora troppo lento */ SELECT relname,
+* last_autovacuum, n_dead_tup FROM pg_stat_user_tables WHERE relname = 'orders';
 ```

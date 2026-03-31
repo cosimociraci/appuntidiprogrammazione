@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "VarHandle per Accesso Atomico"
-date: 2026-03-31 19:00:05 
+date: 2026-03-31 19:21:21 
 sintesi: "Prima di Java 9, per l'accesso low-level alla memoria si usava sun.misc.Unsafe, una API interna e pericolosa. VarHandle offre la stessa potenza di Unsafe (operazioni CAS, memory fences) ma in modo sicuro e standard. Un VarHandle permette di manipolar"
 tech: java
 tags: [java, "advanced reflection & metaprogr"]
@@ -17,5 +17,50 @@ Problema: Necessità di eseguire operazioni atomiche su campi di classi esistent
 ## Esempio Implementativo
 
 ```java
-/* Ottengo i VarHandle per i campi che devono essere modificati atomicamente. Come per MethodHandle, la risoluzione avviene una sola volta in un blocco static: il costo è allo startup, non a runtime. */ public class LockFreeStack<T> { private static final VarHandle HEAD_VH; private static final VarHandle NEXT_VH; static { try { MethodHandles.Lookup lookup = MethodHandles.lookup(); HEAD_VH = lookup.findVarHandle(LockFreeStack.class, "head", Node.class); NEXT_VH = lookup.findVarHandle(Node.class, "next", Node.class); } catch (NoSuchFieldException | IllegalAccessException e) { throw new ExceptionInInitializerError(e); } } private volatile Node<T> head = null; private static class Node<T> { final T value; volatile Node<T> next; Node(T value, Node<T> next) { this.value = value; this.next = next; } } /* Push lock-free: uso CAS per aggiornare head atomicamente. Se un altro thread ha modificato head nel frattempo, il CAS fallisce e riprovo. */ public void push(T value) { Node<T> newNode = new Node<>(value, null); Node<T> currentHead; do { currentHead = (Node<T>) HEAD_VH.getVolatile(this); NEXT_VH.set(newNode, currentHead); // Non ho bisogno di atomicità qui } while (!HEAD_VH.compareAndSet(this, currentHead, newNode)); // CAS atomico } /* Pop lock-free: rimuovo la testa in modo atomico. */ public T pop() { Node<T> currentHead; Node<T> newHead; do { currentHead = (Node<T>) HEAD_VH.getVolatile(this); if (currentHead == null) return null; // Stack vuoto newHead = (Node<T>) NEXT_VH.getVolatile(currentHead); } while (!HEAD_VH.compareAndSet(this, currentHead, newHead)); return currentHead.value; } } /* VarHandle supporta anche le memory fence esplicite per controllo fine dell'ordinamento della memoria: */ public class ProgressTracker { private volatile int progress = 0; private static final VarHandle PROGRESS_VH; static { try { PROGRESS_VH = MethodHandles.lookup() .findVarHandle(ProgressTracker.class, "progress", int.class); } catch (Exception e) { throw new ExceptionInInitializerError(e); } } public void updateProgress(int newValue) { PROGRESS_VH.setRelease(this, newValue); // Memory fence: garantisce che le scritture precedenti siano visibili } public int readProgress() { return (int) PROGRESS_VH.getAcquire(this); // Memory fence: garantisce la lettura aggiornata } public boolean tryComplete(int expectedProgress) { return PROGRESS_VH.compareAndSet(this, expectedProgress, 100); // CAS nativo } } /* In Spring Boot, uso VarHandle per implementare un rate limiter lock-free: */ @Component public class LockFreeRateLimiter { private volatile long lastRefillTime = System.nanoTime(); private volatile int availableTokens; private final int maxTokens; private static final VarHandle TOKENS_VH; private static final VarHandle TIME_VH; static { try { MethodHandles.Lookup lookup = MethodHandles.lookup(); TOKENS_VH = lookup.findVarHandle(LockFreeRateLimiter.class, "availableTokens", int.class); TIME_VH = lookup.findVarHandle(LockFreeRateLimiter.class, "lastRefillTime", long.class); } catch (Exception e) { throw new ExceptionInInitializerError(e); } } public boolean tryAcquire() { refillIfNeeded(); int current; do { current = (int) TOKENS_VH.getVolatile(this); if (current <= 0) return false; // Nessun token disponibile } while (!TOKENS_VH.compareAndSet(this, current, current - 1)); return true; } }
+/* Ottengo i VarHandle per i campi che devono essere modificati atomicamente.
+* Come per MethodHandle, la risoluzione avviene una sola volta in un blocco
+* static: il costo è allo startup, non a runtime. */ public class
+* LockFreeStack<T> { private static final VarHandle HEAD_VH; private static
+* final VarHandle NEXT_VH; static { try { MethodHandles.Lookup lookup =
+* MethodHandles.lookup(); HEAD_VH = lookup.findVarHandle(LockFreeStack.class,
+* "head", Node.class); NEXT_VH = lookup.findVarHandle(Node.class, "next",
+* Node.class); } catch (NoSuchFieldException | IllegalAccessException e) { throw
+* new ExceptionInInitializerError(e); } } private volatile Node<T> head = null;
+* private static class Node<T> { final T value; volatile Node<T> next; Node(T
+* value, Node<T> next) { this.value = value; this.next = next; } } /* Push lock-
+* free: uso CAS per aggiornare head atomicamente. Se un altro thread ha
+* modificato head nel frattempo, il CAS fallisce e riprovo. */ public void
+* push(T value) { Node<T> newNode = new Node<>(value, null); Node<T>
+* currentHead; do { currentHead = (Node<T>) HEAD_VH.getVolatile(this);
+* NEXT_VH.set(newNode, currentHead); // Non ho bisogno di atomicità qui } while
+* (!HEAD_VH.compareAndSet(this, currentHead, newNode)); // CAS atomico } /* Pop
+* lock-free: rimuovo la testa in modo atomico. */ public T pop() { Node<T>
+* currentHead; Node<T> newHead; do { currentHead = (Node<T>)
+* HEAD_VH.getVolatile(this); if (currentHead == null) return null; // Stack
+* vuoto newHead = (Node<T>) NEXT_VH.getVolatile(currentHead); } while
+* (!HEAD_VH.compareAndSet(this, currentHead, newHead)); return
+* currentHead.value; } } /* VarHandle supporta anche le memory fence esplicite
+* per controllo fine dell'ordinamento della memoria: */ public class
+* ProgressTracker { private volatile int progress = 0; private static final
+* VarHandle PROGRESS_VH; static { try { PROGRESS_VH = MethodHandles.lookup()
+* .findVarHandle(ProgressTracker.class, "progress", int.class); } catch
+* (Exception e) { throw new ExceptionInInitializerError(e); } } public void
+* updateProgress(int newValue) { PROGRESS_VH.setRelease(this, newValue); //
+* Memory fence: garantisce che le scritture precedenti siano visibili } public
+* int readProgress() { return (int) PROGRESS_VH.getAcquire(this); // Memory
+* fence: garantisce la lettura aggiornata } public boolean tryComplete(int
+* expectedProgress) { return PROGRESS_VH.compareAndSet(this, expectedProgress,
+* 100); // CAS nativo } } /* In Spring Boot, uso VarHandle per implementare un
+* rate limiter lock-free: */ @Component public class LockFreeRateLimiter {
+* private volatile long lastRefillTime = System.nanoTime(); private volatile int
+* availableTokens; private final int maxTokens; private static final VarHandle
+* TOKENS_VH; private static final VarHandle TIME_VH; static { try {
+* MethodHandles.Lookup lookup = MethodHandles.lookup(); TOKENS_VH =
+* lookup.findVarHandle(LockFreeRateLimiter.class, "availableTokens", int.class);
+* TIME_VH = lookup.findVarHandle(LockFreeRateLimiter.class, "lastRefillTime",
+* long.class); } catch (Exception e) { throw new ExceptionInInitializerError(e);
+* } } public boolean tryAcquire() { refillIfNeeded(); int current; do { current
+* = (int) TOKENS_VH.getVolatile(this); if (current <= 0) return false; // Nessun
+* token disponibile } while (!TOKENS_VH.compareAndSet(this, current, current -
+* 1)); return true; } }
 ```

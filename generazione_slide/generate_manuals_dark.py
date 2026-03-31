@@ -171,7 +171,7 @@ async def run_gen(selected_techs, output_format):
                     
                     slides = []
                     # 1. Cover
-                    slides.append(f'<div class="slide cover-slide"><div class="cover-badge">{tech.upper()}</div><h1 class="cover-title">{titolo}</h1><div style="margin-top:40px; color:var(--tech-accent); font-weight:900; font-size:24px;">appuntidiprogrammazione.it</div></div>')
+                    slides.append(f'<div class="slide cover-slide"><div class="cover-badge">{tech.upper()}</div><h1 class="cover-title">{titolo}</h1><div style="margin-top:40px; color:var(--tech-accent); font-weight:900; font-size:24px;">https://icarocomix.github.io/appuntidiprogrammazione</div></div>')
                     # 2. Analisi
                     analisi = process_text_formatting(row.get('ANALISI TECNICA', row.get('SINTESI DEL PROBLEMA', '')))
                     slides.append(f'<div class="slide content-slide"><div class="header"><h1>{titolo}</h1></div><span class="section-label">Analisi Tecnica</span><div class="section-content">{analisi}</div></div>')
@@ -193,7 +193,7 @@ async def run_gen(selected_techs, output_format):
                             <span class="console-prompt">></span><span class="console-key">Requisito:</span><br>
                             <span class="console-val-accent" style="margin-left:45px;">Click sull'icona Segnalibro</span>
                         </div>
-                        <div class="cta-footer">@appuntidiprogrammazione.it</div>
+                        <div class="cta-footer">https://icarocomix.github.io/appuntidiprogrammazione</div>
                     </div>
                     """)
 
