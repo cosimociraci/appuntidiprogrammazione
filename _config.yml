@@ -50,8 +50,14 @@ defaults:
 markdown: kramdown
 highlighter: rouge
 kramdown:
-  input: GFM
+  input: GFM                    # Abilita GitHub Flavored Markdown
   syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    span:
+      line_numbers: false
+    block:
+      line_numbers: true        # Utile per il codice lungo
+      wrap: true                # Forza il wrapping se Rouge lo supporta
 
 # ==========================================
 # 6. ESCLUSIONI (File ignorati da Jekyll)

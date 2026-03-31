@@ -2,47 +2,70 @@
 layout: default
 ---
 <article class="article-card">
-  <h1>{{ page.title }}</h1>
-  <p class="date">{{ page.date | date: "%d/%m/%Y" }}</p>
+  <h1 class="post-main-title" style="margin-bottom: 10px;">{{ page.title }}</h1>
+  
+  <p class="post-date" style="margin-bottom: 20px; font-weight: bold; color: #555;">
+    Data: {{ page.date | date: "%d/%m/%Y" }}
+  </p>
 
-  <div class="tags">
+  <div class="tags-container" style="margin-bottom: 30px; display: flex; gap: 12px; flex-wrap: wrap;">
     {% for tag in page.tags %}
-      <span class="tag-btn">{{ tag }}</span>
+      <span class="tag-btn" style="padding: 6px 16px; border: 3px solid #000; background: #fff; font-weight: 800; box-shadow: 4px 4px 0px #000; text-transform: uppercase; font-size: 0.85rem;">
+        {{ tag }}
+      </span>
     {% endfor %}
   </div>
 
-  {% if page.sintesi %}
-  <section>
-    <span class="section-label">SINTESI DEL PROBLEMA</span>
-    <p>{{ page.sintesi }}</p>
-  </section>
-  {% endif %}
+  <div class="article-body" style="margin-top: 20px;">
+    
+    {% if page.sintesi %}
+    <section class="neo-section" style="margin-bottom: 45px;">
+      <h2 class="neo-h2-label" style="background: #000; color: #fff; display: inline-block; padding: 5px 15px; margin-bottom: 15px; font-size: 1.2rem; border: 3px solid #000; box-shadow: 4px 4px 0px #ffde03; font-family: sans-serif; font-weight: 900;">
+        SINTESI DEL PROBLEMA
+      </h2>
+      <p class="section-text" style="font-size: 1.1rem; line-height: 1.6; margin-left: 5px;">
+        {{ page.sintesi }}
+      </p>
+    </section>
+    {% endif %}
 
-  {% if page.esigenza %}
-  <section>
-    <span class="section-label">ESIGENZA REALE</span>
-    <p>{{ page.esigenza }}</p>
-  </section>
-  {% endif %}
+    {% if page.esigenza and page.esigenza != "N/A" %}
+    <section class="neo-section" style="margin-bottom: 45px;">
+      <h2 class="neo-h2-label" style="background: #000; color: #fff; display: inline-block; padding: 5px 15px; margin-bottom: 15px; font-size: 1.2rem; border: 3px solid #000; box-shadow: 4px 4px 0px #00ff00; font-family: sans-serif; font-weight: 900;">
+        ESIGENZA REALE
+      </h2>
+      <p class="section-text" style="font-size: 1.1rem; line-height: 1.6; margin-left: 5px;">
+        {{ page.esigenza }}
+      </p>
+    </section>
+    {% endif %}
 
-  <section class="analysis">
-    <span class="section-label">ANALISI TECNICA</span>
-    <div class="content">
-      {{ content }}
-    </div>
-  </section>
+    <section class="neo-section analysis" style="margin-bottom: 45px;">
+      <h2 class="neo-h2-label" style="background: #000; color: #fff; display: inline-block; padding: 5px 15px; margin-bottom: 15px; font-size: 1.2rem; border: 3px solid #000; box-shadow: 4px 4px 0px #00d4ff; font-family: sans-serif; font-weight: 900;">
+        ANALISI TECNICA
+      </h2>
+      <div class="markdown-content" style="line-height: 1.8; margin-left: 5px;">
+        {{ content }}
+      </div>
+    </section>
 
-  {% if page.codice %}
-  <section>
-    <span class="section-label">ESEMPIO IMPLEMENTATIVO</span>
-    <div class="code-block">
-      {% comment %}
-        Usiamo il backtick o il tag pre per evitare l'errore di sintassi di Liquid
-      {% endcomment %}
-      <pre><code class="language-{{ page.tech | default: 'java' }}">
-{{ page.codice }}
-      </code></pre>
-    </div>
-  </section>
-  {% endif %}
-</article>
+    {% if page.codice %}
+    <section class="neo-section code-section" style="margin-bottom: 60px;">
+      <h2 class="neo-h2-label" style="background: #000; color: #fff; display: inline-block; padding: 5px 15px; margin-bottom: 15px; font-size: 1.2rem; border: 3px solid #000; box-shadow: 4px 4px 0px #ff4e00; font-family: sans-serif; font-weight: 900;">
+        ESEMPIO IMPLEMENTATIVO
+      </h2>
+      <div class="code-block neo-code" style="background: #1e1e1e; color: #fff; border: 3px solid #000; padding: 25px; box-shadow: 10px 10px 0px #000; overflow-x: auto;">
+        {% capture code_lang %}{{ page.tech | default: 'java' }}{% endcapture %}
+        {% highlight {{ code_lang }} %}
+        {{ page.codice }}
+        {% endhighlight %}
+      </div>
+    </section>
+    {% endif %}
+
+  </div> </article>
+
+<style>
+  .neo-h2-label { font-family: sans-serif; }
+  .code-block pre { margin: 0; white-space: pre-wrap; }
+</style>
