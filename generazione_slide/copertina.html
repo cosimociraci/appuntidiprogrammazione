@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Anteprima Copertina Slide</title>
+    <style>
+        /* Sfondo scuro e font professionali */
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Poppins:wght@300&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000; /* Sfondo Nero Assoluto */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Contenitore Slide (Proporzioni 16:9 simulate) */
+        .slide-preview {
+            width: 1000px; /* Larghezza simulata per il browser */
+            height: 562.5px; /* Altezza simulata 16:9 */
+            background-color: #111; /* Antracite profondo */
+            box-sizing: border-box;
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Spazia gli elementi top/bottom */
+            position: relative;
+            border: 2px solid #333; /* Bordo per simulare la slide */
+        }
+
+        /* Filigrana geometrica di sfondo (opzionale) */
+        .slide-preview::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(30deg, #1a1a1a 12%, transparent 12.5%, transparent 87%, #1a1a1a 87.5%, #1a1a1a),
+                              linear-gradient(150deg, #1a1a1a 12%, transparent 12.5%, transparent 87%, #1a1a1a 87.5%, #1a1a1a),
+                              linear-gradient(30deg, #1a1a1a 12%, transparent 12.5%, transparent 87%, #1a1a1a 87.5%, #1a1a1a),
+                              linear-gradient(150deg, #1a1a1a 12%, transparent 12.5%, transparent 87%, #1a1a1a 87.5%, #1a1a1a);
+            background-size: 80px 140px;
+            background-position: 0 0, 0 0, 40px 70px, 40px 70px;
+            opacity: 0.2;
+        }
+
+        /* 1. La Categoria (Tecnologia) - Top Left */
+        .category-badge {
+            background-color: #FFD600; /* Giallo Cyber per Java/JS */
+            color: #000;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 20px;
+            padding: 10px 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: inline-block;
+            align-self: flex-start;
+            z-index: 10;
+        }
+
+        /* Contenitore Testo Centrale */
+        .titles-container {
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            flex-grow: 1; /* Occupa lo spazio centrale */
+        }
+
+        /* 2. Il Contesto (Nome Foglio) - Centro */
+        .sheet-name {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 300;
+            font-size: 32px;
+            color: #AAA; /* Grigio chiaro per non distrarre */
+            margin: 0 0 10px 0;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        /* 3. Il Soggetto (Nome File) - Centro/Basso */
+        .file-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 65px;
+            color: #FFF; /* Bianco Puro per il protagonista */
+            margin: 0;
+            line-height: 1.1;
+            letter-spacing: -2px;
+        }
+
+        /* Linea di accento colorata */
+        .accent-line {
+            width: 100px;
+            height: 8px;
+            background-color: #FF4081; /* Cyber Pink */
+            margin-top: 30px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="slide-preview">
+        <div class="category-badge">JAVA ARCHITECTURE</div>
+
+        <div class="titles-container">
+            <div class="sheet-name">Memory and Performance</div>
+            
+            <h1 class="file-title">NIO Direct<br>Buffer Tuning</h1>
+            
+            <div class="accent-line"></div>
+        </div>
+    </div>
+
+</body>
+</html>
