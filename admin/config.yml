@@ -1,9 +1,13 @@
-local_backend: true
-display_url: http://localhost:8000
 backend:
   name: github
   repo: cosimociraci/appuntidiprogrammazione
   branch: main
+  # AGGIUNTA FONDAMENTALE PER IL LOGIN
+  base_url: https://api.staticcms.org
+  auth_endpoint: /auth
+
+local_backend: true
+display_url: https://cosimociraci.github.io/appuntidiprogrammazione
 
 media_folder: "assets/img"
 public_folder: "/assets/img"
@@ -11,7 +15,8 @@ public_folder: "/assets/img"
 collections:
   - name: "articoli"
     label: "Articoli di Programmazione"
-    folder: "data/articoli"
+    # CORRETTO: Jekyll legge solo se c'è l'underscore
+    folder: "_articoli" 
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
