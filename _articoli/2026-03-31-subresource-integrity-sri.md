@@ -1,55 +1,20 @@
 ---
 layout: post
-title: Subresource Integrity (SRI)
-date: '2026-03-31 16:25:01 '
-sintesi: 'Caricare librerie da CDN esterne è un rischio: se la CDN viene compromessa,
-  lo script può essere sostituito con malware. Lo standard SRI richiede l''aggiunta
-  dell''attributo integrity con l''hash crittografico del file. Il browser scaricherà
-  il file, ne'
-esigenza: Garantire la sicurezza degli asset statici caricati da infrastrutture di
-  terze parti non controllate direttamente.
+title: "Subresource Integrity (SRI)"
+date: 2026-03-31 16:39:57 
 tech: js
-tags:
-- js
-- security & cryptography
-codice: '/* ATTRIBUTO SRI: il browser calcola SHA-384 del file scaricato e lo confronta
-  con il valore dichiarato. Se non corrisponde, lo script viene bloccato e la pagina
-  riceve un errore di rete. */ <!-- jQuery da CDN con SRI: --> <script src="https://code.jquery.com/jquery-3.7.1.min.js"
-  integrity="sha384-1H217gwSVyLSIfaLxHbE7dRb3v4mYCKbpQvzx0cegeju1MVsGrX5xXxAvs/HgeFs"
-  crossorigin="anonymous"></script> <!-- Bootstrap CSS con SRI: --> <link rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
-  crossorigin="anonymous"> /* Genero l''hash SRI in Node.js durante il processo di
-  build per automatizzare l''aggiornamento: */ const crypto = require(''crypto'');
-  const https = require(''https''); async function generateSriHash(url) { return new
-  Promise((resolve, reject) => { https.get(url, (response) => { const hash = crypto.createHash(''sha384'');
-  response.on(''data'', chunk => hash.update(chunk)); response.on(''end'', () => {
-  const digest = hash.digest(''base64''); resolve(`sha384-${digest}`); }); response.on(''error'',
-  reject); }); }); } // Uso nello script di build: async function updateSriHashes()
-  { const assets = [ { url: ''https://code.jquery.com/jquery-3.7.1.min.js'', name:
-  ''jQuery'' }, { url: ''https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js'',
-  name: ''Bootstrap'' } ]; for (const asset of assets) { const hash = await generateSriHash(asset.url);
-  console.log(`${asset.name}: integrity="${hash}"`); } } /* Verifico l''hash SRI di
-  un file locale per confrontarlo con quello della CDN (audit): */ const fs = require(''fs'');
-  function verifySriHash(filePath, expectedHash) { const content = fs.readFileSync(filePath);
-  const [algorithm, expectedDigest] = expectedHash.split(''-''); const actualDigest
-  = crypto.createHash(algorithm).update(content).digest(''base64''); const isValid
-  = crypto.timingSafeEqual( Buffer.from(actualDigest, ''base64''), Buffer.from(expectedDigest,
-  ''base64'') ); if (!isValid) { console.error(`ALERT: Hash SRI non corrisponde per
-  ${filePath}`); console.error(`Atteso: ${expectedHash}`); console.error(`Trovato:
-  ${algorithm}-${actualDigest}`); process.exit(1); // Blocco la build } return true;
-  } /* Politica di sicurezza completa: uso SRI in combinazione con CSP per richiedere
-  SRI su tutti gli script esterni: */ // Nel CSP header aggiungo la direttiva require-sri-for:
-  res.setHeader(''Content-Security-Policy'', [ // ... altre direttive ... `require-sri-for
-  script style`, // Blocca qualsiasi script/CSS esterno senza attributo integrity
-  `script-src ''self'' ''nonce-${nonce}'' https://code.jquery.com https://cdn.jsdelivr.net`
-  ].join(''; '')); /* Per i tag generati dinamicamente lato server (Spring Boot /
-  Thymeleaf), configuro un helper che genera automaticamente il tag script con SRI:
-  */ // @Component // public class SriHelper { // private final Map<String, String>
-  sriHashes; // // Carico gli hash da un file generato durante la build // // public
-  String scriptTag(String url) { // String hash = sriHashes.get(url); // if (hash
-  == null) throw new IllegalArgumentException("Nessun hash SRI per: " + url); // return
-  String.format("<script src=\"%s\" integrity=\"%s\" crossorigin=\"anonymous\"></script>",
-  url, hash); // } // }'
+tags: ['js', 'security & cryptography']
+pdf_file: "subresource-integrity-sri.pdf"
 ---
 
+## Esigenza Reale
+Garantire la sicurezza degli asset statici caricati da infrastrutture di terze parti non controllate direttamente.
+
+## Analisi Tecnica
 Problema: Rischio di "Supply Chain Attack" tramite la manomissione di script distribuiti via reti CDN globali. Perché: Uso il controllo di integrità crittografica. Ho scelto SRI per delegare al browser il compito di verificare che il codice di terze parti non sia stato alterato durante il transito o sulla sorgente.
+
+## Esempio Implementativo
+
+```js
+/* ATTRIBUTO SRI: il browser calcola SHA-384 del file scaricato e lo confronta con il valore dichiarato. Se non corrisponde, lo script viene bloccato e la pagina riceve un errore di rete. */ <!-- jQuery da CDN con SRI: --> <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha384-1H217gwSVyLSIfaLxHbE7dRb3v4mYCKbpQvzx0cegeju1MVsGrX5xXxAvs/HgeFs" crossorigin="anonymous"></script> <!-- Bootstrap CSS con SRI: --> <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous"> /* Genero l'hash SRI in Node.js durante il processo di build per automatizzare l'aggiornamento: */ const crypto = require('crypto'); const https = require('https'); async function generateSriHash(url) { return new Promise((resolve, reject) => { https.get(url, (response) => { const hash = crypto.createHash('sha384'); response.on('data', chunk => hash.update(chunk)); response.on('end', () => { const digest = hash.digest('base64'); resolve(`sha384-${digest}`); }); response.on('error', reject); }); }); } // Uso nello script di build: async function updateSriHashes() { const assets = [ { url: 'https://code.jquery.com/jquery-3.7.1.min.js', name: 'jQuery' }, { url: 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js', name: 'Bootstrap' } ]; for (const asset of assets) { const hash = await generateSriHash(asset.url); console.log(`${asset.name}: integrity="${hash}"`); } } /* Verifico l'hash SRI di un file locale per confrontarlo con quello della CDN (audit): */ const fs = require('fs'); function verifySriHash(filePath, expectedHash) { const content = fs.readFileSync(filePath); const [algorithm, expectedDigest] = expectedHash.split('-'); const actualDigest = crypto.createHash(algorithm).update(content).digest('base64'); const isValid = crypto.timingSafeEqual( Buffer.from(actualDigest, 'base64'), Buffer.from(expectedDigest, 'base64') ); if (!isValid) { console.error(`ALERT: Hash SRI non corrisponde per ${filePath}`); console.error(`Atteso: ${expectedHash}`); console.error(`Trovato: ${algorithm}-${actualDigest}`); process.exit(1); // Blocco la build } return true; } /* Politica di sicurezza completa: uso SRI in combinazione con CSP per richiedere SRI su tutti gli script esterni: */ // Nel CSP header aggiungo la direttiva require-sri-for: res.setHeader('Content-Security-Policy', [ // ... altre direttive ... `require-sri-for script style`, // Blocca qualsiasi script/CSS esterno senza attributo integrity `script-src 'self' 'nonce-${nonce}' https://code.jquery.com https://cdn.jsdelivr.net` ].join('; ')); /* Per i tag generati dinamicamente lato server (Spring Boot / Thymeleaf), configuro un helper che genera automaticamente il tag script con SRI: */ // @Component // public class SriHelper { // private final Map<String, String> sriHashes; // // Carico gli hash da un file generato durante la build // // public String scriptTag(String url) { // String hash = sriHashes.get(url); // if (hash == null) throw new IllegalArgumentException("Nessun hash SRI per: " + url); // return String.format("<script src=\"%s\" integrity=\"%s\" crossorigin=\"anonymous\"></script>", url, hash); // } // }
+```

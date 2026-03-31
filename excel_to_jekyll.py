@@ -8,19 +8,6 @@ from pathlib import Path
 INPUT_DIR = "excel_input"
 OUTPUT_DIR = "_articoli"
 
-# --- FIX PER YAML MULTI-RIGA ---
-# Questo pezzo di codice istruisce yaml.dump a usare lo stile '|' 
-# quando incontra una stringa con ritorni a capo (\n), preservando la formattazione.
-class QuotedString(str):
-    pass
-
-def str_representer(dumper, data):
-    if '\n' in data:
-        return dumper.represent_scalar('tag:yaml.org,2002:str', data, style='|')
-    return dumper.represent_scalar('tag:yaml.org,2002:str', data)
-
-yaml.add_representer(str, str_representer)
-
 def sanitize_filename(text):
     """Genera un nome file pulito per Jekyll"""
     s = str(text).lower()
@@ -31,7 +18,6 @@ def clean_excel_text(text):
     """Normalizza i ritorni a capo da Excel"""
     if pd.isna(text):
         return ""
-    # Trasforma i '\\n' letterali di Excel in veri ritorni a capo
     return str(text).replace("\\n", "\n").replace("\r", "")
 
 def process_excels():
@@ -42,10 +28,7 @@ def process_excels():
         old_file.unlink()
 
     excel_files = list(Path(INPUT_DIR).glob("*.xlsx"))
-    if not excel_files:
-        print(f"⚠️ Nessun file trovato in {INPUT_DIR}")
-        return
-
+    
     for file in excel_files:
         tech_name = file.stem.lower()
         print(f"📦 Elaborazione: {tech_name}")
@@ -57,43 +40,44 @@ def process_excels():
             
             for idx, row in df.iterrows():
                 titolo = str(row.get('TITOLO', f'Topic-{idx}'))
-                # Usiamo una data fissa o quella del file se disponibile
                 date_str = pd.Timestamp.now().strftime('%Y-%m-%d')
                 filename = f"{date_str}-{sanitize_filename(titolo)}.md"
                 
-                # 1. Raccolta Codice
-                code_cols = [col for col in df.columns if 'ESEMPIO' in col and pd.notna(row[col])]
-                raw_code = "\n".join([str(row[col]) for col in code_cols])
-                full_code = clean_excel_text(raw_code)
-                
-                # 2. Formattazione Testi
+                # Raccolta e pulizia dati
                 analisi = clean_excel_text(row.get('ANALISI TECNICA', ''))
                 sintesi = clean_excel_text(row.get('SINTESI DEL PROBLEMA', ''))
                 esigenza = clean_excel_text(row.get('ESIGENZA REALE', ''))
                 
-                # 3. Preparazione Tag
+                # Raccolta Codice (Prendiamo tutte le colonne esempio)
+                code_cols = [col for col in df.columns if 'ESEMPIO' in col and pd.notna(row[col])]
+                full_code = "\n".join([clean_excel_text(row[col]) for col in code_cols])
+                
                 tags = [tech_name, sheet_name.lower().replace("_", " ")]
 
-                # 4. Costruzione Frontmatter
-                # Usiamo dict ordinato implicitamente (Python 3.7+)
-                frontmatter_data = {
-                    "layout": "post",
-                    "title": titolo,
-                    "date": pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S %z'),
-                    "sintesi": sintesi[:250],
-                    "esigenza": esigenza,
-                    "tech": tech_name,
-                    "tags": tags,
-                    "codice": full_code.strip() # Il representer ora userà '|' automaticamente
-                }
-
-                # 5. Scrittura File
+                # SCRITTURA MANUALE DEL FILE (Per avere controllo totale sulla struttura)
                 with open(out_path / filename, "w", encoding="utf-8") as f:
                     f.write("---\n")
-                    # allow_unicode è fondamentale per i caratteri accentati
-                    yaml.dump(frontmatter_data, f, allow_unicode=True, sort_keys=False, default_flow_style=False)
+                    f.write(f"layout: post\n")
+                    f.write(f"title: \"{titolo}\"\n")
+                    f.write(f"date: {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S %z')}\n")
+                    f.write(f"tech: {tech_name}\n")
+                    f.write(f"tags: {tags}\n")
+                    # Riferimento al PDF automatico basato sullo slug del file
+                    f.write(f"pdf_file: \"{sanitize_filename(titolo)}.pdf\"\n")
                     f.write("---\n\n")
-                    f.write(analisi)
+                    
+                    # CORPO DEL FILE (Markdown puro)
+                    if esigenza:
+                        f.write(f"## Esigenza Reale\n{esigenza}\n\n")
+                    
+                    if analisi:
+                        f.write(f"## Analisi Tecnica\n{analisi}\n\n")
+                    
+                    if full_code:
+                        f.write(f"## Esempio Implementativo\n\n")
+                        f.write(f"```{tech_name}\n")
+                        f.write(f"{full_code}\n")
+                        f.write(f"```\n")
                 
                 print(f"  ✅ {filename}")
 
