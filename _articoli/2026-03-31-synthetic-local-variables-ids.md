@@ -1,7 +1,8 @@
 ---
 layout: post
 title: "Synthetic Local Variables (#ids)"
-date: 2026-03-31 16:39:57 
+date: 2026-03-31 16:50:23 
+sintesi: "In loop complessi, generare ID univoci per l'accessibilità (ARIA) o per JS è difficile. L'oggetto #ids.seq('myId') genera una sequenza incrementale che persiste per tutta la richiesta. Questo garantisce che i tag label e input siano sempre sincronizz"
 tech: thymeleaf
 tags: ['thymeleaf', 'advanced layout & templating']
 pdf_file: "synthetic-local-variables-ids.pdf"

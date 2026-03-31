@@ -1,7 +1,8 @@
 ---
 layout: post
 title: "Node.js Cluster & Shared Sockets"
-date: 2026-03-31 16:39:57 
+date: 2026-03-31 16:50:23 
+sintesi: "Node.js non scala sui core per default. Il modulo cluster permette al master di creare worker e condividere con loro i file descriptor dei socket. Questo permette a più processi di ascoltare sulla stessa porta. Il master usa un algoritmo Round-Robin "
 tech: js
 tags: ['js', 'node.js internals & libuv']
 pdf_file: "nodejs-cluster-shared-sockets.pdf"

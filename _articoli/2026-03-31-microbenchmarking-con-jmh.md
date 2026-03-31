@@ -1,7 +1,8 @@
 ---
 layout: post
 title: "Microbenchmarking con JMH"
-date: 2026-03-31 16:39:57 
+date: 2026-03-31 16:50:23 
+sintesi: "Misurare le performance con System.currentTimeMillis() è sbagliato a causa del JIT warmup e delle ottimizzazioni JVM. JMH (Java Microbenchmark Harness) è lo standard industriale per misurare nanosecondi reali, gestendo le fasi di riscaldamento e evit"
 tech: java
 tags: ['java', 'memory & performance']
 pdf_file: "microbenchmarking-con-jmh.pdf"

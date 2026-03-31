@@ -1,7 +1,8 @@
 ---
 layout: post
 title: "Dynamic Fragment Injection"
-date: 2026-03-31 16:39:57 
+date: 2026-03-31 16:50:23 
+sintesi: "A volte non si sa quale frammento caricare finché non si è a runtime (es. blocchi di un CMS). L'espressione ~{${path} :: ${name}} permette a Thymeleaf di risolvere prima le stringhe dentro ${} e poi cercare il frammento. Questo permette di implementa"
 tech: thymeleaf
 tags: ['thymeleaf', 'advanced layout & templating']
 pdf_file: "dynamic-fragment-injection.pdf"

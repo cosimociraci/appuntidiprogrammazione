@@ -1,7 +1,8 @@
 ---
 layout: post
 title: "CharSequence vs String.substring"
-date: 2026-03-31 16:39:57 
+date: 2026-03-31 16:50:23 
+sintesi: "In Java, String.substring crea una nuova copia dell'array di caratteri (dalla versione 7u6). Usando CharSequence o viste custom sul buffer originale, si possono manipolare porzioni di testo senza allocare nuova memoria. Passando interfacce CharSequen"
 tech: java
 tags: ['java', 'memory & performance']
 pdf_file: "charsequence-vs-stringsubstring.pdf"

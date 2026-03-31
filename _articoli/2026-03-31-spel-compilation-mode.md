@@ -1,7 +1,8 @@
 ---
 layout: post
 title: "SpEL Compilation Mode"
-date: 2026-03-31 16:39:57 
+date: 2026-03-31 16:50:23 
+sintesi: "Di default, Spring interpreta le espressioni SpEL ogni volta, il che è lento. La modalità spring.expression.compiler.mode=IMMEDIATE forza il compilatore a generare bytecode Java reale per le espressioni più frequenti. Questo riduce drasticamente i ci"
 tech: thymeleaf
 tags: ['thymeleaf', 'performance tuning & caching']
 pdf_file: "spel-compilation-mode.pdf"

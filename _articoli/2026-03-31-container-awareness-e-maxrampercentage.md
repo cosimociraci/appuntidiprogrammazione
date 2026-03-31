@@ -1,7 +1,8 @@
 ---
 layout: post
 title: "Container Awareness e MaxRAMPercentage"
-date: 2026-03-31 16:39:57 
+date: 2026-03-31 16:50:23 
+sintesi: "Eseguire Java in un container senza parametri specifici è pericoloso: la JVM potrebbe vedere la memoria totale dell'host invece dei limiti del container, portando al crash (OOM Kill). L'uso di -XX:MaxRAMPercentage invece di -Xmx statico rende l'immag"
 tech: java
 tags: ['java', 'jvm tuning & garbage collection']
 pdf_file: "container-awareness-e-maxrampercentage.pdf"

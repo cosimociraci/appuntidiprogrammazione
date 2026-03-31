@@ -1,7 +1,8 @@
 ---
 layout: post
 title: "JWT Signature Bypass e Algorithm "none""
-date: 2026-03-31 16:39:57 
+date: 2026-03-31 16:50:23 
+sintesi: "Molte librerie JWT accettano l'algoritmo "none", permettendo a un utente di modificare il payload e rimuovere la firma. Il server deve forzare esplicitamente l'algoritmo atteso (es. HS256 o RS256) e rifiutare qualsiasi token che non corrisponda, igno"
 tech: js
 tags: ['js', 'security & cryptography']
 pdf_file: "jwt-signature-bypass-e-algorithm-none.pdf"

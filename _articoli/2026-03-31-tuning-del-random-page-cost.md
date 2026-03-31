@@ -1,7 +1,8 @@
 ---
 layout: post
 title: "Tuning del Random Page Cost"
-date: 2026-03-31 16:39:58 
+date: 2026-03-31 16:50:23 
+sintesi: "Il Planner di PostgreSQL stima il costo delle scansioni degli indici basandosi sul parametro random_page_cost. Per impostazione predefinita, questo valore è 4.0, un retaggio dell'era dei dischi rotanti (HDD) dove l'accesso casuale era molto più lento"
 tech: db
 tags: ['db', 'query opt. & planner']
 pdf_file: "tuning-del-random-page-cost.pdf"

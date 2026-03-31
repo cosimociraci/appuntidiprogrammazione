@@ -1,7 +1,8 @@
 ---
 layout: post
 title: "Monadi (Maybe, Either) per Error Handling"
-date: 2026-03-31 16:39:57 
+date: 2026-03-31 16:50:23 
+sintesi: "L'abuso di try...catch e controlli if(null) sporca il dominio core. Il pattern Either incapsula effetti collaterali e potenziali fallimenti: Left rappresenta l'errore, Right il successo. Questo permette di concatenare operazioni (.map, .chain) in una"
 tech: js
 tags: ['js', 'design patterns & architecture']
 pdf_file: "monadi-maybe-either-per-error-handling.pdf"

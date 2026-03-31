@@ -1,7 +1,8 @@
 ---
 layout: post
 title: "Evitare il Reflection Stack con th:with"
-date: 2026-03-31 16:39:57 
+date: 2026-03-31 16:50:23 
+sintesi: "Accedere ripetutamente a metodi complessi tramite SpEL all'interno di un ciclo è costoso. L'istruzione th:with crea una variabile locale nel contesto di Thymeleaf. Memorizzando il risultato di una computazione o di una lookup una sola volta per itera"
 tech: thymeleaf
 tags: ['thymeleaf', 'performance tuning & caching']
 pdf_file: "evitare-il-reflection-stack-con-thwith.pdf"

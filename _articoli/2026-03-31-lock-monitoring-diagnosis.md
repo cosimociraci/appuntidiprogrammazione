@@ -1,7 +1,8 @@
 ---
 layout: post
 title: "Lock Monitoring & Diagnosis"
-date: 2026-03-31 16:39:58 
+date: 2026-03-31 16:50:23 
+sintesi: "In un sistema di produzione, i lock "silenziosi" sono i peggiori nemici delle performance. Una transazione dimenticata aperta può bloccare l'intero sistema (es. un VACUUM o una migrazione di schema). È fondamentale avere una vista chiara di chi sta b"
 tech: db
 tags: ['db', 'concorrenza e locking approfond']
 pdf_file: "lock-monitoring-diagnosis.pdf"

@@ -1,7 +1,8 @@
 ---
 layout: post
 title: "Evitare il Context Switch Overhead"
-date: 2026-03-31 16:39:57 
+date: 2026-03-31 16:50:23 
+sintesi: "Passare da Java a Native ha un costo: la JVM deve salvare lo stato dei registri e gestire i safepoint. Chiamate native troppo frequenti a funzioni microscopiche sono controproducenti. La soluzione è "batchare" il lavoro: meglio passare un intero Memo"
 tech: java
 tags: ['java', 'jni & project panama']
 pdf_file: "evitare-il-context-switch-overhead.pdf"

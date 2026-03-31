@@ -1,7 +1,8 @@
 ---
 layout: post
 title: "Libuv Thread Pool & UV_THREADPOOL_SIZE"
-date: 2026-03-31 16:39:57 
+date: 2026-03-31 16:50:23 
+sintesi: "Non tutto in Node è single-threaded: operazioni come FS, DNS e Crypto usano un pool di thread interno. Il default è di soli 4 thread. Saturando questo pool (es. con molti fs.readFile simultanei), le performance crollano. Ottimizzare questa variabile "
 tech: js
 tags: ['js', 'node.js internals & libuv']
 pdf_file: "libuv-thread-pool-uvthreadpoolsize.pdf"

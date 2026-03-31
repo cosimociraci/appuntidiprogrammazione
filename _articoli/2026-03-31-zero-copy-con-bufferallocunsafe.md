@@ -1,7 +1,8 @@
 ---
 layout: post
 title: "Zero-Copy con Buffer.allocUnsafe"
-date: 2026-03-31 16:39:57 
+date: 2026-03-31 16:50:23 
+sintesi: "Buffer.alloc inizializza la memoria a zero, operazione costosa per buffer enormi. Buffer.allocUnsafe alloca un blocco di memoria "sporca" che potrebbe contenere dati sensibili di precedenti operazioni. È estremamente veloce perché bypassa l'inizializ"
 tech: js
 tags: ['js', 'node.js internals & libuv']
 pdf_file: "zero-copy-con-bufferallocunsafe.pdf"

@@ -1,7 +1,8 @@
 ---
 layout: post
 title: "Fillfactor e HOT Updates"
-date: 2026-03-31 16:39:58 
+date: 2026-03-31 16:50:23 
+sintesi: "PostgreSQL permette di fare update "in riga" (Heap Only Tuple) se c'è spazio sufficiente nella stessa pagina disco e se non vengono cambiate colonne indicizzate. Gli HOT updates sono incredibilmente veloci perché non richiedono l'aggiornamento degli "
 tech: db
 tags: ['db', 'vacuum & storage']
 pdf_file: "fillfactor-e-hot-updates.pdf"

@@ -1,7 +1,8 @@
 ---
 layout: post
 title: "Zero-Copy I/O con Memory Mapping"
-date: 2026-03-31 16:39:57 
+date: 2026-03-31 16:50:23 
+sintesi: "Leggere un file da 10GB in Java solitamente richiede di copiarlo dal kernel allo user-space. Il FileChannel.map unito a Panama permette il vero Zero-Copy: il file viene mappato direttamente in un MemorySegment e il sistema operativo caricherà le pagi"
 tech: java
 tags: ['java', 'jni & project panama']
 pdf_file: "zero-copy-io-con-memory-mapping.pdf"

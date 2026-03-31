@@ -1,7 +1,8 @@
 ---
 layout: post
 title: "SSTI (Server-Side Template Injection) Prevention"
-date: 2026-03-31 16:39:57 
+date: 2026-03-31 16:50:23 
+sintesi: "Una vulnerabilità storica di Thymeleaf permette l'esecuzione di codice se il nome della vista è costruito con input utente. Concatenare parametri della request nel percorso della view (return "user/" + lang + "/index") è pericoloso. È necessario usar"
 tech: thymeleaf
 tags: ['thymeleaf', 'security & spel expressions']
 pdf_file: "ssti-server-side-template-injection-prevention.pdf"

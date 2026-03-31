@@ -1,7 +1,8 @@
 ---
 layout: post
 title: "Hot Standby Feedback"
-date: 2026-03-31 16:39:58 
+date: 2026-03-31 16:50:23 
+sintesi: "In una configurazione Master-Replica, può succedere che una query lunga sulla replica venga interrotta perché il Master ha rimosso dei dati (tramite Vacuum) che la replica deve ancora processare. Questo è il "replication conflict". Il meccanismo hot_"
 tech: db
 tags: ['db', 'concorrenza e locking approfond']
 pdf_file: "hot-standby-feedback.pdf"

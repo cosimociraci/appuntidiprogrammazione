@@ -1,7 +1,8 @@
 ---
 layout: post
 title: "GIN Index e Pending List Tuning"
-date: 2026-03-31 16:39:58 
+date: 2026-03-31 16:50:23 
+sintesi: "Gli indici GIN (Generalized Inverted Index) sono fondamentali per la ricerca Full Text e per i campi JSONB, ma sono notoriamente lenti in fase di inserimento perché ogni riga genera molteplici voci nell'indice. Il ruolo della pending_list è centrale:"
 tech: db
 tags: ['db', 'indexing internals']
 pdf_file: "gin-index-e-pending-list-tuning.pdf"

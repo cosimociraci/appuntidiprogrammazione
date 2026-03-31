@@ -1,7 +1,8 @@
 ---
 layout: post
 title: "SP-GiST per Dati Non Bilanciati"
-date: 2026-03-31 16:39:58 
+date: 2026-03-31 16:50:23 
+sintesi: "Lo Space-Partitioned GiST (SP-GiST) è un'evoluzione per strutture dati non bilanciate come alberi radi (quadtree, k-d trees). A differenza di GiST, che divide il set di dati in sotto-insiemi potenzialmente sovrapposti, SP-GiST divide lo spazio in reg"
 tech: db
 tags: ['db', 'indexing internals']
 pdf_file: "sp-gist-per-dati-non-bilanciati.pdf"

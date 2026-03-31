@@ -1,7 +1,8 @@
 ---
 layout: post
 title: "Expression Objects Custom"
-date: 2026-03-31 16:39:57 
+date: 2026-03-31 16:50:23 
+sintesi: "Spesso servono utility nel template (formattazione date particolari, calcoli finanziari) che non appartengono al modello dati. Registrando oggetti tramite IExpressionObjectFactory, è possibile richiamarli con la sintassi ${#myUtils...}, simile ai bui"
 tech: thymeleaf
 tags: ['thymeleaf', 'custom dialects & processors']
 pdf_file: "expression-objects-custom.pdf"

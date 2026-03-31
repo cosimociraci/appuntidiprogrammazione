@@ -1,7 +1,6 @@
 import os
 import pandas as pd
 import re
-import yaml
 from pathlib import Path
 
 # --- CONFIGURAZIONE ---
@@ -18,12 +17,14 @@ def clean_excel_text(text):
     """Normalizza i ritorni a capo da Excel"""
     if pd.isna(text):
         return ""
+    # Trasforma i '\\n' letterali di Excel in veri ritorni a capo
     return str(text).replace("\\n", "\n").replace("\r", "")
 
 def process_excels():
     out_path = Path(OUTPUT_DIR)
     out_path.mkdir(parents=True, exist_ok=True)
     
+    # Pulizia articoli vecchi
     for old_file in out_path.glob("*.md"):
         old_file.unlink()
 
@@ -41,32 +42,37 @@ def process_excels():
             for idx, row in df.iterrows():
                 titolo = str(row.get('TITOLO', f'Topic-{idx}'))
                 date_str = pd.Timestamp.now().strftime('%Y-%m-%d')
+                time_str = pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S %z')
                 filename = f"{date_str}-{sanitize_filename(titolo)}.md"
                 
-                # Raccolta e pulizia dati
+                # Raccolta e pulizia dati per il corpo
                 analisi = clean_excel_text(row.get('ANALISI TECNICA', ''))
-                sintesi = clean_excel_text(row.get('SINTESI DEL PROBLEMA', ''))
                 esigenza = clean_excel_text(row.get('ESIGENZA REALE', ''))
                 
-                # Raccolta Codice (Prendiamo tutte le colonne esempio)
+                # Pulizia sintesi (una sola riga per il frontmatter)
+                sintesi_raw = clean_excel_text(row.get('SINTESI DEL PROBLEMA', ''))
+                sintesi = sintesi_raw.replace("\n", " ").strip()[:250]
+                
+                # Raccolta Codice
                 code_cols = [col for col in df.columns if 'ESEMPIO' in col and pd.notna(row[col])]
                 full_code = "\n".join([clean_excel_text(row[col]) for col in code_cols])
                 
                 tags = [tech_name, sheet_name.lower().replace("_", " ")]
+                pdf_name = f"{sanitize_filename(titolo)}.pdf"
 
-                # SCRITTURA MANUALE DEL FILE (Per avere controllo totale sulla struttura)
+                # SCRITTURA MANUALE
                 with open(out_path / filename, "w", encoding="utf-8") as f:
                     f.write("---\n")
                     f.write(f"layout: post\n")
                     f.write(f"title: \"{titolo}\"\n")
-                    f.write(f"date: {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S %z')}\n")
+                    f.write(f"date: {time_str}\n")
+                    f.write(f"sintesi: \"{sintesi}\"\n")
                     f.write(f"tech: {tech_name}\n")
                     f.write(f"tags: {tags}\n")
-                    # Riferimento al PDF automatico basato sullo slug del file
-                    f.write(f"pdf_file: \"{sanitize_filename(titolo)}.pdf\"\n")
+                    f.write(f"pdf_file: \"{pdf_name}\"\n")
                     f.write("---\n\n")
                     
-                    # CORPO DEL FILE (Markdown puro)
+                    # Corpo del file
                     if esigenza:
                         f.write(f"## Esigenza Reale\n{esigenza}\n\n")
                     

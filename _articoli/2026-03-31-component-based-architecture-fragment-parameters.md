@@ -1,7 +1,8 @@
 ---
 layout: post
 title: "Component-Based Architecture (Fragment Parameters)"
-date: 2026-03-31 16:39:57 
+date: 2026-03-31 16:50:23 
+sintesi: "Passare dati semplici ai frammenti non permette di creare componenti veramente isolati. Passando interi oggetti, classi CSS e fallback ai frammenti, e usando il no-op token _, è possibile definire un valore predefinito nel mockup HTML che viene mante"
 tech: thymeleaf
 tags: ['thymeleaf', 'advanced layout & templating']
 pdf_file: "component-based-architecture-fragment-parameters.pdf"
