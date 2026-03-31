@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "MethodHandle vs Reflection"
-date: 2026-03-31 16:55:13 
+date: 2026-03-31 17:02:46 
 sintesi: "L'API java.lang.reflect.Method è lenta perché esegue controlli di accesso a ogni chiamata e non viene facilmente "inlineata" dal compilatore JIT. MethodHandle (introdotto in Java 7) agisce come un puntatore a funzione tipizzato e costante. Se memoriz"
 tech: java
 tags: ['java', 'advanced reflection & metaprogr']

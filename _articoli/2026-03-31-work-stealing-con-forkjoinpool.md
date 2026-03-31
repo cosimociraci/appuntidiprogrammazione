@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Work-Stealing con ForkJoinPool"
-date: 2026-03-31 16:55:07 
+date: 2026-03-31 17:02:46 
 sintesi: "Per calcoli computazionali pesanti (CPU bound), un pool a dimensione fissa può essere inefficiente se alcuni task sono più lunghi di altri. ForkJoinPool implementa l'algoritmo di work-stealing: i thread inattivi "rubano" lavoro dalle code degli altri"
 tech: java
 tags: ['java', 'concurrency & multithreading']

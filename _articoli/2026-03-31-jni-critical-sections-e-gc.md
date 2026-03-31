@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "JNI Critical Sections e GC"
-date: 2026-03-31 16:55:21 
+date: 2026-03-31 17:02:46 
 sintesi: "Quando il codice nativo JNI è in esecuzione, il GC potrebbe aver bisogno di spostare gli oggetti nell'heap, ma non può farlo se il C sta usando i puntatori (pinning). Il rischio è bloccare il GC (Stop-The-World prolungato) a causa di thread nativi "l"
 tech: java
 tags: ['java', 'jni & project panama']

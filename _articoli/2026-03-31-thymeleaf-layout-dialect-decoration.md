@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Thymeleaf Layout Dialect (Decoration)"
-date: 2026-03-31 16:55:36 
+date: 2026-03-31 17:02:46 
 sintesi: "Il semplice th:replace causa duplicazione di intestazioni e meta-tag. Il pattern layout:decorate permette a un "Base Layout" di definire punti di inserimento (layout:fragment) che le pagine figlie sovrascrivono. Le pagine non includono il layout, ma "
 tech: thymeleaf
 tags: ['thymeleaf', 'advanced layout & templating']

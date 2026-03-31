@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Locality of Reference e L1/L2 Cache"
-date: 2026-03-31 16:55:17 
+date: 2026-03-31 17:02:46 
 sintesi: "La CPU legge la memoria a blocchi (cache lines da 64 byte). Un array di oggetti in Java è in realtà un array di puntatori a oggetti sparsi nell'heap (scarsa località). Per massimizzare le performance, la soluzione è usare array di primitivi 1D dove i"
 tech: java
 tags: ['java', 'memory & performance']

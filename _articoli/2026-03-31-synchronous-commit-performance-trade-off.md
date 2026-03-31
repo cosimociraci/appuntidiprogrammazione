@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Synchronous Commit & Performance Trade-off"
-date: 2026-03-31 16:56:01 
+date: 2026-03-31 17:02:46 
 sintesi: "La replica sincrona garantisce che una transazione sia confermata solo dopo essere stata scritta su almeno un nodo standby. Questo elimina il rischio di perdere dati in caso di failover, ma introduce una latenza pari al Round Trip Time (RTT) tra i se"
 tech: db
 tags: ['db', 'advanced replication & ha']

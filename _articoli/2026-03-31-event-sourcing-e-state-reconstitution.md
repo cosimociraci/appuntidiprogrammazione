@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Event Sourcing e State Reconstitution"
-date: 2026-03-31 16:55:25 
+date: 2026-03-31 17:02:46 
 sintesi: "Gestire lo stato attuale non permette di capire come ci si è arrivati (audit log). L'Event Sourcing non salva lo stato, ma una sequenza immutabile di eventi (append-only). Lo stato attuale viene ricostruito ("proiezione") riducendo (folding) l'array "
 tech: js
 tags: ['js', 'design patterns & architecture']

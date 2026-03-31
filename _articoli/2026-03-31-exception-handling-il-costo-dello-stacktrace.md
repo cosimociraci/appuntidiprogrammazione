@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Exception Handling: il costo dello Stacktrace"
-date: 2026-03-31 16:55:17 
+date: 2026-03-31 17:02:46 
 sintesi: "Creare un'eccezione è costoso non per l'oggetto in sé, ma per il metodo fillInStackTrace(), che deve percorrere l'intero call stack nativo. Per errori di business frequenti (es. UserNotFound), non dovremmo usare eccezioni con stacktrace. Una tecnica "
 tech: java
 tags: ['java', 'memory & performance']

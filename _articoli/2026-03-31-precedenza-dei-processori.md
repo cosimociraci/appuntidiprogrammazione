@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Precedenza dei Processori"
-date: 2026-03-31 16:55:32 
+date: 2026-03-31 17:02:46 
 sintesi: "Quando più attributi th:* sono sullo stesso tag, l'ordine di esecuzione è critico. Un processore che altera la struttura del DOM (come un th:each custom) deve avere una precedenza numerica inferiore (viene eseguito prima) rispetto a quelli che modifi"
 tech: thymeleaf
 tags: ['thymeleaf', 'custom dialects & processors']
@@ -17,48 +17,5 @@ Problema: Errori di rendering o variabili non trovate perché il processore di v
 ## Esempio Implementativo
 
 ```thymeleaf
-/* La tabella di precedenza dei processori standard di Thymeleaf (valori numerici bassi = alta
-priorità): th:insert, th:replace -> 100 (struttura del DOM: prima di tutto) th:each -> 200
-(iterazione: popola le variabili di loop) th:if, th:unless, th:switch -> 300 (condizionale: decide
-se renderizzare) th:object -> 400 (binding dell'oggetto form) th:attr, th:attrappend -> 700
-(attributi HTML) th:text, th:utext -> 1400 (contenuto testuale: dopo che il DOM è stabile)
-th:fragment -> 20000 (markup solo: non altera il DOM) */ /* Definisco tre processori con precedenza
-esplicita per garantire l'ordine corretto. */ // PROCESSORE 1: Itera su una lista e popola variabili
-di contesto (come th:each) public class SecureIterationProcessor extends
-AbstractAttributeTagProcessor { public SecureIterationProcessor(String prefix) {
-super(TemplateMode.HTML, prefix, null, false, "secure-each", true, 200, // Bassa priorità numerica =
-alta precedenza: eseguito subito dopo th:replace true); } @Override protected void
-doProcess(ITemplateContext context, IProcessableElementTag tag, AttributeName attributeName, String
-attributeValue, IElementTagStructureHandler structureHandler) { // Eseguo PRIMA: popolo le variabili
-di iterazione // Formato: "item : ${items}" String[] parts = attributeValue.split("\\s*:\\s*");
-String varName = parts[0].trim(); // Accedo alla variabile usando il parser di espressioni Thymeleaf
-IEngineConfiguration config = context.getConfiguration(); IStandardExpressionParser parser =
-StandardExpressions.getExpressionParser(config); IStandardExpression expression =
-parser.parseExpression(context, parts[1].trim()); List<?> items = (List<?>)
-expression.execute(context); // Uso iterateElement per replicare il tag per ogni elemento
-strutturalmente // (implementazione semplificata: in produzione uso IModel per clonare il tag)
-structureHandler.setLocalVariable(varName, items.isEmpty() ? null : items.get(0)); } } // PROCESSORE
-2: Verifica il ruolo (come app:role-check) -> precedenza 300, eseguito dopo l'iterazione public
-class RoleGuardProcessor extends AbstractAttributeTagProcessor { public RoleGuardProcessor(String
-prefix) { super(TemplateMode.HTML, prefix, null, false, "role-guard", true, 300, // Eseguito DOPO
-secure-each: le variabili di iterazione sono già disponibili true); } @Override protected void
-doProcess(ITemplateContext context, IProcessableElementTag tag, AttributeName attributeName, String
-attributeValue, IElementTagStructureHandler structureHandler) { // A questo punto le variabili
-dell'iterazione sono già nel contesto Object item = context.getVariable("item"); // Posso accedere
-alla variabile popolata da secure-each String requiredRole = attributeValue; Authentication auth =
-SecurityContextHolder.getContext().getAuthentication(); if (!hasRole(auth, requiredRole)) {
-structureHandler.removeElement(); } else { structureHandler.removeAttribute(attributeName); } } } //
-PROCESSORE 3: Formatta il testo -> precedenza 1400, eseguito per ultimo public class
-FormattedTextProcessor extends AbstractAttributeTagProcessor { public FormattedTextProcessor(String
-prefix) { super(TemplateMode.HTML, prefix, null, false, "fmt-text", true, 1400, // Eseguito per
-ULTIMO: DOM stabile, variabili disponibili, sicurezza verificata true); } @Override protected void
-doProcess(ITemplateContext context, IProcessableElementTag tag, AttributeName attributeName, String
-attributeValue, IElementTagStructureHandler structureHandler) { // A questo punto il DOM è stabile e
-le variabili sono disponibili IEngineConfiguration config = context.getConfiguration();
-IStandardExpressionParser parser = StandardExpressions.getExpressionParser(config); Object value =
-parser.parseExpression(context, attributeValue).execute(context); structureHandler.setBody(value !=
-null ? value.toString() : "", false); structureHandler.removeAttribute(attributeName); } } /* Uso
-nel template: i tre attributi coesistono sullo stesso tag in modo deterministico. */ //
-<tr app:secure-each="item : ${orders}" app:role-guard="manager" app:fmt-text="${item.total}"></tr>
-// Ordine di esecuzione garantito: secure-each(200) -> role-guard(300) -> fmt-text(1400)
+/* La tabella di precedenza dei processori standard di Thymeleaf (valori numerici bassi = alta priorità): th:insert, th:replace -> 100 (struttura del DOM: prima di tutto) th:each -> 200 (iterazione: popola le variabili di loop) th:if, th:unless, th:switch -> 300 (condizionale: decide se renderizzare) th:object -> 400 (binding dell'oggetto form) th:attr, th:attrappend -> 700 (attributi HTML) th:text, th:utext -> 1400 (contenuto testuale: dopo che il DOM è stabile) th:fragment -> 20000 (markup solo: non altera il DOM) */ /* Definisco tre processori con precedenza esplicita per garantire l'ordine corretto. */ // PROCESSORE 1: Itera su una lista e popola variabili di contesto (come th:each) public class SecureIterationProcessor extends AbstractAttributeTagProcessor { public SecureIterationProcessor(String prefix) { super(TemplateMode.HTML, prefix, null, false, "secure-each", true, 200, // Bassa priorità numerica = alta precedenza: eseguito subito dopo th:replace true); } @Override protected void doProcess(ITemplateContext context, IProcessableElementTag tag, AttributeName attributeName, String attributeValue, IElementTagStructureHandler structureHandler) { // Eseguo PRIMA: popolo le variabili di iterazione // Formato: "item : ${items}" String[] parts = attributeValue.split("\\s*:\\s*"); String varName = parts[0].trim(); // Accedo alla variabile usando il parser di espressioni Thymeleaf IEngineConfiguration config = context.getConfiguration(); IStandardExpressionParser parser = StandardExpressions.getExpressionParser(config); IStandardExpression expression = parser.parseExpression(context, parts[1].trim()); List<?> items = (List<?>) expression.execute(context); // Uso iterateElement per replicare il tag per ogni elemento strutturalmente // (implementazione semplificata: in produzione uso IModel per clonare il tag) structureHandler.setLocalVariable(varName, items.isEmpty() ? null : items.get(0)); } } // PROCESSORE 2: Verifica il ruolo (come app:role-check) -> precedenza 300, eseguito dopo l'iterazione public class RoleGuardProcessor extends AbstractAttributeTagProcessor { public RoleGuardProcessor(String prefix) { super(TemplateMode.HTML, prefix, null, false, "role-guard", true, 300, // Eseguito DOPO secure-each: le variabili di iterazione sono già disponibili true); } @Override protected void doProcess(ITemplateContext context, IProcessableElementTag tag, AttributeName attributeName, String attributeValue, IElementTagStructureHandler structureHandler) { // A questo punto le variabili dell'iterazione sono già nel contesto Object item = context.getVariable("item"); // Posso accedere alla variabile popolata da secure-each String requiredRole = attributeValue; Authentication auth = SecurityContextHolder.getContext().getAuthentication(); if (!hasRole(auth, requiredRole)) { structureHandler.removeElement(); } else { structureHandler.removeAttribute(attributeName); } } } // PROCESSORE 3: Formatta il testo -> precedenza 1400, eseguito per ultimo public class FormattedTextProcessor extends AbstractAttributeTagProcessor { public FormattedTextProcessor(String prefix) { super(TemplateMode.HTML, prefix, null, false, "fmt-text", true, 1400, // Eseguito per ULTIMO: DOM stabile, variabili disponibili, sicurezza verificata true); } @Override protected void doProcess(ITemplateContext context, IProcessableElementTag tag, AttributeName attributeName, String attributeValue, IElementTagStructureHandler structureHandler) { // A questo punto il DOM è stabile e le variabili sono disponibili IEngineConfiguration config = context.getConfiguration(); IStandardExpressionParser parser = StandardExpressions.getExpressionParser(config); Object value = parser.parseExpression(context, attributeValue).execute(context); structureHandler.setBody(value != null ? value.toString() : "", false); structureHandler.removeAttribute(attributeName); } } /* Uso nel template: i tre attributi coesistono sullo stesso tag in modo deterministico. */ // <tr app:secure-each="item : ${orders}" app:role-guard="manager" app:fmt-text="${item.total}"></tr> // Ordine di esecuzione garantito: secure-each(200) -> role-guard(300) -> fmt-text(1400)
 ```

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Diagnosticare il GC Thrashing"
-date: 2026-03-31 16:55:12 
+date: 2026-03-31 17:02:46 
 sintesi: "Quando l'heap è quasi pieno, il GC gira continuamente cercando di liberare pochi KB (thrashing). Se il tempo di GC supera il 90% del tempo totale e libera meno del 2% della memoria, l'applicazione è in coma. I flag GCTimeLimit e GCHeapFreeLimit perme"
 tech: java
 tags: ['java', 'jvm tuning & garbage collection']

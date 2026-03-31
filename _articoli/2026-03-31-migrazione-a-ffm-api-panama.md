@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Migrazione a FFM API (Panama)"
-date: 2026-03-31 16:55:19 
+date: 2026-03-31 17:02:46 
 sintesi: "JNI richiede la scrittura di codice C "glue" (stub) e ha un alto costo di transizione (context switch). La Foreign Function & Memory API (Java 21/22) permette di chiamare funzioni C direttamente da Java usando Linker e SymbolLookup. Questo elimina la"
 tech: java
 tags: ['java', 'jni & project panama']
