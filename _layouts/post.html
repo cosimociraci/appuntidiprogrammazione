@@ -4,11 +4,11 @@ layout: default
 
 <article class="post-container container" style="padding-top: 40px; max-width: 1500px; margin: 0 auto;">
     
-    <header class="post-header" style="margin-bottom: 40px; border-bottom: 4px solid var(--text); padding-bottom: 20px;">
-        <div class="post-meta" style="font-size: 0.9rem; font-weight: 800; color: var(--accent); text-transform: uppercase; margin-bottom: 10px;">
-            {{ page.tech | default: "Tech" }} • {{ page.date | date: "%d %B %Y" }}
+    <header class="post-header" style="margin-bottom: 40px; border-bottom: 5px solid var(--text); padding-bottom: 25px;">
+        <div class="post-meta" style="font-size: 0.9rem; font-weight: 800; color: var(--accent); text-transform: uppercase; margin-bottom: 12px; letter-spacing: 1px;">
+            {{ page.tech | default: "Tech Note" }} • {{ page.date | date: "%d %B %Y" }}
         </div>
-        <h1 class="post-title" style="font-size: 3rem; line-height: 1.1; margin: 0; font-weight: 900;">
+        <h1 class="post-title" style="font-size: 3.5rem; line-height: 1.05; margin: 0; font-weight: 900; letter-spacing: -1px;">
             {{ page.title }}
         </h1>
     </header>
@@ -16,86 +16,89 @@ layout: default
     {% assign pdf_name = page.pdf_file | default: page.slug | append: ".pdf" %}
     {% assign pdf_path = "/assets/pdf/" | append: pdf_name %}
 
-    <section class="attachments-box" style="margin-bottom: 40px; padding: 25px; border: 3px solid var(--text); background: var(--card-bg); box-shadow: 8px 8px 0px var(--accent); display: flex; align-items: center; justify-content: space-between; gap: 20px;">
+    <section class="attachments-box" style="margin-bottom: 50px; padding: 30px; border: 4px solid var(--text); background: var(--card-bg); box-shadow: 10px 10px 0px var(--accent); display: flex; align-items: center; justify-content: space-between; gap: 20px;">
         <div>
-            <h3 style="margin: 0 0 5px 0; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">📂 Documentazione Tecnica</h3>
-            <p style="font-size: 0.95rem; margin: 0; opacity: 0.8;">Disponibile il PDF correlato a questo appunto: <strong>{{ pdf_name }}</strong></p>
+            <h3 style="margin: 0 0 8px 0; font-size: 0.85rem; text-transform: uppercase; font-weight: 900;">📂 ALLEGATO TECNICO PDF</h3>
+            <p style="font-size: 1rem; margin: 0; opacity: 0.8;">Documento: <strong>{{ pdf_name }}</strong></p>
         </div>
-        
-        <a href="{{ pdf_path | relative_url }}" 
-           download 
-           class="btn-download"
-           style="display: inline-flex; align-items: center; gap: 10px; background: var(--text); color: var(--bg); padding: 12px 25px; text-decoration: none; font-weight: 900; text-transform: uppercase; font-size: 0.9rem; border: none; cursor: pointer; white-space: nowrap;">
-            <span>⬇️</span> SCARICA PDF
+        <a href="{{ pdf_path | relative_url }}" download class="btn-download" style="background: var(--text); color: var(--bg); padding: 15px 30px; text-decoration: none; font-weight: 900; text-transform: uppercase; font-size: 0.9rem; border: none; box-shadow: 4px 4px 0px var(--accent);">
+            DOWNLOAD
         </a>
     </section>
 
-    <div class="post-content" style="line-height: 1.7; font-size: 1.15rem; color: var(--text);">
+    <div class="post-content">
         {{ content }}
     </div>
 
-    <footer class="post-footer" style="margin-top: 80px; padding-top: 30px; border-top: 4px solid var(--text);">
-        <div class="post-tags" style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
-            <strong style="text-transform: uppercase; font-size: 0.8rem;">Tag:</strong>
+    <footer class="post-footer" style="margin-top: 100px; padding-top: 40px; border-top: 5px solid var(--text); padding-bottom: 100px;">
+        <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: center; margin-bottom: 50px;">
+            <strong style="text-transform: uppercase; font-size: 0.8rem;">Tag cloud:</strong>
             {% for tag in page.tags %}
-                <span style="background: var(--card-bg); border: 2px solid var(--text); padding: 5px 12px; font-weight: 700; font-size: 0.85rem;">
-                    #{{ tag | upcase }}
+                <span style="background: var(--text); color: var(--bg); padding: 6px 15px; font-weight: 900; font-size: 0.8rem; text-transform: uppercase;">
+                    {{ tag }}
                 </span>
             {% endfor %}
         </div>
-        
-        <div style="margin-top: 50px; margin-bottom: 50px;">
-            <a href="{{ '/' | relative_url }}" style="display: inline-block; padding: 10px 20px; background: var(--accent); color: white; font-weight: 900; text-decoration: none; box-shadow: 4px 4px 0px var(--text);">
-                ← TORNA ALL'INDICE
-            </a>
-        </div>
+        <a href="{{ '/' | relative_url }}" style="font-size: 1.2rem; color: var(--text); font-weight: 900; text-decoration: none; border-bottom: 4px solid var(--accent);">
+            ← TORNA ALL'INDICE DEGLI APPUNTI
+        </a>
     </footer>
 
 </article>
 
 <style>
-    /* Forza il blocco pre a mantenere la formattazione originale */
-    .post-content pre {
-        background: #000 !important;
-        border: 2px solid var(--text);
-        padding: 20px;
-        overflow-x: auto; /* Scroll orizzontale se riga lunga */
-        margin: 25px 0;
-        box-shadow: 5px 5px 0px rgba(0,0,0,0.2);
+    /* FIX DEFINITIVO PER IL CODICE SU PIÙ RIGHE */
+    
+    /* Il contenitore PRE deve essere un blocco che scorre orizzontalmente */
+    pre {
+        background: #000000 !important;
+        color: #ffffff !important;
+        padding: 25px !important;
+        border: 3px solid var(--text) !important;
+        box-shadow: 8px 8px 0px rgba(0,0,0,0.15) !important;
+        overflow-x: auto !important; /* Barra scorrimento orizzontale */
+        margin: 30px 0 !important;
+        display: block !important;
     }
 
-    .post-content code {
-        font-family: 'Fira Code', monospace;
-        font-size: 0.95rem;
-        display: block; /* Essenziale per i blocchi multi-riga */
-        white-space: pre; /* Mantiene i ritorni a capo del file .md */
-        word-wrap: normal;
-        color: #e0e0e0;
+    /* Il tag CODE deve forzare il mantenimento degli a capo */
+    code {
+        font-family: 'Fira Code', 'Courier New', monospace !important;
+        font-size: 0.95rem !important;
+        line-height: 1.6 !important;
+        white-space: pre !important; /* MANIENE GLI SPAZI E GLI A CAPO */
+        word-spacing: normal !important;
+        word-break: normal !important;
+        word-wrap: normal !important;
+        display: block !important; /* Forza il comportamento block per le righe */
     }
 
-    /* Stile per snippet inline (es. `codice`) */
-    .post-content p code, .post-content li code {
-        display: inline;
-        white-space: normal;
-        background: var(--card-bg);
-        padding: 2px 6px;
-        border: 1px solid var(--border);
-        color: var(--accent);
+    /* Stile per codice inline nel testo (es. `var x`) */
+    p code, li code {
+        display: inline !important;
+        white-space: nowrap !important;
+        background: var(--card-bg) !important;
+        color: var(--accent) !important;
+        padding: 2px 6px !important;
+        border: 1px solid var(--border) !important;
     }
+
+    .post-content {
+        line-height: 1.8;
+        font-size: 1.2rem;
+    }
+    
+    .post-content h2 { margin-top: 50px; font-weight: 900; text-transform: uppercase; border-left: 10px solid var(--accent); padding-left: 20px; }
 </style>
 
 <script>
-    // Controllo esistenza PDF
+    // Verifica PDF e nasconde box se mancante
     document.addEventListener('DOMContentLoaded', function() {
-        const pdfLink = document.querySelector('.btn-download');
-        if (pdfLink) {
-            fetch(pdfLink.href, { method: 'HEAD' })
-                .then(res => {
-                    if (res.status === 404) {
-                        document.querySelector('.attachments-box').style.display = 'none';
-                    }
-                })
-                .catch(() => {});
+        const btn = document.querySelector('.btn-download');
+        if (btn) {
+            fetch(btn.href, { method: 'HEAD' }).then(res => {
+                if (res.status === 404) document.querySelector('.attachments-box').style.display = 'none';
+            }).catch(() => {});
         }
     });
 </script>
