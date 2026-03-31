@@ -1,19 +1,65 @@
 ---
 layout: post
-title: "Timeout e Safety nei Lock"
-date: 2026-03-31 10:11:47 +0200
-sintesi: "L'uso di synchronized o lock() senza parametri può portare a deadlock infiniti se un thread non rilascia mai la risorsa. L'uso sistematico di tryLock(..."
+title: Timeout e Safety nei Lock
+date: '2026-03-31 16:25:00 '
+sintesi: L'uso di synchronized o lock() senza parametri può portare a deadlock infiniti
+  se un thread non rilascia mai la risorsa. L'uso sistematico di tryLock(timeout,
+  unit) permette al thread di "arrendersi" se non ottiene il lock entro un tempo ragionevole,
+esigenza: Prevenire il congelamento di un microservizio quando si verifica una contesa
+  imprevista su una risorsa critica condivisa.
 tech: java
-tags: ['java', 'concurrency & multithreading']
+tags:
+- java
+- concurrency & multithreading
+codice: '/* Confronto i tre approcci per evidenziare perché tryLock è preferibile
+  in produzione. */ // APPROCCIO 1 - PERICOLOSO: synchronized blocca il thread indefinitamente
+  public synchronized void dangerousMethod() { externalService.call(); // Se il servizio
+  si blocca, il thread aspetta per sempre } // APPROCCIO 2 - MIGLIORE MA ANCORA RISCHIOSA:
+  lock() senza timeout private final ReentrantLock lock = new ReentrantLock(); public
+  void stillDangerous() { lock.lock(); // Blocco infinito se qualcuno tiene il lock
+  try { externalService.call(); } finally { lock.unlock(); } } // APPROCCIO 3 - CORRETTO:
+  tryLock con timeout e gestione esplicita del fallimento public void safeMethod()
+  throws InterruptedException { boolean acquired = lock.tryLock(2, TimeUnit.SECONDS);
+  if (!acquired) { log.warn("Impossibile acquisire il lock entro 2 secondi. Thread:
+  {}", Thread.currentThread().getName()); throw new ServiceUnavailableException("Risorsa
+  occupata, riprova più tardi"); } try { externalService.call(); } finally { lock.unlock();
+  // Sempre nel finally: garantito anche in caso di eccezione } } /* In Spring Boot,
+  applico il pattern a un service che gestisce l''accesso a una risorsa condivisa
+  (es. un file di configurazione o un device hardware): */ @Service public class SharedResourceService
+  { private final ReentrantLock resourceLock = new ReentrantLock(true); // fair=true:
+  FIFO tra i thread in attesa private static final long LOCK_TIMEOUT_MS = 500; public
+  <T> T executeWithLock(Supplier<T> operation) { boolean acquired = false; try { acquired
+  = resourceLock.tryLock(LOCK_TIMEOUT_MS, TimeUnit.MILLISECONDS); if (!acquired) {
+  // Monitoro il numero di timeout per rilevare saturazione della risorsa meterRegistry.counter("lock.timeout",
+  "resource", "shared").increment(); throw new ResourceBusyException("Risorsa occupata
+  dopo " + LOCK_TIMEOUT_MS + "ms"); } return operation.get(); } catch (InterruptedException
+  e) { Thread.currentThread().interrupt(); throw new ServiceUnavailableException("Thread
+  interrotto durante l''attesa del lock"); } finally { if (acquired) { resourceLock.unlock();
+  } } } } /* Rilevazione di potenziali deadlock in sviluppo tramite il ThreadMXBean
+  della JVM: */ ThreadMXBean tmx = ManagementFactory.getThreadMXBean(); long[] deadlockedThreads
+  = tmx.findDeadlockedThreads(); if (deadlockedThreads != null) { ThreadInfo[] infos
+  = tmx.getThreadInfo(deadlockedThreads, true, true); for (ThreadInfo info : infos)
+  { log.error("DEADLOCK rilevato su thread: {} in stato: {}", info.getThreadName(),
+  info.getThreadState()); log.error("Lock che il thread aspetta: {}", info.getLockName());
+  log.error("Lock owner: {}", info.getLockOwnerName()); } } /* In produzione, schedulo
+  questo controllo ogni minuto per rilevare deadlock prima che l''utente li segnali:
+  */ @Scheduled(fixedDelay = 60_000) public void detectDeadlocks() { long[] deadlocked
+  = ManagementFactory.getThreadMXBean().findDeadlockedThreads(); if (deadlocked !=
+  null) { alertService.sendCritical("DEADLOCK rilevato su " + deadlocked.length +
+  " thread. Riavvio necessario."); } } /* Strategia di lock ordering per prevenire
+  i deadlock strutturalmente: acquisire sempre i lock nello stesso ordine globale.
+  */ public void transferFunds(Account from, Account to, BigDecimal amount) { // Ordino
+  i lock per ID per garantire che due thread che trasferiscono tra gli stessi account
+  // acquisiscano sempre i lock nello stesso ordine, prevenendo il deadlock. Account
+  first = from.getId() < to.getId() ? from : to; Account second = from.getId() < to.getId()
+  ? to : from; boolean firstAcquired = false; boolean secondAcquired = false; try
+  { firstAcquired = first.getLock().tryLock(1, TimeUnit.SECONDS); if (!firstAcquired)
+  throw new ResourceBusyException("Account " + first.getId() + " occupato"); secondAcquired
+  = second.getLock().tryLock(1, TimeUnit.SECONDS); if (!secondAcquired) throw new
+  ResourceBusyException("Account " + second.getId() + " occupato"); from.debit(amount);
+  to.credit(amount); } catch (InterruptedException e) { Thread.currentThread().interrupt();
+  } finally { if (secondAcquired) second.getLock().unlock(); if (firstAcquired) first.getLock().unlock();
+  } }'
 ---
-## Esigenza Reale
-Prevenire il congelamento di un microservizio quando si verifica una contesa imprevista su una risorsa critica condivisa.
 
-## Analisi Tecnica
 Problema: Thread bloccati indefinitamente in attesa di un lock, causando l'esaurimento delle risorse del server. Perché: Uso tryLock con timeout. Ho scelto questa strategia per garantire la resilienza del sistema: preferisco un fallimento controllato con timeout piuttosto che un blocco totale silenzioso.
-
-## Esempio Implementativo
-
-```java
-/* Confronto i tre approcci per evidenziare perché tryLock è preferibile in produzione. */ // APPROCCIO 1 - PERICOLOSO: synchronized blocca il thread indefinitamente public synchronized void dangerousMethod() { externalService.call(); // Se il servizio si blocca, il thread aspetta per sempre } // APPROCCIO 2 - MIGLIORE MA ANCORA RISCHIOSA: lock() senza timeout private final ReentrantLock lock = new ReentrantLock(); public void stillDangerous() { lock.lock(); // Blocco infinito se qualcuno tiene il lock try { externalService.call(); } finally { lock.unlock(); } } // APPROCCIO 3 - CORRETTO: tryLock con timeout e gestione esplicita del fallimento public void safeMethod() throws InterruptedException { boolean acquired = lock.tryLock(2, TimeUnit.SECONDS); if (!acquired) { log.warn("Impossibile acquisire il lock entro 2 secondi. Thread: {}", Thread.currentThread().getName()); throw new ServiceUnavailableException("Risorsa occupata, riprova più tardi"); } try { externalService.call(); } finally { lock.unlock(); // Sempre nel finally: garantito anche in caso di eccezione } } /* In Spring Boot, applico il pattern a un service che gestisce l'accesso a una risorsa condivisa (es. un file di configurazione o un device hardware): */ @Service public class SharedResourceService { private final ReentrantLock resourceLock = new ReentrantLock(true); // fair=true: FIFO tra i thread in attesa private static final long LOCK_TIMEOUT_MS = 500; public <T> T executeWithLock(Supplier<T> operation) { boolean acquired = false; try { acquired = resourceLock.tryLock(LOCK_TIMEOUT_MS, TimeUnit.MILLISECONDS); if (!acquired) { // Monitoro il numero di timeout per rilevare saturazione della risorsa meterRegistry.counter("lock.timeout", "resource", "shared").increment(); throw new ResourceBusyException("Risorsa occupata dopo " + LOCK_TIMEOUT_MS + "ms"); } return operation.get(); } catch (InterruptedException e) { Thread.currentThread().interrupt(); throw new ServiceUnavailableException("Thread interrotto durante l'attesa del lock"); } finally { if (acquired) { resourceLock.unlock(); } } } } /* Rilevazione di potenziali deadlock in sviluppo tramite il ThreadMXBean della JVM: */ ThreadMXBean tmx = ManagementFactory.getThreadMXBean(); long[] deadlockedThreads = tmx.findDeadlockedThreads(); if (deadlockedThreads != null) { ThreadInfo[] infos = tmx.getThreadInfo(deadlockedThreads, true, true); for (ThreadInfo info : infos) { log.error("DEADLOCK rilevato su thread: {} in stato: {}", info.getThreadName(), info.getThreadState()); log.error("Lock che il thread aspetta: {}", info.getLockName()); log.error("Lock owner: {}", info.getLockOwnerName()); } } /* In produzione, schedulo questo controllo ogni minuto per rilevare deadlock prima che l'utente li segnali: */ @Scheduled(fixedDelay = 60_000) public void detectDeadlocks() { long[] deadlocked = ManagementFactory.getThreadMXBean().findDeadlockedThreads(); if (deadlocked != null) { alertService.sendCritical("DEADLOCK rilevato su " + deadlocked.length + " thread. Riavvio necessario."); } } /* Strategia di lock ordering per prevenire i deadlock strutturalmente: acquisire sempre i lock nello stesso ordine globale. */ public void transferFunds(Account from, Account to, BigDecimal amount) { // Ordino i lock per ID per garantire che due thread che trasferiscono tra gli stessi account // acquisiscano sempre i lock nello stesso ordine, prevenendo il deadlock. Account first = from.getId() < to.getId() ? from : to; Account second = from.getId() < to.getId() ? to : from; boolean firstAcquired = false; boolean secondAcquired = false; try { firstAcquired = first.getLock().tryLock(1, TimeUnit.SECONDS); if (!firstAcquired) throw new ResourceBusyException("Account " + first.getId() + " occupato"); secondAcquired = second.getLock().tryLock(1, TimeUnit.SECONDS); if (!secondAcquired) throw new ResourceBusyException("Account " + second.getId() + " occupato"); from.debit(amount); to.credit(amount); } catch (InterruptedException e) { Thread.currentThread().interrupt(); } finally { if (secondAcquired) second.getLock().unlock(); if (firstAcquired) first.getLock().unlock(); } }
-```

@@ -1,19 +1,59 @@
 ---
 layout: post
-title: "CharSequence vs String.substring"
-date: 2026-03-31 10:11:47 +0200
-sintesi: "In Java, String.substring crea una nuova copia dell'array di caratteri (dalla versione 7u6). Usando CharSequence o viste custom sul buffer originale, ..."
+title: CharSequence vs String.substring
+date: '2026-03-31 16:25:01 '
+sintesi: In Java, String.substring crea una nuova copia dell'array di caratteri (dalla
+  versione 7u6). Usando CharSequence o viste custom sul buffer originale, si possono
+  manipolare porzioni di testo senza allocare nuova memoria. Passando interfacce CharSequen
+esigenza: Estrarre tag e valori da log giganteschi o messaggi di protocollo senza
+  raddoppiare l'occupazione di memoria.
 tech: java
-tags: ['java', 'memory & performance']
+tags:
+- java
+- memory & performance
+codice: '/* Confronto l''approccio naive con quello ottimizzato per renderlo concreto.
+  */ // APPROCCIO NAIVE: ogni substring alloca una nuova copia dell''array di caratteri
+  String logLine = "2026-03-25T10:15:03 ERROR OrderService User 42 not found"; String
+  timestamp = logLine.substring(0, 23); // Nuova allocazione: 23 caratteri copiati
+  String level = logLine.substring(24, 29); // Nuova allocazione: 5 caratteri copiati
+  String message = logLine.substring(30); // Nuova allocazione: N caratteri copiati
+  // Su 1 milione di log, questo alloca 3 milioni di oggetti String inutili /* Implemento
+  una vista zero-copy su CharSequence che non alloca finché non serve la String vera:
+  */ public final class CharSequenceView implements CharSequence { private final CharSequence
+  source; private final int start; private final int end; public CharSequenceView(CharSequence
+  source, int start, int end) { this.source = source; this.start = start; this.end
+  = end; } @Override public int length() { return end - start; } @Override public
+  char charAt(int index) { return source.charAt(start + index); } @Override public
+  CharSequence subSequence(int start, int end) { // Creo un''altra vista, non una
+  copia: zero allocazione return new CharSequenceView(source, this.start + start,
+  this.start + end); } @Override public String toString() { // Alloco la String SOLO
+  quando è strettamente necessario (es. per salvare su DB) return source.toString().substring(start,
+  end); } } /* Parser di log che usa viste zero-copy: */ @Component public class LogLineParser
+  { public ParsedLogLine parse(CharSequence line) { // Trovo gli indici dei separatori
+  senza allocare substring int firstSpace = indexOf(line, '' '', 0); int secondSpace
+  = indexOf(line, '' '', firstSpace + 1); // Creo viste sul buffer originale: zero
+  allocazioni CharSequence timestamp = new CharSequenceView(line, 0, firstSpace);
+  CharSequence level = new CharSequenceView(line, firstSpace + 1, secondSpace); CharSequence
+  message = new CharSequenceView(line, secondSpace + 1, line.length()); // Confronto
+  il livello senza allocare String: uso equals su CharSequence if (charSequenceEquals(level,
+  "ERROR")) { // Alloco la String solo per il messaggio di errore che viene salvato
+  return new ParsedLogLine(timestamp.toString(), "ERROR", message.toString()); } return
+  new ParsedLogLine(timestamp.toString(), level.toString(), null); } private int indexOf(CharSequence
+  cs, char target, int fromIndex) { for (int i = fromIndex; i < cs.length(); i++)
+  { if (cs.charAt(i) == target) return i; } return -1; } private boolean charSequenceEquals(CharSequence
+  a, String b) { if (a.length() != b.length()) return false; for (int i = 0; i < a.length();
+  i++) { if (a.charAt(i) != b.charAt(i)) return false; } return true; } } /* Per il
+  parsing di protocolli FIX o HL7, uso direttamente ByteBuffer per evitare anche la
+  conversione da byte a char: */ @Component public class FixMessageParser { public
+  Map<Integer, CharSequence> parse(ByteBuffer rawMessage) { // Lavoro direttamente
+  sul ByteBuffer senza convertire in String Map<Integer, CharSequence> fields = new
+  HashMap<>(); CharBuffer charView = StandardCharsets.US_ASCII.decode(rawMessage);
+  // Una sola conversione int start = 0; for (int i = 0; i < charView.length(); i++)
+  { if (charView.charAt(i) == ''\u0001'') { // SOH separator CharSequence field =
+  new CharSequenceView(charView, start, i); int eq = indexOf(field, ''='', 0); if
+  (eq > 0) { int tag = Integer.parseInt(field.subSequence(0, eq).toString()); fields.put(tag,
+  field.subSequence(eq + 1, field.length())); // Vista, non copia } start = i + 1;
+  } } return fields; } }'
 ---
-## Esigenza Reale
-Estrarre tag e valori da log giganteschi o messaggi di protocollo senza raddoppiare l'occupazione di memoria.
 
-## Analisi Tecnica
 Problema: Esplosione della memoria dovuta alla creazione di migliaia di stringhe "frammento" durante le operazioni di split e substring. Perché: Uso l'interfaccia CharSequence. Ho scelto di passare riferimenti all'oggetto originale uniti a indici di inizio e fine, evitando di copiare i dati finché non è strettamente necessario.
-
-## Esempio Implementativo
-
-```java
-/* Confronto l'approccio naive con quello ottimizzato per renderlo concreto. */ // APPROCCIO NAIVE: ogni substring alloca una nuova copia dell'array di caratteri String logLine = "2026-03-25T10:15:03 ERROR OrderService User 42 not found"; String timestamp = logLine.substring(0, 23); // Nuova allocazione: 23 caratteri copiati String level = logLine.substring(24, 29); // Nuova allocazione: 5 caratteri copiati String message = logLine.substring(30); // Nuova allocazione: N caratteri copiati // Su 1 milione di log, questo alloca 3 milioni di oggetti String inutili /* Implemento una vista zero-copy su CharSequence che non alloca finché non serve la String vera: */ public final class CharSequenceView implements CharSequence { private final CharSequence source; private final int start; private final int end; public CharSequenceView(CharSequence source, int start, int end) { this.source = source; this.start = start; this.end = end; } @Override public int length() { return end - start; } @Override public char charAt(int index) { return source.charAt(start + index); } @Override public CharSequence subSequence(int start, int end) { // Creo un'altra vista, non una copia: zero allocazione return new CharSequenceView(source, this.start + start, this.start + end); } @Override public String toString() { // Alloco la String SOLO quando è strettamente necessario (es. per salvare su DB) return source.toString().substring(start, end); } } /* Parser di log che usa viste zero-copy: */ @Component public class LogLineParser { public ParsedLogLine parse(CharSequence line) { // Trovo gli indici dei separatori senza allocare substring int firstSpace = indexOf(line, ' ', 0); int secondSpace = indexOf(line, ' ', firstSpace + 1); // Creo viste sul buffer originale: zero allocazioni CharSequence timestamp = new CharSequenceView(line, 0, firstSpace); CharSequence level = new CharSequenceView(line, firstSpace + 1, secondSpace); CharSequence message = new CharSequenceView(line, secondSpace + 1, line.length()); // Confronto il livello senza allocare String: uso equals su CharSequence if (charSequenceEquals(level, "ERROR")) { // Alloco la String solo per il messaggio di errore che viene salvato return new ParsedLogLine(timestamp.toString(), "ERROR", message.toString()); } return new ParsedLogLine(timestamp.toString(), level.toString(), null); } private int indexOf(CharSequence cs, char target, int fromIndex) { for (int i = fromIndex; i < cs.length(); i++) { if (cs.charAt(i) == target) return i; } return -1; } private boolean charSequenceEquals(CharSequence a, String b) { if (a.length() != b.length()) return false; for (int i = 0; i < a.length(); i++) { if (a.charAt(i) != b.charAt(i)) return false; } return true; } } /* Per il parsing di protocolli FIX o HL7, uso direttamente ByteBuffer per evitare anche la conversione da byte a char: */ @Component public class FixMessageParser { public Map<Integer, CharSequence> parse(ByteBuffer rawMessage) { // Lavoro direttamente sul ByteBuffer senza convertire in String Map<Integer, CharSequence> fields = new HashMap<>(); CharBuffer charView = StandardCharsets.US_ASCII.decode(rawMessage); // Una sola conversione int start = 0; for (int i = 0; i < charView.length(); i++) { if (charView.charAt(i) == '\u0001') { // SOH separator CharSequence field = new CharSequenceView(charView, start, i); int eq = indexOf(field, '=', 0); if (eq > 0) { int tag = Integer.parseInt(field.subSequence(0, eq).toString()); fields.put(tag, field.subSequence(eq + 1, field.length())); // Vista, non copia } start = i + 1; } } return fields; } }
-```

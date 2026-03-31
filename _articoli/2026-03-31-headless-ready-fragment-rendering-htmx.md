@@ -1,19 +1,65 @@
 ---
 layout: post
-title: "Headless-Ready: Fragment Rendering (HTMX)"
-date: 2026-03-31 10:11:47 +0200
-sintesi: "Spesso serve ritornare solo un pezzo di HTML per aggiornamenti AJAX/HTMX, non l'intera pagina. Thymeleaf può processare solo una porzione del file .ht..."
+title: 'Headless-Ready: Fragment Rendering (HTMX)'
+date: '2026-03-31 16:25:01 '
+sintesi: 'Spesso serve ritornare solo un pezzo di HTML per aggiornamenti AJAX/HTMX,
+  non l''intera pagina. Thymeleaf può processare solo una porzione del file .html
+  (es. return "page :: my-fragment"). Questo abilita pattern "HTML over the wire",
+  permettendo a Sp'
+esigenza: Implementare un pulsante "Carica altro" che aggiunge elementi a una lista
+  senza ricaricare la pagina intera.
 tech: thymeleaf
-tags: ['thymeleaf', 'advanced layout & templating']
+tags:
+- thymeleaf
+- advanced layout & templating
+codice: '/* Controller che gestisce sia la richiesta iniziale (pagina intera) che
+  le richieste HTMX (solo frammento). */ @Controller @RequestMapping("/products")
+  public class ProductController { @Autowired private ProductService productService;
+  /* Prima richiesta: carica l''intera pagina con i primi risultati. */ @GetMapping
+  public String productList(Model model, @RequestParam(defaultValue = "0") int page)
+  { Page<Product> products = productService.findAll(PageRequest.of(page, 20)); model.addAttribute("products",
+  products.getContent()); model.addAttribute("currentPage", page); model.addAttribute("hasMore",
+  products.hasNext()); return "products"; // Restituisce l''intera pagina products.html
+  } /* Richiesta HTMX: restituisce SOLO il frammento della lista. HTMX manda l''header
+  HX-Request: true per identificarsi. */ @GetMapping("/more") public String loadMore(Model
+  model, @RequestParam int page, @RequestHeader(value = "HX-Request", defaultValue
+  = "false") boolean isHtmx) { Page<Product> products = productService.findAll(PageRequest.of(page,
+  20)); model.addAttribute("products", products.getContent()); model.addAttribute("currentPage",
+  page); model.addAttribute("hasMore", products.hasNext()); if (isHtmx) { // Restituisco
+  SOLO il frammento: nessun layout, nessun header, solo le righe HTML return "products
+  :: product-rows"; } return "products"; // Fallback per richiesta diretta (browser
+  senza JS) } /* Controller per ricerca live con HTMX: aggiorna solo i risultati mentre
+  l''utente digita. */ @GetMapping("/search") public String search(@RequestParam String
+  q, Model model, @RequestHeader(value = "HX-Request", defaultValue = "false") boolean
+  isHtmx) { List<Product> results = productService.search(q); model.addAttribute("products",
+  results); model.addAttribute("query", q); model.addAttribute("hasMore", false);
+  return isHtmx ? "products :: product-rows" : "products"; } /* Per operazioni CRUD,
+  restituisco il singolo elemento aggiornato: */ @PostMapping("/{id}/toggle-status")
+  public String toggleStatus(@PathVariable Long id, Model model, @RequestHeader(value
+  = "HX-Request", defaultValue = "false") boolean isHtmx) { Product product = productService.toggleStatus(id);
+  model.addAttribute("product", product); return isHtmx ? "products :: product-row(product=${product})"
+  : "redirect:/products"; } } <!-- Template products.html: contiene sia la pagina
+  intera che i frammenti HTMX. --> <!DOCTYPE html> <html xmlns:th="http://www.thymeleaf.org">
+  <body> <div class="container"> <h1>Prodotti</h1> <!-- Campo di ricerca live: HTMX
+  aggiorna #product-list a ogni keystroke --> <input type="search" name="q" placeholder="Cerca
+  prodotti..." hx-get="/products/search" hx-target="#product-list" hx-trigger="keyup
+  changed delay:300ms" hx-swap="innerHTML"> <!-- Contenitore della lista: viene aggiornato
+  da HTMX --> <div id="product-list"> <!-- Frammento riutilizzabile: usato sia per
+  il rendering iniziale che per gli aggiornamenti --> <th:block th:replace="~{:: product-rows}"></th:block>
+  </div> <!-- Pulsante "Carica altro": si auto-sostituisce con il prossimo batch -->
+  <button th:if="${hasMore}" th:attr="hx-get=''/products/more?page='' + ${currentPage
+  + 1}" hx-target="#product-list" hx-swap="beforeend" <!-- Aggiunge DOPO il contenuto
+  esistente --> th:hx-indicator="''#loading-spinner''"> Carica altri 20 prodotti </button>
+  <div id="loading-spinner" class="htmx-indicator spinner-border"></div> </div> <!--
+  FRAMMENTO: le righe della lista (usato per rendering iniziale e aggiornamenti HTMX)
+  --> <th:block th:fragment="product-rows"> <div th:each="product : ${products}" th:fragment="product-row(product)"
+  th:id="''product-'' + ${product.id}" class="product-card"> <h3 th:text="${product.name}">Nome
+  Prodotto</h3> <span th:text="${#finance.formatCurrency(product.price, ''EUR'')}">€
+  0</span> <span th:class="${product.active ? ''badge-success'' : ''badge-secondary''}"
+  th:text="${product.active ? ''Attivo'' : ''Inattivo''}">Stato</span> <!-- Toggle
+  status: aggiorna solo questa card senza ricaricare la lista --> <button th:attr="hx-post=''/products/''
+  + ${product.id} + ''/toggle-status''" th:hx-target="''#product-'' + ${product.id}"
+  hx-swap="outerHTML"> Toggle </button> </div> </th:block> </body> </html>'
 ---
-## Esigenza Reale
-Implementare un pulsante "Carica altro" che aggiunge elementi a una lista senza ricaricare la pagina intera.
 
-## Analisi Tecnica
 Problema: Overhead di banda e tempi di caricamento dovuti al re-rendering dell'intero layout per piccole modifiche alla UI. Perché: Uso il rendering parziale dei frammenti. Ho scelto questo approccio per servire "HTML over the wire", permettendo a Spring Boot di comportarsi come un'API di frammenti UI per HTMX.
-
-## Esempio Implementativo
-
-```thymeleaf
-/* Controller che gestisce sia la richiesta iniziale (pagina intera) che le richieste HTMX (solo frammento). */ @Controller @RequestMapping("/products") public class ProductController { @Autowired private ProductService productService; /* Prima richiesta: carica l'intera pagina con i primi risultati. */ @GetMapping public String productList(Model model, @RequestParam(defaultValue = "0") int page) { Page<Product> products = productService.findAll(PageRequest.of(page, 20)); model.addAttribute("products", products.getContent()); model.addAttribute("currentPage", page); model.addAttribute("hasMore", products.hasNext()); return "products"; // Restituisce l'intera pagina products.html } /* Richiesta HTMX: restituisce SOLO il frammento della lista. HTMX manda l'header HX-Request: true per identificarsi. */ @GetMapping("/more") public String loadMore(Model model, @RequestParam int page, @RequestHeader(value = "HX-Request", defaultValue = "false") boolean isHtmx) { Page<Product> products = productService.findAll(PageRequest.of(page, 20)); model.addAttribute("products", products.getContent()); model.addAttribute("currentPage", page); model.addAttribute("hasMore", products.hasNext()); if (isHtmx) { // Restituisco SOLO il frammento: nessun layout, nessun header, solo le righe HTML return "products :: product-rows"; } return "products"; // Fallback per richiesta diretta (browser senza JS) } /* Controller per ricerca live con HTMX: aggiorna solo i risultati mentre l'utente digita. */ @GetMapping("/search") public String search(@RequestParam String q, Model model, @RequestHeader(value = "HX-Request", defaultValue = "false") boolean isHtmx) { List<Product> results = productService.search(q); model.addAttribute("products", results); model.addAttribute("query", q); model.addAttribute("hasMore", false); return isHtmx ? "products :: product-rows" : "products"; } /* Per operazioni CRUD, restituisco il singolo elemento aggiornato: */ @PostMapping("/{id}/toggle-status") public String toggleStatus(@PathVariable Long id, Model model, @RequestHeader(value = "HX-Request", defaultValue = "false") boolean isHtmx) { Product product = productService.toggleStatus(id); model.addAttribute("product", product); return isHtmx ? "products :: product-row(product=${product})" : "redirect:/products"; } } <!-- Template products.html: contiene sia la pagina intera che i frammenti HTMX. --> <!DOCTYPE html> <html xmlns:th="http://www.thymeleaf.org"> <body> <div class="container"> <h1>Prodotti</h1> <!-- Campo di ricerca live: HTMX aggiorna #product-list a ogni keystroke --> <input type="search" name="q" placeholder="Cerca prodotti..." hx-get="/products/search" hx-target="#product-list" hx-trigger="keyup changed delay:300ms" hx-swap="innerHTML"> <!-- Contenitore della lista: viene aggiornato da HTMX --> <div id="product-list"> <!-- Frammento riutilizzabile: usato sia per il rendering iniziale che per gli aggiornamenti --> <th:block th:replace="~{:: product-rows}"></th:block> </div> <!-- Pulsante "Carica altro": si auto-sostituisce con il prossimo batch --> <button th:if="${hasMore}" th:attr="hx-get='/products/more?page=' + ${currentPage + 1}" hx-target="#product-list" hx-swap="beforeend" <!-- Aggiunge DOPO il contenuto esistente --> th:hx-indicator="'#loading-spinner'"> Carica altri 20 prodotti </button> <div id="loading-spinner" class="htmx-indicator spinner-border"></div> </div> <!-- FRAMMENTO: le righe della lista (usato per rendering iniziale e aggiornamenti HTMX) --> <th:block th:fragment="product-rows"> <div th:each="product : ${products}" th:fragment="product-row(product)" th:id="'product-' + ${product.id}" class="product-card"> <h3 th:text="${product.name}">Nome Prodotto</h3> <span th:text="${#finance.formatCurrency(product.price, 'EUR')}">€ 0</span> <span th:class="${product.active ? 'badge-success' : 'badge-secondary'}" th:text="${product.active ? 'Attivo' : 'Inattivo'}">Stato</span> <!-- Toggle status: aggiorna solo questa card senza ricaricare la lista --> <button th:attr="hx-post='/products/' + ${product.id} + '/toggle-status'" th:hx-target="'#product-' + ${product.id}" hx-swap="outerHTML"> Toggle </button> </div> </th:block> </body> </html>
-```

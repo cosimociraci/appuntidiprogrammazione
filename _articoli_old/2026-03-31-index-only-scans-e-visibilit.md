@@ -1,0 +1,19 @@
+---
+layout: post
+title: "Index-Only Scans e Visibilità"
+date: 2026-03-31 10:11:47 +0200
+sintesi: "Un Index-Only Scan permette a Postgres di rispondere a una query leggendo solo l'indice, senza toccare la tabella (heap). Tuttavia, a causa di MVCC, l..."
+tech: db
+tags: ['db', 'concorrenza e locking approfond']
+---
+## Esigenza Reale
+Velocizzare le query di conteggio o di ricerca su colonne indicizzate in tabelle con milioni di record.
+
+## Analisi Tecnica
+Problema: L'indice contiene i dati ma non le informazioni di visibilità transazionale, forzando accessi al disco extra. Perché: Mantengo la Visibility Map pulita tramite autovacuum aggressivo. Ho scelto questa strategia per permettere al planner di usare l'Index-Only Scan il 100% delle volte.
+
+## Esempio Implementativo
+
+```sql
+/* Verifico se la query sta davvero usando solo l'indice. Il valore "Heap Fetches" nell'output di EXPLAIN ANALYZE è il mio indicatore chiave: se è > 0, significa che la Visibility Map non è aggiornata per alcune pagine. */ EXPLAIN (ANALYZE, BUFFERS, FORMAT TEXT) SELECT count(*) FROM users WHERE status = 'active'; /* Creo un indice covering che includa tutte le colonne necessarie alla query, eliminando qualsiasi necessità di accedere alla heap. */ CREATE INDEX CONCURRENTLY idx_users_status_covering ON users (status) INCLUDE (id, email, created_at); /* Verifico lo stato della Visibility Map per la tabella: le pagine "all-visible" sono quelle che l'Index-Only Scan può leggere senza toccare la heap. */ SELECT relname, heap_blks_read, heap_blks_hit, idx_blks_read, idx_blks_hit, round(100.0 * heap_blks_hit / nullif(heap_blks_hit + heap_blks_read, 0), 2) AS heap_hit_pct FROM pg_statio_user_tables WHERE relname = 'users'; /* Configuro l'autovacuum in modo aggressivo per la tabella specifica, così la Visibility Map rimane sempre fresca: */ ALTER TABLE users SET ( autovacuum_vacuum_scale_factor = 0.01, -- Triggera dopo l'1% di righe modificate autovacuum_analyze_scale_factor = 0.005 ); /* Forzo un VACUUM per ripristinare immediatamente l'efficacia degli Index-Only Scan dopo un batch massiccio di UPDATE. */ VACUUM (ANALYZE) users;
+```

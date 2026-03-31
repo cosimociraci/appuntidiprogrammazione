@@ -1,19 +1,61 @@
 ---
 layout: post
-title: "Pattern Observer e RxJS Multicasting"
-date: 2026-03-31 10:11:47 +0200
-sintesi: "I semplici EventEmitter possono causare memory leak se i listener non vengono rimossi. Subject e ReplaySubject permettono di gestire flussi di dati mu..."
+title: Pattern Observer e RxJS Multicasting
+date: '2026-03-31 16:25:01 '
+sintesi: I semplici EventEmitter possono causare memory leak se i listener non vengono
+  rimossi. Subject e ReplaySubject permettono di gestire flussi di dati multi-consumatore.
+  L'operatore takeUntil deregistra automaticamente gli osservatori, evitando che "gho
+esigenza: Gestire aggiornamenti real-time della dashboard dove più widget devono reagire
+  allo stesso stream di dati WebSocket.
 tech: js
-tags: ['js', 'design patterns & architecture']
+tags:
+- js
+- design patterns & architecture
+codice: '/* Implemento un Observer pattern minimale in Vanilla JS per ambienti senza
+  RxJS. */ class Subject { constructor() { this._observers = new Set(); // Set per
+  evitare duplicati } subscribe(observer) { this._observers.add(observer); // Ritorno
+  una funzione di unsubscribe: il chiamante la chiama quando ha finito return () =>
+  this._observers.delete(observer); } next(value) { this._observers.forEach(observer
+  => { try { observer(value); } catch (e) { console.error(''Errore in observer:'',
+  e); // Isolo gli errori: un observer rotto non blocca gli altri } }); } get observerCount()
+  { return this._observers.size; } } /* Implemento un ReplaySubject che emette gli
+  ultimi N valori ai nuovi subscriber. */ class ReplaySubject extends Subject { constructor(bufferSize
+  = 1) { super(); this._buffer = []; this._bufferSize = bufferSize; } next(value)
+  { // Mantengo il buffer degli ultimi N valori this._buffer.push(value); if (this._buffer.length
+  > this._bufferSize) { this._buffer.shift(); } super.next(value); } subscribe(observer)
+  { // Replay dei valori in buffer per il nuovo subscriber this._buffer.forEach(value
+  => observer(value)); return super.subscribe(observer); } } /* Implemento il WebSocket
+  data stream centralizzato per la dashboard. */ class DashboardDataStream { constructor(wsUrl)
+  { // Un solo Subject per tutti i widget: un solo WebSocket, N subscriber this.priceStream$
+  = new ReplaySubject(1); // Ultimo prezzo sempre disponibile this.alertStream$ =
+  new Subject(); // Solo nuovi alert, nessun replay this.statusStream$ = new ReplaySubject(5);
+  // Ultimi 5 stati const ws = new WebSocket(wsUrl); ws.onmessage = ({ data }) =>
+  { const message = JSON.parse(data); switch (message.type) { case ''PRICE_UPDATE'':
+  this.priceStream$.next(message.payload); break; case ''ALERT'': this.alertStream$.next(message.payload);
+  break; case ''STATUS'': this.statusStream$.next(message.payload); break; } }; ws.onclose
+  = () => { console.warn(''WebSocket chiuso: riconnessione in 3s''); setTimeout(()
+  => new DashboardDataStream(wsUrl), 3000); }; } } /* Uso il pattern nei widget della
+  dashboard con pulizia automatica. */ class PriceWidget { constructor(dataStream)
+  { this._unsubscribeFns = []; // Tengo traccia di tutte le unsubscribe // Sottoscrivo
+  lo stream dei prezzi: al mount del widget const unsubPrice = dataStream.priceStream$.subscribe(price
+  => { this.render(price); }); // Sottoscrivo anche gli alert per questo widget const
+  unsubAlert = dataStream.alertStream$.subscribe(alert => { if (alert.severity ===
+  ''HIGH'') this.showAlert(alert); }); this._unsubscribeFns.push(unsubPrice, unsubAlert);
+  } render(price) { document.getElementById(''price'').textContent = `€${price.toFixed(2)}`;
+  } showAlert(alert) { console.warn(''Alert critico:'', alert.message); } // Chiamo
+  destroy() quando il widget viene rimosso dal DOM: zero ghost subscriptions destroy()
+  { this._unsubscribeFns.forEach(unsub => unsub()); this._unsubscribeFns = []; console.log(''Widget
+  distrutto: tutte le sottoscrizioni rimosse''); } } /* Con RxJS, il pattern è più
+  espressivo grazie a takeUntil: */ import { Subject, ReplaySubject } from ''rxjs'';
+  import { takeUntil, filter, map, distinctUntilChanged } from ''rxjs/operators'';
+  class PriceWidgetRx { constructor(dataStream$) { this._destroy$ = new Subject();
+  // Signal di distruzione // takeUntil si disiscrive automaticamente quando destroy$
+  emette dataStream$.priceStream$.pipe( distinctUntilChanged(), // Ignoro duplicati:
+  emetto solo se il prezzo è cambiato filter(price => price > 0), // Ignoro prezzi
+  non validi map(price => price.toFixed(2)), // Formato takeUntil(this._destroy$)
+  // Auto-cleanup: nessun leak possibile ).subscribe(formattedPrice => { document.getElementById(''price'').textContent
+  = `€${formattedPrice}`; }); } destroy() { this._destroy$.next(); // Tutti gli stream
+  con takeUntil(this._destroy$) si chiudono this._destroy$.complete(); } }'
 ---
-## Esigenza Reale
-Gestire aggiornamenti real-time della dashboard dove più widget devono reagire allo stesso stream di dati WebSocket.
 
-## Analisi Tecnica
 Problema: Memory leak e comportamenti inconsistenti dovuti a sottoscrizioni multiple non coordinate a flussi di dati asincroni. Perché: Uso il Multicasting controllato. Ho scelto di centralizzare lo stream per inviare dati a tutti i listener attivi con un'unica esecuzione della logica sorgente.
-
-## Esempio Implementativo
-
-```js
-/* Implemento un Observer pattern minimale in Vanilla JS per ambienti senza RxJS. */ class Subject { constructor() { this._observers = new Set(); // Set per evitare duplicati } subscribe(observer) { this._observers.add(observer); // Ritorno una funzione di unsubscribe: il chiamante la chiama quando ha finito return () => this._observers.delete(observer); } next(value) { this._observers.forEach(observer => { try { observer(value); } catch (e) { console.error('Errore in observer:', e); // Isolo gli errori: un observer rotto non blocca gli altri } }); } get observerCount() { return this._observers.size; } } /* Implemento un ReplaySubject che emette gli ultimi N valori ai nuovi subscriber. */ class ReplaySubject extends Subject { constructor(bufferSize = 1) { super(); this._buffer = []; this._bufferSize = bufferSize; } next(value) { // Mantengo il buffer degli ultimi N valori this._buffer.push(value); if (this._buffer.length > this._bufferSize) { this._buffer.shift(); } super.next(value); } subscribe(observer) { // Replay dei valori in buffer per il nuovo subscriber this._buffer.forEach(value => observer(value)); return super.subscribe(observer); } } /* Implemento il WebSocket data stream centralizzato per la dashboard. */ class DashboardDataStream { constructor(wsUrl) { // Un solo Subject per tutti i widget: un solo WebSocket, N subscriber this.priceStream$ = new ReplaySubject(1); // Ultimo prezzo sempre disponibile this.alertStream$ = new Subject(); // Solo nuovi alert, nessun replay this.statusStream$ = new ReplaySubject(5); // Ultimi 5 stati const ws = new WebSocket(wsUrl); ws.onmessage = ({ data }) => { const message = JSON.parse(data); switch (message.type) { case 'PRICE_UPDATE': this.priceStream$.next(message.payload); break; case 'ALERT': this.alertStream$.next(message.payload); break; case 'STATUS': this.statusStream$.next(message.payload); break; } }; ws.onclose = () => { console.warn('WebSocket chiuso: riconnessione in 3s'); setTimeout(() => new DashboardDataStream(wsUrl), 3000); }; } } /* Uso il pattern nei widget della dashboard con pulizia automatica. */ class PriceWidget { constructor(dataStream) { this._unsubscribeFns = []; // Tengo traccia di tutte le unsubscribe // Sottoscrivo lo stream dei prezzi: al mount del widget const unsubPrice = dataStream.priceStream$.subscribe(price => { this.render(price); }); // Sottoscrivo anche gli alert per questo widget const unsubAlert = dataStream.alertStream$.subscribe(alert => { if (alert.severity === 'HIGH') this.showAlert(alert); }); this._unsubscribeFns.push(unsubPrice, unsubAlert); } render(price) { document.getElementById('price').textContent = `€${price.toFixed(2)}`; } showAlert(alert) { console.warn('Alert critico:', alert.message); } // Chiamo destroy() quando il widget viene rimosso dal DOM: zero ghost subscriptions destroy() { this._unsubscribeFns.forEach(unsub => unsub()); this._unsubscribeFns = []; console.log('Widget distrutto: tutte le sottoscrizioni rimosse'); } } /* Con RxJS, il pattern è più espressivo grazie a takeUntil: */ import { Subject, ReplaySubject } from 'rxjs'; import { takeUntil, filter, map, distinctUntilChanged } from 'rxjs/operators'; class PriceWidgetRx { constructor(dataStream$) { this._destroy$ = new Subject(); // Signal di distruzione // takeUntil si disiscrive automaticamente quando destroy$ emette dataStream$.priceStream$.pipe( distinctUntilChanged(), // Ignoro duplicati: emetto solo se il prezzo è cambiato filter(price => price > 0), // Ignoro prezzi non validi map(price => price.toFixed(2)), // Formato takeUntil(this._destroy$) // Auto-cleanup: nessun leak possibile ).subscribe(formattedPrice => { document.getElementById('price').textContent = `€${formattedPrice}`; }); } destroy() { this._destroy$.next(); // Tutti gli stream con takeUntil(this._destroy$) si chiudono this._destroy$.complete(); } }
-```
