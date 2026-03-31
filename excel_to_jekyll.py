@@ -66,7 +66,7 @@ def process_excels():
                     f.write(f"layout: post\n")
                     f.write(f"title: \"{titolo}\"\n")
                     f.write(f"date: {time_str}\n")
-                    f.write(f"sintesi: \"{sintesi}\"\n") 
+                    f.write(f"sintesi: \"{sintesi}\"\n")
                     f.write(f"tech: {tech_name}\n")
                     f.write(f"tags: {tags}\n")
                     f.write(f"pdf_file: \"{pdf_name}\"\n")
