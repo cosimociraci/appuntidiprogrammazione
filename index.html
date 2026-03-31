@@ -1,50 +1,42 @@
 ---
 layout: default
-title: Home - DevLog
+title: Home
 ---
-
 <div class="container">
     <nav class="tag-nav">
         <button class="tag-btn active" onclick="filterByTag('tutti', this)">Tutti</button>
-        
-        {% comment %} Metodo infallibile per estrarre tag unici in Jekyll {% endcomment %}
-        {% assign raw_tags = "" %}
+        {% comment %} Estrazione Tag Infallibile {% endcomment %}
+        {% assign tag_string = "" %}
         {% for post in site.posts %}
             {% for tag in post.tags %}
-                {% assign raw_tags = raw_tags | append: tag | append: "|" %}
+                {% assign tag_string = tag_string | append: tag | append: "|" %}
             {% endfor %}
         {% endfor %}
-        {% assign unique_tags = raw_tags | split: "|" | uniq | sort %}
+        {% assign unique_tags = tag_string | split: "|" | uniq | sort %}
 
         {% for tag in unique_tags %}
             {% if tag != "" %}
-            <button class="tag-btn" onclick="filterByTag('{{ tag | slugify }}', this)">
-                {{ tag | upcase }}
-            </button>
+            <button class="tag-btn" onclick="filterByTag('{{ tag | slugify }}', this)">{{ tag | upcase }}</button>
             {% endif %}
         {% endfor %}
     </nav>
 
     <section class="search-container">
-        <input type="text" id="searchInput" placeholder="Cerca tra gli articoli..." onkeyup="applyFilters()">
+        <input type="text" id="searchInput" placeholder="Cerca..." onkeyup="applyFilters()">
     </section>
     
     <main class="bento-grid">
         {% for post in site.posts %}
-        {% capture tag_slugs %}{% for tag in post.tags %}{{ tag | slugify }}{% unless forloop.last %},{% endunless %}{% endfor %}{% endcapture %}
-        
-        <article class="article-card" data-tags="{{ tag_slugs }}" data-title="{{ post.title | downcase }}">
+        {% capture slugs %}{% for t in post.tags %}{{ t | slugify }}{% unless forloop.last %},{% endunless %}{% endfor %}{% endcapture %}
+        <article class="article-card" data-tags="{{ slugs }}" data-title="{{ post.title | downcase }}">
             <div class="card-content">
                 <h2 class="article-title">
                     <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
                 </h2>
-                <p class="sintesi">{{ post.sintesi | truncate: 150 }}</p>
+                <p class="sintesi">{{ post.sintesi | default: "Nessuna sintesi disponibile." }}</p>
             </div>
-            
             {% if post.codice_mini %}
-            <div class="code-mini">
-                <code>{{ post.codice_mini }}</code>
-            </div>
+            <div class="code-mini"><code>{{ post.codice_mini }}</code></div>
             {% endif %}
         </article>
         {% endfor %}
@@ -52,32 +44,21 @@ title: Home - DevLog
 </div>
 
 <script>
-    let currentTag = 'tutti';
-
-    function filterByTag(tag, btn) {
-        currentTag = tag.toLowerCase().trim();
-        // Aggiorna UI bottoni
+    let activeTag = 'tutti';
+    function filterByTag(tag, el) {
+        activeTag = tag;
         document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+        el.classList.add('active');
         applyFilters();
     }
-
     function applyFilters() {
         const search = document.getElementById('searchInput').value.toLowerCase();
-        const articles = document.querySelectorAll('.article-card');
-
-        articles.forEach(card => {
-            const title = card.getAttribute('data-title') || "";
+        document.querySelectorAll('.article-card').forEach(card => {
             const tags = card.getAttribute('data-tags').split(',');
-            
-            const matchTag = (currentTag === 'tutti' || tags.includes(currentTag));
-            const matchSearch = title.includes(search);
-
-            if (matchTag && matchSearch) {
-                card.style.display = "flex";
-            } else {
-                card.style.display = "none";
-            }
+            const title = card.getAttribute('data-title');
+            const matchesTag = (activeTag === 'tutti' || tags.includes(activeTag));
+            const matchesSearch = title.includes(search);
+            card.style.display = (matchesTag && matchesSearch) ? "flex" : "none";
         });
     }
 </script>

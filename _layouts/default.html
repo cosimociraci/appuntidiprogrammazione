@@ -7,18 +7,20 @@
     <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&family=Fira+Code&display=swap" rel="stylesheet">
     <script>
-        // Gestione Tema: deve essere globale per funzionare con onclick
-        function toggleTheme() {
-            const html = document.documentElement;
-            const current = html.getAttribute('data-theme');
-            const next = current === 'dark' ? 'light' : 'dark';
-            html.setAttribute('data-theme', next);
-            localStorage.setItem('theme', next);
+        // Gestione Tema immediata per evitare flash bianchi
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
             const btn = document.getElementById('theme-btn');
-            if (btn) btn.innerHTML = next === 'dark' ? '☀️' : '🌙';
+            if (btn) btn.innerHTML = theme === 'dark' ? '☀️' : '🌙';
         }
 
-        // Applica il tema salvato prima del rendering per evitare flash
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', next);
+            applyTheme(next);
+        }
+
         const savedTheme = localStorage.getItem('theme') || 'dark';
         document.documentElement.setAttribute('data-theme', savedTheme);
     </script>
@@ -28,13 +30,12 @@
         <div class="logo" onclick="window.location.href='{{ '/' | relative_url }}'">
             APPUNTI DI <span>PROGRAMMAZIONE.</span>
         </div>
-        <nav>
-            <button onclick="toggleTheme()" id="theme-btn" class="theme-toggle">
-                {% if savedTheme == 'light' %}🌙{% else %}☀️{% endif %}
-            </button>
-        </nav>
+        <button onclick="toggleTheme()" id="theme-btn" class="theme-toggle">☀️</button>
     </header>
-
     {{ content }}
+    <script>
+        // Sincronizza l'icona al caricamento
+        document.addEventListener('DOMContentLoaded', () => applyTheme(localStorage.getItem('theme') || 'dark'));
+    </script>
 </body>
 </html>
