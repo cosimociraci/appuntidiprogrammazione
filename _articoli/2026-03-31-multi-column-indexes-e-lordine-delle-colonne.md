@@ -1,10 +1,10 @@
 ---
 layout: post
 title: "Multi-column Indexes e l'ordine delle colonne"
-date: 2026-03-31 17:53:41 
+date: 2026-03-31 18:55:06 
 sintesi: "L'ordine delle colonne in un indice composto (B-Tree) è critico. La "regola del prefisso" stabilisce che un indice su (A, B) può essere usato per ricerche su A e su A+B, ma è quasi inutile per ricerche solo su B. Le colonne con la maggiore selettivit"
 tech: db
-tags: ['db', 'indexing internals']
+tags: [db, "indexing internals"]
 pdf_file: "multi-column-indexes-e-lordine-delle-colonne.pdf"
 ---
 

@@ -1,10 +1,10 @@
 ---
 layout: post
 title: "Synthetic Local Variables (#ids)"
-date: 2026-03-31 17:53:25 
+date: 2026-03-31 18:54:50 
 sintesi: "In loop complessi, generare ID univoci per l'accessibilità (ARIA) o per JS è difficile. L'oggetto #ids.seq('myId') genera una sequenza incrementale che persiste per tutta la richiesta. Questo garantisce che i tag label e input siano sempre sincronizz"
 tech: thymeleaf
-tags: ['thymeleaf', 'advanced layout & templating']
+tags: [thymeleaf, "advanced layout & templating"]
 pdf_file: "synthetic-local-variables-ids.pdf"
 ---
 
@@ -27,9 +27,7 @@ Problema: ID duplicati nel DOM che causano malfunzionamenti negli script JS e vi
             th:value="${permission.code}"
             th:checked="${permission.assigned}"
         />
-        <label th:for="${#ids.prev('perm')}" th:text="${permission.label}"
-            >Permesso</label
-        >
+        <label th:for="${#ids.prev('perm')}" th:text="${permission.label}">Permesso</label>
     </li>
 </ul>
 <!-- Output generato: -->
@@ -88,11 +86,8 @@ Problema: ID duplicati nel DOM che causano malfunzionamenti negli script JS e vi
     </div>
 </div>
 <!-- Due inclusioni dello stesso frammento: ID distinti garantiti -->
-<th:block
-    th:replace="~{:: toggle-panel('Sezione A', 'Contenuto A')}"
-></th:block>
-<th:block
-    th:replace="~{:: toggle-panel('Sezione B', 'Contenuto B')}"
-></th:block>
+<th:block th:replace="~{:: toggle-panel('Sezione A', 'Contenuto A')}"></th:block>
+<th:block th:replace="~{:: toggle-panel('Sezione B', 'Contenuto B')}"></th:block>
 <!-- Genera: collapse-1 e collapse-2, mai duplicati -->
+
 ```

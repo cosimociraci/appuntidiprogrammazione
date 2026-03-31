@@ -1,10 +1,10 @@
 ---
 layout: post
 title: "Security Dialect: sec:authorize"
-date: 2026-03-31 17:53:27 
+date: 2026-03-31 18:54:52 
 sintesi: "Nascondere elementi via CSS (display:none) non è sicurezza: l'HTML è visibile nel sorgente. L'attributo sec:authorize="hasRole(...)" impedisce fisicamente al server di generare e inviare il markup al browser se l'utente non ha i permessi. Questo ridu"
 tech: thymeleaf
-tags: ['thymeleaf', 'security & spel expressions']
+tags: [thymeleaf, "security & spel expressions"]
 pdf_file: "security-dialect-secauthorize.pdf"
 ---
 
@@ -22,10 +22,9 @@ Problema: Esposizione di informazioni riservate o strutture URL sensibili nel co
     // <groupId>org.thymeleaf.extras</groupId> //
     <artifactId>thymeleaf-extras-springsecurity6</artifactId> //
 </dependency>
-/* Spring Boot auto-configura il dialetto se la dipendenza è nel classpath. Per
-configurazione esplicita: */ @Configuration public class ThymeleafSecurityConfig
-{ @Bean public SpringSecurityDialect springSecurityDialect() { return new
-SpringSecurityDialect(); } }
+/* Spring Boot auto-configura il dialetto se la dipendenza è nel classpath. Per configurazione
+esplicita: */ @Configuration public class ThymeleafSecurityConfig { @Bean public
+SpringSecurityDialect springSecurityDialect() { return new SpringSecurityDialect(); } }
 <!-- Namespace da aggiungere al tag html: -->
 <!-- <html xmlns:sec="http://www.thymeleaf.org/extras/spring-security"> -->
 <!-- CASO 1: Visibilità basata su ruolo. Il div NON viene nemmeno generato per gli utenti non-admin: il browser non riceve l'HTML, non solo non lo vede. -->
@@ -62,24 +61,15 @@ SpringSecurityDialect(); } }
 <!-- Link di login/logout condizionale -->
 <a sec:authorize="isAnonymous()" href="/login">Accedi</a>
 <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
-    <input
-        type="hidden"
-        th:name="${_csrf.parameterName}"
-        th:value="${_csrf.token}"
-    />
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
     <button type="submit" class="btn btn-outline-secondary">Esci</button>
 </form>
 <!-- CASO 5: Combinare sec:authorize con th:if per logica mista. -->
-<tr
-    th:each="user : ${users}"
-    th:with="isOwner=${user.id == #authentication.principal.id}"
->
+<tr th:each="user : ${users}" th:with="isOwner=${user.id == #authentication.principal.id}">
     <td th:text="${user.name}">Nome</td>
     <!-- Il pulsante "Modifica" è visibile solo se l'utente è il proprietario o admin -->
     <td>
-        <a th:if="${isOwner}" th:href="@{'/users/' + ${user.id} + '/edit'}"
-            >Modifica</a
-        >
+        <a th:if="${isOwner}" th:href="@{'/users/' + ${user.id} + '/edit'}">Modifica</a>
         <button
             sec:authorize="hasRole('ADMIN')"
             th:attr="data-userid=${user.id}"
@@ -89,12 +79,12 @@ SpringSecurityDialect(); } }
         </button>
     </td>
 </tr>
-/* Definisco un SecurityService per logiche di autorizzazione complesse
-richiamabili da SpEL: */ @Service("securityService") public class
-SecurityService { public boolean isSameOrg(Authentication auth, Long orgId) { if
-(!(auth.getPrincipal() instanceof UserDetails userDetails)) return false;
-UserEntity user = userRepository.findByUsername(userDetails.getUsername());
-return user != null && user.getOrganizationId().equals(orgId); } public boolean
-canEditProduct(Authentication auth, Long productId) { return hasRole(auth,
-"ADMIN") || productRepository.isOwner(productId, auth.getName()); } }
+/* Definisco un SecurityService per logiche di autorizzazione complesse richiamabili da SpEL: */
+@Service("securityService") public class SecurityService { public boolean isSameOrg(Authentication
+auth, Long orgId) { if (!(auth.getPrincipal() instanceof UserDetails userDetails)) return false;
+UserEntity user = userRepository.findByUsername(userDetails.getUsername()); return user != null &&
+user.getOrganizationId().equals(orgId); } public boolean canEditProduct(Authentication auth, Long
+productId) { return hasRole(auth, "ADMIN") || productRepository.isOwner(productId, auth.getName());
+} }
+
 ```

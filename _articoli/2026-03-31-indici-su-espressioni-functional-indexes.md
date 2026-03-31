@@ -1,10 +1,10 @@
 ---
 layout: post
 title: "Indici su Espressioni (Functional Indexes)"
-date: 2026-03-31 17:53:40 
+date: 2026-03-31 18:55:05 
 sintesi: "Molte query falliscono l'uso degli indici perché applicano funzioni alle colonne (es. WHERE lower(name) = 'rossi'). Un indice standard su name non serve in questo caso. La soluzione è un indice su espressione, dove il risultato della funzione viene p"
 tech: db
-tags: ['db', 'indexing internals']
+tags: [db, "indexing internals"]
 pdf_file: "indici-su-espressioni-functional-indexes.pdf"
 ---
 

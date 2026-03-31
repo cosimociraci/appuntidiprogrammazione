@@ -1,10 +1,10 @@
 ---
 layout: post
 title: "Component-Based Architecture (Fragment Parameters)"
-date: 2026-03-31 17:53:24 
+date: 2026-03-31 18:54:48 
 sintesi: "Passare dati semplici ai frammenti non permette di creare componenti veramente isolati. Passando interi oggetti, classi CSS e fallback ai frammenti, e usando il no-op token _, è possibile definire un valore predefinito nel mockup HTML che viene mante"
 tech: thymeleaf
-tags: ['thymeleaf', 'advanced layout & templating']
+tags: [thymeleaf, "advanced layout & templating"]
 pdf_file: "component-based-architecture-fragment-parameters.pdf"
 ---
 
@@ -27,10 +27,7 @@ Problema: Frammenti troppo rigidi che forzano a passare parametri vuoti o nulli,
         th:attr="aria-label=${label ?: 'Azione'}"
     >
         <!-- Icona opzionale: se icon è _ o null, il tag span non viene renderizzato -->
-        <span
-            th:if="${icon != null and icon != _}"
-            th:class="'icon icon-' + ${icon}"
-        ></span>
+        <span th:if="${icon != null and icon != _}" th:class="'icon icon-' + ${icon}"></span>
         <span th:text="${label ?: 'Salva'}">Salva</span>
     </button>
 </div>
@@ -41,9 +38,7 @@ Problema: Frammenti troppo rigidi che forzano a passare parametri vuoti o nulli,
     th:remove="tag"
 >
     <div class="card-header">
-        <h5 class="card-title" th:text="${title ?: 'Titolo Card'}">
-            Titolo Card
-        </h5>
+        <h5 class="card-title" th:text="${title ?: 'Titolo Card'}">Titolo Card</h5>
         <p
             th:if="${subtitle != null and subtitle != _}"
             class="card-subtitle"
@@ -74,9 +69,7 @@ Problema: Frammenti troppo rigidi che forzano a passare parametri vuoti o nulli,
     th:replace="~{fragments/components :: button('Elimina', 'danger', 'trash', false)}"
 ></th:block>
 <!-- Button con solo label: gli altri parametri usano il default -->
-<th:block
-    th:replace="~{fragments/components :: button('Salva', _, _, _)}"
-></th:block>
+<th:block th:replace="~{fragments/components :: button('Salva', _, _, _)}"></th:block>
 <!-- Card completa con contenuto iniettato -->
 <th:block
     th:replace="~{fragments/components :: card('Ordini Recenti', 'Ultimi 30 giorni', 'shadow-sm', true)}"
@@ -90,4 +83,5 @@ Problema: Frammenti troppo rigidi che forzano a passare parametri vuoti o nulli,
         </table>
     </th:block>
 </th:block>
+
 ```

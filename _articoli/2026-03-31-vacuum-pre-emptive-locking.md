@@ -1,10 +1,10 @@
 ---
 layout: post
 title: "Vacuum Pre-emptive Locking"
-date: 2026-03-31 17:53:34 
+date: 2026-03-31 18:54:59 
 sintesi: "Il Vacuum è un processo di background, ma per finalizzare la pulizia o per troncare una tabella alla fine, ha bisogno di un lock breve ma forte (Access Exclusive). Se la tabella è costantemente sotto query, il Vacuum potrebbe non riuscire mai a finir"
 tech: db
-tags: ['db', 'concorrenza e locking approfond']
+tags: [db, "concorrenza e locking approfond"]
 pdf_file: "vacuum-pre-emptive-locking.pdf"
 ---
 

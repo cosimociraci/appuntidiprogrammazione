@@ -1,10 +1,10 @@
 ---
 layout: post
 title: "Content Security Policy (CSP) e Nonces"
-date: 2026-03-31 17:53:19 
+date: 2026-03-31 18:54:44 
 sintesi: "Gli attacchi XSS iniettano script malevoli nel DOM. Una CSP rigorosa può bloccare l'esecuzione di script non autorizzati. I Nonces (numeri usati una sola volta) sono token casuali generati dal server a ogni richiesta, inclusi sia nell'header HTTP che"
 tech: js
-tags: ['js', 'security & cryptography']
+tags: [js, "security & cryptography"]
 pdf_file: "content-security-policy-csp-e-nonces.pdf"
 ---
 

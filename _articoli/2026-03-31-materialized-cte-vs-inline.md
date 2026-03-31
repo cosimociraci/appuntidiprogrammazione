@@ -1,10 +1,10 @@
 ---
 layout: post
 title: "Materialized CTE vs Inline"
-date: 2026-03-31 17:53:35 
+date: 2026-03-31 18:55:00 
 sintesi: "Prima di PostgreSQL 12, le Common Table Expressions (CTE) erano "optimization fences": venivano sempre calcolate e caricate in memoria (materializzate) prima del resto della query. Oggi il Planner le "inlinea" per ottimizzarle. Tuttavia, a volte è ne"
 tech: db
-tags: ['db', 'query opt. & planner']
+tags: [db, "query opt. & planner"]
 pdf_file: "materialized-cte-vs-inline.pdf"
 ---
 

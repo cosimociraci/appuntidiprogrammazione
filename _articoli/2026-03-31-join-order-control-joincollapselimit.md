@@ -1,10 +1,10 @@
 ---
 layout: post
 title: "Join Order Control (join_collapse_limit)"
-date: 2026-03-31 17:53:36 
+date: 2026-03-31 18:55:01 
 sintesi: "Quando una query ha molti join, il Planner tenta di rimescolarli per trovare l'ordine più efficiente. Tuttavia, il numero di combinazioni cresce esponenzialmente. Se superiamo il join_collapse_limit, il Planner smette di cercare l'ordine perfetto e i"
 tech: db
-tags: ['db', 'query opt. & planner']
+tags: [db, "query opt. & planner"]
 pdf_file: "join-order-control-joincollapselimit.pdf"
 ---
 

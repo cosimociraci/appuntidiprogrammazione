@@ -1,10 +1,10 @@
 ---
 layout: post
 title: "Backpressure con Semaphores"
-date: 2026-03-31 17:52:56 
+date: 2026-03-31 18:54:09 
 sintesi: "In sistemi asincroni, è facile che un produttore veloce inondi un consumatore lento, esaurendo la memoria (unbounded queue). L'uso di Semaphore come meccanismo di backpressure è semplice ma efficace. Il produttore deve acquisire un permesso prima di "
 tech: java
-tags: ['java', 'concurrency & multithreading']
+tags: [java, "concurrency & multithreading"]
 pdf_file: "backpressure-con-semaphores.pdf"
 ---
 

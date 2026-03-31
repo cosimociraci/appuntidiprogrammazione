@@ -1,10 +1,10 @@
 ---
 layout: post
 title: "Index Scan vs Bitmap Scan"
-date: 2026-03-31 17:53:37 
+date: 2026-03-31 18:55:02 
 sintesi: "PostgreSQL ha due modi principali di usare un indice: Index Scan (legge l'indice e va subito alla tabella riga per riga) e Bitmap Index Scan (legge tutto l'indice, crea una mappa di bit delle righe e poi accede alla tabella in modo ordinato). Il Bitm"
 tech: db
-tags: ['db', 'query opt. & planner']
+tags: [db, "query opt. & planner"]
 pdf_file: "index-scan-vs-bitmap-scan.pdf"
 ---
 

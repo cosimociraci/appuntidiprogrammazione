@@ -1,10 +1,10 @@
 ---
 layout: post
 title: "Transaction ID (XID) Wraparound"
-date: 2026-03-31 17:53:33 
+date: 2026-03-31 18:54:57 
 sintesi: "Ogni transazione in Postgres riceve un ID numerico a 32 bit. Poiché i numeri finiscono (circa 4 miliardi), Postgres deve riutilizzarli. Se non gestito, questo porta al "wraparound", un evento catastrofico dove i vecchi dati sembrano sparire o diventa"
 tech: db
-tags: ['db', 'concorrenza e locking approfond']
+tags: [db, "concorrenza e locking approfond"]
 pdf_file: "transaction-id-xid-wraparound.pdf"
 ---
 

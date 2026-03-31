@@ -1,10 +1,10 @@
 ---
 layout: post
 title: "Virtual Threads & I/O Bound Tasks"
-date: 2026-03-31 17:52:55 
+date: 2026-03-31 18:54:08 
 sintesi: "Con Java 21, i Virtual Threads cambiano il paradigma: non dobbiamo più preoccuparci di saturare il pool di thread dell'OS. Per task bloccanti (chiamate HTTP, JDBC), non serve più usare complessi approcci reattivi. I Virtual Threads sono leggeri e ges"
 tech: java
-tags: ['java', 'concurrency & multithreading']
+tags: [java, "concurrency & multithreading"]
 pdf_file: "virtual-threads-io-bound-tasks.pdf"
 ---
 

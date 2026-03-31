@@ -1,10 +1,10 @@
 ---
 layout: post
 title: "Logical Replication Slots e Upgrade "Near-Zero Downtime""
-date: 2026-03-31 17:53:45 
+date: 2026-03-31 18:55:09 
 sintesi: "La replica logica è lo strumento principe per eseguire upgrade di versione (es. da PG 15 a 17) con downtime minimo. La procedura prevede: creare un nuovo cluster con la versione recente, attivare la replica logica dal vecchio al nuovo, aspettare che "
 tech: db
-tags: ['db', 'advanced replication & ha']
+tags: [db, "advanced replication & ha"]
 pdf_file: "logical-replication-slots-e-upgrade-near-zero-downtime.pdf"
 ---
 

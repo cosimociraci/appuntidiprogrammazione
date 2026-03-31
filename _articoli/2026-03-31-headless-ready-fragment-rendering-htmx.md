@@ -1,10 +1,10 @@
 ---
 layout: post
 title: "Headless-Ready: Fragment Rendering (HTMX)"
-date: 2026-03-31 17:53:25 
+date: 2026-03-31 18:54:50 
 sintesi: "Spesso serve ritornare solo un pezzo di HTML per aggiornamenti AJAX/HTMX, non l'intera pagina. Thymeleaf può processare solo una porzione del file .html (es. return "page :: my-fragment"). Questo abilita pattern "HTML over the wire", permettendo a Sp"
 tech: thymeleaf
-tags: ['thymeleaf', 'advanced layout & templating']
+tags: [thymeleaf, "advanced layout & templating"]
 pdf_file: "headless-ready-fragment-rendering-htmx.pdf"
 ---
 

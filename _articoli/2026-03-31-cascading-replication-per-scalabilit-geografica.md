@@ -1,10 +1,10 @@
 ---
 layout: post
 title: "Cascading Replication per Scalabilità Geografica"
-date: 2026-03-31 17:53:43 
+date: 2026-03-31 18:55:08 
 sintesi: "In architetture distribuite globalmente, avere 100 repliche collegate a un unico Master saturerebbe la sua banda di rete. La "Cascading Replication" permette a una replica di comportarsi a sua volta come un publisher per altre repliche "nipoti". Ques"
 tech: db
-tags: ['db', 'advanced replication & ha']
+tags: [db, "advanced replication & ha"]
 pdf_file: "cascading-replication-per-scalabilit-geografica.pdf"
 ---
 

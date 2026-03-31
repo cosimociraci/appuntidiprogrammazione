@@ -1,10 +1,10 @@
 ---
 layout: post
 title: "Pattern Observer e RxJS Multicasting"
-date: 2026-03-31 17:53:14 
+date: 2026-03-31 18:54:39 
 sintesi: "I semplici EventEmitter possono causare memory leak se i listener non vengono rimossi. Subject e ReplaySubject permettono di gestire flussi di dati multi-consumatore. L'operatore takeUntil deregistra automaticamente gli osservatori, evitando che "gho"
 tech: js
-tags: ['js', 'design patterns & architecture']
+tags: [js, "design patterns & architecture"]
 pdf_file: "pattern-observer-e-rxjs-multicasting.pdf"
 ---
 

@@ -1,10 +1,10 @@
 ---
 layout: post
 title: "Monitoring I/O con pg_stat_bgwriter"
-date: 2026-03-31 17:53:48 
+date: 2026-03-31 18:55:13 
 sintesi: "Il Background Writer ha il compito di scrivere le pagine sporche dalla memoria al disco in modo graduale, evitando picchi durante i Checkpoint. Se il numero di buffers_backend è alto, significa che le query degli utenti sono costrette a scrivere i da"
 tech: db
-tags: ['db', 'vacuum & storage']
+tags: [db, "vacuum & storage"]
 pdf_file: "monitoring-io-con-pgstatbgwriter.pdf"
 ---
 

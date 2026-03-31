@@ -1,10 +1,10 @@
 ---
 layout: post
 title: "Memory Layouts e C Structs"
-date: 2026-03-31 17:53:09 
+date: 2026-03-31 18:54:32 
 sintesi: "Leggere una struct C da Java con JNI richiede di mappare ogni campo manualmente. I GroupLayout di Panama permettono di definire la struttura esatta della memoria (padding compreso) per farla combaciare con quella del C. Tramite i VarHandle generati d"
 tech: java
-tags: ['java', 'jni & project panama']
+tags: [java, "jni & project panama"]
 pdf_file: "memory-layouts-e-c-structs.pdf"
 ---
 

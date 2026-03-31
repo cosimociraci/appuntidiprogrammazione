@@ -1,10 +1,10 @@
 ---
 layout: post
 title: "CQRS (Command Query Responsibility Segregation)"
-date: 2026-03-31 17:53:15 
+date: 2026-03-31 18:54:39 
 sintesi: "Usare lo stesso modello per leggere e scrivere dati porta a compromessi sulle performance. La separazione tra Command (scrive/modifica) e Query (legge) permette di ottimizzare i Command per la consistenza e le Query per la velocità (es. usando viste "
 tech: js
-tags: ['js', 'design patterns & architecture']
+tags: [js, "design patterns & architecture"]
 pdf_file: "cqrs-command-query-responsibility-segregation.pdf"
 ---
 

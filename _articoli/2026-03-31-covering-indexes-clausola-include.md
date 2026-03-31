@@ -1,10 +1,10 @@
 ---
 layout: post
 title: "Covering Indexes (Clausola INCLUDE)"
-date: 2026-03-31 17:53:40 
+date: 2026-03-31 18:55:05 
 sintesi: "Introdotta in Postgres 11, la clausola INCLUDE permette di creare indici "coprenti". Questo permette di aggiungere colonne extra ai nodi foglia dell'indice che non fanno parte della chiave di ricerca. Il vantaggio tecnico è rilevante: permette gli "I"
 tech: db
-tags: ['db', 'indexing internals']
+tags: [db, "indexing internals"]
 pdf_file: "covering-indexes-clausola-include.pdf"
 ---
 

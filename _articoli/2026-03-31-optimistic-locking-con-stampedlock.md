@@ -1,10 +1,10 @@
 ---
 layout: post
 title: "Optimistic Locking con StampedLock"
-date: 2026-03-31 17:52:55 
+date: 2026-03-31 18:54:07 
 sintesi: "Il classico ReentrantReadWriteLock può soffrire di "write starvation" se ci sono troppi lettori. StampedLock offre una modalità di lettura ottimistica che non blocca affatto i thread di scrittura. Il trucco è validare il "ticket" (stamp) dopo la lett"
 tech: java
-tags: ['java', 'concurrency & multithreading']
+tags: [java, "concurrency & multithreading"]
 pdf_file: "optimistic-locking-con-stampedlock.pdf"
 ---
 

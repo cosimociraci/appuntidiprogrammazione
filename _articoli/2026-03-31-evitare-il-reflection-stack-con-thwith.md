@@ -1,10 +1,10 @@
 ---
 layout: post
 title: "Evitare il Reflection Stack con th:with"
-date: 2026-03-31 17:53:23 
+date: 2026-03-31 18:54:48 
 sintesi: "Accedere ripetutamente a metodi complessi tramite SpEL all'interno di un ciclo è costoso. L'istruzione th:with crea una variabile locale nel contesto di Thymeleaf. Memorizzando il risultato di una computazione o di una lookup una sola volta per itera"
 tech: thymeleaf
-tags: ['thymeleaf', 'performance tuning & caching']
+tags: [thymeleaf, "performance tuning & caching"]
 pdf_file: "evitare-il-reflection-stack-con-thwith.pdf"
 ---
 
@@ -51,12 +51,7 @@ Problema: Degradazione delle performance dovuta a chiamate ridondanti a metodi d
         Ruolo
     </td>
     <td th:text="${formattedSpent}">€ 0</td>
-    <td
-        th:class="${isVip} ? 'text-gold' : ''"
-        th:text="${isVip} ? 'VIP' : 'Standard'"
-    >
-        Tier
-    </td>
+    <td th:class="${isVip} ? 'text-gold' : ''" th:text="${isVip} ? 'VIP' : 'Standard'">Tier</td>
 </tr>
 <!-- th:with annidato per logiche più complesse: calcolo il subtotale e il discount una sola volta. -->
 <tbody
@@ -81,4 +76,5 @@ Problema: Degradazione delle performance dovuta a chiamate ridondanti a metodi d
     <span th:text="${config.dateFormat}">dd/MM/yyyy</span>
     <span th:text="${config.currency}">EUR</span>
 </div>
+
 ```

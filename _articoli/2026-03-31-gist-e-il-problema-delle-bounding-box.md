@@ -1,10 +1,10 @@
 ---
 layout: post
 title: "GiST e il problema delle Bounding Box"
-date: 2026-03-31 17:53:39 
+date: 2026-03-31 18:55:04 
 sintesi: "L'indice GiST (Generalized Search Tree) è il motore di PostGIS, ma la sua efficienza dipende dalla "qualità" delle Bounding Box (MBR) create. Se le geometrie sono molto sovrapposte o disperse, l'albero GiST diventa inefficiente perché deve scansionar"
 tech: db
-tags: ['db', 'indexing internals']
+tags: [db, "indexing internals"]
 pdf_file: "gist-e-il-problema-delle-bounding-box.pdf"
 ---
 

@@ -1,10 +1,10 @@
 ---
 layout: post
 title: "Bloat Analysis & pg_repack"
-date: 2026-03-31 17:53:47 
+date: 2026-03-31 18:55:11 
 sintesi: "Il Vacuum recupera lo spazio all'interno del file, ma non lo restituisce al sistema operativo. Una tabella con molto "bloat" è come una spugna con troppi buchi: occupa molto spazio ma contiene pochi dati utili. Se il bloat è eccessivo (es. >30%), le "
 tech: db
-tags: ['db', 'vacuum & storage']
+tags: [db, "vacuum & storage"]
 pdf_file: "bloat-analysis-pgrepack.pdf"
 ---
 

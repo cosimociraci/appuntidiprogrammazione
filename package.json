@@ -1,0 +1,24 @@
+{
+  "name": "appuntidiprogrammazione",
+  "version": "1.0.0",
+  "description": "python3 -m http.server 8000 npx decap-server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cosimociraci/appuntidiprogrammazione.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cosimociraci/appuntidiprogrammazione/issues"
+  },
+  "homepage": "https://github.com/cosimociraci/appuntidiprogrammazione#readme",
+  "devDependencies": {
+    "prettier": "^3.8.1",
+    "prettier-plugin-java": "^2.8.1"
+  }
+}

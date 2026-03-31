@@ -1,10 +1,10 @@
 ---
 layout: post
 title: "Wait Queues e Lock Priority"
-date: 2026-03-31 17:53:31 
+date: 2026-03-31 18:54:56 
 sintesi: "PostgreSQL gestisce i lock tramite una coda FIFO (First-In-First-Out). Se un processo chiede un Access Exclusive Lock (es. per un ALTER TABLE), si mette in coda. Tutti i processi che arrivano dopo, anche se chiedono solo una semplice SELECT, rimarran"
 tech: db
-tags: ['db', 'concorrenza e locking approfond']
+tags: [db, "concorrenza e locking approfond"]
 pdf_file: "wait-queues-e-lock-priority.pdf"
 ---
 

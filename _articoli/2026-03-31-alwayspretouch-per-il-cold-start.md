@@ -1,10 +1,10 @@
 ---
 layout: post
 title: "AlwaysPreTouch per il Cold Start"
-date: 2026-03-31 17:52:59 
+date: 2026-03-31 18:54:15 
 sintesi: "Di default, la JVM riserva la memoria all'avvio ma non la occupa realmente (lazy allocation). Questo causa un calo di performance quando l'applicazione inizia a lavorare seriamente. Il parametro -XX:+AlwaysPreTouch forza la JVM a scrivere uno zero in"
 tech: java
-tags: ['java', 'jvm tuning & garbage collection']
+tags: [java, "jvm tuning & garbage collection"]
 pdf_file: "alwayspretouch-per-il-cold-start.pdf"
 ---
 

@@ -1,10 +1,10 @@
 ---
 layout: post
 title: "Indici GIN su Array e JSONB"
-date: 2026-03-31 17:53:41 
+date: 2026-03-31 18:55:06 
 sintesi: "PostgreSQL eccelle nel gestire dati non strutturati grazie agli indici GIN applicati ad array o oggetti JSONB. Questi indici permettono di interrogare "l'interno" del dato: trovare tutti i documenti che contengono un certo tag o una specifica chiave/"
 tech: db
-tags: ['db', 'indexing internals']
+tags: [db, "indexing internals"]
 pdf_file: "indici-gin-su-array-e-jsonb.pdf"
 ---
 
