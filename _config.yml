@@ -12,7 +12,8 @@ description: >-
 # ==========================================
 baseurl: "/appuntidiprogrammazione"
 url: "https://icarocomix.github.io"
-future: true
+theme: null # Forza Jekyll a usare solo i tuoi layout
+future: true # Lo teniamo per evitare i 404
 
 # ==========================================
 # 3. BACKEND & AUTENTICAZIONE (Decap CMS)
