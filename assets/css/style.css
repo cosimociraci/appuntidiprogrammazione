@@ -6,86 +6,120 @@
     max-width: 1200px;
     margin: 40px auto;
     padding: 0 20px;
+    align-items: start; /* Evita che la sidebar si allunghi inutilmente */
 }
 
 .main-sidebar {
     position: sticky;
     top: 20px;
-    height: fit-content;
+    height: auto;
 }
 
 /* Sidebar Box */
 .sidebar-box {
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 20px;
+    border-radius: 12px; /* Angoli leggermente più morbidi */
+    padding: 24px;
+    margin-bottom: 24px;
+    transition: box-shadow 0.3s ease;
+}
+
+.sidebar-box:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .box-label {
     display: block;
-    font-size: 0.8rem;
-    font-weight: bold;
+    font-size: 0.75rem;
+    font-weight: 700;
     color: var(--text-muted);
     text-transform: uppercase;
-    margin-bottom: 15px;
-    letter-spacing: 1px;
+    margin-bottom: 18px;
+    letter-spacing: 1.2px;
 }
 
 /* Tag Nav Verticale */
 .tag-nav-vertical {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 10px;
 }
 
 /* Mini Book Cards per la Home */
 .featured-books {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 20px;
 }
 
 .mini-book-card {
     display: flex;
-    gap: 12px;
+    align-items: center; /* Allinea verticalmente immagine e testo */
+    gap: 15px;
     text-decoration: none;
     color: inherit;
-    font-size: 0.9rem;
-    transition: transform 0.2s;
+    font-size: 0.95rem;
+    transition: transform 0.2s ease, color 0.2s ease;
 }
 
 .mini-book-card:hover {
-    transform: translateX(5px);
+    transform: translateX(8px);
+}
+
+.mini-book-card:hover strong {
+    color: var(--accent-hover, var(--accent-color)); /* Feedback colore sul titolo */
 }
 
 .mini-book-card img {
-    width: 50px;
-    height: 70px;
+    width: 55px;
+    height: 80px;
     object-fit: cover;
-    border-radius: 4px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    border-radius: 6px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    flex-shrink: 0; /* Impedisce all'immagine di rimpicciolirsi */
+}
+
+.mini-book-card .info-container {
+    display: flex;
+    flex-direction: column;
 }
 
 .mini-book-card strong {
     display: block;
     color: var(--accent-color);
+    line-height: 1.3;
+    transition: color 0.2s;
 }
 
 .mini-book-card p {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     color: var(--text-muted);
     margin: 4px 0 0 0;
 }
 
 /* Responsive */
-@media (max-width: 900px) {
+@media (max-width: 992px) { /* Breakpoint leggermente più alto per tablet */
     .main-layout-container {
         grid-template-columns: 1fr;
+        gap: 30px;
     }
+    
     .main-sidebar {
         order: -1; /* Sidebar sopra il contenuto su mobile */
         position: static;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+
+    .sidebar-box {
+        margin-bottom: 0;
+    }
+}
+
+@media (max-width: 600px) {
+    .main-sidebar {
+        grid-template-columns: 1fr;
     }
 }

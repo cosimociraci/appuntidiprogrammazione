@@ -8,7 +8,7 @@ layout: default
       <span class="box-label">Argomenti</span>
       <div class="tag-cloud-sidebar">
         {% for tag in page.tags %}
-          <a href="/tags#{{ tag | slugify }}" class="sidebar-tag">{{ tag }}</a>
+          <span class="sidebar-tag">{{ tag }}</span>
         {% endfor %}
       </div>
     </div>

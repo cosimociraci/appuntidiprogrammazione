@@ -3,6 +3,37 @@ layout: default
 title: Home
 ---
 
+<style>
+    /* Stili per rendere la sezione tag scrollabile e limitata in altezza */
+    .tag-nav-vertical {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        /* Limita l'altezza al 50% della viewport */
+        max-height: 50vh; 
+        /* Attiva lo scroll verticale se i tag superano l'altezza */
+        overflow-y: auto;
+        /* Opzionale: padding per non far toccare i bottoni al bordo dello scroll */
+        padding-right: 5px; 
+    }
+
+    /* Personalizzazione scrollbar (opzionale, per renderla più discreta) */
+    .tag-nav-vertical::-webkit-scrollbar {
+        width: 6px;
+    }
+    .tag-nav-vertical::-webkit-scrollbar-thumb {
+        background-color: #ccc;
+        border-radius: 10px;
+    }
+
+    .tag-btn {
+        text-align: left;
+        width: 100%;
+        /* Assicurati che i bottoni non vengano schiacciati */
+        flex-shrink: 0; 
+    }
+</style>
+
 <div class="main-layout-container">
     <main class="content-area">
         <section class="search-section">
@@ -29,7 +60,7 @@ title: Home
             <span class="box-label">Argomenti Caldi</span>
             <nav class="tag-nav-vertical" id="dynamic-tags">
                 <button class="tag-btn active" onclick="filterByTag('tutti', this)">TUTTI</button>
-                </nav>
+            </nav>
         </div>
 
         <div class="sidebar-box">
@@ -55,7 +86,7 @@ title: Home
 </div>
 
 <script>
-    // Logica JS per estrarre i tag e filtrare (stessa di prima, ma punta alla sidebar)
+    // La logica JS rimane la stessa, popolerà dinamicamente il nav scrollabile
     document.addEventListener('DOMContentLoaded', () => {
         const articles = document.querySelectorAll('.post-item');
         const tagContainer = document.getElementById('dynamic-tags');
