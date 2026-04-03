@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Fillfactor e HOT Updates"
-date: 2026-04-03 14:40:39
-sintesi: "PostgreSQL permette di fare update in riga (Heap Only Tuple) se c' spazio sufficiente nella stessa pagina disco e se non vengono cambiate colonne indicizzate. Gli HOT updates sono incredibilmente veloci perch non richiedono l'aggiornamento degli in"
+date: 2026-04-03 14:45:28
+sintesi: >
+  PostgreSQL permette di fare update 'in riga' (Heap Only Tuple) se c'è spazio sufficiente nella stessa pagina disco e se non vengono cambiate colonne indicizzate. Gli HOT updates sono incredibilmente veloci perché non richiedono l'aggiornamento degli 
 tech: "db"
 tags: ["db", "vacuum & storage"]
 pdf_file: "fillfactor-e-hot-updates.pdf"
@@ -16,7 +17,7 @@ Problema: Ogni aggiornamento di riga genera una nuova voce in tutti gli indici d
 
 ## Esempio Implementativo
 
-```db
+```sql
 /* Imposto il fillfactor al 90% per lasciare spazio agli HOT update */
  ALTER TABLE counters SET (fillfactor = 90); 
 * La modifica diventa effettiva solo dopo una riscrittura: eseguo VACUUM FULL o

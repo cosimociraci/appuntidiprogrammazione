@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Subtransactions e Lock Overflow"
-date: 2026-04-03 14:40:25
-sintesi: "L'uso eccessivo di subtransazioni (spesso create da blocchi EXCEPTION nei loop PL/pgSQL o dai Savepoint) pu degradare drasticamente le performance dei lock. PostgreSQL tiene traccia delle transazioni in memoria (nello Shared Buffer). Se una transazi"
+date: 2026-04-03 14:45:14
+sintesi: >
+  L'uso eccessivo di subtransazioni (spesso create da blocchi EXCEPTION nei loop PL/pgSQL o dai Savepoint) può degradare drasticamente le performance dei lock. PostgreSQL tiene traccia delle transazioni in memoria (nello Shared Buffer). Se una transazi
 tech: "db"
 tags: ["db", "concorrenza e locking approfond"]
 pdf_file: "subtransactions-e-lock-overflow.pdf"
@@ -16,7 +17,7 @@ Problema: Ogni blocco EXCEPTION crea una subtransazione. Se sono troppe, il mecc
 
 ## Esempio Implementativo
 
-```db
+```sql
 * PATTERN DA EVITARE: ogni iterazione crea una subtransazione, e con migliaia di
 * righe il subxact cache (64 slot in memoria) va in overflow su disco,
 * rallentando l'intero cluster. DO $$ DECLARE r RECORD; BEGIN FOR r IN SELECT *

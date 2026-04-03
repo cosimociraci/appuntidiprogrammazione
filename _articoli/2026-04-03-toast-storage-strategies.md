@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "TOAST Storage Strategies"
-date: 2026-04-03 14:40:37
-sintesi: "Quando una colonna supera i 2KB (es. testi lunghi o JSONB), Postgres usa il sistema TOAST (The Oversized-Attribute Storage Technique) per spostarla in una tabella separata fuori riga. Esistono diverse strategie- EXTENDED (compressione + fuori riga) o"
+date: 2026-04-03 14:45:26
+sintesi: >
+  Quando una colonna supera i 2KB (es. testi lunghi o JSONB), Postgres usa il sistema TOAST (The Oversized-Attribute Storage Technique) per spostarla in una tabella separata 'fuori riga'. Esistono diverse strategie: EXTENDED (compressione + fuori riga)
 tech: "db"
 tags: ["db", "vacuum & storage"]
 pdf_file: "toast-storage-strategies.pdf"
@@ -16,7 +17,7 @@ Problema: Latenza extra introdotta dal recupero dei dati dai chunk della tabella
 
 ## Esempio Implementativo
 
-```db
+```sql
 /* Verifico la strategia TOAST attuale di tutte le colonne della tabella */
  SELECT attname, attstorage FROM pg_attribute WHERE attrelid =
 'documents'::regclass AND attnum > 0;

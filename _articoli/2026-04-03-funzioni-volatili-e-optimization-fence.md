@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Funzioni Volatili e Optimization Fence"
-date: 2026-04-03 14:40:29
-sintesi: "Le funzioni in Postgres hanno tre livelli di volatilit- VOLATILE, STABLE e IMMUTABLE. Il Planner tratta diversamente le query che le contengono. Una funzione definita erroneamente come VOLATILE (il default) impedisce al Planner di ottimizzare la que"
+date: 2026-04-03 14:45:18
+sintesi: >
+  Le funzioni in Postgres hanno tre livelli di volatilità: VOLATILE, STABLE e IMMUTABLE. Il Planner tratta diversamente le query che le contengono. Una funzione definita erroneamente come VOLATILE (il default) impedisce al Planner di ottimizzare la que
 tech: "db"
 tags: ["db", "query opt. & planner"]
 pdf_file: "funzioni-volatili-e-optimization-fence.pdf"
@@ -16,7 +17,7 @@ Problema: Degrado prestazionale dovuto all'impossibilità del Planner di ottimiz
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Dimostro l'impatto della volatilità con un esempio concreto. Questa funzione è
 * VOLATILE per default: il Planner la chiama una volta per riga, anche se
 * l'input è costante. */

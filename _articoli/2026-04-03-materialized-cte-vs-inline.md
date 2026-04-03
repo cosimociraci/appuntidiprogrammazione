@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Materialized CTE vs Inline"
-date: 2026-04-03 14:40:27
-sintesi: "Prima di PostgreSQL 12, le Common Table Expressions (CTE) erano optimization fences- venivano sempre calcolate e caricate in memoria (materializzate) prima del resto della query. Oggi il Planner le inlinea per ottimizzarle. Tuttavia, a volte  necess"
+date: 2026-04-03 14:45:16
+sintesi: >
+  Prima di PostgreSQL 12, le Common Table Expressions (CTE) erano 'optimization fences': venivano sempre calcolate e caricate in memoria (materializzate) prima del resto della query. Oggi il Planner le 'inlinea' per ottimizzarle. Tuttavia, a volte è ne
 tech: "db"
 tags: ["db", "query opt. & planner"]
 pdf_file: "materialized-cte-vs-inline.pdf"
@@ -16,7 +17,7 @@ Problema: Il Planner "sposta" i predicati dentro la CTE in modo inefficiente, ca
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Confronto il comportamento con e senza MATERIALIZED per capire l'impatto sul
 * piano di esecuzione. */
  -- Versione inline (default Postgres 12+): il Planner può spostare i predicati

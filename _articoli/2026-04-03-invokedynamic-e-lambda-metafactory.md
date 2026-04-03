@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Invokedynamic e Lambda Metafactory"
-date: 2026-04-03 14:39:40
-sintesi: "Le Lambda in Java non sono semplici classi anonime, ma usano l'istruzione invokedynamic. La LambdaMetafactory permette di generare al volo un'implementazione di un'interfaccia funzionale collegandola a un metodo esistente. Questo evita la creazione d"
+date: 2026-04-03 14:44:32
+sintesi: >
+  Le Lambda in Java non sono semplici classi anonime, ma usano l'istruzione invokedynamic. La LambdaMetafactory permette di generare 'al volo' un'implementazione di un'interfaccia funzionale collegandola a un metodo esistente. Questo evita la creazione
 tech: "java"
 tags: ["java", "advanced reflection & metaprogr"]
 pdf_file: "invokedynamic-e-lambda-metafactory.pdf"

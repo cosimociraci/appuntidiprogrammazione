@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Visibility Map e Index Scans"
-date: 2026-04-03 14:40:37
-sintesi: "La Visibility Map (VM)  un file che indica a Postgres quali blocchi contengono solo tuple visibili a tutti. Senza una VM aggiornata, gli Index-Only Scans non funzionano- il DB deve comunque leggere la tabella per verificare la visibilit. Il Vacuum "
+date: 2026-04-03 14:45:26
+sintesi: >
+  La Visibility Map (VM) è un file che indica a Postgres quali blocchi contengono solo tuple visibili a tutti. Senza una VM aggiornata, gli 'Index-Only Scans' non funzionano: il DB deve comunque leggere la tabella per verificare la visibilità. Il Vacuu
 tech: "db"
 tags: ["db", "vacuum & storage"]
 pdf_file: "visibility-map-e-index-scans.pdf"
@@ -16,7 +17,7 @@ Problema: Query che dovrebbero usare solo l'indice risultano lente perché devon
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Controllo la percentuale di pagine visibili: se è bassa, l'Index-Only Scan non
 * sarà efficace */
  SELECT relname, relpages, relallvisible, round((relallvisible::float /

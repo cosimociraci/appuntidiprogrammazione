@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "WAL Archiving & Point-In-Time Recovery (PITR)"
-date: 2026-04-03 14:40:35
-sintesi: "Il PITR permette di riportare il database a un istante preciso nel passato (es. un secondo prima di un DROP TABLE accidentale). Il flusso si basa su due componenti- un base backup periodico unito a una catena ininterrotta di file WAL archiviati. L'af"
+date: 2026-04-03 14:45:23
+sintesi: >
+  Il PITR permette di riportare il database a un istante preciso nel passato (es. un secondo prima di un DROP TABLE accidentale). Il flusso si basa su due componenti: un base backup periodico unito a una catena ininterrotta di file WAL archiviati. L'af
 tech: "db"
 tags: ["db", "advanced replication & ha"]
 pdf_file: "wal-archiving-point-in-time-recovery-pitr.pdf"
@@ -16,7 +17,7 @@ Problema: Impossibilità di recuperare dati cancellati per errore se non si disp
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Nel postgresql.conf abilito l'archiviazione WAL verso una destinazione remota
 * sicura. */
  -- archive_mode = on -- archive_command = 'pgbackrest --stanza=myapp archive-

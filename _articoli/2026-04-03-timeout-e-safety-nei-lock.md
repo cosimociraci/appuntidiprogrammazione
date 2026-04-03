@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Timeout e Safety nei Lock"
-date: 2026-04-03 14:39:32
-sintesi: "L'uso di synchronized o lock() senza parametri pu portare a deadlock infiniti se un thread non rilascia mai la risorsa. L'uso sistematico di tryLock(timeout, unit) permette al thread di arrendersi se non ottiene il lock entro un tempo ragionevole, c"
+date: 2026-04-03 14:44:25
+sintesi: >
+  L'uso di synchronized o lock() senza parametri può portare a deadlock infiniti se un thread non rilascia mai la risorsa. L'uso sistematico di tryLock(timeout, unit) permette al thread di 'arrendersi' se non ottiene il lock entro un tempo ragionevole,
 tech: "java"
 tags: ["java", "concurrency & multithreading"]
 pdf_file: "timeout-e-safety-nei-lock.pdf"

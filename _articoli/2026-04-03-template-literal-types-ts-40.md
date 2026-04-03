@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Template Literal Types (TS 4.0+)"
-date: 2026-04-03 14:40:03
-sintesi: "Manipolare stringhe a livello di tipo per validare pattern testuali. Combinando stringhe con la sintassi `${A}${B}`  possibile generare set di tipi dinamici. Questo permette di tipizzare con precisione millimetrica eventi, percorsi di routing o stil"
+date: 2026-04-03 14:44:54
+sintesi: >
+  Manipolare stringhe a livello di tipo per validare pattern testuali. Combinando stringhe con la sintassi `${A}${B}` è possibile generare set di tipi dinamici. Questo permette di tipizzare con precisione millimetrica eventi, percorsi di routing o stil
 tech: "js"
 tags: ["js", "typescript & advanced types"]
 pdf_file: "template-literal-types-ts-40.pdf"

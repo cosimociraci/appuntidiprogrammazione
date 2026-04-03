@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Extended Statistics (CREATE STATISTICS)"
-date: 2026-04-03 14:40:27
-sintesi: "Il Planner assume solitamente che le colonne siano indipendenti tra loro. Se interroghiamo una tabella filtrando per Marca e Modello, Postgres moltiplica le selettivit singole, spesso sottostimando il numero di righe risultanti. CREATE STATISTICS pe"
+date: 2026-04-03 14:45:16
+sintesi: >
+  Il Planner assume solitamente che le colonne siano indipendenti tra loro. Se interroghiamo una tabella filtrando per 'Marca' e 'Modello', Postgres moltiplica le selettività singole, spesso sottostimando il numero di righe risultanti. CREATE STATISTIC
 tech: "db"
 tags: ["db", "query opt. & planner"]
 pdf_file: "extended-statistics-create-statistics.pdf"
@@ -16,7 +17,7 @@ Problema: Stime di cardinalità errate portano alla scelta di join inefficienti 
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Creo statistiche di dipendenza per la coppia city/zip_code che sono
 * logicamente correlate: conoscere lo zip determina quasi univocamente la city.
 * */

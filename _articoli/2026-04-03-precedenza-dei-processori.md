@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Precedenza dei Processori"
-date: 2026-04-03 14:40:07
-sintesi: "Quando pi attributi th-* sono sullo stesso tag, l'ordine di esecuzione  critico. Un processore che altera la struttura del DOM (come un th-each custom) deve avere una precedenza numerica inferiore (viene eseguito prima) rispetto a quelli che modifi"
+date: 2026-04-03 14:44:58
+sintesi: >
+  Quando più attributi th:* sono sullo stesso tag, l'ordine di esecuzione è critico. Un processore che altera la struttura del DOM (come un th:each custom) deve avere una precedenza numerica inferiore (viene eseguito prima) rispetto a quelli che modifi
 tech: "thymeleaf"
 tags: ["thymeleaf", "custom dialects & processors"]
 pdf_file: "precedenza-dei-processori.pdf"

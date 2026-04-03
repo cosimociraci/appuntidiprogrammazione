@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Locking su Partizioni"
-date: 2026-04-03 14:40:22
-sintesi: "Quando si usano tabelle partizionate, i lock possono propagarsi in modo gerarchico. Un lock sulla tabella padre (es. per una manutenzione dello schema) si propaga a tutte le partizioni figlie. Tuttavia, nelle query DML standard (SELECT, UPDATE), Post"
+date: 2026-04-03 14:45:11
+sintesi: >
+  Quando si usano tabelle partizionate, i lock possono propagarsi in modo gerarchico. Un lock sulla tabella 'padre' (es. per una manutenzione dello schema) si propaga a tutte le partizioni 'figlie'. Tuttavia, nelle query DML standard (SELECT, UPDATE), 
 tech: "db"
 tags: ["db", "concorrenza e locking approfond"]
 pdf_file: "locking-su-partizioni.pdf"
@@ -16,7 +17,7 @@ Problema: Un lock eccessivo sulla tabella master impedisce l'accesso a tutte le 
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Verifico prima la struttura delle partizioni esistenti per identificare quella
 * da rimuovere. */
  SELECT inhrelid::regclass AS partition_name, pg_get_expr(c.relpartbound, c.oid)

@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Quorum-based Synchronous Replication"
-date: 2026-04-03 14:40:35
-sintesi: "Dalla versione 10, PostgreSQL supporta la replica sincrona basata su quorum- la transazione  sicura se N nodi su una lista di M confermano la ricezione. Questo meccanismo evita il Single Point of Failure della replica sincrona classica- se uno stand"
+date: 2026-04-03 14:45:24
+sintesi: >
+  Dalla versione 10, PostgreSQL supporta la replica sincrona basata su quorum: la transazione è sicura se N nodi su una lista di M confermano la ricezione. Questo meccanismo evita il 'Single Point of Failure' della replica sincrona classica: se uno sta
 tech: "db"
 tags: ["db", "advanced replication & ha"]
 pdf_file: "quorum-based-synchronous-replication.pdf"
@@ -16,7 +17,7 @@ Problema: In una replica sincrona 1-a-1, se la replica cade, il Master smette di
 
 ## Esempio Implementativo
 
-```db
+```sql
 /* Nel postgresql.conf del Master */
  synchronous_standby_names = 'ANY 2 (node_a, node_b, node_c)';
 synchronous_commit = on;

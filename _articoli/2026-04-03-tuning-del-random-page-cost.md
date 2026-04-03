@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Tuning del Random Page Cost"
-date: 2026-04-03 14:40:26
-sintesi: "Il Planner di PostgreSQL stima il costo delle scansioni degli indici basandosi sul parametro random_page_cost. Per impostazione predefinita, questo valore  4.0, un retaggio dell'era dei dischi rotanti (HDD) dove l'accesso casuale era molto pi lento"
+date: 2026-04-03 14:45:15
+sintesi: >
+  Il Planner di PostgreSQL stima il costo delle scansioni degli indici basandosi sul parametro random_page_cost. Per impostazione predefinita, questo valore è 4.0, un retaggio dell'era dei dischi rotanti (HDD) dove l'accesso casuale era molto più lento
 tech: "db"
 tags: ["db", "query opt. & planner"]
 pdf_file: "tuning-del-random-page-cost.pdf"
@@ -16,7 +17,7 @@ Problema: Il Planner evita l'uso degli indici perché sovrastima il costo di let
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Testo l'impatto del parametro solo per la sessione corrente, senza toccare la
 * configurazione globale del server. In questo modo posso confrontare i piani
 * prima e dopo in modo sicuro. */

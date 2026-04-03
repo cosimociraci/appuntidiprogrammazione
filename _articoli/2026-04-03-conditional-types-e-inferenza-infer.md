@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Conditional Types e Inferenza (infer)"
-date: 2026-04-03 14:40:02
-sintesi: "Creare utility types che si adattano dinamicamente alla struttura dei dati. La sintassi T extends U ? X - Y permette di creare logiche decisionali a livello di tipo. La keyword infer, usata all'interno di un conditional type, permette di estrarre un "
+date: 2026-04-03 14:44:53
+sintesi: >
+  Creare utility types che si adattano dinamicamente alla struttura dei dati. La sintassi T extends U ? X : Y permette di creare logiche decisionali a livello di tipo. La keyword infer, usata all'interno di un conditional type, permette di 'estrarre' u
 tech: "js"
 tags: ["js", "typescript & advanced types"]
 pdf_file: "conditional-types-e-inferenza-infer.pdf"

@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "ZGC e Low Latency sotto i 10ms"
-date: 2026-04-03 14:39:33
-sintesi: "Con heap molto grandi (>100GB), i classici GC come G1 possono avere pause Stop-The-World percepibili. ZGC esegue quasi tutto il lavoro in concorrenza con i thread dell'applicazione. Il vantaggio tecnico  che i tempi di pausa sono costanti e non dipe"
+date: 2026-04-03 14:44:25
+sintesi: >
+  Con heap molto grandi (>100GB), i classici GC come G1 possono avere pause 'Stop-The-World' percepibili. ZGC esegue quasi tutto il lavoro in concorrenza con i thread dell'applicazione. Il vantaggio tecnico è che i tempi di pausa sono costanti e non di
 tech: "java"
 tags: ["java", "jvm tuning & garbage collection"]
 pdf_file: "zgc-e-low-latency-sotto-i-10ms.pdf"

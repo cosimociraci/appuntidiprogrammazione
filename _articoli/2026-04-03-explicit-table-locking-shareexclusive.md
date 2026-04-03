@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Explicit Table Locking (SHARE/EXCLUSIVE)"
-date: 2026-04-03 14:40:22
-sintesi: "Sebbene il locking automatico di Postgres sia eccellente, a volte  necessario un controllo manuale tramite il comando LOCK TABLE. Esistono diversi modi- SHARE (permette letture, blocca scritture) o EXCLUSIVE (blocca tutto). L'uso di lock espliciti "
+date: 2026-04-03 14:45:12
+sintesi: >
+  Sebbene il locking automatico di Postgres sia eccellente, a volte è necessario un controllo manuale tramite il comando LOCK TABLE. Esistono diversi modi: SHARE (permette letture, blocca scritture) o EXCLUSIVE (blocca tutto). L'uso di lock espliciti è
 tech: "db"
 tags: ["db", "concorrenza e locking approfond"]
 pdf_file: "explicit-table-locking-shareexclusive.pdf"
@@ -16,7 +17,7 @@ Problema: La necessità di garantire un'istantanea statica di un'intera tabella 
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Acquisisco il lock più debole che soddisfa il mio requisito. SHARE blocca
 * INSERT/UPDATE/DELETE ma non i SELECT degli altri utenti, minimizzando
 * l'impatto sulla concorrenza in lettura. */

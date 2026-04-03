@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Statistics Target e Selettivit"
-date: 2026-04-03 14:40:30
-sintesi: "La qualit del piano dipende dalla precisione degli istogrammi salvati nelle statistiche. Per impostazione predefinita, Postgres campiona 100 valori comuni per ogni colonna. Per colonne con distribuzioni di dati molto irregolari (es. pochi clienti co"
+date: 2026-04-03 14:45:18
+sintesi: >
+  La qualità del piano dipende dalla precisione degli istogrammi salvati nelle statistiche. Per impostazione predefinita, Postgres campiona 100 valori comuni per ogni colonna. Per colonne con distribuzioni di dati molto irregolari (es. pochi clienti co
 tech: "db"
 tags: ["db", "query opt. & planner"]
 pdf_file: "statistics-target-e-selettivit.pdf"

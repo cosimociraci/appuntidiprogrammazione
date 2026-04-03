@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Microtask vs Macrotask Queue"
-date: 2026-04-03 14:40:00
-sintesi: "Non tutte le callback hanno la stessa priorit. process.nextTick e Promise.then (microtasks) vengono eseguiti immediatamente dopo ogni operazione, prima del ciclo successivo dell'Event Loop. Un abuso di nextTick pu causare la starvation dell'I/O, im"
+date: 2026-04-03 14:44:52
+sintesi: >
+  Non tutte le callback hanno la stessa priorità. process.nextTick e Promise.then (microtasks) vengono eseguiti immediatamente dopo ogni operazione, prima del ciclo successivo dell'Event Loop. Un abuso di nextTick può causare la 'starvation' dell'I/O, 
 tech: "js"
 tags: ["js", "node.js internals & libuv"]
 pdf_file: "microtask-vs-macrotask-queue.pdf"

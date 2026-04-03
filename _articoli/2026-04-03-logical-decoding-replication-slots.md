@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Logical Decoding & Replication Slots"
-date: 2026-04-03 14:40:34
-sintesi: "La replica logica permette di trasmettere solo le modifiche ai dati (INSERT/UPDATE/DELETE) invece di interi blocchi di disco. Il problema principale sorge quando il ricevente (subscriber) si disconnette- il mittente (publisher) deve conservare tutti "
+date: 2026-04-03 14:45:22
+sintesi: >
+  La replica logica permette di trasmettere solo le modifiche ai dati (INSERT/UPDATE/DELETE) invece di interi blocchi di disco. Il problema principale sorge quando il ricevente (subscriber) si disconnette: il mittente (publisher) deve conservare tutti 
 tech: "db"
 tags: ["db", "advanced replication & ha"]
 pdf_file: "logical-decoding-replication-slots.pdf"
@@ -16,7 +17,7 @@ Problema: Rischio di saturazione del disco sul nodo primario se i subscriber non
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Sul Publisher: creo una pubblicazione per tabelle specifiche, evitando di
 * replicare l'intero database verso il data warehouse. */
  CREATE PUBLICATION subset_pub FOR TABLE orders, customers, products; 

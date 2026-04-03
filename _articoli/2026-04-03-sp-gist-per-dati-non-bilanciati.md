@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "SP-GiST per Dati Non Bilanciati"
-date: 2026-04-03 14:40:32
-sintesi: "Lo Space-Partitioned GiST (SP-GiST)  un'evoluzione per strutture dati non bilanciate come alberi radi (quadtree, k-d trees). A differenza di GiST, che divide il set di dati in sotto-insiemi potenzialmente sovrapposti, SP-GiST divide lo spazio in reg"
+date: 2026-04-03 14:45:21
+sintesi: >
+  Lo Space-Partitioned GiST (SP-GiST) è un'evoluzione per strutture dati non bilanciate come alberi radi (quadtree, k-d trees). A differenza di GiST, che divide il set di dati in sotto-insiemi potenzialmente sovrapposti, SP-GiST divide lo spazio in reg
 tech: "db"
 tags: ["db", "indexing internals"]
 pdf_file: "sp-gist-per-dati-non-bilanciati.pdf"
@@ -16,7 +17,7 @@ Problema: L'indice GiST standard soffre di troppi overlap in zone con altissima 
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Creo l'indice SP-GiST sulla colonna di tipo point. Per dati puntuali puri, SP-
 * GiST è spesso più veloce e più compatto di GiST perché non gestisce geometrie
 * sovrapposte. */

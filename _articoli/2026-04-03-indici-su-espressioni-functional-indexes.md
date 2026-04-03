@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Indici su Espressioni (Functional Indexes)"
-date: 2026-04-03 14:40:32
-sintesi: "Molte query falliscono l'uso degli indici perch applicano funzioni alle colonne (es. WHERE lower(name) = 'rossi'). Un indice standard su name non serve in questo caso. La soluzione  un indice su espressione, dove il risultato della funzione viene p"
+date: 2026-04-03 14:45:21
+sintesi: >
+  Molte query falliscono l'uso degli indici perché applicano funzioni alle colonne (es. WHERE lower(name) = 'rossi'). Un indice standard su name non serve in questo caso. La soluzione è un indice su espressione, dove il risultato della funzione viene p
 tech: "db"
 tags: ["db", "indexing internals"]
 pdf_file: "indici-su-espressioni-functional-indexes.pdf"
@@ -16,7 +17,7 @@ Problema: L'indice non viene usato perché la clausola WHERE trasforma il dato d
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Creo l'indice funzionale sul cast a DATE. Le parentesi attorno all'espressione
 * sono obbligatorie per distinguerla da un nome di colonna. */
  CREATE INDEX idx_orders_day ON orders ((created_at::DATE)); 

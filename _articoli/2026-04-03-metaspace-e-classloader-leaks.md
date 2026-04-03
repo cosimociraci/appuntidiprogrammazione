@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Metaspace e ClassLoader Leaks"
-date: 2026-04-03 14:39:36
-sintesi: "Il Metaspace contiene i metadati delle classi. Caricare dinamicamente classi (es. tramite proxy o script) senza un limite pu saturare la memoria fisica del server. Se il Metaspace cresce all'infinito, significa che i ClassLoader non vengono scaricat"
+date: 2026-04-03 14:44:28
+sintesi: >
+  Il Metaspace contiene i metadati delle classi. Caricare dinamicamente classi (es. tramite proxy o script) senza un limite può saturare la memoria fisica del server. Se il Metaspace cresce all'infinito, significa che i ClassLoader non vengono scaricat
 tech: "java"
 tags: ["java", "jvm tuning & garbage collection"]
 pdf_file: "metaspace-e-classloader-leaks.pdf"

@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Covering Indexes (Clausola INCLUDE)"
-date: 2026-04-03 14:40:32
-sintesi: "Introdotta in Postgres 11, la clausola INCLUDE permette di creare indici coprenti. Questo permette di aggiungere colonne extra ai nodi foglia dell'indice che non fanno parte della chiave di ricerca. Il vantaggio tecnico  rilevante- permette gli Inde"
+date: 2026-04-03 14:45:20
+sintesi: >
+  Introdotta in Postgres 11, la clausola INCLUDE permette di creare indici 'coprenti'. Questo permette di aggiungere colonne extra ai nodi foglia dell'indice che non fanno parte della chiave di ricerca. Il vantaggio tecnico è rilevante: permette gli 'I
 tech: "db"
 tags: ["db", "indexing internals"]
 pdf_file: "covering-indexes-clausola-include.pdf"
@@ -16,7 +17,7 @@ Problema: Anche se l'ID è indicizzato, il database deve comunque leggere la tab
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Creo l'indice coprente. user_id è la chiave di ricerca; email, username e
 * status sono payload disponibili per la SELECT senza toccare la heap. */
  CREATE INDEX idx_users_id_covering ON users (user_id) INCLUDE (email, username,

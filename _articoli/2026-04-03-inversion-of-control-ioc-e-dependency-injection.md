@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Inversion of Control (IoC) e Dependency Injection"
-date: 2026-04-03 14:39:58
-sintesi: "L'accoppiamento rigido tra moduli rende il testing isolato quasi impossibile e il codice fragile. Il pattern Hexagonal Architecture permette di separare il core logico dai dettagli implementativi (DB, API). Invece di importare direttamente le dipende"
+date: 2026-04-03 14:44:50
+sintesi: >
+  L'accoppiamento rigido tra moduli rende il testing isolato quasi impossibile e il codice fragile. Il pattern Hexagonal Architecture permette di separare il core logico dai dettagli implementativi (DB, API). Invece di importare direttamente le dipende
 tech: "js"
 tags: ["js", "design patterns & architecture"]
 pdf_file: "inversion-of-control-ioc-e-dependency-injection.pdf"

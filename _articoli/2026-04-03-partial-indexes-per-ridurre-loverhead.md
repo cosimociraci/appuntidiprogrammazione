@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Partial Indexes per ridurre loverhead"
-date: 2026-04-03 14:40:31
-sintesi: "Un errore comune  indicizzare l'intera tabella quando le query filtrano sempre per una condizione specifica (es. solo i record attivi). I Partial Indexes includono solo le righe che soddisfano un predicato WHERE. Questo li rende minuscoli, velocissi"
+date: 2026-04-03 14:45:20
+sintesi: >
+  Un errore comune è indicizzare l'intera tabella quando le query filtrano sempre per una condizione specifica (es. solo i record 'attivi'). I Partial Indexes includono solo le righe che soddisfano un predicato WHERE. Questo li rende minuscoli, velocis
 tech: "db"
 tags: ["db", "indexing internals"]
 pdf_file: "partial-indexes-per-ridurre-loverhead.pdf"
@@ -16,7 +17,7 @@ Problema: L'indice sulla colonna 'status' è enorme e poco selettivo perché la 
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Creo l'indice solo sui dati "caldi". Postgres lo userà automaticamente quando
 * la WHERE della query implica la stessa condizione del predicato parziale. */
  CREATE INDEX idx_orders_pending ON orders (created_at) WHERE status =

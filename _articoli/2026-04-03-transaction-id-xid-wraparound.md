@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Transaction ID (XID) Wraparound"
-date: 2026-04-03 14:40:24
-sintesi: "Ogni transazione in Postgres riceve un ID numerico a 32 bit. Poich i numeri finiscono (circa 4 miliardi), Postgres deve riutilizzarli. Se non gestito, questo porta al wraparound, un evento catastrofico dove i vecchi dati sembrano sparire o diventare"
+date: 2026-04-03 14:45:13
+sintesi: >
+  Ogni transazione in Postgres riceve un ID numerico a 32 bit. Poiché i numeri finiscono (circa 4 miliardi), Postgres deve riutilizzarli. Se non gestito, questo porta al 'wraparound', un evento catastrofico dove i vecchi dati sembrano sparire o diventa
 tech: "db"
 tags: ["db", "concorrenza e locking approfond"]
 pdf_file: "transaction-id-xid-wraparound.pdf"
@@ -16,7 +17,7 @@ Problema: Esaurimento dei numeri identificativi delle transazioni, che renderebb
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Verifico la distanza dal wraparound per ogni database. Se 'age' si avvicina a
 * 2 miliardi, Postgres entrerà in modalità di sola lettura di emergenza. La
 * soglia di allarme deve essere fissata intorno a 1.5 miliardi (75%). */

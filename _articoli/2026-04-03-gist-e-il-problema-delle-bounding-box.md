@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "GiST e il problema delle Bounding Box"
-date: 2026-04-03 14:40:31
-sintesi: "L'indice GiST (Generalized Search Tree)  il motore di PostGIS, ma la sua efficienza dipende dalla qualit delle Bounding Box (MBR) create. Se le geometrie sono molto sovrapposte o disperse, l'albero GiST diventa inefficiente perch deve scansionare "
+date: 2026-04-03 14:45:19
+sintesi: >
+  L'indice GiST (Generalized Search Tree) è il motore di PostGIS, ma la sua efficienza dipende dalla 'qualità' delle Bounding Box (MBR) create. Se le geometrie sono molto sovrapposte o disperse, l'albero GiST diventa inefficiente perché deve scansionar
 tech: "db"
 tags: ["db", "indexing internals"]
 pdf_file: "gist-e-il-problema-delle-bounding-box.pdf"
@@ -16,7 +17,7 @@ Problema: Scansione di troppi nodi dell'albero GiST a causa di un'organizzazione
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Creo prima l'indice GiST, poi eseguo il CLUSTER per riordinare fisicamente la
 * tabella seguendo l'ordine spaziale dell'indice. Le zone geograficamente vicine
 * vengono così scritte in pagine disco adiacenti. */

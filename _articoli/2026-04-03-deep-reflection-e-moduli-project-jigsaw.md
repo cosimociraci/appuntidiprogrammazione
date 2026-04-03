@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Deep Reflection e Moduli (Project Jigsaw)"
-date: 2026-04-03 14:39:41
-sintesi: "Da Java 9, l'incapsulamento  diventato reale- non si pu pi accedere ai campi privati di librerie esterne se il modulo non lo permette. Gestire gli errori di Access Denied usando i flag --add-opens  la soluzione immediata, ma la reflection profond"
+date: 2026-04-03 14:44:33
+sintesi: >
+  Da Java 9, l'incapsulamento è diventato reale: non si può più accedere ai campi privati di librerie esterne se il modulo non lo permette. Gestire gli errori di 'Access Denied' usando i flag --add-opens è la soluzione immediata, ma la reflection 'prof
 tech: "java"
 tags: ["java", "advanced reflection & metaprogr"]
 pdf_file: "deep-reflection-e-moduli-project-jigsaw.pdf"

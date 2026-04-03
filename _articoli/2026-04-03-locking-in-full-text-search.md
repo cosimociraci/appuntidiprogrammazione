@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Locking in Full Text Search"
-date: 2026-04-03 14:40:26
-sintesi: "La ricerca testuale (FTS) in Postgres usa indici GIN. Questi indici sono molto efficienti in lettura ma costosi da aggiornare. Durante un inserimento massivo, l'aggiornamento dell'indice GIN pu diventare un punto di contesa per i lock, poich deve i"
+date: 2026-04-03 14:45:15
+sintesi: >
+  La ricerca testuale (FTS) in Postgres usa indici GIN. Questi indici sono molto efficienti in lettura ma costosi da aggiornare. Durante un inserimento massivo, l'aggiornamento dell'indice GIN può diventare un punto di contesa per i lock, poiché deve i
 tech: "db"
 tags: ["db", "concorrenza e locking approfond"]
 pdf_file: "locking-in-full-text-search.pdf"
@@ -16,7 +17,7 @@ Problema: L'aggiornamento simultaneo degli indici GIN da parte di più transazio
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Creo l'indice GIN con l'opzione fastupdate abilitata (è il default ma lo rendo
 * esplicito) e aumento il buffer della pending list per ridurre la frequenza dei
 * merge sull'entry tree principale. */

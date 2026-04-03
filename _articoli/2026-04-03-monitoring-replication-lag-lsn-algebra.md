@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Monitoring Replication Lag (LSN Algebra)"
-date: 2026-04-03 14:40:36
-sintesi: "Il Replication Lag non si misura solo in secondi, ma in byte di scarto tramite i Log Sequence Numbers (LSN). Sottraendo l'LSN di ricezione della replica dall'LSN di scrittura del Master si ottiene la distanza reale tra i due nodi. Se la differenza  "
+date: 2026-04-03 14:45:24
+sintesi: >
+  Il 'Replication Lag' non si misura solo in secondi, ma in byte di scarto tramite i Log Sequence Numbers (LSN). Sottraendo l'LSN di ricezione della replica dall'LSN di scrittura del Master si ottiene la distanza reale tra i due nodi. Se la differenza 
 tech: "db"
 tags: ["db", "advanced replication & ha"]
 pdf_file: "monitoring-replication-lag-lsn-algebra.pdf"
@@ -16,7 +17,7 @@ Problema: I secondi di lag sono una metrica ingannevole: una replica può essere
 
 ## Esempio Implementativo
 
-```db
+```sql
 /* Query completa di analisi lag sul Master */
  SELECT application_name, pg_wal_lsn_diff(pg_current_wal_lsn(), sent_lsn) AS
 network_lag_bytes, pg_wal_lsn_diff(sent_lsn, write_lsn) AS write_lag_bytes,

@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Deadlock Timeout e Analisi Log"
-date: 2026-04-03 14:40:23
-sintesi: "Il parametro deadlock_timeout (default 1s) definisce quanto tempo Postgres aspetta prima di lanciare il controllo del grafo dei lock. Abbassare troppo questo valore aumenta il carico sulla CPU, mentre alzarlo rende il sistema pigro nel risolvere i co"
+date: 2026-04-03 14:45:12
+sintesi: >
+  Il parametro deadlock_timeout (default 1s) definisce quanto tempo Postgres aspetta prima di lanciare il controllo del grafo dei lock. Abbassare troppo questo valore aumenta il carico sulla CPU, mentre alzarlo rende il sistema pigro nel risolvere i co
 tech: "db"
 tags: ["db", "concorrenza e locking approfond"]
 pdf_file: "deadlock-timeout-e-analisi-log.pdf"
@@ -16,7 +17,7 @@ Problema: Un deadlock non rilevato rapidamente tiene occupate risorse preziose, 
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Nella sessione di debug, posso abbassare temporaneamente il timeout per
 * forzare una rilevazione più rapida e osservare il comportamento. */
  SET deadlock_timeout = '500ms'; 

@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "GIN Index e Pending List Tuning"
-date: 2026-04-03 14:40:30
-sintesi: "Gli indici GIN (Generalized Inverted Index) sono fondamentali per la ricerca Full Text e per i campi JSONB, ma sono notoriamente lenti in fase di inserimento perch ogni riga genera molteplici voci nell'indice. Il ruolo della pending_list  centrale-"
+date: 2026-04-03 14:45:19
+sintesi: >
+  Gli indici GIN (Generalized Inverted Index) sono fondamentali per la ricerca Full Text e per i campi JSONB, ma sono notoriamente lenti in fase di inserimento perché ogni riga genera molteplici voci nell'indice. Il ruolo della pending_list è centrale:
 tech: "db"
 tags: ["db", "indexing internals"]
 pdf_file: "gin-index-e-pending-list-tuning.pdf"
@@ -16,7 +17,7 @@ Problema: Latenza in scrittura inaccettabile dovuta al continuo aggiornamento de
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Creo l'indice GIN con fastupdate abilitato e una pending list generosa per
 * ingestione massiva di log JSONB. */
  CREATE INDEX CONCURRENTLY idx_app_logs_gin ON app_logs USING GIN (payload

@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Predicate Locking in SSI"
-date: 2026-04-03 14:40:24
-sintesi: "Il Predicate Locking  la tecnologia che permette al livello SERIALIZABLE di funzionare. A differenza dei lock normali, non blocca i dati esistenti, ma segna le condizioni di ricerca (i predicati). Se una transazione A legge tutti gli utenti attivi e"
+date: 2026-04-03 14:45:13
+sintesi: >
+  Il Predicate Locking è la tecnologia che permette al livello SERIALIZABLE di funzionare. A differenza dei lock normali, non blocca i dati esistenti, ma 'segna' le condizioni di ricerca (i predicati). Se una transazione A legge tutti gli utenti 'attiv
 tech: "db"
 tags: ["db", "concorrenza e locking approfond"]
 pdf_file: "predicate-locking-in-ssi.pdf"
@@ -16,7 +17,7 @@ Problema: Come bloccare una "condizione" (la somma) invece di singole righe che 
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Il database "ricorda" che ho letto questa somma tramite un predicate lock
 * implicito sulla condizione WHERE project_id = 5. Se qualcuno inserisce una
 * spesa sullo stesso progetto prima del mio COMMIT, Postgres rileva la

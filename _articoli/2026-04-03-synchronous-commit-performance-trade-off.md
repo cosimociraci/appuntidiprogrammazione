@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Synchronous Commit & Performance Trade-off"
-date: 2026-04-03 14:40:34
-sintesi: "La replica sincrona garantisce che una transazione sia confermata solo dopo essere stata scritta su almeno un nodo standby. Questo elimina il rischio di perdere dati in caso di failover, ma introduce una latenza pari al Round Trip Time (RTT) tra i se"
+date: 2026-04-03 14:45:23
+sintesi: >
+  La replica sincrona garantisce che una transazione sia confermata solo dopo essere stata scritta su almeno un nodo standby. Questo elimina il rischio di perdere dati in caso di failover, ma introduce una latenza pari al Round Trip Time (RTT) tra i se
 tech: "db"
 tags: ["db", "advanced replication & ha"]
 pdf_file: "synchronous-commit-performance-trade-off.pdf"
@@ -16,7 +17,7 @@ Problema: L'overhead della rete rallenta ogni singola scrittura se configurato g
 
 ## Esempio Implementativo
 
-```db
+```sql
 /* Configuro il nodo standby come sincrono nel postgresql.conf del Master: */
  -- synchronous_standby_names = 'FIRST 1 (standby1, standby2)' 
 * Nella sessione critica del pagamento forzo la replica sincrona al livello più

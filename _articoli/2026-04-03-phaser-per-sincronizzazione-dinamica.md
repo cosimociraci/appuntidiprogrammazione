@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Phaser per Sincronizzazione Dinamica"
-date: 2026-04-03 14:39:31
-sintesi: "CountDownLatch e CyclicBarrier sono rigidi- il numero di thread deve essere noto in anticipo. Phaser permette a thread di registrarsi e deregistrarsi dinamicamente.  ideale per algoritmi a fasi dove il numero di partecipanti pu cambiare nel tempo ("
+date: 2026-04-03 14:44:23
+sintesi: >
+  CountDownLatch e CyclicBarrier sono rigidi: il numero di thread deve essere noto in anticipo. Phaser permette a thread di registrarsi e deregistrarsi dinamicamente. È ideale per algoritmi a fasi dove il numero di partecipanti può cambiare nel tempo (
 tech: "java"
 tags: ["java", "concurrency & multithreading"]
 pdf_file: "phaser-per-sincronizzazione-dinamica.pdf"

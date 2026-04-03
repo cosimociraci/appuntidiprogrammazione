@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Gestione della Memoria con Arena"
-date: 2026-04-03 14:39:51
-sintesi: "La memoria nativa (off-heap) non  vista dal GC- se non viene liberata correttamente, il server crasha. L'Arena di Panama definisce il ciclo di vita della memoria- quando l'Arena viene chiusa (try-with-resources), tutta la memoria allocata al suo int"
+date: 2026-04-03 14:44:43
+sintesi: >
+  La memoria nativa (off-heap) non è vista dal GC: se non viene liberata correttamente, il server crasha. L'Arena di Panama definisce il ciclo di vita della memoria: quando l'Arena viene chiusa (try-with-resources), tutta la memoria allocata al suo int
 tech: "java"
 tags: ["java", "jni & project panama"]
 pdf_file: "gestione-della-memoria-con-arena.pdf"

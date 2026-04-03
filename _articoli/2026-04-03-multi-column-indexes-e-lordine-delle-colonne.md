@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Multi-column Indexes e lordine delle colonne"
-date: 2026-04-03 14:40:33
-sintesi: "L'ordine delle colonne in un indice composto (B-Tree)  critico. La regola del prefisso stabilisce che un indice su (A, B) pu essere usato per ricerche su A e su A+B, ma  quasi inutile per ricerche solo su B. Le colonne con la maggiore selettivit "
+date: 2026-04-03 14:45:21
+sintesi: >
+  L'ordine delle colonne in un indice composto (B-Tree) è critico. La 'regola del prefisso' stabilisce che un indice su (A, B) può essere usato per ricerche su A e su A+B, ma è quasi inutile per ricerche solo su B. Le colonne con la maggiore selettivit
 tech: "db"
 tags: ["db", "indexing internals"]
 pdf_file: "multi-column-indexes-e-lordine-delle-colonne.pdf"
@@ -16,7 +17,7 @@ Problema: Le query che filtrano solo per la seconda colonna dell'indice non otte
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Creo l'indice mettendo la colonna più selettiva e più usata nelle WHERE di
 * uguaglianza per prima. Questo indice serve query su (app_id) e query su
 * (app_id + severity), ma non query solo su severity. */

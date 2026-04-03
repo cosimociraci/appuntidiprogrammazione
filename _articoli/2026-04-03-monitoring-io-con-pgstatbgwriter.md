@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Monitoring I/O con pg_stat_bgwriter"
-date: 2026-04-03 14:40:40
-sintesi: "Il Background Writer ha il compito di scrivere le pagine sporche dalla memoria al disco in modo graduale, evitando picchi durante i Checkpoint. Se il numero di buffers_backend  alto, significa che le query degli utenti sono costrette a scrivere i da"
+date: 2026-04-03 14:45:29
+sintesi: >
+  Il Background Writer ha il compito di scrivere le pagine sporche dalla memoria al disco in modo graduale, evitando picchi durante i Checkpoint. Se il numero di buffers_backend è alto, significa che le query degli utenti sono costrette a scrivere i da
 tech: "db"
 tags: ["db", "vacuum & storage"]
 pdf_file: "monitoring-io-con-pgstatbgwriter.pdf"
@@ -16,7 +17,7 @@ Problema: Picchi di latenza improvvisi durante le scritture pesanti, dovuti a un
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Analizzo le statistiche del bgwriter per capire dove si trova il collo di
 * bottiglia. Il reset delle statistiche all'inizio mi dà una baseline pulita per
 * il confronto. */

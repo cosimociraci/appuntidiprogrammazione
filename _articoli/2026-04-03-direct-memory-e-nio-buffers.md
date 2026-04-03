@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Direct Memory e NIO Buffers"
-date: 2026-04-03 14:39:38
-sintesi: "Molte librerie (Netty, gRPC) usano la Direct Memory (off-heap) per l'I/O veloce. Questa memoria non  gestita dal GC standard e non appare nel grafico dell'heap. Se non limitata con -XX-MaxDirectMemorySize, pu crescere fino a rubare RAM al kernel. M"
+date: 2026-04-03 14:44:30
+sintesi: >
+  Molte librerie (Netty, gRPC) usano la Direct Memory (off-heap) per l'I/O veloce. Questa memoria non è gestita dal GC standard e non appare nel grafico dell'heap. Se non limitata con -XX:MaxDirectMemorySize, può crescere fino a rubare RAM al kernel. M
 tech: "java"
 tags: ["java", "jvm tuning & garbage collection"]
 pdf_file: "direct-memory-e-nio-buffers.pdf"

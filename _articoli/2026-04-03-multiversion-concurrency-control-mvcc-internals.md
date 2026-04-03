@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Multiversion Concurrency Control (MVCC) Internals"
-date: 2026-04-03 14:40:22
-sintesi: "MVCC  il cuore di PostgreSQL- permette ai lettori di non bloccare gli scrittori e viceversa. Ogni riga ha dei metadati nascosti (xmin, xmax) che determinano la visibilit per una specifica transazione. Quando si esegue un UPDATE, Postgres non sovras"
+date: 2026-04-03 14:45:11
+sintesi: >
+  MVCC è il cuore di PostgreSQL: permette ai lettori di non bloccare gli scrittori e viceversa. Ogni riga ha dei metadati nascosti (xmin, xmax) che determinano la visibilità per una specifica transazione. Quando si esegue un UPDATE, Postgres non sovras
 tech: "db"
 tags: ["db", "concorrenza e locking approfond"]
 pdf_file: "multiversion-concurrency-control-mvcc-internals.pdf"
@@ -16,7 +17,7 @@ Problema: Le vecchie versioni delle righe (dead tuples) occupano spazio e rallen
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Guardo i metadati nascosti per capire lo stato di visibilità. xmin indica la
 * transazione che ha creato la riga, xmax quella che l'ha cancellata o
 * aggiornata. Se xmax è valorizzato e la transazione corrispondente è conclusa,

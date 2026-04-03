@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Cascading Replication per Scalabilit Geografica"
-date: 2026-04-03 14:40:35
-sintesi: "In architetture distribuite globalmente, avere 100 repliche collegate a un unico Master saturerebbe la sua banda di rete. La Cascading Replication permette a una replica di comportarsi a sua volta come un publisher per altre repliche nipoti. Questa s"
+date: 2026-04-03 14:45:24
+sintesi: >
+  In architetture distribuite globalmente, avere 100 repliche collegate a un unico Master saturerebbe la sua banda di rete. La 'Cascading Replication' permette a una replica di comportarsi a sua volta come un publisher per altre repliche 'nipoti'. Ques
 tech: "db"
 tags: ["db", "advanced replication & ha"]
 pdf_file: "cascading-replication-per-scalabilit-geografica.pdf"
@@ -16,7 +17,7 @@ Problema: Saturazione delle risorse di rete e CPU del nodo Master a causa del nu
 
 ## Esempio Implementativo
 
-```db
+```sql
 /* Sulla replica intermedia (Hub regionale) */
  primary_conninfo = 'host=master_italy port=5432 user=rep_user'; wal_level =
 replica; hot_standby = on; max_wal_senders = 5;

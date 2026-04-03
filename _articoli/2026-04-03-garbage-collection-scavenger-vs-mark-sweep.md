@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Garbage Collection: Scavenger vs Mark-Sweep"
-date: 2026-04-03 14:39:58
-sintesi: "V8 divide l'heap in New Space (piccolo e veloce) e Old Space. La maggior parte degli oggetti muore giovane nello Scavenger GC (copia veloce). Se un oggetto sopravvive troppo, finisce nell'Old Space dove il Mark-Sweep  molto pi costoso. Per ridurre "
+date: 2026-04-03 14:44:49
+sintesi: >
+  V8 divide l'heap in 'New Space' (piccolo e veloce) e 'Old Space'. La maggior parte degli oggetti muore giovane nello Scavenger GC (copia veloce). Se un oggetto sopravvive troppo, finisce nell'Old Space dove il Mark-Sweep è molto più costoso. Per ridu
 tech: "js"
 tags: ["js", "v8 engine & runtime performance"]
 pdf_file: "garbage-collection-scavenger-vs-mark-sweep.pdf"

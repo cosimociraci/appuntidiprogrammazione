@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Diagnostica: OutOfMemory Nativo"
-date: 2026-04-03 14:39:56
-sintesi: "Se la memoria nativa finisce, la JVM crasha senza un java.lang.OutOfMemoryError classico. Monitorare il processo a livello di sistema operativo (RSS - Resident Set Size)  fondamentale. Se l'heap  vuoto ma il processo occupa 32GB di RAM, il colpevol"
+date: 2026-04-03 14:44:48
+sintesi: >
+  Se la memoria nativa finisce, la JVM crasha senza un java.lang.OutOfMemoryError classico. Monitorare il processo a livello di sistema operativo (RSS - Resident Set Size) è fondamentale. Se l'heap è vuoto ma il processo occupa 32GB di RAM, il colpevol
 tech: "java"
 tags: ["java", "jni & project panama"]
 pdf_file: "diagnostica-outofmemory-nativo.pdf"

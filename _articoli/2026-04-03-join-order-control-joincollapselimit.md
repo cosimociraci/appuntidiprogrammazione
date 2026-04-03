@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Join Order Control (join_collapse_limit)"
-date: 2026-04-03 14:40:28
-sintesi: "Quando una query ha molti join, il Planner tenta di rimescolarli per trovare l'ordine pi efficiente. Tuttavia, il numero di combinazioni cresce esponenzialmente. Se superiamo il join_collapse_limit, il Planner smette di cercare l'ordine perfetto e i"
+date: 2026-04-03 14:45:17
+sintesi: >
+  Quando una query ha molti join, il Planner tenta di rimescolarli per trovare l'ordine più efficiente. Tuttavia, il numero di combinazioni cresce esponenzialmente. Se superiamo il join_collapse_limit, il Planner smette di cercare l'ordine perfetto e i
 tech: "db"
 tags: ["db", "query opt. & planner"]
 pdf_file: "join-order-control-joincollapselimit.pdf"
@@ -16,7 +17,7 @@ Problema: Tempi di pianificazione (Planning Time) superiori ai tempi di esecuzio
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Misuro il Planning Time attuale. Se supera il Execution Time, il problema è
 * nella fase di pianificazione, non nell'esecuzione. */
  EXPLAIN (ANALYZE, FORMAT TEXT) SELECT o.id, u.name, p.title, c.name AS category

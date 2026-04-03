@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Java Flight Recorder (JFR) in Prod"
-date: 2026-04-03 14:39:38
-sintesi: "Diagnosticare problemi di performance dopo che sono avvenuti  quasi impossibile senza dati storici. JFR  uno strumento a basso overhead (<1%) da tenere sempre attivo in produzione. JFR registra eventi interni della JVM (allocazioni, lock, pause GC,"
+date: 2026-04-03 14:44:30
+sintesi: >
+  Diagnosticare problemi di performance dopo che sono avvenuti è quasi impossibile senza dati storici. JFR è uno strumento a basso overhead (<1%) da tenere sempre attivo in produzione. JFR registra eventi interni della JVM (allocazioni, lock, pause GC,
 tech: "java"
 tags: ["java", "jvm tuning & garbage collection"]
 pdf_file: "java-flight-recorder-jfr-in-prod.pdf"

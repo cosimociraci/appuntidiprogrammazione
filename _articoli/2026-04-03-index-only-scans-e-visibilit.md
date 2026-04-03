@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Index-Only Scans e Visibilit"
-date: 2026-04-03 14:40:25
-sintesi: "Un Index-Only Scan permette a Postgres di rispondere a una query leggendo solo l'indice, senza toccare la tabella (heap). Tuttavia, a causa di MVCC, l'indice non sa se una riga  visibile per la transazione corrente. Per confermarlo, Postgres usa la "
+date: 2026-04-03 14:45:14
+sintesi: >
+  Un Index-Only Scan permette a Postgres di rispondere a una query leggendo solo l'indice, senza toccare la tabella (heap). Tuttavia, a causa di MVCC, l'indice non sa se una riga è visibile per la transazione corrente. Per confermarlo, Postgres usa la 
 tech: "db"
 tags: ["db", "concorrenza e locking approfond"]
 pdf_file: "index-only-scans-e-visibilit.pdf"
@@ -16,7 +17,7 @@ Problema: L'indice contiene i dati ma non le informazioni di visibilità transaz
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Verifico se la query sta davvero usando solo l'indice. Il valore "Heap
 * Fetches" nell'output di EXPLAIN ANALYZE è il mio indicatore chiave: se è > 0,
 * significa che la Visibility Map non è aggiornata per alcune pagine. */

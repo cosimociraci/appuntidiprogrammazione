@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Hot Standby Feedback"
-date: 2026-04-03 14:40:25
-sintesi: "In una configurazione Master-Replica, pu succedere che una query lunga sulla replica venga interrotta perch il Master ha rimosso dei dati (tramite Vacuum) che la replica deve ancora processare. Questo  il replication conflict. Il meccanismo hot_st"
+date: 2026-04-03 14:45:14
+sintesi: >
+  In una configurazione Master-Replica, può succedere che una query lunga sulla replica venga interrotta perché il Master ha rimosso dei dati (tramite Vacuum) che la replica deve ancora processare. Questo è il 'replication conflict'. Il meccanismo hot_
 tech: "db"
 tags: ["db", "concorrenza e locking approfond"]
 pdf_file: "hot-standby-feedback.pdf"
@@ -16,7 +17,7 @@ Problema: Disallineamento tra la pulizia dei dati (Vacuum) sul Master e le neces
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Configurazione da applicare nel file postgresql.conf della REPLICA. Comunica
 * al master di mantenere le tuple necessarie finché la replica non ha concluso
 * le sue transazioni aperte. */

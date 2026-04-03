@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Autovacuum Tuning (Cost-Based)"
-date: 2026-04-03 14:40:37
-sintesi: "L'Autovacuum  fondamentale per recuperare lo spazio delle tuple morte, ma se non configurato correttamente pu essere troppo timido o troppo aggressivo. PostgreSQL usa un sistema a punti (costo) per limitare l'impatto dell'I/O- ogni operazione consu"
+date: 2026-04-03 14:45:25
+sintesi: >
+  L'Autovacuum è fondamentale per recuperare lo spazio delle tuple morte, ma se non configurato correttamente può essere troppo timido o troppo aggressivo. PostgreSQL usa un sistema a 'punti' (costo) per limitare l'impatto dell'I/O: ogni operazione con
 tech: "db"
 tags: ["db", "vacuum & storage"]
 pdf_file: "autovacuum-tuning-cost-based.pdf"
@@ -16,7 +17,7 @@ Problema: Il Vacuum è troppo lento rispetto alla velocità di generazione delle
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Regolo i parametri per rendere il vacuum più aggressivo sulla tabella critica,
 * senza toccare i default dell'intero cluster */
  ALTER TABLE high_traffic_table SET (autovacuum_vacuum_cost_limit = 1000,

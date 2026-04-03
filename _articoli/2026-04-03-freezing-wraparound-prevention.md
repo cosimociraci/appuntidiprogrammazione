@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Freezing & Wraparound Prevention"
-date: 2026-04-03 14:40:38
-sintesi: "Ogni riga ha un Transaction ID (XID). Poich il contatore  a 32 bit, dopo 2 miliardi di transazioni il database va in wraparound (i vecchi dati diventano invisibili). Il Freezing  il processo con cui il Vacuum marca le righe vecchie come congelate "
+date: 2026-04-03 14:45:27
+sintesi: >
+  Ogni riga ha un Transaction ID (XID). Poiché il contatore è a 32 bit, dopo 2 miliardi di transazioni il database va in 'wraparound' (i vecchi dati diventano invisibili). Il 'Freezing' è il processo con cui il Vacuum marca le righe vecchie come 'conge
 tech: "db"
 tags: ["db", "vacuum & storage"]
 pdf_file: "freezing-wraparound-prevention.pdf"
@@ -16,7 +17,7 @@ Problema: Accumulo di ID transazione non congelati che minaccia l'integrità del
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Verifico l'età delle transazioni per ogni database: se supera 1.5 miliardi è
 * urgente */
  SELECT datname, age(datfrozenxid) AS xid_age, round(age(datfrozenxid) /

@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Custom Dialects e IProcessor"
-date: 2026-04-03 14:40:06
-sintesi: "I frammenti standard (th-replace) non bastano per logiche UI molto complesse o componenti riutilizzabili tra progetti diversi. Implementando un IProcessorDialect  possibile introdurre nuovi attributi (es. app-chart) o tag che vengono elaborati dal s"
+date: 2026-04-03 14:44:57
+sintesi: >
+  I frammenti standard (th:replace) non bastano per logiche UI molto complesse o componenti riutilizzabili tra progetti diversi. Implementando un IProcessorDialect è possibile introdurre nuovi attributi (es. app:chart) o tag che vengono elaborati dal s
 tech: "thymeleaf"
 tags: ["thymeleaf", "custom dialects & processors"]
 pdf_file: "custom-dialects-e-iprocessor.pdf"

@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Index Bloat e REINDEX CONCURRENTLY"
-date: 2026-04-03 14:40:39
-sintesi: "Anche gli indici soffrono di bloat, spesso pi delle tabelle. Un indice frammentato rallenta tutte le query di ricerca. Postgres 12+ permette il comando REINDEX CONCURRENTLY che ricostruisce l'indice da zero senza bloccare le scritture sulla tabella."
+date: 2026-04-03 14:45:28
+sintesi: >
+  Anche gli indici soffrono di bloat, spesso più delle tabelle. Un indice frammentato rallenta tutte le query di ricerca. Postgres 12+ permette il comando REINDEX CONCURRENTLY che ricostruisce l'indice da zero senza bloccare le scritture sulla tabella.
 tech: "db"
 tags: ["db", "vacuum & storage"]
 pdf_file: "index-bloat-e-reindex-concurrently.pdf"
@@ -16,7 +17,7 @@ Problema: Indici massivi che non entrano più in RAM a causa della frammentazion
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Stimo il bloat degli indici confrontando la dimensione attuale con il numero
 * di tuple reali. Un indice sano ha una densità foglia superiore al 70%: sotto
 * il 50% il bloat è significativo. */

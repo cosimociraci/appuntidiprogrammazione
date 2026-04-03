@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Conflict Detection in Logical Replication"
-date: 2026-04-03 14:40:34
-sintesi: "A differenza della replica fisica, quella logica pu incontrare conflitti (es. un inserimento sulla replica di una riga con una chiave primaria gi esistente). Quando ci accade, la replica si blocca e smette di applicare le modifiche, creando un lag"
+date: 2026-04-03 14:45:23
+sintesi: >
+  A differenza della replica fisica, quella logica può incontrare conflitti (es. un inserimento sulla replica di una riga con una chiave primaria già esistente). Quando ciò accade, la replica si blocca e smette di applicare le modifiche, creando un lag
 tech: "db"
 tags: ["db", "advanced replication & ha"]
 pdf_file: "conflict-detection-in-logical-replication.pdf"
@@ -16,7 +17,7 @@ Problema: Interruzione del flusso di replica dovuto a violazioni di vincoli di i
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Verifico il lag della replica e lo stato attuale della subscription per
 * rilevare se si è bloccata. */
  SELECT subname, received_lsn, latest_end_lsn, pg_wal_lsn_diff(latest_end_lsn,

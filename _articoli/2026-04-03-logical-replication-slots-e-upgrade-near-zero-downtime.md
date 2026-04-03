@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Logical Replication Slots e Upgrade Near-Zero Downtime"
-date: 2026-04-03 14:40:36
-sintesi: "La replica logica  lo strumento principe per eseguire upgrade di versione (es. da PG 15 a 17) con downtime minimo. La procedura prevede- creare un nuovo cluster con la versione recente, attivare la replica logica dal vecchio al nuovo, aspettare che "
+date: 2026-04-03 14:45:25
+sintesi: >
+  La replica logica è lo strumento principe per eseguire upgrade di versione (es. da PG 15 a 17) con downtime minimo. La procedura prevede: creare un nuovo cluster con la versione recente, attivare la replica logica dal vecchio al nuovo, aspettare che 
 tech: "db"
 tags: ["db", "advanced replication & ha"]
 pdf_file: "logical-replication-slots-e-upgrade-near-zero-downtime.pdf"
@@ -16,7 +17,7 @@ Problema: I metodi di upgrade tradizionali (pg_upgrade) richiedono che il databa
 
 ## Esempio Implementativo
 
-```db
+```sql
 /* STEP 1: Sul vecchio DB (v15) — abilitare la replica logica */
  wal_level = logical; 
 * Nel postgresql.conf: obbligatorio, senza questo la publication non funziona */

@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Wait Queues e Lock Priority"
-date: 2026-04-03 14:40:23
-sintesi: "PostgreSQL gestisce i lock tramite una coda FIFO (First-In-First-Out). Se un processo chiede un Access Exclusive Lock (es. per un ALTER TABLE), si mette in coda. Tutti i processi che arrivano dopo, anche se chiedono solo una semplice SELECT, rimarran"
+date: 2026-04-03 14:45:12
+sintesi: >
+  PostgreSQL gestisce i lock tramite una coda FIFO (First-In-First-Out). Se un processo chiede un Access Exclusive Lock (es. per un ALTER TABLE), si mette in coda. Tutti i processi che arrivano dopo, anche se chiedono solo una semplice SELECT, rimarran
 tech: "db"
 tags: ["db", "concorrenza e locking approfond"]
 pdf_file: "wait-queues-e-lock-priority.pdf"
@@ -16,7 +17,7 @@ Problema: Una richiesta di manutenzione pesante si mette in testa alla coda e bl
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Configuro la sessione per non attendere all'infinito. Preferisco che la
 * migrazione fallisca e venga ritentata più tardi, piuttosto che creare un
 * ingorgo che svuota il connection pool. */

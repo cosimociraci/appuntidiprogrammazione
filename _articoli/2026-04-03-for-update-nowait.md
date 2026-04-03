@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "FOR UPDATE NOWAIT"
-date: 2026-04-03 14:40:23
-sintesi: "Quando un'applicazione deve acquisire un lock su una riga per modificarla, il comportamento standard  aspettare se la riga  gi bloccata. In scenari interattivi (es. un utente che apre una scheda per modifica), l'attesa pu sembrare un blocco del s"
+date: 2026-04-03 14:45:13
+sintesi: >
+  Quando un'applicazione deve acquisire un lock su una riga per modificarla, il comportamento standard è aspettare se la riga è già bloccata. In scenari interattivi (es. un utente che apre una scheda per modifica), l'attesa può sembrare un blocco del s
 tech: "db"
 tags: ["db", "concorrenza e locking approfond"]
 pdf_file: "for-update-nowait.pdf"
@@ -16,7 +17,7 @@ Problema: L'utente rimane in attesa indefinita se un altro processo ha lasciato 
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Tento il lock sulla riga. Se un altro utente la sta modificando, Postgres
 * lancia immediatamente un'eccezione senza attendere, che catturo a livello
 * applicativo. */

@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Decoupled Logic (th:ref)"
-date: 2026-04-03 14:40:09
-sintesi: "Mantenere i file HTML puri per i designer, separando la logica Thymeleaf in file .th.xml, permette ai grafici di lavorare su file HTML standard senza vedere attributi th-, mentre il server applica la logica di binding esternamente. I selettori CSS de"
+date: 2026-04-03 14:44:59
+sintesi: >
+  Mantenere i file HTML 'puri' per i designer, separando la logica Thymeleaf in file .th.xml, permette ai grafici di lavorare su file HTML standard senza vedere attributi th:, mentre il server applica la logica di binding esternamente. I selettori CSS 
 tech: "thymeleaf"
 tags: ["thymeleaf", "custom dialects & processors"]
 pdf_file: "decoupled-logic-thref.pdf"

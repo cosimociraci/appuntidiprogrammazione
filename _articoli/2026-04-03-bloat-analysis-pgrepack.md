@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Bloat Analysis & pg_repack"
-date: 2026-04-03 14:40:38
-sintesi: "Il Vacuum recupera lo spazio all'interno del file, ma non lo restituisce al sistema operativo. Una tabella con molto bloat  come una spugna con troppi buchi- occupa molto spazio ma contiene pochi dati utili. Se il bloat  eccessivo (es. >30%), le sc"
+date: 2026-04-03 14:45:27
+sintesi: >
+  Il Vacuum recupera lo spazio all'interno del file, ma non lo restituisce al sistema operativo. Una tabella con molto 'bloat' è come una spugna con troppi buchi: occupa molto spazio ma contiene pochi dati utili. Se il bloat è eccessivo (es. >30%), le 
 tech: "db"
 tags: ["db", "vacuum & storage"]
 pdf_file: "bloat-analysis-pgrepack.pdf"
@@ -16,7 +17,7 @@ Problema: Tabella enorme che occupa molto più spazio della somma reale dei reco
 
 ## Esempio Implementativo
 
-```db
+```sql
 /* Stimo il bloat confrontando dimensione reale e dimensione attesa */
  SELECT relname, pg_size_pretty(pg_total_relation_size(relid)) AS total_size,
 n_live_tup, n_dead_tup, round(n_dead_tup::numeric / NULLIF(n_live_tup +

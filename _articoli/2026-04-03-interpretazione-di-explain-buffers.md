@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Interpretazione di EXPLAIN BUFFERS"
-date: 2026-04-03 14:40:28
-sintesi: "La metrica pi onesta per misurare una query non  il tempo (che dipende dal carico del server), ma i blocchi letti (BUFFERS). La differenza tra shared hit (dati in RAM), read (dati letti dal disco) e dirtied (pagine modificate) rivela l'impatto real"
+date: 2026-04-03 14:45:17
+sintesi: >
+  La metrica più onesta per misurare una query non è il tempo (che dipende dal carico del server), ma i blocchi letti (BUFFERS). La differenza tra shared hit (dati in RAM), read (dati letti dal disco) e dirtied (pagine modificate) rivela l'impatto real
 tech: "db"
 tags: ["db", "query opt. & planner"]
 pdf_file: "interpretazione-di-explain-buffers.pdf"
@@ -16,7 +17,7 @@ Problema: La latenza variabile delle query rende difficile capire se l'ottimizza
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Eseguo la query con BUFFERS per vedere il comportamento reale sull'I/O. La
 * prima esecuzione avrà molti 'read' (cold cache), la seconda avrà molti 'hit'
 * (warm cache). */

@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Evitare il False Sharing con @Contended"
-date: 2026-04-03 14:39:30
-sintesi: "A livello hardware, la CPU carica i dati in cache lines (solitamente 64 byte). Se due variabili diverse usate da thread diversi finiscono nella stessa linea, la modifica di una invalida la cache dell'altro core, facendo crollare le performance. L'ann"
+date: 2026-04-03 14:44:22
+sintesi: >
+  A livello hardware, la CPU carica i dati in cache lines (solitamente 64 byte). Se due variabili diverse usate da thread diversi finiscono nella stessa linea, la modifica di una invalida la cache dell'altro core, facendo crollare le performance. L'ann
 tech: "java"
 tags: ["java", "concurrency & multithreading"]
 pdf_file: "evitare-il-false-sharing-con-contended.pdf"

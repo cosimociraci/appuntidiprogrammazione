@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Reactive SSE (Server-Sent Events) Streaming"
-date: 2026-04-03 14:40:19
-sintesi: "Aggiornare parti della pagina in tempo reale senza WebSocket complessi  possibile con SpringWebFluxThymeleafView. Usando WebFlux, si pu restituire un Flux<Data> al template- Thymeleaf renderizza i frammenti man mano che i dati arrivano dallo stream"
+date: 2026-04-03 14:45:08
+sintesi: >
+  Aggiornare parti della pagina in tempo reale senza WebSocket complessi è possibile con SpringWebFluxThymeleafView. Usando WebFlux, si può restituire un Flux<Data> al template: Thymeleaf renderizza i frammenti man mano che i dati arrivano dallo stream
 tech: "thymeleaf"
 tags: ["thymeleaf", "spring integration & flow archi"]
 pdf_file: "reactive-sse-server-sent-events-streaming.pdf"

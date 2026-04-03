@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "ThreadLocal e Memory Leak"
-date: 2026-04-03 14:39:32
-sintesi: "ThreadLocal  utile per trasportare contesti (es. SecurityContext o TransactionID) senza passarli come parametri. In ambienti con thread pool (come Spring Boot), i thread non muoiono mai. Dimenticare di chiamare .remove() causa memory leak gravissimi"
+date: 2026-04-03 14:44:24
+sintesi: >
+  ThreadLocal è utile per trasportare contesti (es. SecurityContext o TransactionID) senza passarli come parametri. In ambienti con thread pool (come Spring Boot), i thread non muoiono mai. Dimenticare di chiamare .remove() causa memory leak gravissimi
 tech: "java"
 tags: ["java", "concurrency & multithreading"]
 pdf_file: "threadlocal-e-memory-leak.pdf"

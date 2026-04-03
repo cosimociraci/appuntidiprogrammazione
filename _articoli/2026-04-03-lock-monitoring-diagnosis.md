@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Lock Monitoring & Diagnosis"
-date: 2026-04-03 14:40:21
-sintesi: "In un sistema di produzione, i lock silenziosi sono i peggiori nemici delle performance. Una transazione dimenticata aperta pu bloccare l'intero sistema (es. un VACUUM o una migrazione di schema).  fondamentale avere una vista chiara di chi sta blo"
+date: 2026-04-03 14:45:10
+sintesi: >
+  In un sistema di produzione, i lock 'silenziosi' sono i peggiori nemici delle performance. Una transazione dimenticata aperta può bloccare l'intero sistema (es. un VACUUM o una migrazione di schema). È fondamentale avere una vista chiara di chi sta b
 tech: "db"
 tags: ["db", "concorrenza e locking approfond"]
 pdf_file: "lock-monitoring-diagnosis.pdf"
@@ -16,7 +17,7 @@ Problema: Difficoltà nel distinguere tra un normale tempo di esecuzione e un'at
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Questa query mi restituisce il PID che blocca, la query in esecuzione, e la
 * durata del blocco. È il mio strumento di debugging principale in produzione.
 * */

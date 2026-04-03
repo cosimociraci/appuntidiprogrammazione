@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Linker Options e Variadic Functions"
-date: 2026-04-03 14:39:56
-sintesi: "Alcune funzioni C (come printf o ioctl) accettano un numero variabile di argomenti. Configurare i FunctionDescriptor variadici in Panama richiede di definire gli specializzatori per ogni combinazione di argomenti usata. Questo livello di dettaglio pe"
+date: 2026-04-03 14:44:47
+sintesi: >
+  Alcune funzioni C (come printf o ioctl) accettano un numero variabile di argomenti. Configurare i FunctionDescriptor variadici in Panama richiede di definire gli 'specializzatori' per ogni combinazione di argomenti usata. Questo livello di dettaglio 
 tech: "java"
 tags: ["java", "jni & project panama"]
 pdf_file: "linker-options-e-variadic-functions.pdf"

@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Row-Level Security (RLS) e Concorrenza"
-date: 2026-04-03 14:40:21
-sintesi: "La sicurezza a livello di riga (RLS) aggiunge un filtro invisibile a ogni query. Sebbene potente, pu impattare sulla concorrenza se le policy includono subquery complesse che acquisiscono lock su altre tabelle. Ogni volta che un utente accede a una "
+date: 2026-04-03 14:45:11
+sintesi: >
+  La sicurezza a livello di riga (RLS) aggiunge un filtro invisibile a ogni query. Sebbene potente, può impattare sulla concorrenza se le policy includono subquery complesse che acquisiscono lock su altre tabelle. Ogni volta che un utente accede a una 
 tech: "db"
 tags: ["db", "concorrenza e locking approfond"]
 pdf_file: "row-level-security-rls-e-concorrenza.pdf"
@@ -16,7 +17,7 @@ Problema: Le policy RLS troppo complesse rallentano l'acquisizione dei lock e po
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Attivo RLS e definisco policy separate per lettura e scrittura per avere
 * granularità nel controllo degli accessi per tipo di operazione. */
  ALTER TABLE orders ENABLE ROW LEVEL SECURITY; CREATE POLICY

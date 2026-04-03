@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Discriminated Unions ed Exhaustiveness Checking"
-date: 2026-04-03 14:40:02
-sintesi: "Gestire stati complessi dove alcune propriet esistono solo se altre hanno valori specifici. Le Discriminated Unions usano un tag comune per discriminare tra casi. L'uso del tipo never per l'exhaustiveness checking garantisce che ogni caso sia gestit"
+date: 2026-04-03 14:44:54
+sintesi: >
+  Gestire stati complessi dove alcune proprietà esistono solo se altre hanno valori specifici. Le Discriminated Unions usano un 'tag' comune per discriminare tra casi. L'uso del tipo never per l'exhaustiveness checking garantisce che ogni caso sia gest
 tech: "js"
 tags: ["js", "typescript & advanced types"]
 pdf_file: "discriminated-unions-ed-exhaustiveness-checking.pdf"

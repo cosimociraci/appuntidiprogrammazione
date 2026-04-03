@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "BRIN: Indici per dataset massivi"
-date: 2026-04-03 14:40:31
-sintesi: "Quando una tabella raggiunge i terabyte, un indice B-Tree pu diventare pi grande della RAM disponibile. Gli indici BRIN (Block Range Indexes) nascono per questo scenario- invece di salvare ogni singola riga, memorizzano solo il valore minimo e mass"
+date: 2026-04-03 14:45:20
+sintesi: >
+  Quando una tabella raggiunge i terabyte, un indice B-Tree può diventare più grande della RAM disponibile. Gli indici BRIN (Block Range Indexes) nascono per questo scenario: invece di salvare ogni singola riga, memorizzano solo il valore minimo e mass
 tech: "db"
 tags: ["db", "indexing internals"]
 pdf_file: "brin-indici-per-dataset-massivi.pdf"
@@ -16,7 +17,7 @@ Problema: L'indice B-Tree standard consuma troppo spazio disco e satura la cache
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Creo un indice BRIN su una colonna timestamp. pages_per_range=64 significa che
 * ogni voce dell'indice copre 64 pagine (512KB con block_size=8KB): più piccolo
 * = più preciso ma indice più grande. */

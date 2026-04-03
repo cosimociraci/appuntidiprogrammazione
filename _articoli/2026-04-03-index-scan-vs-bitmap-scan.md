@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Index Scan vs Bitmap Scan"
-date: 2026-04-03 14:40:29
-sintesi: "PostgreSQL ha due modi principali di usare un indice- Index Scan (legge l'indice e va subito alla tabella riga per riga) e Bitmap Index Scan (legge tutto l'indice, crea una mappa di bit delle righe e poi accede alla tabella in modo ordinato). Il Bitm"
+date: 2026-04-03 14:45:17
+sintesi: >
+  PostgreSQL ha due modi principali di usare un indice: Index Scan (legge l'indice e va subito alla tabella riga per riga) e Bitmap Index Scan (legge tutto l'indice, crea una mappa di bit delle righe e poi accede alla tabella in modo ordinato). Il Bitm
 tech: "db"
 tags: ["db", "query opt. & planner"]
 pdf_file: "index-scan-vs-bitmap-scan.pdf"
@@ -16,7 +17,7 @@ Problema: L'accesso casuale alla tabella tramite Index Scan diventa inefficiente
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Osservo il tipo di scan scelto dal Planner. Con una colonna a bassa
 * selettività come status, mi aspetto un Bitmap Heap Scan preceduto da un Bitmap
 * Index Scan. */

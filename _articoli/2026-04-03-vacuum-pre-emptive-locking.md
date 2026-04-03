@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Vacuum Pre-emptive Locking"
-date: 2026-04-03 14:40:26
-sintesi: "Il Vacuum  un processo di background, ma per finalizzare la pulizia o per troncare una tabella alla fine, ha bisogno di un lock breve ma forte (Access Exclusive). Se la tabella  costantemente sotto query, il Vacuum potrebbe non riuscire mai a finir"
+date: 2026-04-03 14:45:15
+sintesi: >
+  Il Vacuum è un processo di background, ma per finalizzare la pulizia o per troncare una tabella alla fine, ha bisogno di un lock breve ma forte (Access Exclusive). Se la tabella è costantemente sotto query, il Vacuum potrebbe non riuscire mai a finir
 tech: "db"
 tags: ["db", "concorrenza e locking approfond"]
 pdf_file: "vacuum-pre-emptive-locking.pdf"
@@ -16,7 +17,7 @@ Problema: Il Vacuum viene costantemente interrotto dalle transazioni utente, ren
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Prima di intervenire, misuro il livello di bloat reale sulla tabella per
 * quantificare il problema. */
  SELECT relname, pg_size_pretty(pg_total_relation_size(relid)) AS total_size,

@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Indici GIN su Array e JSONB"
-date: 2026-04-03 14:40:33
-sintesi: "PostgreSQL eccelle nel gestire dati non strutturati grazie agli indici GIN applicati ad array o oggetti JSONB. Questi indici permettono di interrogare l'interno del dato- trovare tutti i documenti che contengono un certo tag o una specifica chiave/va"
+date: 2026-04-03 14:45:22
+sintesi: >
+  PostgreSQL eccelle nel gestire dati non strutturati grazie agli indici GIN applicati ad array o oggetti JSONB. Questi indici permettono di interrogare 'l'interno' del dato: trovare tutti i documenti che contengono un certo tag o una specifica chiave/
 tech: "db"
 tags: ["db", "indexing internals"]
 pdf_file: "indici-gin-su-array-e-jsonb.pdf"
@@ -16,7 +17,7 @@ Problema: Le query che cercano chiavi nidificate dentro il JSONB eseguono un Seq
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Creo l'indice GIN con jsonb_path_ops per query di contenimento. È più piccolo
 * di jsonb_ops perché non indicizza le chiavi isolate, solo i path completi. */
  CREATE INDEX idx_products_attrs_path ON products USING GIN (attributes

@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "B-Tree Index Bloat & Fillfactor"
-date: 2026-04-03 14:40:30
-sintesi: "Gli indici B-Tree tendono a frammentarsi (bloat) a causa di frequenti update e delete, poich PostgreSQL non pu riutilizzare immediatamente lo spazio delle pagine degli indici fino al passaggio del Vacuum. Un B-Tree gonfio aumenta il numero di livel"
+date: 2026-04-03 14:45:19
+sintesi: >
+  Gli indici B-Tree tendono a frammentarsi (bloat) a causa di frequenti update e delete, poiché PostgreSQL non può riutilizzare immediatamente lo spazio delle pagine degli indici fino al passaggio del Vacuum. Un B-Tree 'gonfio' aumenta il numero di liv
 tech: "db"
 tags: ["db", "indexing internals"]
 pdf_file: "b-tree-index-bloat-fillfactor.pdf"
@@ -16,7 +17,7 @@ Problema: Il degrado delle performance dovuto alla frammentazione fisica dell'in
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Creo un indice con spazio di riserva per gli update. Il fillfactor=85 lascia
 * il 15% di ogni pagina libero per aggiornamenti futuri, prevenendo la
 * frammentazione precoce sotto carichi di scrittura intensi. */

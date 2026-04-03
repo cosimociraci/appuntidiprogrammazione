@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "JIT Compilation Tuning"
-date: 2026-04-03 14:40:27
-sintesi: "La Just-In-Time (JIT) compilation trasforma parte della query in codice macchina nativo. Sebbene sembri un vantaggio, ha un costo di startup non indifferente. Per query OLTP veloci (che durano millisecondi), il tempo speso per compilare il codice JIT"
+date: 2026-04-03 14:45:16
+sintesi: >
+  La Just-In-Time (JIT) compilation trasforma parte della query in codice macchina nativo. Sebbene sembri un vantaggio, ha un costo di 'startup' non indifferente. Per query OLTP veloci (che durano millisecondi), il tempo speso per compilare il codice J
 tech: "db"
 tags: ["db", "query opt. & planner"]
 pdf_file: "jit-compilation-tuning.pdf"
@@ -16,7 +17,7 @@ Problema: L'overhead di compilazione JIT aggiunge 50-100ms a query che dovrebber
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Verifico se JIT è attivo e se sta intervenendo sulla query problematica.
 * Nell'output di EXPLAIN ANALYZE cerco la sezione "JIT" con i tempi di
 * "Generation" e "Inlining". */

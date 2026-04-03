@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "FSM e VM: Gestione dello spazio libero"
-date: 2026-04-03 14:40:39
-sintesi: "La Free Space Map (FSM) tiene traccia di dove c' spazio libero nelle pagine esistenti per nuovi inserimenti. Se la FSM  corrotta o insufficiente, Postgres inizier a creare nuove pagine anche se c' spazio disponibile, gonfiando la tabella inutilme"
+date: 2026-04-03 14:45:28
+sintesi: >
+  La Free Space Map (FSM) tiene traccia di dove c'è spazio libero nelle pagine esistenti per nuovi inserimenti. Se la FSM è corrotta o insufficiente, Postgres inizierà a creare nuove pagine anche se c'è spazio disponibile, gonfiando la tabella inutilme
 tech: "db"
 tags: ["db", "vacuum & storage"]
 pdf_file: "fsm-e-vm-gestione-dello-spazio-libero.pdf"
@@ -16,7 +17,7 @@ Problema: Il database chiede nuovo spazio al sistema operativo anche se sono sta
 
 ## Esempio Implementativo
 
-```db
+```sql
 /* Analizzo lo spazio libero medio nelle pagine della tabella */
  SELECT * FROM pg_freespace('my_table') ORDER BY avail DESC LIMIT 20; 
 * Se le pagine mostrano avail = 0 nonostante recenti DELETE, la FSM non è

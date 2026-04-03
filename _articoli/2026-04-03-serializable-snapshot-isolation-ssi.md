@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Serializable Snapshot Isolation (SSI)"
-date: 2026-04-03 14:40:21
-sintesi: "Il livello di isolamento SERIALIZABLE in PostgreSQL non si limita a bloccare le righe, ma monitora le dipendenze tra le transazioni per prevenire anomalie di vizio di scrittura (write skew). Mentre REPEATABLE READ garantisce che i dati letti non camb"
+date: 2026-04-03 14:45:10
+sintesi: >
+  Il livello di isolamento SERIALIZABLE in PostgreSQL non si limita a bloccare le righe, ma monitora le dipendenze tra le transazioni per prevenire anomalie di 'vizio di scrittura' (write skew). Mentre REPEATABLE READ garantisce che i dati letti non ca
 tech: "db"
 tags: ["db", "concorrenza e locking approfond"]
 pdf_file: "serializable-snapshot-isolation-ssi.pdf"
@@ -16,7 +17,7 @@ Problema: Il controllo del conteggio (COUNT) in una transazione non vede gli ins
 
 ## Esempio Implementativo
 
-```db
+```sql
 * Imposto il livello di isolamento più alto. Se un'altra transazione inserisce
 * un appuntamento per lo stesso medico mentre io sto contando, Postgres fallirà
 * il mio COMMIT con SQLSTATE 40001 "could not serialize access". */

@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Argon2 e Key Derivation (KDF)"
-date: 2026-04-03 14:40:04
-sintesi: "Usare MD5 o SHA256 per le password  inutile contro le GPU moderne (Rainbow Tables). Argon2, vincitore della Password Hashing Competition,  progettato per essere Memory-Hard- i parametri di memoria, tempo e parallelismo costringono l'attaccante a us"
+date: 2026-04-03 14:44:55
+sintesi: >
+  Usare MD5 o SHA256 per le password è inutile contro le GPU moderne (Rainbow Tables). Argon2, vincitore della Password Hashing Competition, è progettato per essere 'Memory-Hard': i parametri di memoria, tempo e parallelismo costringono l'attaccante a 
 tech: "js"
 tags: ["js", "security & cryptography"]
 pdf_file: "argon2-e-key-derivation-kdf.pdf"
