@@ -130,34 +130,44 @@ def process_excels():
                 df.columns = [str(c).strip().upper() for c in df.columns]
                 
                 for idx, row in df.iterrows():
+                    # --- PULIZIA TITOLO E SINTESI ---
+                    # Normalizziamo i caratteri speciali che Excel inserisce a tradimento
                     titolo = str(row.get('TITOLO', f'Topic-{idx}')).replace('"', '').replace("'", "")
+                    titolo = titolo.encode('ascii', 'ignore').decode('ascii') # Rimuove emoji o char strani
+                    
                     filename = f"{pd.Timestamp.now().strftime('%Y-%m-%d')}-{sanitize_filename(titolo)}.md"
                     
-                    sintesi = str(row.get('SINTESI DEL PROBLEMA', '')).replace("\\n", " ").replace("\n", " ").replace('"', '').strip()[:250]
-                    
+                    # Pulizia profonda della sintesi per evitare che rompa il layout YAML
+                    sintesi = str(row.get('SINTESI DEL PROBLEMA', '')).replace("\\n", " ").replace("\n", " ")
+                    sintesi = sintesi.replace('"', '').replace(":", "-").strip()[:250]
+                    sintesi = sintesi.encode('ascii', 'ignore').decode('ascii')
+
                     code_cols = [col for col in df.columns if 'ESEMPIO' in col and pd.notna(row[col])]
                     raw_code = "\n".join([str(row[col]) for col in code_cols])
                     
-                    # FORMATTAZIONE PRO
                     formatted_code = format_code_pro(raw_code, tech_name)
                     
                     with open(out_path / filename, "w", encoding="utf-8") as f:
                         f.write("---\n")
                         f.write(f"layout: post\n")
                         f.write(f"title: \"{titolo}\"\n")
-                        f.write(f"date: {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S %z')}\n")
+                        # Data in formato standard Jekyll per evitare errori di parsing
+                        f.write(f"date: {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
                         f.write(f"sintesi: \"{sintesi}\"\n")
-                        f.write(f"tech: {tech_name}\n")
-                        f.write(f"tags: [{tech_name}, \"{sheet_name.lower()}\"]\n")
+                        f.write(f"tech: \"{tech_name}\"\n") # Virgolette per sicurezza
+                        f.write(f"tags: [\"{tech_name}\", \"{sheet_name.lower().strip()}\"]\n")
                         f.write(f"pdf_file: \"{sanitize_filename(titolo)}.pdf\"\n")
                         f.write("---\n\n")
                         
                         for section in ['ESIGENZA REALE', 'ANALISI TECNICA']:
                             content = str(row.get(section, '')).replace("\\n", "\n")
                             if content and content != 'nan':
+                                # Rimuoviamo eventuali caratteri che simulano tag Liquid {{ }}
+                                content = content.replace("{{", "{ {").replace("}}", "} }")
                                 f.write(f"## {section.title()}\n{content}\n\n")
                         
                         if formatted_code:
+                            # Proteggiamo il blocco di codice
                             f.write(f"## Esempio Implementativo\n\n```{tech_name}\n{formatted_code}\n```\n")
                     
                     print(f"  ✅ {filename}")

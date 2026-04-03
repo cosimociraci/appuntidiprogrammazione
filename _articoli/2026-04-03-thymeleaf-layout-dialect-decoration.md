@@ -1,0 +1,92 @@
+---
+layout: post
+title: "Thymeleaf Layout Dialect (Decoration)"
+date: 2026-04-03 14:40:13
+sintesi: "Il semplice th-replace causa duplicazione di intestazioni e meta-tag. Il pattern layout-decorate permette a un Base Layout di definire punti di inserimento (layout-fragment) che le pagine figlie sovrascrivono. Le pagine non includono il layout, ma lo"
+tech: "thymeleaf"
+tags: ["thymeleaf", "advanced layout & templating"]
+pdf_file: "thymeleaf-layout-dialect-decoration.pdf"
+---
+
+## Esigenza Reale
+Gestire un sito con diverse sezioni (Pubblica, Admin, Dashboard) che condividono lo stesso scheletro ma hanno head/footer differenti.
+
+## Analisi Tecnica
+Problema: Gestione difficoltosa dei meta-tag SEO e degli script specifici per pagina quando si usa l'inclusione classica "bottom-up". Perché: Uso il pattern Decorator. Ho scelto questo dialetto per invertire la responsabilità: è la pagina specifica che decide quale layout riempire, non il layout che "tira dentro" i pezzi.
+
+## Esempio Implementativo
+
+```thymeleaf
+/* Aggiungo la dipendenza del Layout Dialect al pom.xml: */
+ 
+// <dependency> 
+//   <groupId>nz.net.ultraq.thymeleaf</groupId> 
+//   <artifactId>thymeleaf-layout-dialect</artifactId> 
+//   <version>3.3.0</version> 
+// </dependency> 
+* Registro il dialetto in Spring Boot (auto-configurato se nel classpath, ma
+* rendo esplicito): */
+ @Configuration public class ThymeleafLayoutConfig 
+{ @Bean public LayoutDialect layoutDialect() 
+{ return new LayoutDialect(); }
+ }
+ <!-- LIVELLO 1: Layout base condiviso da tutto il sito
+(templates/layouts/base.html) --> <!DOCTYPE html> <html xmlns:th="http:
+//www.thymeleaf.org" xmlns:layout="http:
+// www.ultraq.net.nz/thymeleaf/layout"> <head> <!-- layout:title-pattern combina
+// il titolo della pagina con il nome del sito --> <title layout:title-
+// pattern="$CONTENT_TITLE | MyApp">MyApp</title> <!-- Meta-tag SEO di default:
+// sovrascrivibili dalla pagina --> <meta name="description"
+// layout:fragment="meta-description" content="MyApp - Piattaforma aziendale">
+// <!-- CSS comune a tutte le pagine --> <link rel="stylesheet"
+// href="/css/bootstrap.min.css"> <link rel="stylesheet" href="/css/app.css">
+// <!-- Punto di inserimento per CSS specifici della pagina --> <th:block
+// layout:fragment="page-css"></th:block> </head> <body> <!-- Header comune: non
+// sovrascrivibile --> <header th:replace="~
+{fragments/header :: header}
+"></header> <!-- Breadcrumb: sovrascrivibile dalle pagine --> <nav
+layout:fragment="breadcrumb" aria-label="breadcrumb"> <ol class="breadcrumb"><li
+class="breadcrumb-item">Home</li></ol> </nav> <!-- Contenuto principale: DEVE
+essere sovrascrivitto dalla pagina figlia --> <main layout:fragment="content">
+<p>Contenuto di default (non dovrebbe mai apparire)</p> </main> <!-- Footer
+comune: non sovrascrivibile --> <footer th:replace="~
+{fragments/footer :: footer}
+"></footer> <!-- JS comuni --> <script
+src="/js/bootstrap.bundle.min.js"></script> <!-- Punto di inserimento per JS
+specifici della pagina --> <th:block layout:fragment="page-scripts"></th:block>
+</body> </html> <!-- LIVELLO 2: Layout specifico per la sezione Admin
+(templates/layouts/admin.html) --> <!-- Decora il base layout aggiungendo
+sidebar e stili admin --> <html xmlns:layout="http:
+//www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~
+{layouts/base}
+"> <head> <title>Admin</title> <!-- Aggiunge CSS admin al blocco page-css del
+base layout --> <th:block layout:fragment="page-css"> <link rel="stylesheet"
+href="/css/admin.css"> </th:block> </head> <body> <th:block
+layout:fragment="breadcrumb"> <nav aria-label="breadcrumb"> <ol
+class="breadcrumb"> <li class="breadcrumb-item"><a href="/">Home</a></li> <li
+class="breadcrumb-item"><a href="/admin">Admin</a></li> </ol> </nav> </th:block>
+<th:block layout:fragment="content"> <div class="admin-layout"> <aside
+th:replace="~
+{fragments/admin-sidebar :: sidebar}
+"></aside> <!-- Sotto-frammento: le pagine admin riempiono questo slot --> <main
+layout:fragment="admin-content"> <p>Seleziona una sezione dal menu.</p> </main>
+</div> </th:block> </body> </html> <!-- LIVELLO 3: Pagina concreta User List
+(templates/admin/users.html) --> <!-- Decora il layout admin, non il base:
+eredita l'intera gerarchia --> <html xmlns:layout="http:
+//www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~
+{layouts/admin}
+"> <head> <title>Gestione Utenti</title> <meta name="description"
+layout:fragment="meta-description" content="Gestione degli utenti della
+piattaforma"> <th:block layout:fragment="page-scripts"> <script
+src="/js/datatables.min.js"></script> <script src="/js/admin-users.js"></script>
+</th:block> </head> <body> <!-- Sovrascrive solo admin-content: breadcrumb e
+sidebar vengono dal layout admin --> <th:block layout:fragment="admin-content">
+<h1>Gestione Utenti</h1> <table id="users-table" class="table"> <tr
+th:each="user : $
+{users}
+"> <td th:text="$
+{user.name}
+">Nome</td> <td th:text="$
+{user.email}
+">Email</td> </tr> </table> </th:block> </body> </html>
+```
