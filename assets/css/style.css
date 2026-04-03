@@ -38,3 +38,75 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-ser
 .sintesi { color: var(--sub-text); font-size: 0.9rem; margin: 15px 0; line-height: 1.5; }
 
 .theme-toggle { background: var(--card); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; padding: 10px; font-size: 1.2rem; }
+
+/* Contenitore principale */
+.post-container {
+    display: flex;
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Sidebar a sinistra */
+.post-sidebar {
+    width: 250px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    position: sticky; /* Resta visibile mentre scorri il post */
+    top: 20px;
+}
+
+/* Stile comune per le sezioni della sidebar */
+.sidebar-section {
+    padding: 15px;
+    background: #1a1a1a; /* Leggermente più chiaro dello sfondo nero */
+    border-left: 4px solid var(--tech-accent);
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+/* Sezione Libri - Copertine */
+.book-item {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.book-item img {
+    width: 100%;
+    max-width: 150px;
+    height: auto;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+    transition: transform 0.3s;
+}
+
+.book-item img:hover {
+    transform: scale(1.05);
+}
+
+.book-item span {
+    display: block;
+    font-size: 14px;
+    margin-top: 8px;
+    color: #ccc;
+}
+
+/* Contenuto del post */
+.post-content {
+    flex-grow: 1;
+    min-width: 0; /* Previene overflow del codice */
+}
+
+/* Responsive: su mobile mettiamo tutto in colonna */
+@media (max-width: 768px) {
+    .post-container {
+        flex-direction: column;
+    }
+    .post-sidebar {
+        width: 100%;
+        position: static;
+    }
+}
