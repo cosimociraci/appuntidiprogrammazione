@@ -2,30 +2,58 @@
 <html lang="it" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <title>{{ page.title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page.title }} — DevLog</title>
+    <meta name="description" content="{{ page.sintesi | default: site.description }}">
     <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/style.css">
+
     <script>
-        function toggleTheme() {
-            const html = document.documentElement;
-            const current = html.getAttribute('data-theme');
-            const next = current === 'dark' ? 'light' : 'dark';
-            html.setAttribute('data-theme', next);
-            localStorage.setItem('theme', next);
-        }
-        
-        // Applica tema salvato
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        document.documentElement.setAttribute('data-theme', savedTheme);
+        /*
+         * Applico il tema PRIMA del rendering per evitare il flash di contenuto
+         * (FOUC). Lo script è inline e bloccante di proposito: deve girare
+         * prima che il browser disegni qualsiasi elemento.
+         */
+        (function() {
+            var saved = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', saved);
+        })();
     </script>
 </head>
 <body>
-    <header class="main-header" style="display: flex; justify-content: space-between; align-items: center; padding: 20px; left: 210px; position: relative;">
+
+    <header class="main-header">
         <div class="logo" onclick="window.location.href='{{ '/' | relative_url }}'">
             APPUNTI DI <span>PROGRAMMAZIONE</span>
         </div>
-        <button onclick="toggleTheme()" class="theme-toggle">🌓</button>
+
+        <!-- 
+            Il pulsante aggiorna l'attributo data-theme sull'<html> e
+            persiste la scelta nel localStorage per le sessioni future.
+        -->
+        <button onclick="toggleTheme()" class="theme-toggle" aria-label="Cambia tema">🌓</button>
     </header>
 
     {{ content }}
+
+    <footer class="main-footer">
+        DevLog — Appunti di Programmazione &nbsp;·&nbsp; {{ site.email }}
+    </footer>
+
+    <script>
+        /*
+         * toggleTheme: legge il tema corrente dall'attributo HTML,
+         * calcola l'opposto e lo salva. Il CSS reagisce via [data-theme].
+         * Non uso classi sul body per mantenere tutto centralizzato
+         * sull'elemento radice.
+         */
+        function toggleTheme() {
+            var html = document.documentElement;
+            var current = html.getAttribute('data-theme');
+            var next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+        }
+    </script>
+
 </body>
 </html>

@@ -1,125 +1,778 @@
-/* Layout a due colonne */
+/* ================================================
+   DEVLOG — style.css
+   Sistema di design: editoriale tecnico, notebook
+   Palette: quasi-nero + verde fosforescente (dark)
+            bianco sporco + inchiostro scuro (light)
+   ================================================ */
+
+/* ------------------------------------------------
+   0. IMPORT FONT
+   Ho scelto:
+   - JetBrains Mono: per UI label e codice (tecnico)
+   - Lora: per il corpo testo (caldo, editoriale)
+   ------------------------------------------------ */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
+
+/* ------------------------------------------------
+   1. CSS VARIABLES — TEMI
+   Uso data-theme sull'elemento <html> per il toggle.
+   Ogni valore semantico è definito qui una volta sola.
+   ------------------------------------------------ */
+:root,
+[data-theme="dark"] {
+  --bg-primary:      #0d0f0e;
+  --bg-secondary:    #141716;
+  --bg-tertiary:     #1c201e;
+  --border-color:    #2a2f2c;
+  --text-primary:    #e8ede9;
+  --text-secondary:  #9aab9d;
+  --text-muted:      #5a6b5d;
+  --accent-color:    #4dff91;      /* verde fosforescente */
+  --accent-dim:      #1a4d30;
+  --accent-hover:    #80ffb3;
+  --tag-bg:          #1a2e1f;
+  --tag-color:       #4dff91;
+  --code-bg:         #111511;
+  --shadow-soft:     0 2px 16px rgba(0,0,0,0.5);
+  --shadow-hover:    0 6px 32px rgba(0,0,0,0.7);
+  --header-bg:       rgba(13,15,14,0.92);
+}
+
+[data-theme="light"] {
+  --bg-primary:      #f5f0e8;      /* carta invecchiata */
+  --bg-secondary:    #ffffff;
+  --bg-tertiary:     #edeae3;
+  --border-color:    #d4cfc6;
+  --text-primary:    #1a1c1a;
+  --text-secondary:  #4a4f4a;
+  --text-muted:      #8a8f8a;
+  --accent-color:    #1a6e3c;      /* verde inchiostro */
+  --accent-dim:      #d4edd9;
+  --accent-hover:    #0e4a28;
+  --tag-bg:          #d4edd9;
+  --tag-color:       #1a6e3c;
+  --code-bg:         #ede9e0;
+  --shadow-soft:     0 2px 12px rgba(0,0,0,0.08);
+  --shadow-hover:    0 6px 24px rgba(0,0,0,0.14);
+  --header-bg:       rgba(245,240,232,0.92);
+}
+
+/* ------------------------------------------------
+   2. RESET & BASE
+   ------------------------------------------------ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Lora', Georgia, serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.7;
+  font-size: 16px;
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+a {
+  color: var(--accent-color);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--accent-hover);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* ------------------------------------------------
+   3. HEADER / TOOLBAR
+   Sticky, con backdrop-filter per il blur.
+   Uso position:sticky invece di fixed per non
+   dover compensare l'altezza con padding sul body.
+   ------------------------------------------------ */
+.main-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--header-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  height: 64px;
+  transition: background 0.3s ease;
+}
+
+/* Logo: testo monospace con accento */
+.logo {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--text-secondary);
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+
+.logo span {
+  color: var(--accent-color);
+}
+
+.logo:hover {
+  color: var(--text-primary);
+}
+
+/* Pulsante toggle tema */
+.theme-toggle {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.1s;
+  color: var(--text-primary);
+}
+
+.theme-toggle:hover {
+  background: var(--accent-dim);
+  border-color: var(--accent-color);
+  transform: scale(1.05);
+}
+
+.theme-toggle:active {
+  transform: scale(0.97);
+}
+
+/* ------------------------------------------------
+   4. LAYOUT HOME — griglia principale
+   Colonna sinistra (articoli + ricerca) | sidebar 280px
+   ------------------------------------------------ */
 .main-layout-container {
-    display: grid;
-    grid-template-columns: 1fr 300px;
-    gap: 40px;
-    max-width: 1200px;
-    margin: 40px auto;
-    padding: 0 20px;
-    align-items: start; /* Evita che la sidebar si allunghi inutilmente */
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 48px;
+  max-width: 1200px;
+  margin: 48px auto;
+  padding: 0 32px;
+  align-items: start;
 }
 
+/* ------------------------------------------------
+   5. SEARCH BAR
+   Input monospace, bordo accent al focus
+   ------------------------------------------------ */
+.search-section {
+  margin-bottom: 36px;
+}
+
+#search-bar {
+  width: 100%;
+  padding: 12px 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#search-bar::placeholder {
+  color: var(--text-muted);
+}
+
+#search-bar:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px var(--accent-dim);
+}
+
+/* ------------------------------------------------
+   6. GRIGLIA ARTICOLI (Home)
+   Lista verticale, ogni card è un articolo
+   ------------------------------------------------ */
+.post-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2px; /* Separatori sottili tra articoli */
+}
+
+.post-item {
+  padding: 28px 0;
+  border-bottom: 1px solid var(--border-color);
+  transition: padding-left 0.2s ease;
+}
+
+.post-item:first-child {
+  border-top: 1px solid var(--border-color);
+}
+
+.post-item:hover {
+  padding-left: 8px;
+}
+
+/* Metadati sopra il titolo: tech e data */
+.post-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: var(--accent-color);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.post-title {
+  font-family: 'Lora', serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-bottom: 10px;
+}
+
+.post-title a {
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.post-title a:hover {
+  color: var(--accent-color);
+}
+
+/* Sintesi articolo */
+.post-sintesi {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  /* Limito a 3 righe per non appesantire il listing */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ------------------------------------------------
+   7. SIDEBAR COMUNE (home e post)
+   ------------------------------------------------ */
 .main-sidebar {
-    position: sticky;
-    top: 20px;
-    height: auto;
+  position: sticky;
+  top: 80px; /* 64px header + 16px respiro */
+  height: auto;
 }
 
-/* Sidebar Box */
 .sidebar-box {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    border-radius: 12px; /* Angoli leggermente più morbidi */
-    padding: 24px;
-    margin-bottom: 24px;
-    transition: box-shadow 0.3s ease;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-soft);
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 .sidebar-box:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--accent-color);
 }
 
 .box-label {
-    display: block;
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    margin-bottom: 18px;
-    letter-spacing: 1.2px;
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  margin-bottom: 16px;
+  /* Lineetta decorativa sotto il label */
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-color);
 }
 
-/* Tag Nav Verticale */
+/* ------------------------------------------------
+   8. TAG BUTTONS (sidebar home)
+   Lista verticale scrollabile, max 50% viewport
+   ------------------------------------------------ */
 .tag-nav-vertical {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 50vh;
+  overflow-y: auto;
+  padding-right: 4px;
 }
 
-/* Mini Book Cards per la Home */
+/* Scrollbar discreta */
+.tag-nav-vertical::-webkit-scrollbar { width: 4px; }
+.tag-nav-vertical::-webkit-scrollbar-track { background: transparent; }
+.tag-nav-vertical::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+.tag-nav-vertical::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+.tag-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  flex-shrink: 0;
+  padding: 8px 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.tag-btn:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.tag-btn.active {
+  background: var(--accent-dim);
+  color: var(--accent-color);
+  border-color: var(--accent-color);
+}
+
+/* ------------------------------------------------
+   9. BOOK CARDS (sidebar — mini versione home)
+   ------------------------------------------------ */
 .featured-books {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .mini-book-card {
-    display: flex;
-    align-items: center; /* Allinea verticalmente immagine e testo */
-    gap: 15px;
-    text-decoration: none;
-    color: inherit;
-    font-size: 0.95rem;
-    transition: transform 0.2s ease, color 0.2s ease;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  text-decoration: none;
+  color: inherit;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
 .mini-book-card:hover {
-    transform: translateX(8px);
-}
-
-.mini-book-card:hover strong {
-    color: var(--accent-hover, var(--accent-color)); /* Feedback colore sul titolo */
+  background: var(--bg-tertiary);
+  border-color: var(--border-color);
+  transform: translateX(4px);
 }
 
 .mini-book-card img {
-    width: 55px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 6px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    flex-shrink: 0; /* Impedisce all'immagine di rimpicciolirsi */
-}
-
-.mini-book-card .info-container {
-    display: flex;
-    flex-direction: column;
+  width: 52px;
+  height: 78px;
+  object-fit: cover;
+  border-radius: 4px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+  flex-shrink: 0;
 }
 
 .mini-book-card strong {
-    display: block;
-    color: var(--accent-color);
-    line-height: 1.3;
-    transition: color 0.2s;
+  display: block;
+  font-family: 'Lora', serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+  margin-bottom: 4px;
+  transition: color 0.2s;
+}
+
+.mini-book-card:hover strong {
+  color: var(--accent-color);
 }
 
 .mini-book-card p {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    margin: 4px 0 0 0;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.4;
 }
 
-/* Responsive */
-@media (max-width: 992px) { /* Breakpoint leggermente più alto per tablet */
-    .main-layout-container {
-        grid-template-columns: 1fr;
-        gap: 30px;
-    }
-    
-    .main-sidebar {
-        order: -1; /* Sidebar sopra il contenuto su mobile */
-        position: static;
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 20px;
-    }
-
-    .sidebar-box {
-        margin-bottom: 0;
-    }
+/* ------------------------------------------------
+   10. LAYOUT POST — dettaglio articolo
+   Main content | sidebar destra (solo libri)
+   ------------------------------------------------ */
+.post-container {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 48px;
+  max-width: 1200px;
+  margin: 48px auto;
+  padding: 0 32px;
+  align-items: start;
 }
 
+/* Definisco le aree: content a sinistra, sidebar a destra.
+   In post.html l'ordine DOM è: main.post-content → aside.post-sidebar.
+   Le grid-areas permettono di riposizionare i blocchi in modo dichiarativo. */
+.post-container {
+  grid-template-areas: "content sidebar";
+}
+
+.post-content {
+  grid-area: content;
+  min-width: 0; /* Evita overflow del codice */
+}
+
+.post-sidebar {
+  grid-area: sidebar;
+  position: sticky;
+  top: 80px;
+}
+
+/* Breadcrumb — link home in cima all'articolo */
+.post-breadcrumb {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  margin-bottom: 32px;
+  color: var(--text-muted);
+}
+
+.post-breadcrumb a {
+  color: var(--accent-color);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.post-breadcrumb a:hover {
+  color: var(--accent-hover);
+}
+
+.post-breadcrumb .separator {
+  margin: 0 8px;
+  opacity: 0.4;
+}
+
+/* Tags sopra il titolo nel dettaglio */
+.post-tags-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.post-tag-chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 4px;
+  background: var(--tag-bg);
+  color: var(--tag-color);
+  border: 1px solid var(--accent-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Link PDF */
+.pdf-link-wrapper {
+  margin-bottom: 36px;
+}
+
+.pdf-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 8px 16px;
+  background: var(--accent-dim);
+  color: var(--accent-color);
+  border: 1px solid var(--accent-color);
+  border-radius: 6px;
+  text-decoration: none;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.pdf-link:hover {
+  background: var(--accent-color);
+  color: var(--bg-primary);
+}
+
+.pdf-link::before {
+  content: '↓';
+  font-size: 0.9rem;
+}
+
+/* ------------------------------------------------
+   11. CORPO DELL'ARTICOLO (Markdown renderizzato)
+   Stili per tutti gli elementi generati da kramdown
+   ------------------------------------------------ */
+.post-article-body {
+  font-family: 'Lora', serif;
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--text-primary);
+}
+
+.post-article-body h1,
+.post-article-body h2,
+.post-article-body h3,
+.post-article-body h4 {
+  font-family: 'Lora', serif;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-top: 2.2em;
+  margin-bottom: 0.7em;
+  line-height: 1.3;
+}
+
+.post-article-body h2 {
+  font-size: 1.35rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 8px;
+}
+
+.post-article-body h3 { font-size: 1.1rem; }
+
+.post-article-body p {
+  margin-bottom: 1.2em;
+  color: var(--text-secondary);
+}
+
+.post-article-body strong { color: var(--text-primary); }
+
+.post-article-body ul, 
+.post-article-body ol {
+  margin: 1em 0 1.2em 1.5em;
+  color: var(--text-secondary);
+}
+
+.post-article-body li { margin-bottom: 0.4em; }
+
+.post-article-body blockquote {
+  border-left: 3px solid var(--accent-color);
+  padding: 4px 0 4px 20px;
+  margin: 1.5em 0;
+  color: var(--text-muted);
+  font-style: italic;
+  background: var(--bg-secondary);
+  border-radius: 0 6px 6px 0;
+}
+
+/* Codice inline */
+.post-article-body code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82em;
+  background: var(--code-bg);
+  color: var(--accent-color);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+}
+
+/* Blocchi di codice (Rouge/Kramdown) */
+.post-article-body pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 20px 24px;
+  overflow-x: auto;
+  margin: 1.6em 0;
+  box-shadow: var(--shadow-soft);
+  /* Linea accent a sinistra, effetto notebook */
+  border-left: 3px solid var(--accent-color);
+}
+
+.post-article-body pre code {
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-size: 0.82rem;
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+/* Numeri di riga (Rouge con line_numbers: true) */
+.post-article-body .rouge-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.post-article-body .rouge-gutter {
+  width: 1%;
+  white-space: nowrap;
+  padding-right: 16px;
+  color: var(--text-muted);
+  user-select: none;
+  border-right: 1px solid var(--border-color);
+}
+
+.post-article-body .rouge-code {
+  padding-left: 16px;
+}
+
+/* Tags in sidebar post */
+.tag-cloud-sidebar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sidebar-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  font-weight: 500;
+  padding: 5px 10px;
+  border-radius: 4px;
+  background: var(--tag-bg);
+  color: var(--tag-color);
+  border: 1px solid var(--accent-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Book card sidebar post */
+.book-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.book-card a {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-decoration: none;
+  color: inherit;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.book-card a:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--accent-color);
+}
+
+.book-card img {
+  width: 80px;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.book-card p {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* ------------------------------------------------
+   12. FOOTER (opzionale, per ordine)
+   ------------------------------------------------ */
+.main-footer {
+  border-top: 1px solid var(--border-color);
+  padding: 24px 32px;
+  margin-top: 80px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-align: center;
+  letter-spacing: 0.08em;
+}
+
+/* ------------------------------------------------
+   13. RESPONSIVE
+   ------------------------------------------------ */
+
+/* Tablet: 992px */
+@media (max-width: 992px) {
+  .main-layout-container,
+  .post-container {
+    grid-template-columns: 1fr;
+    grid-template-areas: none;
+    gap: 32px;
+  }
+
+  /* Su tablet metto la sidebar sopra il content */
+  .main-sidebar {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+  }
+
+  .main-sidebar .sidebar-box {
+    margin-bottom: 0;
+  }
+
+  /* Nel post la sidebar va sotto il contenuto */
+  .post-sidebar {
+    position: static;
+    grid-area: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+  }
+
+  .post-content {
+    grid-area: auto;
+  }
+
+  /* La sidebar post viene dopo il main nel DOM,
+     quindi su mobile appare naturalmente sotto */
+}
+
+/* Mobile: 600px */
 @media (max-width: 600px) {
-    .main-sidebar {
-        grid-template-columns: 1fr;
-    }
+  .main-header {
+    padding: 0 20px;
+  }
+
+  .logo {
+    font-size: 0.72rem;
+  }
+
+  .main-layout-container,
+  .post-container {
+    padding: 0 16px;
+    margin: 24px auto;
+  }
+
+  .main-sidebar,
+  .post-sidebar {
+    grid-template-columns: 1fr;
+  }
+
+  .post-article-body pre {
+    font-size: 0.75rem;
+    padding: 14px 16px;
+  }
 }

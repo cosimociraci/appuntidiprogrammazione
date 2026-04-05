@@ -3,125 +3,188 @@ layout: default
 title: Home
 ---
 
-<style>
-    /* Stili per rendere la sezione tag scrollabile e limitata in altezza */
-    .tag-nav-vertical {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        /* Limita l'altezza al 50% della viewport */
-        max-height: 50vh; 
-        /* Attiva lo scroll verticale se i tag superano l'altezza */
-        overflow-y: auto;
-        /* Opzionale: padding per non far toccare i bottoni al bordo dello scroll */
-        padding-right: 5px; 
-    }
-
-    /* Personalizzazione scrollbar (opzionale, per renderla più discreta) */
-    .tag-nav-vertical::-webkit-scrollbar {
-        width: 6px;
-    }
-    .tag-nav-vertical::-webkit-scrollbar-thumb {
-        background-color: #ccc;
-        border-radius: 10px;
-    }
-
-    .tag-btn {
-        text-align: left;
-        width: 100%;
-        /* Assicurati che i bottoni non vengano schiacciati */
-        flex-shrink: 0; 
-    }
-</style>
-
+<!--
+    Homepage: layout a due colonne gestito dal CSS (.main-layout-container).
+    - Sinistra (.content-area): barra ricerca + griglia articoli
+    - Destra (.main-sidebar): 
+        box 1 — tag filtrabili (scrollabile, max 50vh)
+        box 2 — libro consigliato
+    
+    I tag sono popolati dinamicamente da JS al DOMContentLoaded:
+    li estrae dagli attributi data-tags di ogni .post-item.
+-->
 <div class="main-layout-container">
+
+    <!-- ========================
+         COLONNA SINISTRA
+         ======================== -->
     <main class="content-area">
+
+        <!-- Barra di ricerca: filtra per titolo in tempo reale -->
         <section class="search-section">
-            <input type="text" id="search-bar" placeholder="Cerca negli appunti..." onkeyup="applyFilters()">
+            <input
+                type="search"
+                id="search-bar"
+                placeholder="Cerca negli appunti…"
+                aria-label="Cerca articoli"
+                autocomplete="off"
+                oninput="applyFilters()"
+            >
         </section>
 
+        <!-- Griglia articoli: ordinati per data decrescente (Jekyll lo fa in automatico) -->
         <div class="post-grid" id="post-grid">
-            {% for post in site.articoli %}
-            <article class="post-item" 
-                     data-tags="{{ post.tags | join: ',' | slugify }}" 
-                     data-title="{{ post.title | downcase }}">
-                <div class="post-meta">{{ post.tech | upcase }} • {{ post.date | date: "%d/%m/%Y" }}</div>
+            {% assign articoli_ordinati = site.articoli | sort: 'date' | reverse %}
+            {% for post in articoli_ordinati %}
+            <article
+                class="post-item"
+                data-tags="{{ post.tags | join: ',' | slugify }}"
+                data-title="{{ post.title | downcase }}"
+            >
+                <!-- Metadati: tecnologia + data -->
+                <div class="post-meta">
+                    {{ post.tech | upcase }} &nbsp;·&nbsp; {{ post.date | date: "%d/%m/%Y" }}
+                </div>
+
+                <!-- Titolo cliccabile -->
                 <h2 class="post-title">
                     <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
                 </h2>
+
+                <!-- Sintesi breve -->
                 <p class="post-sintesi">{{ post.sintesi }}</p>
             </article>
             {% endfor %}
         </div>
+
     </main>
 
+    <!-- ========================
+         COLONNA DESTRA — SIDEBAR
+         ======================== -->
     <aside class="main-sidebar">
+
+        <!-- BOX 1: Tag filtrabili — scrollabile, altezza max 50vh via CSS -->
         <div class="sidebar-box">
             <span class="box-label">Argomenti Caldi</span>
-            <nav class="tag-nav-vertical" id="dynamic-tags">
-                <button class="tag-btn active" onclick="filterByTag('tutti', this)">TUTTI</button>
+            <!--
+                Il nav viene popolato da JS dopo il DOMContentLoaded.
+                Parto con il solo bottone "TUTTI" come stato iniziale attivo.
+            -->
+            <nav class="tag-nav-vertical" id="dynamic-tags" aria-label="Filtra per argomento">
+                <button
+                    class="tag-btn active"
+                    onclick="filterByTag('tutti', this)"
+                    aria-pressed="true"
+                >
+                    TUTTI
+                </button>
             </nav>
         </div>
 
+        <!-- BOX 2: Libri consigliati -->
         <div class="sidebar-box">
             <span class="box-label">Letture Fondamentali</span>
             <div class="featured-books">
                 <a class="mini-book-card"
-                 href="https://www.amazon.it/Appunti-Programmazione-Pensieri-soluzioni-Applicazioni-ebook/dp/B0FMFRHKTF/ref=sr_1_6?__mk_it_IT=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=12XWHZ5YENJNA&dib=eyJ2IjoiMSJ9.2JgrV_bDpP4L1kFT5aJIOd1rYTlKU7nroJ3nlXTMJUk8m1NaCKpta5ZpNGXNNOInC7O-xqSmH74AId9eaW-SPJFzmKouc_fSfVHXqF9C0fzGDT0riJ0o3y2oC0zKXoNhNKCY6vHGLJDQYs3BwBUADnaIi9WpThjaofbPKCTG-jePEDajp5zPCg1o3cje1QcXaiseFEiQsqrKmuGCioPlbPtodE8Q_avFgPXPYrAK3K-uL1JLw_LxkEqXNvSos9tdeD1LlGulGd1xQJwM6hn7Qt3b0i1Sxi5xI3rlRVuIV30.Dn6Q3_13ZNBkDhadmVJ5XwAXz_NVR_DoAOPcMp5j14Q&dib_tag=se&keywords=appunti+di+programmazione&qid=1775224059&sprefix=appunti+di+programmazione%2Caps%2C232&sr=8-6" 
-                 target="_blank">
-                    <img style="width: 100px;height: auto;"
-                    src="https://m.media-amazon.com/images/I/61Ck5eMzGYL._SY466_.jpg" alt="Clean Code">
+                   href="https://www.amazon.it/Appunti-Programmazione-Pensieri-soluzioni-Applicazioni-ebook/dp/B0FMFRHKTF/"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   aria-label="Acquista Appunti di Programmazione su Amazon">
+                    <img src="https://m.media-amazon.com/images/I/61Ck5eMzGYL._SY466_.jpg"
+                         alt="Copertina: Appunti di Programmazione"
+                         width="52"
+                         height="78">
                     <div>
                         <strong>Appunti di Programmazione</strong>
                         <p>Pensieri e soluzioni per Applicazioni WEB</p>
                     </div>
                 </a>
-          </a>
             </div>
         </div>
+
     </aside>
+
 </div>
 
 <script>
-    // La logica JS rimane la stessa, popolerà dinamicamente il nav scrollabile
+    /*
+     * Stato del filtro attivo: parto con 'tutti' per mostrare
+     * tutti gli articoli senza alcun filtro di tag.
+     */
+    let activeTag = 'tutti';
+
+    /*
+     * Al caricamento della pagina estraggo tutti i tag unici
+     * dagli attributi data-tags dei .post-item e popolo il nav.
+     * 
+     * Uso un Set per deduplicare automaticamente i tag duplicati
+     * tra più articoli. L'ordinamento alfabetico aiuta la navigazione.
+     */
     document.addEventListener('DOMContentLoaded', () => {
-        const articles = document.querySelectorAll('.post-item');
-        const tagContainer = document.getElementById('dynamic-tags');
-        const allTags = new Set();
+        const articles  = document.querySelectorAll('.post-item');
+        const container = document.getElementById('dynamic-tags');
+        const allTags   = new Set();
 
         articles.forEach(article => {
-            const tags = article.getAttribute('data-tags').split(',');
-            tags.forEach(t => { if(t) allTags.add(t.trim()) });
+            const raw = article.getAttribute('data-tags') || '';
+            raw.split(',').forEach(t => {
+                const trimmed = t.trim();
+                if (trimmed) allTags.add(trimmed);
+            });
         });
 
-        allTags.forEach(tag => {
+        /* Ordino i tag alfabeticamente prima di renderizzarli */
+        Array.from(allTags).sort().forEach(tag => {
             const btn = document.createElement('button');
-            btn.className = 'tag-btn';
-            btn.innerText = tag.replace(/-/g, ' ').toUpperCase();
-            btn.onclick = (e) => filterByTag(tag, e.target);
-            tagContainer.appendChild(btn);
+            btn.className   = 'tag-btn';
+            btn.textContent = tag.replace(/-/g, ' ').toUpperCase();
+            btn.setAttribute('aria-pressed', 'false');
+
+            /* Uso una closure per catturare il valore corretto di `tag` */
+            btn.addEventListener('click', function() {
+                filterByTag(tag, this);
+            });
+
+            container.appendChild(btn);
         });
     });
 
-    let activeTag = 'tutti';
-
+    /*
+     * filterByTag: aggiorna lo stato activeTag, rimuove la classe
+     * 'active' da tutti i bottoni e la assegna solo a quello cliccato,
+     * poi delega il filtraggio visivo ad applyFilters().
+     */
     function filterByTag(tag, btn) {
         activeTag = tag.toLowerCase();
-        document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+
+        document.querySelectorAll('.tag-btn').forEach(b => {
+            b.classList.remove('active');
+            b.setAttribute('aria-pressed', 'false');
+        });
+
         btn.classList.add('active');
+        btn.setAttribute('aria-pressed', 'true');
+
         applyFilters();
     }
 
+    /*
+     * applyFilters: combina il filtro per tag con la ricerca testuale
+     * sul titolo. Uso display:block/none invece di visibility per
+     * evitare spazio vuoto tra le card filtrate.
+     */
     function applyFilters() {
-        const query = document.getElementById('search-bar').value.toLowerCase();
+        const query    = document.getElementById('search-bar').value.toLowerCase().trim();
         const articles = document.querySelectorAll('.post-item');
 
         articles.forEach(article => {
-            const title = article.getAttribute('data-title');
-            const tags = article.getAttribute('data-tags');
-            const matchesTag = (activeTag === 'tutti' || tags.includes(activeTag));
-            const matchesSearch = title.includes(query);
-            article.style.display = (matchesTag && matchesSearch) ? "block" : "none";
+            const title       = article.getAttribute('data-title') || '';
+            const tags        = article.getAttribute('data-tags')  || '';
+            const matchesTag  = (activeTag === 'tutti' || tags.split(',').includes(activeTag));
+            const matchesTxt  = !query || title.includes(query);
+
+            article.style.display = (matchesTag && matchesTxt) ? '' : 'none';
         });
     }
 </script>
