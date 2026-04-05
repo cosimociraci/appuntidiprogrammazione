@@ -1,0 +1,94 @@
+# ============================================================
+# .github/workflows/instagram.yml
+#
+# Pubblica automaticamente il carosello Instagram pianificato
+# per la data odierna, leggendo il CSV calendario_instagram.csv.
+#
+# Trigger:
+#   - schedule: ogni giorno alle 09:00 UTC
+#   - workflow_dispatch: trigger manuale dalla UI di GitHub
+#     (utile per testare o ripubblicare manualmente)
+# ============================================================
+
+name: Pubblica Carosello Instagram
+
+on:
+  schedule:
+    # Ogni giorno alle 09:00 UTC.
+    # Nota: GitHub Actions può avere ritardi di 5-15 minuti
+    # sui trigger schedulati in periodi di alta richiesta.
+    - cron: '0 9 * * *'
+
+  # Permette il lancio manuale dalla tab "Actions" su GitHub.
+  # Quando si lancia manualmente è possibile attivare il dry-run
+  # per verificare che tutto funzioni senza pubblicare davvero.
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (simula senza pubblicare)'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'false'
+          - 'true'
+
+jobs:
+  pubblica:
+    name: Pubblica carosello del giorno
+    runs-on: ubuntu-latest
+
+    # Timeout esplicito: se instagrapi si blocca non voglio
+    # consumare minuti Actions all'infinito. 10 minuti sono
+    # più che sufficienti per un upload di 10 immagini.
+    timeout-minutes: 10
+
+    steps:
+      # 1. Checkout del repo completo con le immagini dei caroselli
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Setup Python
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          # Cache delle dipendenze pip: velocizza i run successivi
+          # da ~60s a ~10s per l'installazione dei pacchetti.
+          cache: 'pip'
+
+      # 3. Installo le dipendenze
+      # instagrapi ha dipendenze pesanti (cryptography, pillow…):
+      # la cache pip sopra evita di riscaricarle ogni giorno.
+      - name: Installa dipendenze
+        run: |
+          python -m pip install --upgrade pip
+          pip install instagrapi==2.1.2
+
+      # 4. Eseguo lo script di pubblicazione.
+      # Le variabili d'ambiente leggono dai secrets del repo:
+      # Settings → Secrets and variables → Actions → New repository secret.
+      # Non passare MAI le credenziali come argomenti a riga di comando:
+      # sarebbero visibili nei log di Actions.
+      - name: Pubblica carosello
+        env:
+          IG_USERNAME: ${{ secrets.IG_USERNAME }}
+          IG_PASSWORD: ${{ secrets.IG_PASSWORD }}
+        run: |
+          # Se il workflow è stato lanciato manualmente con dry_run=true,
+          # passo il flag --dry-run allo script.
+          # Per i run schedulati (cron) github.event_name è 'schedule'
+          # e github.event.inputs.dry_run è vuoto → publico normalmente.
+          DRY_RUN_FLAG=""
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            DRY_RUN_FLAG="--dry-run"
+            echo "Modalità DRY RUN attiva."
+          fi
+          python publish.py $DRY_RUN_FLAG
+
+      # 5. Log del risultato: mostro la data per facilitare il debug
+      - name: Riepilogo
+        if: always()
+        run: |
+          echo "Run completato il $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+          echo "Evento: ${{ github.event_name }}"
