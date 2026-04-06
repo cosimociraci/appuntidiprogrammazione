@@ -1,5 +1,7 @@
 # appuntidiprogrammazione
+https://icarocomix.github.io/appuntidiprogrammazione/
 
+# INSTALLAZIONE LOCALE
 python3 -m http.server 8000
 npx decap-server
 
@@ -61,7 +63,7 @@ Una volta fatto il `git push`, GitHub attiva un workflow automatico.
 
 ---
 
-## 4. Note per il Manutentore (Tu)
+## 4. Note di Manutenzione
 
 * **Perché il 404?** Se Jekyll trova una data futura nel file `.md`, non genera la pagina. Abbiamo risolto impostando `future: true` nel `_config.yml`.
 * **Perché il codice era su una riga?** Perché veniva salvato come variabile YAML (`codice: '...'`). Spostandolo nel **Corpo** del file Markdown dopo il secondo `---`, Jekyll lo tratta come testo pre-formattato.
