@@ -1,89 +1,37 @@
-# ============================================================
-# .github/workflows/daily-publish.yml
-#
-# Scopo: rieseguire il build Jekyll ogni giorno a mezzanotte
-# (Europe/Rome) così che site.time avanzi e il filtro Liquid
-# {% if post.date <= site.time %} mostri gli articoli
-# man mano che la loro data diventa "passata o presente".
-#
-# Trigger:
-#   - schedule: ogni giorno alle 23:01 UTC (= 00:01 ora italiana,
-#     tenendo conto del fuso +1/+2 uso 22:01 UTC per sicurezza)
-#   - workflow_dispatch: permette il trigger manuale da UI GitHub
-#     (utile per testare o forzare una pubblicazione immediata)
-#   - push su main: rebuild normale ad ogni push
-# ============================================================
-
-# workflow pubblicazione giornaliera
 name: Daily Publish
 
 on:
   schedule:
-    # Ogni giorno alle 22:05 UTC = 00:05 ora italiana (CET, UTC+2 in estate)
-    # Ho scelto 22:05 e non mezzanotte esatta per evitare picchi di carico
-    # sui runner GitHub che tendono ad essere sovraccarichi alle ore tonde.
     - cron: '5 22 * * *'
-
-  # Permette il trigger manuale dalla tab "Actions" su GitHub
   workflow_dispatch:
-
-  # Build normale ad ogni push sul branch principale
   push:
     branches:
       - main
 
-# Permessi minimi necessari: scrittura sul repo per gh-pages
 permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-# Evito build parallele: se arriva un push mentre il scheduled
-# è in corso, annullo quello più vecchio.
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
+  contents: write
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
     steps:
-      # 1. Checkout del codice sorgente
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Configuro Ruby nella versione usata da GitHub Pages
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.3'
-          # bundler-cache: true memorizza le gem tra i run,
-          # riducendo il tempo di build da ~3min a ~40sec
           bundler-cache: true
 
-      # 3. Build Jekyll
-      # JEKYLL_ENV=production attiva la modalità produzione
-      # (es. Google Analytics, compressione HTML se configurata).
-      # Non passo --future: voglio che Jekyll usi site.time reale
-      # per decidere quali file buildare.
       - name: Build Jekyll site
         run: bundle exec jekyll build
         env:
           JEKYLL_ENV: production
 
-      # 4. Upload artifact per GitHub Pages
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Deploy su GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          # Jekyll scrive il build in _site/ per default
-          path: '_site'
-
-      # 5. Deploy su GitHub Pages
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_site
