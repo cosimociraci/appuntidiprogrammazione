@@ -200,7 +200,7 @@ def process_excels():
                                 f"title: \"{titolo_clean}\"\n"
                                 f"date: {data_prefisso} 12:00:00\n")
                         f.write(f"sintesi: >\n  {sintesi}\n"
-                                f"tech: \"{tech_name}\"\n")
+                                f"tech: \"{code_lang}\"\n")
                         f.write(f"tags: [\"{tech_name}\", \"{sheet_name.lower().strip()}\"]\n"
                                 f"pdf_file: \"{sanitize_filename(titolo_clean)}.pdf\"\n"
                                 f"---\n\n")
