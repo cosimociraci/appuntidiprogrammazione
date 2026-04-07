@@ -30,9 +30,9 @@ TECH_CONFIG = {
 }
 
 SQUARE_SIZE = 1080 
-MAX_CHARS_WIDTH = 55
-MAX_CODE_LINES_PER_SLIDE = 12
-MAX_TOTAL_SLIDES = 10
+MAX_CHARS_WIDTH = 65
+MAX_CODE_LINES_PER_SLIDE = 20
+MAX_TOTAL_SLIDES = 15
 
 def highlight_code(code_html):
     """Evidenzia le parole chiave avvolgendole in uno span arancione."""
@@ -122,22 +122,45 @@ def process_text_formatting(text):
 def get_css(color, is_insta=False):
     w, h = (SQUARE_SIZE, SQUARE_SIZE) if is_insta else (1920, 1080)
     fs_body = "28px" if is_insta else "22px"
-    fs_code = "21px" if is_insta else "19px"
-    padding_slide = "90px" if is_insta else "70px"
+    fs_code = "18px" if is_insta else "19px"  # Font leggermente più piccolo
+    padding_slide = "60px 50px" if is_insta else "70px" # Padding verticale ridotto
 
     return f"""
     @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Montserrat:wght@700;900&family=Poppins:wght@300;400;600&display=swap');
     :root {{ --tech-accent: {color}; --neon-green: #4AF626; --keyword-color: #FF9800; }}
     body {{ margin: 0; background: #000; color: white; font-family: 'Poppins', sans-serif; overflow: hidden; }}
-    .slide {{ width: {w}px; height: {h}px; padding: {padding_slide}; box-sizing: border-box; display: flex; flex-direction: column; position: relative; background: #0a0a0a; }}
-    .cover-slide {{ justify-content: center; text-align: center; border: 20px solid var(--tech-accent); }}
-    .cover-badge {{ background: var(--tech-accent); color: #000; font-family: 'Montserrat'; font-weight: 900; font-size: 28px; padding: 12px 30px; display: inline-block; margin-bottom: 25px; }}
-    .cover-title {{ font-family: 'Montserrat'; font-weight: 900; font-size: 65px; line-height: 1.1; margin: 0; text-transform: uppercase; }}
-    .header {{ border-left: 12px solid var(--tech-accent); padding-left: 25px; margin-bottom: 30px; }}
-    .section-label {{ font-family: 'Montserrat'; font-weight: 700; color: var(--tech-accent); text-transform: uppercase; font-size: 20px; margin-bottom: 10px; display: block; }}
-    .section-content {{ font-size: {fs_body}; line-height: 1.6; }}
-    .code-container {{ background: #121212; padding: 35px; border-radius: 6px; border: 1px solid #222; flex-grow: 1; overflow: hidden; }}
-    pre {{ font-family: 'Fira Code', monospace; font-size: {fs_code}; color: #E0E0E0; line-height: 1.5; margin: 0; white-space: pre-wrap; }}
+    .slide {{ 
+        width: {w}px; 
+        height: {h}px; 
+        padding: {padding_slide}; 
+        box-sizing: border-box; 
+        display: flex; 
+        flex-direction: column; 
+        position: relative; 
+        background: #0a0a0a; 
+    }}
+    .header {{ 
+        border-left: 10px solid var(--tech-accent); 
+        padding-left: 20px; 
+        margin-bottom: 20px; # Margine ridotto
+    }}
+    .code-container {{ 
+        background: #121212; 
+        padding: 25px; # Padding interno ridotto
+        border-radius: 6px; 
+        border: 1px solid #222; 
+        flex-grow: 1; 
+        overflow: hidden; 
+        display: flex; # Centra il codice verticalmente se poco
+        flex-direction: column;
+    }}
+    pre {{ 
+        font-family: 'Fira Code', monospace; 
+        font-size: {fs_code}; 
+        line-height: 1.4; # Interlinea più compatta
+        margin: 0; 
+        white-space: pre-wrap; 
+    }}
     .keyword {{ color: var(--keyword-color); font-weight: 500; }}
     .footer-page {{ position: absolute; bottom: 30px; right: 60px; font-size: 18px; color: #333; font-weight: 900; }}
     .cta-debug {{ justify-content: center; font-family: 'Fira Code', monospace; padding: 100px; }}
@@ -215,10 +238,46 @@ async def run_gen(selected_techs, output_format):
 
                     for s_idx, s_html in enumerate(slides):
                         await page.set_content(f"<!DOCTYPE html><html><head><style>{get_css(cfg['color'], is_insta)}</style></head><body>{s_html}</body></html>")
-                        if is_insta: 
-                            await page.screenshot(path=str(out_dir / f"{s_idx+1}.png"))
-                        elif output_format == "pdf": 
-                            await page.pdf(path=str(out_dir / f"{pdf_filename}.pdf"), print_background=True, width=f"{w}px", height=f"{h}px")
+                        if is_insta:
+                            # Modalità Instagram: un file per ogni slide
+                            for s_idx, s_html in enumerate(slides):
+                                html_content = f"<!DOCTYPE html><html><head><style>{get_css(cfg['color'], is_insta)}</style></head><body>{s_html}</body></html>"
+                                await page.set_content(html_content)
+                                await page.screenshot(path=str(out_dir / f"{s_idx+1}.png"))
+                        
+                        elif output_format == "pdf":
+                            # MODALITÀ PDF: Una sola operazione per riga Excel
+                            page_break_css = "<style>.slide { page-break-after: always; break-after: page; }</style>"
+                            full_pdf_html = "".join(slides)
+                            
+                            combined_content = f"""
+                            <!DOCTYPE html>
+                            <html>
+                            <head>
+                                <style>
+                                    {get_css(cfg['color'], is_insta)}
+                                    {page_break_css}
+                                </style>
+                            </head>
+                            <body>
+                                {full_pdf_html}
+                            </body>
+                            </html>
+                            """
+                            
+                            await page.set_content(combined_content)
+                            await page.wait_for_load_state("networkidle")
+                            
+                            pdf_path = out_dir / f"{pdf_filename}.pdf"
+                            await page.pdf(
+                                path=str(pdf_path),
+                                print_background=True,
+                                width=f"{w}px",
+                                height=f"{h}px",
+                                # FIX: Uso stringhe "0px" invece di numeri
+                                margin={"top": "0px", "right": "0px", "bottom": "0px", "left": "0px"},
+                                display_header_footer=False
+                            )
 
                     print(f"✅ [{tech.upper()}] {topic_slug} ({len(slides)} slide)")
         await browser.close()
