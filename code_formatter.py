@@ -1,14 +1,15 @@
 """
-Formattatore di codice multi-linguaggio v6.
-Preserva le interfacce normalize_to_lines e indent_lines per compatibilità esterna.
-Risolve il problema del codice "piatto" forzando i newline sui token strutturali.
+Formattatore di codice multi-linguaggio v8.
+Preserva le interfacce normalize_to_lines e indent_lines.
+Aggiunge rifinitura tramite Prettier e post-processing per i commenti a blocco.
 """
 
 import os
 import re
 import sys
+import subprocess
 
-# Indentazione standard 4 spazi
+# Indentazione standard 4 spazi per la logica custom
 INDENT = "    "
 
 CURLY_BRACE_LANGUAGES = {"java", "javascript", "js", "typescript", "ts", "c", "cpp", "csharp", "cs", "php", "kotlin"}
@@ -21,20 +22,74 @@ _STRING_SINGLE = 2
 _COMMENT_LINE = 3
 _COMMENT_BLOCK = 4
 
-# Regex per identificare l'inizio di una riga logica in Java/C-like
 _RE_BREAK_KEYWORDS = re.compile(r'^(public|protected|private|static|final|class|interface|enum|record|@|void|return|if|for|while)\b', re.IGNORECASE)
 
 # ─────────────────────────────────────────────
-# NORMALIZZAZIONE (Scomposizione in righe)
+# LOGICA DI POST-PROCESSING (Commenti)
+# ─────────────────────────────────────────────
+
+def enforce_comment_newlines(code: str) -> str:
+    """
+    Applica la regola ferrea:
+    - Prima di /* ci deve essere \n
+    - Dopo */ ci deve essere \n
+    Gestisce anche la pulizia di eventuali spazi bianchi multipli creati.
+    """
+    # 1. Inserisco i newline intorno ai blocchi di commento
+    # Uso lookahead/lookbehind per evitare di aggiungere newline se già presenti
+    code = re.sub(r'(?<!\n)\s*/\*', r'\n\n/*', code)
+    code = re.sub(r'\*/\s*(?!\n)', r'*/\n\n', code)
+    
+    # 2. Pulizia: rimuovo righe vuote eccessive create dal passaggio precedente
+    # (Ad esempio se c'erano già spazi o tab prima/dopo)
+    lines = [line.rstrip() for line in code.splitlines()]
+    return "\n".join(lines)
+
+# ─────────────────────────────────────────────
+# INTEGRAZIONE PRETTIER
+# ─────────────────────────────────────────────
+
+def format_with_prettier(code_string: str, language: str) -> str:
+    parser_map = {
+        "java": "java",
+        "javascript": "babel",
+        "js": "babel",
+        "typescript": "typescript",
+        "ts": "typescript",
+        "html": "html",
+        "thymeleaf": "html",
+        "xml": "html",
+        "css": "css"
+    }
+    
+    parser = parser_map.get(language.lower())
+    if not parser:
+        return code_string
+
+    try:
+        process = subprocess.Popen(
+            ['npx', 'prettier', '--parser', parser, '--tab-width', '4'],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            shell=True if os.name == 'nt' else False
+        )
+        stdout, stderr = process.communicate(input=code_string)
+        
+        if process.returncode == 0:
+            return stdout
+        else:
+            return f"/* Prettier Err: {stderr.strip()} */\n{code_string}"
+            
+    except FileNotFoundError:
+        return f"/* Prettier non trovato nel sistema */\n{code_string}"
+
+# ─────────────────────────────────────────────
+# NORMALIZZAZIONE E INDENTAZIONE
 # ─────────────────────────────────────────────
 
 def _normalize_curly_logic(code: str) -> list:
-    """
-    Versione 7:
-    - Impedisce ai commenti // di 'mangiare' il codice successivo se sulla stessa riga.
-    - Forza 'return' a inizio riga.
-    - Mantiene ';' e '{' a fine riga.
-    """
     result = []
     buf = []
     state = _CODE
@@ -44,7 +99,6 @@ def _normalize_curly_logic(code: str) -> list:
     def emit_buf():
         content = "".join(buf).strip()
         if content:
-            # Collassiamo gli spazi ma preserviamo la logica
             result.append(" ".join(content.split()))
         buf.clear()
 
@@ -52,29 +106,15 @@ def _normalize_curly_logic(code: str) -> list:
         ch = code[i]
         next_ch = code[i+1] if i+1 < n else ""
 
-        # --- GESTIONE COMMENTI A RIGA (//) ---
         if state == _COMMENT_LINE:
-            # INTERRUZIONE CRITICA: Se nel commento piatto troviamo ';' o '{' o '}' 
-            # o una parola chiave come 'return', il commento DEVE finire.
-            # Altrimenti il codice dopo // non verrà mai eseguito dal parser.
-            
-            # Controllo se quello che segue nel buffer (escludendo //) 
-            # assomiglia a un'istruzione Java
-            current_comment_text = "".join(buf)
-            
             if ch == "\n":
                 emit_buf(); state = _CODE; i += 1
             elif ch in "{};" or (ch == "r" and code[i:i+7] == "return "):
-                # Ho trovato un trigger di codice: chiudo il commento qui
-                emit_buf()
-                state = _CODE
-                # NON incremento i, così il ciclo successivo gestisce ch come CODICE
+                emit_buf(); state = _CODE
             else:
-                buf.append(ch)
-                i += 1
+                buf.append(ch); i += 1
             continue
 
-        # --- GESTIONE ALTRI STATI (Commenti blocco e Stringhe) ---
         if state == _COMMENT_BLOCK:
             buf.append(ch)
             if ch == "*" and next_ch == "/":
@@ -92,71 +132,44 @@ def _normalize_curly_logic(code: str) -> list:
             else: i += 1
             continue
 
-        # --- LOGICA DI TOKENIZZAZIONE CODICE ---
         if ch == "/" and next_ch == "*":
             emit_buf(); buf.append("/*"); state = _COMMENT_BLOCK; i += 2
         elif ch == "/" and next_ch == "/":
             emit_buf(); buf.append("//"); state = _COMMENT_LINE; i += 2
-        
-        # 1. FINE RIGA: ';' e '{' (Vanno a capo DOPO)
         elif ch in ";{":
-            buf.append(ch)
-            emit_buf()
-            i += 1
-        
-        # 2. INIZIO RIGA: '}' e '@' (Vanno a capo PRIMA)
+            buf.append(ch); emit_buf(); i += 1
         elif ch == "}":
-            emit_buf()
-            result.append("}")
-            i += 1
+            emit_buf(); result.append("}"); i += 1
         elif ch == "@":
-            emit_buf()
-            buf.append("@")
-            i += 1
-
-        # 3. PAROLE CHIAVE SPECIALI (Modificatori e return)
+            emit_buf(); buf.append("@"); i += 1
         elif ch.isspace():
             word = "".join(buf).strip()
-            # Se la parola è 'return' o un modificatore, deve stare a inizio riga
             if word == "return" or _RE_BREAK_KEYWORDS.match(word):
-                # Mi assicuro che la parola non rimanga attaccata a quella precedente
                 temp_word = word
                 buf.clear()
-                emit_buf() # Svuota ciò che c'era prima
+                emit_buf()
                 buf.append(temp_word + " ")
             else:
                 buf.append(" ")
             i += 1
         else:
-            buf.append(ch)
-            i += 1
+            buf.append(ch); i += 1
 
     emit_buf()
     return [l for l in result if l]
 
 def normalize_to_lines(code: str, language: str) -> list:
-    """Interfaccia obbligatoria per lo script esterno."""
     if language in CURLY_BRACE_LANGUAGES:
         return _normalize_curly_logic(code)
-    
     if language in MARKUP_LANGUAGES:
-        # Split sui tag e sui commenti
         parts = re.split(r'(<[^>]+>|/\*.*?\*/|//.*?\n)', code, flags=re.DOTALL)
         return [p.strip() for p in parts if p.strip()]
-    
-    # Fallback per altri linguaggi
     return [l.strip() for l in code.splitlines() if l.strip()]
 
-# ─────────────────────────────────────────────
-# INDENTAZIONE
-# ─────────────────────────────────────────────
-
 def indent_lines(lines: list, language: str) -> list:
-    """Interfaccia obbligatoria per lo script esterno. Applica 4 spazi."""
     formatted = []
     depth = 0
     
-    # Gestione specifica per SQL (semplice)
     if language in SQL_LANGUAGES:
         for l in lines:
             s = l.strip()
@@ -166,20 +179,15 @@ def indent_lines(lines: list, language: str) -> list:
                 formatted.append(INDENT + s)
         return formatted
 
-    # Gestione per linguaggi a graffe (Java, JS, etc.) e Markup
     for line in lines:
         s = line.strip()
         if not s: continue
-        
-        # Chiusura tag o graffa: riduco indentazione prima di scrivere
         is_closing = s.startswith("}") or s.startswith("</") or s.endswith("]]>")
         if is_closing:
             depth = max(0, depth - 1)
         
         formatted.append(INDENT * depth + s)
         
-        # Apertura: aumento indentazione per la riga successiva
-        # Non aumento se è un tag auto-chiudente o un commento a riga singola
         is_opening = (
             (s.endswith("{") or s == "{") or 
             (s.startswith("<") and not s.startswith("</") and not s.endswith("/>") and not s.startswith("<!"))
@@ -190,12 +198,15 @@ def indent_lines(lines: list, language: str) -> list:
     return formatted
 
 # ─────────────────────────────────────────────
-# ESECUZIONE (Se chiamato direttamente)
+# ESECUZIONE
 # ─────────────────────────────────────────────
 
 def detect_language(code: str) -> str:
-    if "@" in code or "public class" in code: return "java"
-    if "th:" in code or "<html" in code: return "thymeleaf"
+    # Provo a dedurre il linguaggio dal contenuto
+    if "@" in code or "public class" in code or "private " in code: return "java"
+    if "th:" in code or "<html" in code or "</div>" in code: return "thymeleaf"
+    if "const " in code or "let " in code or "function(" in code: return "javascript"
+    if "SELECT " in code.upper(): return "sql"
     return "java"
 
 if __name__ == "__main__":
@@ -207,7 +218,18 @@ if __name__ == "__main__":
         raw_content = f.read()
 
     lang = detect_language(raw_content)
+
+    # 1. Normalizzazione
     lines = normalize_to_lines(raw_content, lang)
-    final_output = indent_lines(lines, lang)
     
-    print("\n".join(final_output))
+    # 2. Prima Indentazione
+    custom_formatted_list = indent_lines(lines, lang)
+    custom_formatted_string = "\n".join(custom_formatted_list)
+    
+    # 3. Passaggio Prettier
+    prettier_output = format_with_prettier(custom_formatted_string, lang)
+    
+    # 4. Post-processing commenti (Regola \n /* ... */ \n)
+    final_output = enforce_comment_newlines(prettier_output)
+    
+    print(final_output)
