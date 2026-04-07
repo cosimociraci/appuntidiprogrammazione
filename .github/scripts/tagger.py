@@ -1,13 +1,17 @@
 import os
-import google.generativeai as genai
-import frontmatter
+import time
 import glob
+import frontmatter
+# Cambio la libreria come suggerito dal warning
+from google import genai
+from google.api_core import exceptions
 
-# Configurazione Gemini
-genai.configure(api_key=os.environ["GEMINI_API_KEY"])
-model = genai.GenerativeModel('gemini-2.5-flash')
+# Inizializzo il nuovo client
+client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+MODEL_ID = "gemini-2.5-flash"
 
 def get_ai_tags(content, existing_tags):
+    # Preparo il prompt
     prompt = f"""
     Analizza questo articolo tecnico e restituisci una lista di tag appropriati.
     Tag attualmente suggeriti o esistenti nel sito: {existing_tags}
@@ -20,23 +24,49 @@ def get_ai_tags(content, existing_tags):
     Articolo:
     {content}
     """
-    response = model.generate_content(prompt)
-    return [t.strip().lower() for t in response.text.split(',')]
+    
+    max_retries = 5
+    for attempt in range(max_retries):
+        try:
+            # Uso la nuova sintassi del client per generare contenuti
+            response = client.models.generate_content(
+                model=MODEL_ID,
+                contents=prompt
+            )
+            # Estraggo il testo dalla risposta (la nuova libreria usa .text)
+            return [t.strip().lower() for t in response.text.split(',')]
+            
+        except exceptions.ResourceExhausted:
+            # Se ricevo un 429, aspetto in modo esponenziale
+            wait_time = (2 ** attempt) + 10 
+            print(f"Limite raggiunto. Attesa di {wait_time} secondi...")
+            time.sleep(wait_time)
+        except Exception as e:
+            print(f"Errore imprevisto: {e}")
+            return []
+            
+    return []
 
-# Processa gli ultimi file modificati
+# Processo i file
 for filepath in glob.glob("_articoli/*.md"):
+    print(f"Elaborazione: {filepath}")
+    
     with open(filepath, 'r+', encoding='utf-8') as f:
         post = frontmatter.load(f)
         
-        # Se l'articolo ha pochi tag o vogliamo rinfrescarli
         original_tags = post.get('tags', [])
         new_tags = get_ai_tags(post.content, original_tags)
         
-        # Uniamo e puliamo i duplicati
-        final_tags = list(set(original_tags + new_tags))
-        post['tags'] = final_tags
-        
-        # Salvataggio
-        f.seek(0)
-        f.write(frontmatter.dumps(post))
-        f.truncate()
+        if new_tags:
+            # Unisco e pulisco i duplicati
+            final_tags = list(set(original_tags + new_tags))
+            post['tags'] = final_tags
+            
+            # Sovrascrivo il file
+            f.seek(0)
+            f.write(frontmatter.dumps(post))
+            f.truncate()
+            
+    # Aggiungo un piccolo delay di sicurezza per non saturare i 5 RPM del tier free
+    # 12 secondi tra un file e l'altro garantiscono di stare sotto la soglia
+    time.sleep(12)
