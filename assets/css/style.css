@@ -220,6 +220,17 @@ img { max-width: 100%; display: block; }
 
 .post-article-body pre { margin: 0; padding: 0; background: transparent; border: none; }
 
+.post-article-body pre code[class*="language-"] {
+    display: block;
+    background: var(--code-bg);
+    color: var(--text-primary);
+    padding: 1.5rem;
+    border-radius: 10px;
+    border-left: 3px solid var(--accent-color);
+    white-space: pre-wrap; /* Fondamentale per i ritorni a capo */
+    font-family: 'JetBrains Mono', monospace;
+}
+
 .post-article-body pre code {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.85rem;
