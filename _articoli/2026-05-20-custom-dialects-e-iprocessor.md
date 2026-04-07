@@ -17,68 +17,96 @@ Problema: Duplicazione di codice HTML e logica CSS/JS in decine di template dive
 
 ## Esempio Implementativo
 
-```thymeleaf
+```java
 /* Definisco il dialetto che registra tutti i processori custom dell'azienda. */
-public class CompanyDialect implements IProcessorDialect { @Override public
-    String getName() { return "Company UI Dialect"; } @Override public String
-    getPrefix() { return "app"; // Prefisso usato nei template: app:button,
-    app:card, app:role-check } @Override public int
-    getDialectProcessorPrecedence() { return 1000; } @Override public Set
-<IProcessor>
-    getProcessors(String dialectPrefix) { Set
-    <IProcessor>
-        processors = new HashSet<>(); processors.add(new
-            RoleCheckProcessor(dialectPrefix)); // app:role-check
-            processors.add(new ButtonProcessor(dialectPrefix)); // app:button
-            processors.add(new AlertProcessor(dialectPrefix)); // app:alert
-            return processors; } }
-        /* Processore che rimuove un elemento se l'utente non ha il ruolo
-            richiesto. Estendo AbstractAttributeTagProcessor per agire su un
-            attributo specifico del tag. */
-        public class RoleCheckProcessor extends AbstractAttributeTagProcessor {
-            private static final String ATTR_NAME = "role-check"; private static
-            final int PRECEDENCE = 300; // Eseguo prima di th:text e th:each
-            public RoleCheckProcessor(String dialectPrefix) { super(
-            TemplateMode.HTML, dialectPrefix, // "app" null, // Nessun tag
-            specifico: funziona su qualsiasi tag false, ATTR_NAME, // Nome
-            attributo: "role-check" true, PRECEDENCE, true ); } @Override
-            protected void doProcess( ITemplateContext context,
-            IProcessableElementTag tag, AttributeName attributeName, String
-            attributeValue, IElementTagStructureHandler structureHandler) { //
-            Recupero il SecurityContext da Thymeleaf Authentication
+public class CompanyDialect implements IProcessorDialect {
+    @Override public String getName() {
+        return "Company UI Dialect";
+    }
+    @Override public String getPrefix() {
+        return "app";
+        // Prefisso usato nei template: app:button, app:card, app:role-check
+    }
+    @Override public int getDialectProcessorPrecedence() {
+        return 1000;
+    }
+    @Override public Set<IProcessor> getProcessors(String dialectPrefix) {
+        Set<IProcessor> processors = new HashSet<>();
+        processors.add(new RoleCheckProcessor(dialectPrefix));
+        // app:role-check processors.add(new ButtonProcessor(dialectPrefix))
+        ;
+        // app:button processors.add(new AlertProcessor(dialectPrefix))
+        ;
+        // app:alert
+        return processors;
+    }
+}
+/* Processore che rimuove un elemento se l'utente non ha il ruolo richiesto.
+    Estendo AbstractAttributeTagProcessor per agire su un attributo specifico
+    del tag. */
+public class RoleCheckProcessor extends AbstractAttributeTagProcessor {
+    private static final String ATTR_NAME = "role-check";
+    private static final int PRECEDENCE = 300;
+    // Eseguo prima di th:text e th:each public RoleCheckProcessor(String
+        dialectPrefix)
+    {
+        super( TemplateMode.HTML, dialectPrefix,
+        // "app" null, // Nessun tag specifico: funziona su qualsiasi tag false,
+            ATTR_NAME, // Nome attributo: "role-check" true, PRECEDENCE, true )
+        ;
+    }
+    @Override protected void doProcess( ITemplateContext context,
+        IProcessableElementTag tag, AttributeName attributeName, String
+        attributeValue, IElementTagStructureHandler structureHandler) {
+        // Recupero il SecurityContext da Thymeleaf Authentication
             authentication = (Authentication) ((WebContext)
-            context).getVariable("authentication"); if (authentication == null
-            || !authentication.getAuthorities().stream() .anyMatch(a ->
-            a.getAuthority().equals("ROLE_" + attributeValue.toUpperCase()))) {
+            context).getVariable("authentication")
+        ;
+        if (authentication == null || !authentication.getAuthorities().stream()
+            .anyMatch(a -> a.getAuthority().equals("ROLE_" +
+            attributeValue.toUpperCase()))) {
             // L'utente non ha il ruolo: rimuovo il tag dal DOM
-            structureHandler.removeElement(); } else { // L'utente ha il ruolo:
-            rimuovo solo l'attributo app:role-check dal markup finale
-            structureHandler.removeAttribute(attributeName); } } }
-        /* Processore che genera un bottone Material con varianti e icone. */
-        public class ButtonProcessor extends AbstractAttributeTagProcessor {
-            public ButtonProcessor(String dialectPrefix) {
-            super(TemplateMode.HTML, dialectPrefix, null, false, "button", true,
-            500, true); } @Override protected void doProcess(ITemplateContext
-            context, IProcessableElementTag tag, AttributeName attributeName,
-            String attributeValue, IElementTagStructureHandler structureHandler)
-            { // attributeValue = "primary" | "secondary" | "danger" String
-            variant = attributeValue; String cssClass = "btn btn-" + variant + "
-            btn-company"; // Aggiungo la classe CSS calcolata al tag esistente
-            structureHandler.setAttribute("class", cssClass);
-            structureHandler.setAttribute("type", "button"); // Rimuovo
-            l'attributo custom dal markup finale
-            structureHandler.removeAttribute(attributeName); } }
-        /* Registro il dialetto in Spring Boot: */
-        @Configuration public class ThymeleafConfig { @Bean public
-            CompanyDialect companyDialect() { return new CompanyDialect(); } }
-        /* Uso nei template: markup pulito e semantico senza logica inline. */
-        //
-        <button app:button="primary" app:role-check="admin" th:text="'Elimina
-            utente'">
-        </button>
-        // Se l'utente non è admin -> il tag viene rimosso dal DOM // Se
-            l'utente è admin ->
-        <button class="btn btn-primary btn-company" type="button">
-            Elimina utente
-        </button>
+                structureHandler.removeElement()
+            ;
+        }
+        else {
+            // L'utente ha il ruolo: rimuovo solo l'attributo app:role-check dal
+                markup finale structureHandler.removeAttribute(attributeName)
+            ;
+        }
+    }
+}
+/* Processore che genera un bottone Material con varianti e icone. */
+public class ButtonProcessor extends AbstractAttributeTagProcessor {
+    public ButtonProcessor(String dialectPrefix) {
+        super(TemplateMode.HTML, dialectPrefix, null, false, "button", true,
+            500, true);
+    }
+    @Override protected void doProcess(ITemplateContext context,
+        IProcessableElementTag tag, AttributeName attributeName, String
+        attributeValue, IElementTagStructureHandler structureHandler) {
+        // attributeValue = "primary" | "secondary" | "danger" String variant =
+            attributeValue
+        ;
+        String cssClass = "btn btn-" + variant + " btn-company";
+        // Aggiungo la classe CSS calcolata al tag esistente
+            structureHandler.setAttribute("class", cssClass)
+        ;
+        structureHandler.setAttribute("type", "button");
+        // Rimuovo l'attributo custom dal markup finale
+            structureHandler.removeAttribute(attributeName)
+        ;
+    }
+}
+/* Registro il dialetto in Spring Boot: */
+@Configuration public class ThymeleafConfig {
+    @Bean public CompanyDialect companyDialect() {
+        return new CompanyDialect();
+    }
+}
+/* Uso nei template: markup pulito e semantico senza logica inline. */
+// <button app:button="primary" app:role-check="admin" th:text="'Elimina
+    utente'"></button> // Se l'utente non è admin -> il tag viene rimosso dal
+    DOM // Se l'utente è admin -> <button class="btn btn-primary btn-company"
+    type="button">Elimina utente</button>
 ```

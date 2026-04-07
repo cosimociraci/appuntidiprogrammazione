@@ -17,7 +17,7 @@ Problema: Accesso a proprietà inesistenti in determinati stati (es. leggere dat
 
 ## Esempio Implementativo
 
-```js
+```javascript
 /* Modello gli stati di una richiesta HTTP come Discriminated Union. Il campo
     'status' è il "discriminante": TypeScript lo usa per restringere il tipo in
     ogni branch. */

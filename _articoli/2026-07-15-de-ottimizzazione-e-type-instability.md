@@ -17,7 +17,7 @@ Problema: Jitter nelle performance causato dal compilatore JIT che scarta contin
 
 ## Esempio Implementativo
 
-```js
+```javascript
 /* Dimostro il problema della Deopt con un esempio misurabile. */
 // FUNZIONE POLIMORFICA: causa deopt quando riceve tipi diversi function
     addPolymorphic(a, b)

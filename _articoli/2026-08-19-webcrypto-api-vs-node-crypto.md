@@ -17,7 +17,7 @@ Problema: Esposizione di chiavi crittografiche a script malevoli (XSS) che posso
 
 ## Esempio Implementativo
 
-```js
+```javascript
 /* Genero una coppia di chiavi ECDH non estraibile per il key exchange della
     E2EE. extractable: false è il parametro CRUCIALE: la chiave privata non può
     mai essere letta come buffer dal codice JS, nemmeno dal nostro. Questo la

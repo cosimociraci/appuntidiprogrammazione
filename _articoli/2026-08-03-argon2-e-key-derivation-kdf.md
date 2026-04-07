@@ -17,7 +17,7 @@ Problema: Vulnerabilità degli hash delle password ad attacchi brute-force accel
 
 ## Esempio Implementativo
 
-```js
+```javascript
 /* Scelgo Argon2id: è la variante raccomandata dal RFC 9106 perché combina la
     protezione di Argon2i (side-channel) con quella di Argon2d (GPU). */
 const argon2 = require('argon2');

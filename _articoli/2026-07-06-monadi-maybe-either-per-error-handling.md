@@ -17,7 +17,7 @@ Problema: Codice "spaghetto" dovuto a controlli di errore annidati e gestione in
 
 ## Esempio Implementativo
 
-```js
+```javascript
 /* Implemento il contenitore Either completo con i metodi fondamentali. */
 const Right = value => ({
     isRight: true, isLeft: false, map: fn => Right(fn(value)),

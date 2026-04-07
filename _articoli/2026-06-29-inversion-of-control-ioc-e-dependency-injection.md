@@ -17,7 +17,7 @@ Problema: Codice difficile da testare a causa di dipendenze hard-coded nei file 
 
 ## Esempio Implementativo
 
-```js
+```javascript
 /* Definisco le "Porte": interfacce che il dominio conosce. Il dominio non sa
     nulla di Postgres, HTTP o qualsiasi infrastruttura. */
 class UserRepository {

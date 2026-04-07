@@ -17,7 +17,7 @@ Problema: Validazione insicura dei token JWT che si fida dell'algoritmo dichiara
 
 ## Esempio Implementativo
 
-```js
+```javascript
 /* Dimostro l'attacco "alg:none" per capire cosa stiamo proteggendo. Un
     attaccante prende un token valido, decodifica l'header e il payload (Base64,
     non cifrato), modifica il payload (es. ruolo 'admin') e ricostruisce il

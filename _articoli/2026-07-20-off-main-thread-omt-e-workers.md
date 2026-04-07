@@ -17,7 +17,7 @@ Problema: Blocco dell'Event Loop dovuto a task sincroni CPU-bound che impediscon
 
 ## Esempio Implementativo
 
-```js
+```javascript
 /* MAIN THREAD (main.js): delego il parsing CSV al Worker con trasferimento
     zero-copy del buffer. */
 import {

@@ -17,7 +17,7 @@ Problema: Memory leak e comportamenti inconsistenti dovuti a sottoscrizioni mult
 
 ## Esempio Implementativo
 
-```js
+```javascript
 /* Implemento un Observer pattern minimale in Vanilla JS per ambienti senza
     RxJS. */
 class Subject {

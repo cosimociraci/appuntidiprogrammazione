@@ -17,7 +17,7 @@ Problema: Latenza eccessiva nella pre-allocazione di grandi aree di memoria per 
 
 ## Esempio Implementativo
 
-```js
+```javascript
 /* Confronto il costo delle diverse strategie di allocazione buffer. */
 const BUFFER_SIZE = 10 * 1024 * 1024;
 // 10MB const

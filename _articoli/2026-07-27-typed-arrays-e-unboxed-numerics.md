@@ -17,7 +17,7 @@ Problema: Latenza computazionale e picchi di GC causati dall'allocazione continu
 
 ## Esempio Implementativo
 
-```js
+```javascript
 /* Confronto il costo tra Array standard e Typed Array per renderlo concreto. */
 // APPROCCIO SBAGLIATO: Array standard con Boxed Doubles const standardArray =
     new Array(1_000_000)

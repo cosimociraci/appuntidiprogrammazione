@@ -17,7 +17,7 @@ Problema: OutOfMemoryError causato dall'accumulo di chunk di dati nel buffer di 
 
 ## Esempio Implementativo
 
-```js
+```javascript
 /* Dimostro il problema della backpressure non gestita con .pipe() manuale. */
 // SBAGLIATO: nessuna gestione della backpressure const readable =
     fs.createReadStream('huge-file.zip')

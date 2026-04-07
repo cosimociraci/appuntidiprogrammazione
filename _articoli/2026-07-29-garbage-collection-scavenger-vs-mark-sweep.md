@@ -17,7 +17,7 @@ Problema: Latenze imprevedibili causate da cicli di Garbage Collection pesante s
 
 ## Esempio Implementativo
 
-```js
+```javascript
 /* Avvio Node con flag di diagnostica per osservare i cicli GC in produzione: */
 // node --trace-gc --trace-gc-verbose app.js // Output tipico: // [44315:0x...]
     Scavenge 2.5 / 8.0 ms -> Minor GC: veloce, < 5ms // [44315:0x...] Mark-sweep

@@ -17,7 +17,7 @@ Problema: Rischio di "Supply Chain Attack" tramite la manomissione di script dis
 
 ## Esempio Implementativo
 
-```js
+```javascript
 /* ATTRIBUTO SRI: il browser calcola SHA-384 del file scaricato e lo confronta
     con il valore dichiarato. Se non corrisponde, lo script viene bloccato e la
     pagina riceve un errore di rete. */

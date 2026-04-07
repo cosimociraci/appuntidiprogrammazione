@@ -17,7 +17,7 @@ Problema: L'applicazione non risponde all'I/O esterno perché saturata da una ca
 
 ## Esempio Implementativo
 
-```js
+```javascript
 /* Visualizzo l'ordine esatto di esecuzione delle diverse code per renderlo
     concreto. */
 console.log('1. Synchronous code');

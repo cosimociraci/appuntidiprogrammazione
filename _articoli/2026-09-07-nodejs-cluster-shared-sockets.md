@@ -17,7 +17,7 @@ Problema: Sotto-utilizzo delle risorse hardware: un solo core al 100% e gli altr
 
 ## Esempio Implementativo
 
-```js
+```javascript
 /* Implemento un cluster manager robusto con auto-restart dei worker e graceful
     shutdown. */
 const cluster = require('cluster');

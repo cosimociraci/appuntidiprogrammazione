@@ -17,7 +17,7 @@ Problema: Duplicazione di codice e disallineamento tra le definizioni delle funz
 
 ## Esempio Implementativo
 
-```js
+```javascript
 /* Utility fondamentali basate su infer: estraggo tipi da strutture complesse
     senza ridefinirli. */
 // Estrae il tipo contenuto in una Promise (ricorsivamente per Promise annidate)

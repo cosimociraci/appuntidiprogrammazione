@@ -17,7 +17,7 @@ Problema: Perdita di contesto storico sullo stato dell'applicazione e difficolt√
 
 ## Esempio Implementativo
 
-```js
+```javascript
 /* Definisco i tipi di evento del dominio. Gli eventi sono immutabili e
     descrivono COSA √® successo, non COME. */
 const EventTypes = Object.freeze({

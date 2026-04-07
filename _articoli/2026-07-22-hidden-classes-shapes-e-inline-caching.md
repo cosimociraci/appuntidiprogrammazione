@@ -17,7 +17,7 @@ Problema: Calo drastico delle performance dovuto alla polimorfizzazione delle fu
 
 ## Esempio Implementativo
 
-```js
+```javascript
 /* PATTERN SBAGLIATO: aggiungo proprietà dopo la costruzione, rompendo la Hidden
     Class. V8 crea una nuova Shape per ogni variante, invalidando l'Inline Cache
     per tutte le funzioni che toccano questi oggetti. */

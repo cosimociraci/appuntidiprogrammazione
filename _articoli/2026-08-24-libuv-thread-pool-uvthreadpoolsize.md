@@ -17,7 +17,7 @@ Problema: Latenza elevata in operazioni asincrone non-network a causa della coda
 
 ## Esempio Implementativo
 
-```js
+```javascript
 /* UV_THREADPOOL_SIZE deve essere impostato PRIMA che il runtime Node.js venga
     inizializzato. Il modo più sicuro è impostarlo come variabile d'ambiente
     prima del lancio del processo, non tramite process.env durante l'esecuzione.

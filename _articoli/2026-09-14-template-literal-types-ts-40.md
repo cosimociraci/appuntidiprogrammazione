@@ -17,7 +17,7 @@ Problema: Perdita di type-safety quando si usano stringhe dinamiche come chiavi 
 
 ## Esempio Implementativo
 
-```js
+```javascript
 /* Template Literal Types: combino tipi stringa letterali per generare nuovi
     tipi. */
 type Entity = 'user' | 'order' | 'product' | 'invoice';

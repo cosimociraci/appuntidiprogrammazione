@@ -17,7 +17,7 @@ Problema: Leak di informazioni sensibili tramite la variazione del tempo di esec
 
 ## Esempio Implementativo
 
-```js
+```javascript
 /* Dimostro il problema del timing attack con un confronto naive. Un attaccante
     può misurare il tempo di risposta con migliaia di richieste: una chiave che
     inizia con i caratteri corretti risponderà leggermente più lentamente. */

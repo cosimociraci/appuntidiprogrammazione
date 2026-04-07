@@ -17,7 +17,7 @@ Problema: Esecuzione di script non autorizzati iniettati tramite commenti, profi
 
 ## Esempio Implementativo
 
-```js
+```javascript
 /* Genero un nonce crittograficamente casuale per ogni richiesta HTTP. Il nonce
     deve essere diverso per ogni risposta: se fosse fisso, un attaccante
     potrebbe usarlo per bypassare la CSP. */

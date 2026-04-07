@@ -17,7 +17,7 @@ Problema: Modelli di dati troppo complessi che tentano di soddisfare sia i vinco
 
 ## Esempio Implementativo
 
-```js
+```javascript
 /* LATO COMMAND: gestisco le operazioni di scrittura con validazione e
     invarianti di dominio. */
 class CreatePostCommand {
