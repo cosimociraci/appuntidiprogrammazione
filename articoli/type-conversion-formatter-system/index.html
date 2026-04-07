@@ -89,74 +89,195 @@
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 
-<pre><code class="language-thymeleaf">/* Definisco il DTO con annotazioni di formattazione: Spring le usa per la
-    conversione bidirezionale. */
-public class OrderFormDto { @DateTimeFormat(pattern = "yyyy-MM-dd") // Input:
-    "2026-03-25" -&gt; LocalDate private LocalDate deliveryDate;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) // Per datetime-local
-    HTML5 private LocalDateTime scheduledAt; @NumberFormat(style =
-    NumberFormat.Style.CURRENCY) // Input: "€ 1.250,00" -&gt; BigDecimal private
-    BigDecimal totalAmount; @NumberFormat(pattern = "#,##0.00") private
-    BigDecimal discountRate; private String customerName; }
-/* Per tipi custom (es. Money, IBAN), implemento un Converter bidirezionale. */
-@Component public class MoneyConverter implements Converter
-&lt;String, Money&gt;
-    { @Override public Money convert(String source) { // Parsing: "EUR 1250.00"
-        -&gt; Money(EUR, 1250.00) if (source == null || source.isBlank()) return
-        null; String[] parts = source.trim().split("\\s+", 2); return new
-        Money(Currency.getInstance(parts[0]), new BigDecimal(parts[1])); } }
-        @Component public class MoneyToStringConverter implements Converter
-    &lt;Money, String&gt;
-        { @Override public String convert(Money source) { // Formattazione:
-            Money(EUR, 1250.00) -&gt; "EUR 1250.00" return
-            source.getCurrency().getCurrencyCode() + " " +
-            source.getAmount().toPlainString(); } }
-        /* Registro i converter nel ConversionService di Spring: */
-        @Configuration public class ConversionConfig implements WebMvcConfigurer
-            { @Autowired private MoneyConverter moneyConverter; @Autowired
-            private MoneyToStringConverter moneyToStringConverter; @Override
-            public void addFormatters(FormatterRegistry registry) {
-            registry.addConverter(moneyConverter);
-            registry.addConverter(moneyToStringConverter); // Per tipi
-            Locale-aware, registro un Formatter (combina Printer + Parser)
-            registry.addFormatter(new CoordinateFormatter()); } }
-        /* Formatter per Coordinate con supporto Locale: */
-        public class CoordinateFormatter implements Formatter
-        &lt;GeoCoordinate&gt;
-            { @Override public GeoCoordinate parse(String text, Locale locale)
-                throws ParseException { // "45.4654219,9.1859243" -&gt;
-                GeoCoordinate(lat, lon) String[] parts = text.split(","); return
-                new GeoCoordinate(Double.parseDouble(parts[0].trim()),
-                Double.parseDouble(parts[1].trim())); } @Override public String
-                print(GeoCoordinate coord, Locale locale) { return
-                String.format(locale, "%.7f,%.7f", coord.getLat(),
-                coord.getLon()); } }
-            /* Controller: il binding avviene automaticamente senza codice di
-                conversione manuale. */
-            @PostMapping("/orders") public String createOrder(@ModelAttribute
-                @Valid OrderFormDto form, BindingResult result, Model model) {
-                if (result.hasErrors()) { return "orders/new"; }
-                orderService.create(form); return "redirect:/orders"; }
-            &lt;!-- Template: th:field usa il ConversionService per formattare il
-                valore esistente e per fare il binding all'invio. --&gt;
-            &lt;form th:object="${orderFormDto}" th:action="@{/orders}"
-                method="post"&gt;
-                &lt;!-- th:field chiama print(deliveryDate, locale) per
-                    visualizzare e parse() al submit --&gt;
-                &lt;input type="date" th:field="*{deliveryDate}"
-                    class="form-control"&gt;
-                    &lt;!-- Input valuta: visualizza "€ 1.250,00" e parsifica al
-                        submit --&gt;
-                    &lt;input type="text" th:field="*{totalAmount}"
-                        class="form-control" placeholder="€ 0,00"&gt;
-                        &lt;!-- Coordinate custom con Formatter registrato --&gt;
-                        &lt;input type="text" th:field="*{deliveryCoordinate}"
-                            class="form-control" placeholder="45.4654,9.1859"&gt;
-                            &lt;button type="submit"&gt;
-                                Conferma Ordine
-                            &lt;/button&gt;
-                        &lt;/form&gt;
-</code></pre>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+</pre></td><td class="rouge-code"><pre><span class="cm">/* Definisco il DTO con annotazioni di formattazione: Spring le usa per la
+    conversione bidirezionale. */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">OrderFormDto</span> <span class="o">{</span>
+    <span class="nd">@DateTimeFormat</span><span class="o">(</span><span class="n">pattern</span> <span class="o">=</span> <span class="s">"yyyy-MM-dd"</span><span class="o">)</span>
+    <span class="c1">// Input: "2026-03-25" -&gt; LocalDate private LocalDate deliveryDate</span>
+    <span class="o">;</span>
+    <span class="nd">@DateTimeFormat</span><span class="o">(</span><span class="n">iso</span> <span class="o">=</span> <span class="nc">DateTimeFormat</span><span class="o">.</span><span class="na">ISO</span><span class="o">.</span><span class="na">DATE_TIME</span><span class="o">)</span>
+    <span class="c1">// Per datetime-local HTML5 private LocalDateTime scheduledAt</span>
+    <span class="o">;</span>
+    <span class="nd">@NumberFormat</span><span class="o">(</span><span class="n">style</span> <span class="o">=</span> <span class="nc">NumberFormat</span><span class="o">.</span><span class="na">Style</span><span class="o">.</span><span class="na">CURRENCY</span><span class="o">)</span>
+    <span class="c1">// Input: "€ 1.250,00" -&gt; BigDecimal private BigDecimal totalAmount</span>
+    <span class="o">;</span>
+    <span class="nd">@NumberFormat</span><span class="o">(</span><span class="n">pattern</span> <span class="o">=</span> <span class="s">"#,##0.00"</span><span class="o">)</span> <span class="kd">private</span> <span class="nc">BigDecimal</span> <span class="n">discountRate</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">customerName</span><span class="o">;</span>
+<span class="o">}</span>
+<span class="cm">/* Per tipi custom (es. Money, IBAN), implemento un Converter bidirezionale. */</span>
+<span class="nd">@Component</span> <span class="kd">public</span> <span class="kd">class</span> <span class="nc">MoneyConverter</span> <span class="kd">implements</span> <span class="nc">Converter</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">Money</span><span class="o">&gt;</span> <span class="o">{</span>
+    <span class="nd">@Override</span> <span class="kd">public</span> <span class="nc">Money</span> <span class="nf">convert</span><span class="o">(</span><span class="nc">String</span> <span class="n">source</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// Parsing: "EUR 1250.00" -&gt; Money(EUR, 1250.00) if (source == null ||</span>
+            <span class="n">source</span><span class="o">.</span><span class="na">isBlank</span><span class="o">())</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="nc">String</span><span class="o">[]</span> <span class="n">parts</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="na">trim</span><span class="o">().</span><span class="na">split</span><span class="o">(</span><span class="s">"\\s+"</span><span class="o">,</span> <span class="mi">2</span><span class="o">);</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">Money</span><span class="o">(</span><span class="nc">Currency</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="n">parts</span><span class="o">[</span><span class="mi">0</span><span class="o">]),</span> <span class="k">new</span>
+            <span class="nc">BigDecimal</span><span class="o">(</span><span class="n">parts</span><span class="o">[</span><span class="mi">1</span><span class="o">]));</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="nd">@Component</span> <span class="kd">public</span> <span class="kd">class</span> <span class="nc">MoneyToStringConverter</span> <span class="kd">implements</span> <span class="nc">Converter</span><span class="o">&lt;</span><span class="nc">Money</span><span class="o">,</span>
+    <span class="nc">String</span><span class="o">&gt;</span> <span class="o">{</span>
+    <span class="nd">@Override</span> <span class="kd">public</span> <span class="nc">String</span> <span class="nf">convert</span><span class="o">(</span><span class="nc">Money</span> <span class="n">source</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// Formattazione: Money(EUR, 1250.00) -&gt; "EUR 1250.00"</span>
+        <span class="k">return</span> <span class="n">source</span><span class="o">.</span><span class="na">getCurrency</span><span class="o">().</span><span class="na">getCurrencyCode</span><span class="o">()</span> <span class="o">+</span> <span class="s">" "</span> <span class="o">+</span>
+            <span class="n">source</span><span class="o">.</span><span class="na">getAmount</span><span class="o">().</span><span class="na">toPlainString</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="cm">/* Registro i converter nel ConversionService di Spring: */</span>
+<span class="nd">@Configuration</span> <span class="kd">public</span> <span class="kd">class</span> <span class="nc">ConversionConfig</span> <span class="kd">implements</span> <span class="nc">WebMvcConfigurer</span> <span class="o">{</span>
+    <span class="nd">@Autowired</span> <span class="kd">private</span> <span class="nc">MoneyConverter</span> <span class="n">moneyConverter</span><span class="o">;</span>
+    <span class="nd">@Autowired</span> <span class="kd">private</span> <span class="nc">MoneyToStringConverter</span> <span class="n">moneyToStringConverter</span><span class="o">;</span>
+    <span class="nd">@Override</span> <span class="kd">public</span> <span class="kt">void</span> <span class="nf">addFormatters</span><span class="o">(</span><span class="nc">FormatterRegistry</span> <span class="n">registry</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">registry</span><span class="o">.</span><span class="na">addConverter</span><span class="o">(</span><span class="n">moneyConverter</span><span class="o">);</span>
+        <span class="n">registry</span><span class="o">.</span><span class="na">addConverter</span><span class="o">(</span><span class="n">moneyToStringConverter</span><span class="o">);</span>
+        <span class="c1">// Per tipi Locale-aware, registro un Formatter (combina Printer +</span>
+            <span class="nc">Parser</span><span class="o">)</span> <span class="n">registry</span><span class="o">.</span><span class="na">addFormatter</span><span class="o">(</span><span class="k">new</span> <span class="nc">CoordinateFormatter</span><span class="o">())</span>
+        <span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="cm">/* Formatter per Coordinate con supporto Locale: */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">CoordinateFormatter</span> <span class="kd">implements</span> <span class="nc">Formatter</span><span class="o">&lt;</span><span class="nc">GeoCoordinate</span><span class="o">&gt;</span> <span class="o">{</span>
+    <span class="nd">@Override</span> <span class="kd">public</span> <span class="nc">GeoCoordinate</span> <span class="nf">parse</span><span class="o">(</span><span class="nc">String</span> <span class="n">text</span><span class="o">,</span> <span class="nc">Locale</span> <span class="n">locale</span><span class="o">)</span> <span class="kd">throws</span>
+        <span class="nc">ParseException</span> <span class="o">{</span>
+        <span class="c1">// "45.4654219,9.1859243" -&gt; GeoCoordinate(lat, lon) String[] parts =</span>
+            <span class="n">text</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">","</span><span class="o">)</span>
+        <span class="o">;</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">GeoCoordinate</span><span class="o">(</span><span class="nc">Double</span><span class="o">.</span><span class="na">parseDouble</span><span class="o">(</span><span class="n">parts</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">trim</span><span class="o">()),</span>
+            <span class="nc">Double</span><span class="o">.</span><span class="na">parseDouble</span><span class="o">(</span><span class="n">parts</span><span class="o">[</span><span class="mi">1</span><span class="o">].</span><span class="na">trim</span><span class="o">()));</span>
+    <span class="o">}</span>
+    <span class="nd">@Override</span> <span class="kd">public</span> <span class="nc">String</span> <span class="nf">print</span><span class="o">(</span><span class="nc">GeoCoordinate</span> <span class="n">coord</span><span class="o">,</span> <span class="nc">Locale</span> <span class="n">locale</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="nc">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="n">locale</span><span class="o">,</span> <span class="s">"%.7f,%.7f"</span><span class="o">,</span> <span class="n">coord</span><span class="o">.</span><span class="na">getLat</span><span class="o">(),</span>
+            <span class="n">coord</span><span class="o">.</span><span class="na">getLon</span><span class="o">());</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="cm">/* Controller: il binding avviene automaticamente senza codice di conversione
+    manuale. */</span>
+<span class="nd">@PostMapping</span><span class="o">(</span><span class="s">"/orders"</span><span class="o">)</span> <span class="kd">public</span> <span class="nc">String</span> <span class="nf">createOrder</span><span class="o">(</span>
+<span class="nd">@ModelAttribute</span>
+<span class="nd">@Valid</span> <span class="nc">OrderFormDto</span> <span class="n">form</span><span class="o">,</span> <span class="nc">BindingResult</span> <span class="n">result</span><span class="o">,</span> <span class="nc">Model</span> <span class="n">model</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">result</span><span class="o">.</span><span class="na">hasErrors</span><span class="o">())</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="s">"orders/new"</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="n">orderService</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">form</span><span class="o">);</span>
+    <span class="k">return</span> <span class="s">"redirect:/orders"</span><span class="o">;</span>
+<span class="o">}</span>
+<span class="o">&lt;!--</span> <span class="nl">Template:</span> <span class="nl">th:</span><span class="n">field</span> <span class="n">usa</span> <span class="n">il</span> <span class="nc">ConversionService</span> <span class="n">per</span> <span class="n">formattare</span> <span class="n">il</span> <span class="n">valore</span>
+    <span class="n">esistente</span> <span class="n">e</span> <span class="n">per</span> <span class="n">fare</span> <span class="n">il</span> <span class="n">binding</span> <span class="n">all</span><span class="err">'</span><span class="n">invio</span><span class="o">.</span> <span class="o">--&gt;</span> <span class="o">&lt;</span><span class="n">form</span> <span class="nl">th:</span><span class="n">object</span><span class="o">=</span><span class="s">"${
+    orderFormDto
+}
+"</span> <span class="nl">th:</span><span class="n">action</span><span class="o">=</span><span class="s">"
+@{
+    /orders
+}
+"</span> <span class="n">method</span><span class="o">=</span><span class="s">"post"</span><span class="o">&gt;</span> <span class="o">&lt;!--</span> <span class="nl">th:</span><span class="n">field</span> <span class="n">chiama</span> <span class="nf">print</span><span class="o">(</span><span class="n">deliveryDate</span><span class="o">,</span> <span class="n">locale</span><span class="o">)</span> <span class="n">per</span>
+    <span class="n">visualizzare</span> <span class="n">e</span> <span class="nf">parse</span><span class="o">()</span> <span class="n">al</span> <span class="n">submit</span> <span class="o">--&gt;</span> <span class="o">&lt;</span><span class="n">input</span> <span class="n">type</span><span class="o">=</span><span class="s">"date"</span> <span class="nl">th:</span><span class="n">field</span><span class="o">=</span><span class="s">"*{
+    deliveryDate
+}
+"</span> <span class="kd">class</span><span class="err">="</span><span class="nc">form</span><span class="o">-</span><span class="n">control</span><span class="s">"&gt; &lt;!-- Input valuta: visualizza "</span><span class="err">€</span> <span class="mf">1.250</span><span class="o">,</span><span class="mo">00</span><span class="s">" e parsifica
+    al submit --&gt; &lt;input type="</span><span class="n">text</span><span class="s">" th:field="</span><span class="o">*{</span>
+    <span class="n">totalAmount</span>
+<span class="o">}</span>
+<span class="s">" class="</span><span class="n">form</span><span class="o">-</span><span class="n">control</span><span class="s">" placeholder="</span><span class="err">€</span> <span class="mi">0</span><span class="o">,</span><span class="mo">00</span><span class="s">"&gt; &lt;!-- Coordinate custom con
+    Formatter registrato --&gt; &lt;input type="</span><span class="n">text</span><span class="s">" th:field="</span><span class="o">*{</span>
+    <span class="n">deliveryCoordinate</span>
+<span class="o">}</span>
+<span class="s">" class="</span><span class="n">form</span><span class="o">-</span><span class="n">control</span><span class="s">" placeholder="</span><span class="mf">45.4654</span><span class="o">,</span><span class="mf">9.1859</span><span class="s">"&gt; &lt;button
+    type="</span><span class="n">submit</span><span class="err">"</span><span class="o">&gt;</span><span class="nc">Conferma</span> <span class="nc">Ordine</span><span class="o">&lt;/</span><span class="n">button</span><span class="o">&gt;</span> <span class="o">&lt;/</span><span class="n">form</span><span class="o">&gt;</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
         </article>
 

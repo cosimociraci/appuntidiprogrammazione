@@ -89,144 +89,295 @@
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 
-<pre><code class="language-thymeleaf">/* Definisco validatori cross-field tramite annotazione custom a livello di
-    classe. */
-@Target(ElementType.TYPE) @Retention(RetentionPolicy.RUNTIME)
-    @Constraint(validatedBy = DateRangeValidator.class) public @interface
-    ValidDateRange { String message() default "La data di fine deve essere
-    successiva alla data di inizio"; Class
-&lt;?&gt;
-    [] groups() default {}; Class
-    &lt;? extends Payload&gt;
-        [] payload() default {}; } public class DateRangeValidator implements
-            ConstraintValidator
-        &lt;ValidDateRange, EventFormDto&gt;
-            { @Override public boolean isValid(EventFormDto form,
-                ConstraintValidatorContext ctx) { if (form.getStartDate() ==
-                null || form.getEndDate() == null) return true; if
-                (form.getEndDate().isBefore(form.getStartDate())) { // Aggiungo
-                l'errore come global (non legato a un campo):
-                ctx.disableDefaultConstraintViolation();
-                ctx.buildConstraintViolationWithTemplate( "La data di fine (" +
-                form.getEndDate() + ") deve essere dopo la data di inizio (" +
-                form.getStartDate() + ")") .addConstraintViolation(); return
-                false; } return true; } }
-            /* DTO con validazioni a livello di campo e cross-field. */
-            @ValidDateRange // Validazione cross-field: errore "global" public
-                class EventFormDto { @NotBlank(message = "Il titolo è
-                obbligatorio") @Size(min = 3, max = 100, message = "Il titolo
-                deve avere tra 3 e 100 caratteri") private String title;
-                @NotNull(message = "La data di inizio è obbligatoria")
-                @FutureOrPresent(message = "La data di inizio non può essere nel
-                passato") @DateTimeFormat(pattern = "yyyy-MM-dd") private
-                LocalDate startDate; @NotNull(message = "La data di fine è
-                obbligatoria") @DateTimeFormat(pattern = "yyyy-MM-dd") private
-                LocalDate endDate; @Min(value = 1, message = "La capienza minima
-                è 1 partecipante") @Max(value = 10000, message = "La capienza
-                massima è 10.000 partecipanti") private Integer capacity;
-                @Email(message = "L'email del contatto non è valida") private
-                String contactEmail; }
-            /* Controller che gestisce gli errori di binding e validazione. */
-            @PostMapping("/events") public String createEvent(@ModelAttribute
-                @Valid EventFormDto form, BindingResult result, Model model) {
-                if (result.hasErrors()) { // Non devo aggiungere form al model:
-                Spring lo mantiene automaticamente come "eventFormDto" return
-                "events/new"; // Torno al form con gli errori popolati }
-                eventService.create(form); return "redirect:/events"; }
-            &lt;!-- Template events/new.html: gestione completa degli errori con
-                #fields. --&gt;
-            &lt;form th:object="${eventFormDto}" th:action="@{/events}"
-                method="post"&gt;
-                &lt;!-- ERRORI GLOBALI (cross-field): non associati a un campo
-                    specifico --&gt;
-                &lt;div th:if="${#fields.hasGlobalErrors()}" class="alert
-                    alert-danger" role="alert"&gt;
-                    &lt;strong&gt;
-                        Errori di validazione:
-                    &lt;/strong&gt;
-                    &lt;ul class="mb-0"&gt;
-                        &lt;li th:each="err : ${#fields.globalErrors()}"
-                            th:text="${err}"&gt;
-                            Errore globale
-                        &lt;/li&gt;
-                    &lt;/ul&gt;
-                &lt;/div&gt;
-                &lt;!-- Alternativa: mostro TUTTI gli errori in cima (globali + di
-                    campo) --&gt;
-                &lt;div th:if="${#fields.hasAnyErrors()}" class="alert
-                    alert-warning d-none d-print-block"&gt;
-                    &lt;!-- Utile per la stampa o per screen reader --&gt;
-                    &lt;ul&gt;
-                        &lt;li th:each="err : ${#fields.allErrors()}"
-                            th:text="${err}"&gt;
-                            Errore
-                        &lt;/li&gt;
-                    &lt;/ul&gt;
-                &lt;/div&gt;
-                &lt;!-- CAMPO TITOLO: th:errorclass aggiunge 'is-invalid' se il
-                    campo ha errori --&gt;
-                &lt;div class="mb-3"&gt;
-                    &lt;label for="title" class="form-label"&gt;
-                        Titolo *
-                    &lt;/label&gt;
-                    &lt;!-- th:errorclass: aggiunge la classe CSS solo se
-                        #fields.hasErrors('title') è true --&gt;
-                    &lt;input type="text" th:field="*{title}"
-                        th:errorclass="is-invalid" class="form-control"
-                        id="title"&gt;
-                        &lt;!-- Mostra il primo messaggio di errore per questo
-                            campo --&gt;
-                        &lt;div th:if="${#fields.hasErrors('title')}"
-                            class="invalid-feedback"&gt;
-                            &lt;span th:errors="*{title}"&gt;
-                                Errore titolo
-                            &lt;/span&gt;
-                        &lt;/div&gt;
-                    &lt;/div&gt;
-                    &lt;!-- CAMPO DATA INIZIO: con indicatore visivo dello stato
-                        --&gt;
-                    &lt;div class="mb-3"&gt;
-                        &lt;label for="startDate" class="form-label"&gt;
-                            Data inizio *
-                        &lt;/label&gt;
-                        &lt;input type="date" th:field="*{startDate}"
-                            th:errorclass="is-invalid"
-                            th:classappend="${#fields.hasErrors('startDate')} ?
-                            '' : (${eventFormDto.startDate} != null ? 'is-valid'
-                            : '')" class="form-control" id="startDate"&gt;
-                            &lt;div th:if="${#fields.hasErrors('startDate')}"
-                                class="invalid-feedback"&gt;
-                                &lt;span th:errors="*{startDate}"&gt;
-                                    Errore data
-                                &lt;/span&gt;
-                            &lt;/div&gt;
-                        &lt;/div&gt;
-                        &lt;!-- CAMPO CAPIENZA: errori multipli su stesso campo --&gt;
-                        &lt;div class="mb-3"&gt;
-                            &lt;label for="capacity" class="form-label"&gt;
-                                Capienza massima *
-                            &lt;/label&gt;
-                            &lt;input type="number" th:field="*{capacity}"
-                                th:errorclass="is-invalid" class="form-control"
-                                id="capacity" min="1" max="10000"&gt;
-                                &lt;!-- Se ci sono più errori sullo stesso campo,
-                                    li mostro tutti --&gt;
-                                &lt;div th:if="${#fields.hasErrors('capacity')}"
-                                    class="invalid-feedback"&gt;
-                                    &lt;ul class="mb-0 ps-3"&gt;
-                                        &lt;li th:each="err :
-                                            ${#fields.errors('capacity')}"
-                                            th:text="${err}"&gt;
-                                            Errore
-                                        &lt;/li&gt;
-                                    &lt;/ul&gt;
-                                &lt;/div&gt;
-                            &lt;/div&gt;
-                            &lt;button type="submit" class="btn btn-primary"&gt;
-                                Crea Evento
-                            &lt;/button&gt;
-                        &lt;/form&gt;
-</code></pre>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+</pre></td><td class="rouge-code"><pre><span class="cm">/* Definisco validatori cross-field tramite annotazione custom a livello di
+    classe. */</span>
+<span class="nd">@Target</span><span class="o">(</span><span class="nc">ElementType</span><span class="o">.</span><span class="na">TYPE</span><span class="o">)</span>
+<span class="nd">@Retention</span><span class="o">(</span><span class="nc">RetentionPolicy</span><span class="o">.</span><span class="na">RUNTIME</span><span class="o">)</span>
+<span class="nd">@Constraint</span><span class="o">(</span><span class="n">validatedBy</span> <span class="o">=</span> <span class="nc">DateRangeValidator</span><span class="o">.</span><span class="na">class</span><span class="o">)</span> <span class="kd">public</span>
+<span class="nd">@interface</span> <span class="nc">ValidDateRange</span> <span class="o">{</span>
+    <span class="nc">String</span> <span class="nf">message</span><span class="o">()</span> <span class="k">default</span> <span class="s">"La data di fine deve essere successiva alla data
+        di inizio"</span><span class="o">;</span>
+    <span class="nc">Class</span><span class="o">&lt;?&gt;[]</span> <span class="n">groups</span><span class="o">()</span> <span class="k">default</span> <span class="o">{</span>
+    <span class="o">}</span>
+    <span class="o">;</span>
+    <span class="nc">Class</span><span class="o">&lt;?</span> <span class="kd">extends</span> <span class="nc">Payload</span><span class="o">&gt;[]</span> <span class="nf">payload</span><span class="o">()</span> <span class="k">default</span> <span class="o">{</span>
+    <span class="o">}</span>
+    <span class="o">;</span>
+<span class="o">}</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">DateRangeValidator</span> <span class="kd">implements</span> <span class="nc">ConstraintValidator</span><span class="o">&lt;</span><span class="nc">ValidDateRange</span><span class="o">,</span>
+    <span class="nc">EventFormDto</span><span class="o">&gt;</span> <span class="o">{</span>
+    <span class="nd">@Override</span> <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isValid</span><span class="o">(</span><span class="nc">EventFormDto</span> <span class="n">form</span><span class="o">,</span>
+        <span class="nc">ConstraintValidatorContext</span> <span class="n">ctx</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">form</span><span class="o">.</span><span class="na">getStartDate</span><span class="o">()</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">form</span><span class="o">.</span><span class="na">getEndDate</span><span class="o">()</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span>
+            <span class="kc">true</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">form</span><span class="o">.</span><span class="na">getEndDate</span><span class="o">().</span><span class="na">isBefore</span><span class="o">(</span><span class="n">form</span><span class="o">.</span><span class="na">getStartDate</span><span class="o">()))</span> <span class="o">{</span>
+            <span class="c1">// Aggiungo l'errore come global (non legato a un campo):</span>
+                <span class="n">ctx</span><span class="o">.</span><span class="na">disableDefaultConstraintViolation</span><span class="o">()</span>
+            <span class="o">;</span>
+            <span class="n">ctx</span><span class="o">.</span><span class="na">buildConstraintViolationWithTemplate</span><span class="o">(</span> <span class="s">"La data di fine ("</span> <span class="o">+</span>
+                <span class="n">form</span><span class="o">.</span><span class="na">getEndDate</span><span class="o">()</span> <span class="o">+</span> <span class="s">") deve essere dopo la data di inizio ("</span> <span class="o">+</span>
+                <span class="n">form</span><span class="o">.</span><span class="na">getStartDate</span><span class="o">()</span> <span class="o">+</span> <span class="s">")"</span><span class="o">)</span> <span class="o">.</span><span class="na">addConstraintViolation</span><span class="o">();</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="cm">/* DTO con validazioni a livello di campo e cross-field. */</span>
+<span class="nd">@ValidDateRange</span>
+<span class="c1">// Validazione cross-field: errore "global" public class EventFormDto</span>
+<span class="o">{</span>
+    <span class="nd">@NotBlank</span><span class="o">(</span><span class="n">message</span> <span class="o">=</span> <span class="s">"Il titolo è obbligatorio"</span><span class="o">)</span>
+    <span class="nd">@Size</span><span class="o">(</span><span class="n">min</span> <span class="o">=</span> <span class="mi">3</span><span class="o">,</span> <span class="n">max</span> <span class="o">=</span> <span class="mi">100</span><span class="o">,</span> <span class="n">message</span> <span class="o">=</span> <span class="s">"Il titolo deve avere tra 3 e 100
+        caratteri"</span><span class="o">)</span> <span class="kd">private</span> <span class="nc">String</span> <span class="n">title</span><span class="o">;</span>
+    <span class="nd">@NotNull</span><span class="o">(</span><span class="n">message</span> <span class="o">=</span> <span class="s">"La data di inizio è obbligatoria"</span><span class="o">)</span>
+    <span class="nd">@FutureOrPresent</span><span class="o">(</span><span class="n">message</span> <span class="o">=</span> <span class="s">"La data di inizio non può essere nel passato"</span><span class="o">)</span>
+    <span class="nd">@DateTimeFormat</span><span class="o">(</span><span class="n">pattern</span> <span class="o">=</span> <span class="s">"yyyy-MM-dd"</span><span class="o">)</span> <span class="kd">private</span> <span class="nc">LocalDate</span> <span class="n">startDate</span><span class="o">;</span>
+    <span class="nd">@NotNull</span><span class="o">(</span><span class="n">message</span> <span class="o">=</span> <span class="s">"La data di fine è obbligatoria"</span><span class="o">)</span>
+    <span class="nd">@DateTimeFormat</span><span class="o">(</span><span class="n">pattern</span> <span class="o">=</span> <span class="s">"yyyy-MM-dd"</span><span class="o">)</span> <span class="kd">private</span> <span class="nc">LocalDate</span> <span class="n">endDate</span><span class="o">;</span>
+    <span class="nd">@Min</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="mi">1</span><span class="o">,</span> <span class="n">message</span> <span class="o">=</span> <span class="s">"La capienza minima è 1 partecipante"</span><span class="o">)</span>
+    <span class="nd">@Max</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="mi">10000</span><span class="o">,</span> <span class="n">message</span> <span class="o">=</span> <span class="s">"La capienza massima è 10.000 partecipanti"</span><span class="o">)</span>
+        <span class="kd">private</span> <span class="nc">Integer</span> <span class="n">capacity</span><span class="o">;</span>
+    <span class="nd">@Email</span><span class="o">(</span><span class="n">message</span> <span class="o">=</span> <span class="s">"L'email del contatto non è valida"</span><span class="o">)</span> <span class="kd">private</span> <span class="nc">String</span>
+        <span class="n">contactEmail</span><span class="o">;</span>
+<span class="o">}</span>
+<span class="cm">/* Controller che gestisce gli errori di binding e validazione. */</span>
+<span class="nd">@PostMapping</span><span class="o">(</span><span class="s">"/events"</span><span class="o">)</span> <span class="kd">public</span> <span class="nc">String</span> <span class="nf">createEvent</span><span class="o">(</span>
+<span class="nd">@ModelAttribute</span>
+<span class="nd">@Valid</span> <span class="nc">EventFormDto</span> <span class="n">form</span><span class="o">,</span> <span class="nc">BindingResult</span> <span class="n">result</span><span class="o">,</span> <span class="nc">Model</span> <span class="n">model</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">result</span><span class="o">.</span><span class="na">hasErrors</span><span class="o">())</span> <span class="o">{</span>
+        <span class="c1">// Non devo aggiungere form al model: Spring lo mantiene automaticamente</span>
+            <span class="n">come</span> <span class="s">"eventFormDto"</span>
+        <span class="k">return</span> <span class="s">"events/new"</span><span class="o">;</span>
+        <span class="c1">// Torno al form con gli errori popolati</span>
+    <span class="o">}</span>
+    <span class="n">eventService</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">form</span><span class="o">);</span>
+    <span class="k">return</span> <span class="s">"redirect:/events"</span><span class="o">;</span>
+<span class="o">}</span>
+<span class="o">&lt;!--</span> <span class="nc">Template</span> <span class="n">events</span><span class="o">/</span><span class="k">new</span><span class="o">.</span><span class="na">html</span><span class="o">:</span> <span class="n">gestione</span> <span class="n">completa</span> <span class="n">degli</span> <span class="n">errori</span> <span class="n">con</span> <span class="err">#</span><span class="n">fields</span><span class="o">.</span> <span class="o">--&gt;</span>
+    <span class="o">&lt;</span><span class="n">form</span> <span class="nl">th:</span><span class="n">object</span><span class="o">=</span><span class="s">"${
+    eventFormDto
+}
+"</span> <span class="nl">th:</span><span class="n">action</span><span class="o">=</span><span class="s">"
+@{
+    /events
+}
+"</span> <span class="n">method</span><span class="o">=</span><span class="s">"post"</span><span class="o">&gt;</span> <span class="o">&lt;!--</span> <span class="no">ERRORI</span> <span class="nf">GLOBALI</span> <span class="o">(</span><span class="n">cross</span><span class="o">-</span><span class="n">field</span><span class="o">):</span> <span class="n">non</span> <span class="n">associati</span> <span class="n">a</span> <span class="n">un</span> <span class="n">campo</span>
+    <span class="n">specifico</span> <span class="o">--&gt;</span> <span class="o">&lt;</span><span class="n">div</span> <span class="nl">th:</span><span class="k">if</span><span class="o">=</span><span class="s">"${
+    #fields.hasGlobalErrors()
+}
+"</span> <span class="kd">class</span><span class="err">="</span><span class="nc">alert</span> <span class="n">alert</span><span class="o">-</span><span class="n">danger</span><span class="s">" role="</span><span class="n">alert</span><span class="s">"&gt; &lt;strong&gt;Errori di
+    validazione:&lt;/strong&gt; &lt;ul class="</span><span class="n">mb</span><span class="o">-</span><span class="mi">0</span><span class="s">"&gt; &lt;li th:each="</span><span class="n">err</span> <span class="o">:</span> <span class="err">$</span><span class="o">{</span>
+    <span class="err">#</span><span class="n">fields</span><span class="o">.</span><span class="na">globalErrors</span><span class="o">()</span>
+<span class="o">}</span>
+<span class="s">" th:text="</span><span class="err">$</span><span class="o">{</span>
+    <span class="n">err</span>
+<span class="o">}</span>
+<span class="s">"&gt;Errore globale&lt;/li&gt; &lt;/ul&gt; &lt;/div&gt; &lt;!-- Alternativa: mostro TUTTI gli errori in
+    cima (globali + di campo) --&gt; &lt;div th:if="</span><span class="err">$</span><span class="o">{</span>
+    <span class="err">#</span><span class="n">fields</span><span class="o">.</span><span class="na">hasAnyErrors</span><span class="o">()</span>
+<span class="o">}</span>
+<span class="s">" class="</span><span class="n">alert</span> <span class="n">alert</span><span class="o">-</span><span class="n">warning</span> <span class="n">d</span><span class="o">-</span><span class="n">none</span> <span class="n">d</span><span class="o">-</span><span class="n">print</span><span class="o">-</span><span class="n">block</span><span class="s">"&gt; &lt;!-- Utile per la stampa o
+    per screen reader --&gt; &lt;ul&gt; &lt;li th:each="</span><span class="n">err</span> <span class="o">:</span> <span class="err">$</span><span class="o">{</span>
+    <span class="err">#</span><span class="n">fields</span><span class="o">.</span><span class="na">allErrors</span><span class="o">()</span>
+<span class="o">}</span>
+<span class="s">" th:text="</span><span class="err">$</span><span class="o">{</span>
+    <span class="n">err</span>
+<span class="o">}</span>
+<span class="s">"&gt;Errore&lt;/li&gt; &lt;/ul&gt; &lt;/div&gt; &lt;!-- CAMPO TITOLO: th:errorclass aggiunge
+    'is-invalid' se il campo ha errori --&gt; &lt;div class="</span><span class="n">mb</span><span class="o">-</span><span class="mi">3</span><span class="s">"&gt; &lt;label for="</span><span class="n">title</span><span class="s">"
+    class="</span><span class="n">form</span><span class="o">-</span><span class="n">label</span><span class="s">"&gt;Titolo *&lt;/label&gt; &lt;!-- th:errorclass: aggiunge la classe
+    CSS solo se #fields.hasErrors('title') è true --&gt; &lt;input type="</span><span class="n">text</span><span class="s">"
+    th:field="</span><span class="o">*{</span>
+    <span class="n">title</span>
+<span class="o">}</span>
+<span class="s">" th:errorclass="</span><span class="n">is</span><span class="o">-</span><span class="n">invalid</span><span class="s">" class="</span><span class="n">form</span><span class="o">-</span><span class="n">control</span><span class="s">" id="</span><span class="n">title</span><span class="s">"&gt; &lt;!-- Mostra il
+    primo messaggio di errore per questo campo --&gt; &lt;div th:if="</span><span class="err">$</span><span class="o">{</span>
+    <span class="err">#</span><span class="n">fields</span><span class="o">.</span><span class="na">hasErrors</span><span class="o">(</span><span class="err">'</span><span class="n">title</span><span class="err">'</span><span class="o">)</span>
+<span class="o">}</span>
+<span class="s">" class="</span><span class="n">invalid</span><span class="o">-</span><span class="n">feedback</span><span class="s">"&gt; &lt;span th:errors="</span><span class="o">*{</span>
+    <span class="n">title</span>
+<span class="o">}</span>
+<span class="s">"&gt;Errore titolo&lt;/span&gt; &lt;/div&gt; &lt;/div&gt; &lt;!-- CAMPO DATA INIZIO: con indicatore
+    visivo dello stato --&gt; &lt;div class="</span><span class="n">mb</span><span class="o">-</span><span class="mi">3</span><span class="s">"&gt; &lt;label for="</span><span class="n">startDate</span><span class="s">"
+    class="</span><span class="n">form</span><span class="o">-</span><span class="n">label</span><span class="s">"&gt;Data inizio *&lt;/label&gt; &lt;input type="</span><span class="n">date</span><span class="s">" th:field="</span><span class="o">*{</span>
+    <span class="n">startDate</span>
+<span class="o">}</span>
+<span class="s">" th:errorclass="</span><span class="n">is</span><span class="o">-</span><span class="n">invalid</span><span class="s">" th:classappend="</span><span class="err">$</span><span class="o">{</span>
+    <span class="err">#</span><span class="n">fields</span><span class="o">.</span><span class="na">hasErrors</span><span class="o">(</span><span class="err">'</span><span class="n">startDate</span><span class="err">'</span><span class="o">)</span>
+<span class="o">}</span>
+<span class="o">?</span> <span class="err">''</span> <span class="o">:</span> <span class="o">(</span><span class="err">$</span><span class="o">{</span>
+    <span class="n">eventFormDto</span><span class="o">.</span><span class="na">startDate</span>
+<span class="o">}</span>
+<span class="o">!=</span> <span class="kc">null</span> <span class="o">?</span> <span class="err">'</span><span class="n">is</span><span class="o">-</span><span class="n">valid</span><span class="err">'</span> <span class="o">:</span> <span class="err">''</span><span class="o">)</span><span class="s">" class="</span><span class="n">form</span><span class="o">-</span><span class="n">control</span><span class="s">" id="</span><span class="n">startDate</span><span class="s">"&gt; &lt;div th:if="</span><span class="err">$</span><span class="o">{</span>
+    <span class="err">#</span><span class="n">fields</span><span class="o">.</span><span class="na">hasErrors</span><span class="o">(</span><span class="err">'</span><span class="n">startDate</span><span class="err">'</span><span class="o">)</span>
+<span class="o">}</span>
+<span class="s">" class="</span><span class="n">invalid</span><span class="o">-</span><span class="n">feedback</span><span class="s">"&gt; &lt;span th:errors="</span><span class="o">*{</span>
+    <span class="n">startDate</span>
+<span class="o">}</span>
+<span class="s">"&gt;Errore data&lt;/span&gt; &lt;/div&gt; &lt;/div&gt; &lt;!-- CAMPO CAPIENZA: errori multipli su
+    stesso campo --&gt; &lt;div class="</span><span class="n">mb</span><span class="o">-</span><span class="mi">3</span><span class="s">"&gt; &lt;label for="</span><span class="n">capacity</span><span class="s">"
+    class="</span><span class="n">form</span><span class="o">-</span><span class="n">label</span><span class="s">"&gt;Capienza massima *&lt;/label&gt; &lt;input type="</span><span class="n">number</span><span class="s">"
+    th:field="</span><span class="o">*{</span>
+    <span class="n">capacity</span>
+<span class="o">}</span>
+<span class="s">" th:errorclass="</span><span class="n">is</span><span class="o">-</span><span class="n">invalid</span><span class="s">" class="</span><span class="n">form</span><span class="o">-</span><span class="n">control</span><span class="s">" id="</span><span class="n">capacity</span><span class="s">" min="</span><span class="mi">1</span><span class="s">"
+    max="</span><span class="mi">10000</span><span class="s">"&gt; &lt;!-- Se ci sono più errori sullo stesso campo, li mostro tutti
+    --&gt; &lt;div th:if="</span><span class="err">$</span><span class="o">{</span>
+    <span class="err">#</span><span class="n">fields</span><span class="o">.</span><span class="na">hasErrors</span><span class="o">(</span><span class="err">'</span><span class="n">capacity</span><span class="err">'</span><span class="o">)</span>
+<span class="o">}</span>
+<span class="s">" class="</span><span class="n">invalid</span><span class="o">-</span><span class="n">feedback</span><span class="s">"&gt; &lt;ul class="</span><span class="n">mb</span><span class="o">-</span><span class="mi">0</span> <span class="n">ps</span><span class="o">-</span><span class="mi">3</span><span class="s">"&gt; &lt;li th:each="</span><span class="n">err</span> <span class="o">:</span> <span class="err">$</span><span class="o">{</span>
+    <span class="err">#</span><span class="n">fields</span><span class="o">.</span><span class="na">errors</span><span class="o">(</span><span class="err">'</span><span class="n">capacity</span><span class="err">'</span><span class="o">)</span>
+<span class="o">}</span>
+<span class="s">" th:text="</span><span class="err">$</span><span class="o">{</span>
+    <span class="n">err</span>
+<span class="o">}</span>
+<span class="s">"&gt;Errore&lt;/li&gt; &lt;/ul&gt; &lt;/div&gt; &lt;/div&gt; &lt;button type="</span><span class="n">submit</span><span class="s">" class="</span><span class="n">btn</span>
+    <span class="n">btn</span><span class="o">-</span><span class="n">primary</span><span class="err">"</span><span class="o">&gt;</span><span class="nc">Crea</span> <span class="nc">Evento</span><span class="o">&lt;/</span><span class="n">button</span><span class="o">&gt;</span> <span class="o">&lt;/</span><span class="n">form</span><span class="o">&gt;</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
         </article>
 

@@ -157,74 +157,150 @@
 66
 67
 68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
 </pre></td><td class="rouge-code"><pre><span class="cm">/* Implemento un TypeLocator restrittivo che blocca l'accesso alle classi
     pericolose. Il TypeLocator è il componente SpEL responsabile di risolvere
     T(java.lang.Runtime): sostituendolo con uno personalizzato, posso bloccare
     selettivamente le classi. */</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">RestrictedTypeLocator</span> <span class="kd">implements</span> <span class="nc">TypeLocator</span> <span class="o">{</span> <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span>
-    <span class="nc">Set</span>
-<span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span>
-    <span class="no">BLOCKED_PACKAGES</span> <span class="o">=</span> <span class="nc">Set</span><span class="o">.</span><span class="na">of</span><span class="o">(</span> <span class="s">"java.lang.Runtime"</span><span class="o">,</span> <span class="s">"java.lang.ProcessBuilder"</span><span class="o">,</span>
-        <span class="s">"java.lang.Process"</span><span class="o">,</span> <span class="s">"java.lang.reflect"</span><span class="o">,</span> <span class="s">"java.lang.ClassLoader"</span><span class="o">,</span>
-        <span class="s">"sun.misc.Unsafe"</span><span class="o">,</span> <span class="s">"java.io.File"</span><span class="o">,</span> <span class="s">"java.nio.file"</span><span class="o">,</span> <span class="s">"java.net.URL"</span><span class="o">,</span>
-        <span class="s">"java.net.Socket"</span> <span class="o">);</span> <span class="nd">@Override</span> <span class="kd">public</span> <span class="nc">Class</span>
-    <span class="o">&lt;?&gt;</span>
-        <span class="n">findType</span><span class="o">(</span><span class="nc">String</span> <span class="n">typeName</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">EvaluationException</span> <span class="o">{</span> <span class="c1">// Blocco</span>
-            <span class="n">l</span><span class="err">'</span><span class="n">accesso</span> <span class="n">a</span> <span class="n">qualsiasi</span> <span class="n">classe</span> <span class="n">nei</span> <span class="kn">package</span> <span class="nn">pericolosi</span> <span class="nf">for</span> <span class="o">(</span><span class="nc">String</span>
-            <span class="n">blocked</span> <span class="o">:</span> <span class="no">BLOCKED_PACKAGES</span><span class="o">)</span> <span class="o">{</span> <span class="k">if</span> <span class="o">(</span><span class="n">typeName</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="n">blocked</span><span class="o">))</span> <span class="o">{</span>
-            <span class="k">throw</span> <span class="k">new</span> <span class="nf">EvaluationException</span><span class="o">(</span> <span class="s">"Accesso negato alla classe: "</span> <span class="o">+</span>
-            <span class="n">typeName</span> <span class="o">+</span> <span class="s">". Tipo non consentito nel contesto sandbox."</span><span class="o">);</span> <span class="o">}</span> <span class="o">}</span> <span class="k">try</span> <span class="o">{</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">RestrictedTypeLocator</span> <span class="kd">implements</span> <span class="nc">TypeLocator</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">Set</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="no">BLOCKED_PACKAGES</span> <span class="o">=</span> <span class="nc">Set</span><span class="o">.</span><span class="na">of</span><span class="o">(</span>
+        <span class="s">"java.lang.Runtime"</span><span class="o">,</span> <span class="s">"java.lang.ProcessBuilder"</span><span class="o">,</span> <span class="s">"java.lang.Process"</span><span class="o">,</span>
+        <span class="s">"java.lang.reflect"</span><span class="o">,</span> <span class="s">"java.lang.ClassLoader"</span><span class="o">,</span> <span class="s">"sun.misc.Unsafe"</span><span class="o">,</span>
+        <span class="s">"java.io.File"</span><span class="o">,</span> <span class="s">"java.nio.file"</span><span class="o">,</span> <span class="s">"java.net.URL"</span><span class="o">,</span> <span class="s">"java.net.Socket"</span> <span class="o">);</span>
+    <span class="nd">@Override</span> <span class="kd">public</span> <span class="nc">Class</span><span class="o">&lt;?&gt;</span> <span class="n">findType</span><span class="o">(</span><span class="nc">String</span> <span class="n">typeName</span><span class="o">)</span> <span class="kd">throws</span>
+        <span class="nc">EvaluationException</span> <span class="o">{</span>
+        <span class="c1">// Blocco l'accesso a qualsiasi classe nei package pericolosi for</span>
+            <span class="o">(</span><span class="nc">String</span> <span class="n">blocked</span> <span class="o">:</span> <span class="no">BLOCKED_PACKAGES</span><span class="o">)</span>
+        <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">typeName</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="n">blocked</span><span class="o">))</span> <span class="o">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nf">EvaluationException</span><span class="o">(</span> <span class="s">"Accesso negato alla classe: "</span> <span class="o">+</span>
+                    <span class="n">typeName</span> <span class="o">+</span> <span class="s">". Tipo non consentito nel contesto sandbox."</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">try</span> <span class="o">{</span>
             <span class="k">return</span> <span class="nc">ClassUtils</span><span class="o">.</span><span class="na">forName</span><span class="o">(</span><span class="n">typeName</span><span class="o">,</span>
-            <span class="nc">ClassUtils</span><span class="o">.</span><span class="na">getDefaultClassLoader</span><span class="o">());</span> <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">ClassNotFoundException</span>
-            <span class="n">e</span><span class="o">)</span> <span class="o">{</span> <span class="k">throw</span> <span class="k">new</span> <span class="nc">EvaluationException</span><span class="o">(</span><span class="s">"Classe non trovata: "</span> <span class="o">+</span>
-            <span class="n">typeName</span><span class="o">);</span> <span class="o">}</span> <span class="o">}</span> <span class="o">}</span>
-        <span class="cm">/* Configuro il contesto di valutazione SpEL sandbox per il motore del
-            CMS: */</span>
-        <span class="nd">@Configuration</span> <span class="kd">public</span> <span class="kd">class</span> <span class="nc">SpelSandboxConfig</span> <span class="o">{</span> <span class="nd">@Bean</span> <span class="kd">public</span>
-            <span class="nc">SpelSandboxEvaluator</span> <span class="nf">spelSandboxEvaluator</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="k">new</span>
-            <span class="nc">SpelSandboxEvaluator</span><span class="o">();</span> <span class="o">}</span> <span class="o">}</span> <span class="nd">@Service</span> <span class="kd">public</span> <span class="kd">class</span>
-            <span class="nc">SpelSandboxEvaluator</span> <span class="o">{</span> <span class="kd">private</span> <span class="kd">final</span> <span class="nc">SpelExpressionParser</span> <span class="n">parser</span> <span class="o">=</span>
-            <span class="k">new</span> <span class="nf">SpelExpressionParser</span><span class="o">();</span> <span class="kd">public</span> <span class="nc">Object</span> <span class="nf">evaluate</span><span class="o">(</span><span class="nc">String</span>
-            <span class="n">expression</span><span class="o">,</span> <span class="nc">Map</span>
-        <span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">Object</span><span class="o">&gt;</span>
-            <span class="n">variables</span><span class="o">)</span> <span class="o">{</span> <span class="nc">StandardEvaluationContext</span> <span class="n">context</span> <span class="o">=</span> <span class="k">new</span>
-                <span class="nc">StandardEvaluationContext</span><span class="o">();</span> <span class="c1">// Sostituisco il TypeLocator di</span>
-                <span class="k">default</span> <span class="n">con</span> <span class="n">quello</span> <span class="n">restrittivo</span> <span class="n">context</span><span class="o">.</span><span class="na">setTypeLocator</span><span class="o">(</span><span class="k">new</span>
-                <span class="nc">RestrictedTypeLocator</span><span class="o">());</span> <span class="c1">// Imposto solo le variabili</span>
-                <span class="n">esplicitamente</span> <span class="nl">consentite:</span> <span class="n">zero</span> <span class="n">bean</span> <span class="nc">Spring</span> <span class="n">accessibili</span>
-                <span class="n">variables</span><span class="o">.</span><span class="na">forEach</span><span class="o">(</span><span class="nl">context:</span><span class="o">:</span><span class="n">setVariable</span><span class="o">);</span> <span class="c1">// NON chiamo</span>
-                <span class="n">context</span><span class="o">.</span><span class="na">setBeanResolver</span><span class="o">():</span> <span class="n">impedisco</span> <span class="n">l</span><span class="err">'</span><span class="n">accesso</span> <span class="n">ai</span> <span class="n">bean</span> <span class="nc">Spring</span>
-                <span class="k">try</span> <span class="o">{</span> <span class="nc">Expression</span> <span class="n">expr</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="na">parseExpression</span><span class="o">(</span><span class="n">expression</span><span class="o">);</span>
-                <span class="k">return</span> <span class="n">expr</span><span class="o">.</span><span class="na">getValue</span><span class="o">(</span><span class="n">context</span><span class="o">);</span> <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">EvaluationException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-                <span class="n">log</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">"Espressione SpEL bloccata: '{}' - Motivo: {}"</span><span class="o">,</span>
-                <span class="n">expression</span><span class="o">,</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span> <span class="k">throw</span> <span class="k">new</span>
-                <span class="nc">SecurityException</span><span class="o">(</span><span class="s">"Espressione non consentita: "</span> <span class="o">+</span>
-                <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span> <span class="o">}</span> <span class="o">}</span> <span class="o">}</span>
-            <span class="cm">/* Uso il valutatore sandbox nel servizio del CMS: */</span>
-            <span class="nd">@Service</span> <span class="kd">public</span> <span class="kd">class</span> <span class="nc">CmsTemplateService</span> <span class="o">{</span> <span class="nd">@Autowired</span> <span class="kd">private</span>
-                <span class="nc">SpelSandboxEvaluator</span> <span class="n">sandbox</span><span class="o">;</span> <span class="kd">public</span> <span class="nc">String</span>
-                <span class="nf">renderCmsBlock</span><span class="o">(</span><span class="nc">CmsBlock</span> <span class="n">block</span><span class="o">,</span> <span class="nc">PageContext</span> <span class="n">pageContext</span><span class="o">)</span> <span class="o">{</span> <span class="c1">//</span>
-                <span class="nc">Valuto</span> <span class="n">le</span> <span class="n">espressioni</span> <span class="nc">SpEL</span> <span class="n">presenti</span> <span class="n">nel</span> <span class="n">template</span> <span class="no">CMS</span> <span class="n">in</span> <span class="n">modo</span>
-                <span class="n">sicuro</span> <span class="nc">Map</span>
-            <span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">Object</span><span class="o">&gt;</span>
-                <span class="n">safeVariables</span> <span class="o">=</span> <span class="nc">Map</span><span class="o">.</span><span class="na">of</span><span class="o">(</span> <span class="s">"page"</span><span class="o">,</span> <span class="n">pageContext</span><span class="o">.</span><span class="na">getPageData</span><span class="o">(),</span> <span class="c1">//</span>
-                    <span class="nc">Solo</span> <span class="n">i</span> <span class="n">dati</span> <span class="n">della</span> <span class="n">pagina</span> <span class="s">"user"</span><span class="o">,</span>
-                    <span class="n">pageContext</span><span class="o">.</span><span class="na">getPublicUserData</span><span class="o">()</span> <span class="c1">// Solo i dati pubblici</span>
-                    <span class="n">dell</span><span class="err">'</span><span class="n">utente</span> <span class="c1">// NON espongo: applicationContext, environment,</span>
-                    <span class="n">system</span> <span class="n">properties</span> <span class="o">);</span> <span class="c1">// Processo le espressioni ${...} nel</span>
-                    <span class="n">contenuto</span> <span class="n">del</span> <span class="n">blocco</span> <span class="no">CMS</span> <span class="k">return</span>
-                    <span class="nf">processExpressions</span><span class="o">(</span><span class="n">block</span><span class="o">.</span><span class="na">getContent</span><span class="o">(),</span> <span class="n">safeVariables</span><span class="o">);</span> <span class="o">}</span>
-                    <span class="kd">private</span> <span class="nc">String</span> <span class="nf">processExpressions</span><span class="o">(</span><span class="nc">String</span> <span class="n">content</span><span class="o">,</span> <span class="nc">Map</span>
-                <span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">Object</span><span class="o">&gt;</span>
-                    <span class="n">vars</span><span class="o">)</span> <span class="o">{</span> <span class="c1">// Pattern per trovare le espressioni ${...} nel</span>
-                        <span class="n">contenuto</span> <span class="n">del</span> <span class="no">CMS</span> <span class="k">return</span>
-                        <span class="n">content</span><span class="o">.</span><span class="na">replaceAll</span><span class="o">(</span><span class="s">"\\$\\{([^}]+)}"</span><span class="o">,</span> <span class="n">match</span> <span class="o">-&gt;</span> <span class="o">{</span> <span class="nc">String</span>
-                        <span class="n">expression</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="na">replaceAll</span><span class="o">(</span><span class="s">"\\$\\{|}"</span><span class="o">,</span> <span class="s">""</span><span class="o">);</span> <span class="k">try</span> <span class="o">{</span>
-                        <span class="nc">Object</span> <span class="n">result</span> <span class="o">=</span> <span class="n">sandbox</span><span class="o">.</span><span class="na">evaluate</span><span class="o">(</span><span class="n">expression</span><span class="o">,</span> <span class="n">vars</span><span class="o">);</span>
-                        <span class="k">return</span> <span class="n">result</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">?</span> <span class="n">result</span><span class="o">.</span><span class="na">toString</span><span class="o">()</span> <span class="o">:</span> <span class="s">""</span><span class="o">;</span> <span class="o">}</span> <span class="k">catch</span>
-                        <span class="o">(</span><span class="nc">SecurityException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span> <span class="k">return</span> <span class="s">"[Espressione non
-                        consentita]"</span><span class="o">;</span> <span class="c1">// Non espongo l'errore all'utente finale</span>
-                        <span class="o">}</span> <span class="o">});</span> <span class="o">}</span> <span class="o">}</span>
+                <span class="nc">ClassUtils</span><span class="o">.</span><span class="na">getDefaultClassLoader</span><span class="o">());</span>
+        <span class="o">}</span>
+        <span class="k">catch</span> <span class="o">(</span><span class="nc">ClassNotFoundException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">EvaluationException</span><span class="o">(</span><span class="s">"Classe non trovata: "</span> <span class="o">+</span> <span class="n">typeName</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="cm">/* Configuro il contesto di valutazione SpEL sandbox per il motore del CMS: */</span>
+<span class="nd">@Configuration</span> <span class="kd">public</span> <span class="kd">class</span> <span class="nc">SpelSandboxConfig</span> <span class="o">{</span>
+    <span class="nd">@Bean</span> <span class="kd">public</span> <span class="nc">SpelSandboxEvaluator</span> <span class="nf">spelSandboxEvaluator</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">SpelSandboxEvaluator</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="nd">@Service</span> <span class="kd">public</span> <span class="kd">class</span> <span class="nc">SpelSandboxEvaluator</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="nc">SpelExpressionParser</span> <span class="n">parser</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">SpelExpressionParser</span><span class="o">();</span>
+    <span class="kd">public</span> <span class="nc">Object</span> <span class="nf">evaluate</span><span class="o">(</span><span class="nc">String</span> <span class="n">expression</span><span class="o">,</span> <span class="nc">Map</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">Object</span><span class="o">&gt;</span> <span class="n">variables</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">StandardEvaluationContext</span> <span class="n">context</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">StandardEvaluationContext</span><span class="o">();</span>
+        <span class="c1">// Sostituisco il TypeLocator di default con quello restrittivo</span>
+            <span class="n">context</span><span class="o">.</span><span class="na">setTypeLocator</span><span class="o">(</span><span class="k">new</span> <span class="nc">RestrictedTypeLocator</span><span class="o">())</span>
+        <span class="o">;</span>
+        <span class="c1">// Imposto solo le variabili esplicitamente consentite: zero bean Spring</span>
+            <span class="n">accessibili</span> <span class="n">variables</span><span class="o">.</span><span class="na">forEach</span><span class="o">(</span><span class="nl">context:</span><span class="o">:</span><span class="n">setVariable</span><span class="o">)</span>
+        <span class="o">;</span>
+        <span class="c1">// NON chiamo context.setBeanResolver(): impedisco l'accesso ai bean</span>
+            <span class="nc">Spring</span> <span class="k">try</span>
+        <span class="o">{</span>
+            <span class="nc">Expression</span> <span class="n">expr</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="na">parseExpression</span><span class="o">(</span><span class="n">expression</span><span class="o">);</span>
+            <span class="k">return</span> <span class="n">expr</span><span class="o">.</span><span class="na">getValue</span><span class="o">(</span><span class="n">context</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">catch</span> <span class="o">(</span><span class="nc">EvaluationException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">log</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">"Espressione SpEL bloccata: '{
+            }
+            ' - Motivo: {
+            }
+            "</span><span class="o">,</span> <span class="n">expression</span><span class="o">,</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">SecurityException</span><span class="o">(</span><span class="s">"Espressione non consentita: "</span> <span class="o">+</span>
+                <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="cm">/* Uso il valutatore sandbox nel servizio del CMS: */</span>
+<span class="nd">@Service</span> <span class="kd">public</span> <span class="kd">class</span> <span class="nc">CmsTemplateService</span> <span class="o">{</span>
+    <span class="nd">@Autowired</span> <span class="kd">private</span> <span class="nc">SpelSandboxEvaluator</span> <span class="n">sandbox</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">renderCmsBlock</span><span class="o">(</span><span class="nc">CmsBlock</span> <span class="n">block</span><span class="o">,</span> <span class="nc">PageContext</span> <span class="n">pageContext</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// Valuto le espressioni SpEL presenti nel template CMS in modo sicuro</span>
+            <span class="nc">Map</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">Object</span><span class="o">&gt;</span> <span class="n">safeVariables</span> <span class="o">=</span> <span class="nc">Map</span><span class="o">.</span><span class="na">of</span><span class="o">(</span> <span class="s">"page"</span><span class="o">,</span>
+            <span class="n">pageContext</span><span class="o">.</span><span class="na">getPageData</span><span class="o">(),</span> <span class="c1">// Solo i dati della pagina "user",</span>
+            <span class="n">pageContext</span><span class="o">.</span><span class="na">getPublicUserData</span><span class="o">()</span> <span class="c1">// Solo i dati pubblici dell'utente</span>
+            <span class="c1">// NON espongo: applicationContext, environment, system properties )</span>
+        <span class="o">;</span>
+        <span class="c1">// Processo le espressioni $</span>
+        <span class="o">{</span>
+            <span class="o">...</span>
+        <span class="o">}</span>
+        <span class="n">nel</span> <span class="n">contenuto</span> <span class="n">del</span> <span class="n">blocco</span> <span class="no">CMS</span> <span class="k">return</span>
+            <span class="nf">processExpressions</span><span class="o">(</span><span class="n">block</span><span class="o">.</span><span class="na">getContent</span><span class="o">(),</span> <span class="n">safeVariables</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="nf">processExpressions</span><span class="o">(</span><span class="nc">String</span> <span class="n">content</span><span class="o">,</span> <span class="nc">Map</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">Object</span><span class="o">&gt;</span> <span class="n">vars</span><span class="o">)</span>
+        <span class="o">{</span>
+        <span class="c1">// Pattern per trovare le espressioni $</span>
+        <span class="o">{</span>
+            <span class="o">...</span>
+        <span class="o">}</span>
+        <span class="n">nel</span> <span class="n">contenuto</span> <span class="n">del</span> <span class="no">CMS</span> <span class="k">return</span> <span class="n">content</span><span class="o">.</span><span class="na">replaceAll</span><span class="o">(</span><span class="s">"\\$\\{
+            ([^
+        }
+        ]+)
+    }
+    "</span><span class="o">,</span> <span class="n">match</span> <span class="o">-&gt;</span> <span class="o">{</span>
+        <span class="nc">String</span> <span class="n">expression</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="na">replaceAll</span><span class="o">(</span><span class="s">"\\$\\{
+            |
+        }
+        "</span><span class="o">,</span> <span class="s">""</span><span class="o">);</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="nc">Object</span> <span class="n">result</span> <span class="o">=</span> <span class="n">sandbox</span><span class="o">.</span><span class="na">evaluate</span><span class="o">(</span><span class="n">expression</span><span class="o">,</span> <span class="n">vars</span><span class="o">);</span>
+            <span class="k">return</span> <span class="n">result</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">?</span> <span class="n">result</span><span class="o">.</span><span class="na">toString</span><span class="o">()</span> <span class="o">:</span> <span class="s">""</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">catch</span> <span class="o">(</span><span class="nc">SecurityException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="s">"[Espressione non consentita]"</span><span class="o">;</span>
+            <span class="c1">// Non espongo l'errore all'utente finale</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="o">);</span>
+<span class="o">}</span>
+<span class="o">}</span>
 </pre></td></tr></tbody></table></code></pre></div></div>
 
         </article>

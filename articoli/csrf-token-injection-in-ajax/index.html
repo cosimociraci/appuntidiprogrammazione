@@ -89,70 +89,229 @@
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 
-<pre><code class="language-thymeleaf">&lt;!-- Inserisco i meta-tag CSRF nel layout base: disponibili in tutte le pagine.
-    Thymeleaf inietta i valori correnti del token generato da Spring Security
-    per questa sessione. --&gt;
-&lt;head&gt;
-    &lt;meta name="_csrf" th:content="${_csrf.token}"&gt;
-        &lt;meta name="_csrf_header" th:content="${_csrf.headerName}"&gt;
-            &lt;!-- Oppure uso th:attr per sicurezza se il nome dell'attributo è
-                dinamico: --&gt;
-            &lt;meta th:attr="name=${_csrf.parameterName},content=${_csrf.token}"&gt;
-            &lt;/head&gt;
-            /* Modulo JavaScript centralizzato (csrf.js): leggo i meta-tag una
-                sola volta e li rendo disponibili a tutti i moduli fetch della
-                pagina. */
-            const CsrfUtils = (() =&gt; { // Leggo i valori dal DOM una sola volta
-                al caricamento della pagina const tokenElement =
-                document.querySelector('meta[name="_csrf"]'); const
-                headerElement =
-                document.querySelector('meta[name="_csrf_header"]'); if
-                (!tokenElement || !headerElement) { console.error('Meta-tag CSRF
-                non trovati: le richieste POST falliranno con 403.'); } const
-                token = tokenElement?.content; const headerName =
-                headerElement?.content;
-            /* Wrapper fetch con CSRF automatico: sostituzione drop-in di
-                window.fetch per tutte le richieste mutanti. */
-            function secureFetch(url, options = {}) { const method =
-                (options.method || 'GET').toUpperCase(); // GET e HEAD non
-                necessitano di CSRF (idempotenti per design) if (['GET', 'HEAD',
-                'OPTIONS'].includes(method)) { return fetch(url, options); } //
-                Aggiungo il token CSRF a tutte le richieste mutanti const
-                headers = new Headers(options.headers || {});
-                headers.set(headerName, token); return fetch(url, { ...options,
-                headers }); }
-            /* Funzione helper per form AJAX: serializza il FormData e aggiunge
-                il CSRF. */
-            function submitForm(form) { const formData = new FormData(form); //
-                Spring Security accetta il token anche come parametro di form fo
-                rmData.append(document.querySelector('meta[name="_csrf"]')?.getA
-                ttribute('name') || '_csrf', token); return fetch(form.action, {
-                method: form.method || 'POST', body: formData // NON imposto
-                Content-Type: il browser lo fa automaticamente con il boundary
-                multipart }); } return { token, headerName, secureFetch,
-                submitForm }; })();
-            /* Esempio d'uso: */
-            async function deleteProduct(productId) { const response = await
-                CsrfUtils.secureFetch(`/api/products/${productId}`, { method:
-                'DELETE' }); if (response.ok) {
-                document.getElementById(`product-${productId}`).remove(); } else
-                if (response.status === 403) { console.error('CSRF token non
-                valido o scaduto: ricarica la pagina.'); } }
-            /* Per HTMX, configuro il token CSRF globalmente: */
-            document.addEventListener('htmx:configRequest', (event) =&gt; { // HTMX
-                legge i meta-tag automaticamente se configurato correttamente
-                event.detail.headers[CsrfUtils.headerName] = CsrfUtils.token;
-                });
-            /* Configurazione Spring Security per accettare il token sia come
-                header che come parametro: */
-            @Configuration public class SecurityConfig { @Bean public
-                SecurityFilterChain filterChain(HttpSecurity http) throws
-                Exception { http .csrf(csrf -&gt; csrf .csrfTokenRepository(CookieC
-                srfTokenRepository.withHttpOnlyFalse()) // Permette la lettura
-                del token via JS per SPA .csrfTokenRequestHandler(new
-                CsrfTokenRequestAttributeHandler()) ) // ... resto della
-                configurazione return http.build(); } }
-</code></pre>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+</pre></td><td class="rouge-code"><pre><span class="o">&lt;!--</span> <span class="nc">Inserisco</span> <span class="n">i</span> <span class="n">meta</span><span class="o">-</span><span class="n">tag</span> <span class="no">CSRF</span> <span class="n">nel</span> <span class="n">layout</span> <span class="nl">base:</span> <span class="n">disponibili</span> <span class="n">in</span> <span class="n">tutte</span> <span class="n">le</span> <span class="n">pagine</span><span class="o">.</span>
+    <span class="nc">Thymeleaf</span> <span class="n">inietta</span> <span class="n">i</span> <span class="n">valori</span> <span class="n">correnti</span> <span class="n">del</span> <span class="n">token</span> <span class="n">generato</span> <span class="n">da</span> <span class="nc">Spring</span> <span class="nc">Security</span>
+    <span class="n">per</span> <span class="n">questa</span> <span class="n">sessione</span><span class="o">.</span> <span class="o">--&gt;</span> <span class="o">&lt;</span><span class="n">head</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">meta</span> <span class="n">name</span><span class="o">=</span><span class="s">"_csrf"</span> <span class="nl">th:</span><span class="n">content</span><span class="o">=</span><span class="s">"${
+    _csrf.token
+}
+"</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">meta</span> <span class="n">name</span><span class="o">=</span><span class="s">"_csrf_header"</span> <span class="nl">th:</span><span class="n">content</span><span class="o">=</span><span class="s">"${
+    _csrf.headerName
+}
+"</span><span class="o">&gt;</span> <span class="o">&lt;!--</span> <span class="nc">Oppure</span> <span class="n">uso</span> <span class="nl">th:</span><span class="n">attr</span> <span class="n">per</span> <span class="n">sicurezza</span> <span class="n">se</span> <span class="n">il</span> <span class="n">nome</span> <span class="n">dell</span><span class="err">'</span><span class="n">attributo</span> <span class="n">è</span> <span class="nl">dinamico:</span>
+    <span class="o">--&gt;</span> <span class="o">&lt;</span><span class="n">meta</span> <span class="nl">th:</span><span class="n">attr</span><span class="o">=</span><span class="s">"name=${
+    _csrf.parameterName
+}
+,content=${
+    _csrf.token
+}
+"</span><span class="o">&gt;</span> <span class="o">&lt;/</span><span class="n">head</span><span class="o">&gt;</span>
+<span class="cm">/* Modulo JavaScript centralizzato (csrf.js): leggo i meta-tag una sola volta e
+    li rendo disponibili a tutti i moduli fetch della pagina. */</span>
+<span class="kd">const</span> <span class="nc">CsrfUtils</span> <span class="o">=</span> <span class="o">(()</span> <span class="o">=&gt;</span> <span class="o">{</span>
+    <span class="c1">// Leggo i valori dal DOM una sola volta al caricamento della pagina const</span>
+        <span class="n">tokenElement</span> <span class="o">=</span> <span class="n">document</span><span class="o">.</span><span class="na">querySelector</span><span class="o">(</span><span class="err">'</span><span class="n">meta</span><span class="o">[</span><span class="n">name</span><span class="o">=</span><span class="s">"_csrf"</span><span class="o">]</span><span class="err">'</span><span class="o">)</span>
+    <span class="o">;</span>
+    <span class="kd">const</span> <span class="n">headerElement</span> <span class="o">=</span> <span class="n">document</span><span class="o">.</span><span class="na">querySelector</span><span class="o">(</span><span class="err">'</span><span class="n">meta</span><span class="o">[</span><span class="n">name</span><span class="o">=</span><span class="s">"_csrf_header"</span><span class="o">]</span><span class="err">'</span><span class="o">);</span>
+    <span class="k">if</span> <span class="o">(!</span><span class="n">tokenElement</span> <span class="o">||</span> <span class="o">!</span><span class="n">headerElement</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">console</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="err">'</span><span class="nc">Meta</span><span class="o">-</span><span class="n">tag</span> <span class="no">CSRF</span> <span class="n">non</span> <span class="nl">trovati:</span> <span class="n">le</span> <span class="n">richieste</span> <span class="no">POST</span> <span class="n">falliranno</span>
+            <span class="n">con</span> <span class="mi">403</span><span class="o">.</span><span class="err">'</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="kd">const</span> <span class="n">token</span> <span class="o">=</span> <span class="n">tokenElement</span><span class="o">?.</span><span class="na">content</span><span class="o">;</span>
+    <span class="kd">const</span> <span class="n">headerName</span> <span class="o">=</span> <span class="n">headerElement</span><span class="o">?.</span><span class="na">content</span><span class="o">;</span>
+    <span class="cm">/* Wrapper fetch con CSRF automatico: sostituzione drop-in di window.fetch
+        per tutte le richieste mutanti. */</span>
+    <span class="n">function</span> <span class="nf">secureFetch</span><span class="o">(</span><span class="n">url</span><span class="o">,</span> <span class="n">options</span> <span class="o">=</span> <span class="o">{</span>
+    <span class="o">}</span>
+    <span class="o">)</span> <span class="o">{</span>
+        <span class="kd">const</span> <span class="n">method</span> <span class="o">=</span> <span class="o">(</span><span class="n">options</span><span class="o">.</span><span class="na">method</span> <span class="o">||</span> <span class="err">'</span><span class="no">GET</span><span class="err">'</span><span class="o">).</span><span class="na">toUpperCase</span><span class="o">();</span>
+        <span class="c1">// GET e HEAD non necessitano di CSRF (idempotenti per design) if</span>
+            <span class="o">([</span><span class="err">'</span><span class="no">GET</span><span class="err">'</span><span class="o">,</span> <span class="err">'</span><span class="no">HEAD</span><span class="err">'</span><span class="o">,</span> <span class="err">'</span><span class="no">OPTIONS</span><span class="err">'</span><span class="o">].</span><span class="na">includes</span><span class="o">(</span><span class="n">method</span><span class="o">))</span>
+        <span class="o">{</span>
+            <span class="k">return</span> <span class="nf">fetch</span><span class="o">(</span><span class="n">url</span><span class="o">,</span> <span class="n">options</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="c1">// Aggiungo il token CSRF a tutte le richieste mutanti const headers =</span>
+            <span class="k">new</span> <span class="nf">Headers</span><span class="o">(</span><span class="n">options</span><span class="o">.</span><span class="na">headers</span> <span class="o">||</span>
+        <span class="o">{</span>
+        <span class="o">}</span>
+        <span class="o">);</span>
+        <span class="n">headers</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">headerName</span><span class="o">,</span> <span class="n">token</span><span class="o">);</span>
+        <span class="k">return</span> <span class="nf">fetch</span><span class="o">(</span><span class="n">url</span><span class="o">,</span> <span class="o">{</span>
+            <span class="o">...</span><span class="na">options</span><span class="o">,</span> <span class="n">headers</span>
+        <span class="o">}</span>
+        <span class="o">);</span>
+    <span class="o">}</span>
+    <span class="cm">/* Funzione helper per form AJAX: serializza il FormData e aggiunge il CSRF.
+        */</span>
+    <span class="n">function</span> <span class="nf">submitForm</span><span class="o">(</span><span class="n">form</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">const</span> <span class="n">formData</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">FormData</span><span class="o">(</span><span class="n">form</span><span class="o">);</span>
+        <span class="c1">// Spring Security accetta il token anche come parametro di form formDat</span>
+            <span class="n">a</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">document</span><span class="o">.</span><span class="na">querySelector</span><span class="o">(</span><span class="err">'</span><span class="n">meta</span><span class="o">[</span><span class="n">name</span><span class="o">=</span><span class="s">"_csrf"</span><span class="o">]</span><span class="err">'</span><span class="o">)?.</span><span class="na">getAttribute</span><span class="o">(</span>
+            <span class="err">'</span><span class="n">name</span><span class="err">'</span><span class="o">)</span> <span class="o">||</span> <span class="err">'</span><span class="n">_csrf</span><span class="err">'</span><span class="o">,</span> <span class="n">token</span><span class="o">)</span>
+        <span class="o">;</span>
+        <span class="k">return</span> <span class="nf">fetch</span><span class="o">(</span><span class="n">form</span><span class="o">.</span><span class="na">action</span><span class="o">,</span> <span class="o">{</span>
+            <span class="nl">method:</span> <span class="n">form</span><span class="o">.</span><span class="na">method</span> <span class="o">||</span> <span class="err">'</span><span class="no">POST</span><span class="err">'</span><span class="o">,</span> <span class="nl">body:</span> <span class="n">formData</span>
+            <span class="c1">// NON imposto Content-Type: il browser lo fa automaticamente con il</span>
+                <span class="n">boundary</span> <span class="n">multipart</span>
+        <span class="o">}</span>
+        <span class="o">);</span>
+    <span class="o">}</span>
+    <span class="k">return</span> <span class="o">{</span>
+        <span class="n">token</span><span class="o">,</span> <span class="n">headerName</span><span class="o">,</span> <span class="n">secureFetch</span><span class="o">,</span> <span class="n">submitForm</span>
+    <span class="o">}</span>
+    <span class="o">;</span>
+<span class="o">}</span>
+<span class="o">)();</span>
+<span class="cm">/* Esempio d'uso: */</span>
+<span class="n">async</span> <span class="n">function</span> <span class="nf">deleteProduct</span><span class="o">(</span><span class="n">productId</span><span class="o">)</span> <span class="o">{</span>
+    <span class="kd">const</span> <span class="n">response</span> <span class="o">=</span> <span class="n">await</span> <span class="nc">CsrfUtils</span><span class="o">.</span><span class="na">secureFetch</span><span class="o">(</span><span class="err">`</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">products</span><span class="o">/</span><span class="err">$</span><span class="o">{</span>
+        <span class="n">productId</span>
+    <span class="o">}</span>
+    <span class="err">`</span><span class="o">,</span> <span class="o">{</span>
+        <span class="nl">method:</span> <span class="err">'</span><span class="no">DELETE</span><span class="err">'</span>
+    <span class="o">}</span>
+    <span class="o">);</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">response</span><span class="o">.</span><span class="na">ok</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">document</span><span class="o">.</span><span class="na">getElementById</span><span class="o">(</span><span class="err">`</span><span class="n">product</span><span class="o">-</span><span class="err">$</span><span class="o">{</span>
+            <span class="n">productId</span>
+        <span class="o">}</span>
+        <span class="err">`</span><span class="o">).</span><span class="na">remove</span><span class="o">();</span>
+    <span class="o">}</span>
+    <span class="k">else</span> <span class="nf">if</span> <span class="o">(</span><span class="n">response</span><span class="o">.</span><span class="na">status</span> <span class="o">===</span> <span class="mi">403</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">console</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="err">'</span><span class="no">CSRF</span> <span class="n">token</span> <span class="n">non</span> <span class="n">valido</span> <span class="n">o</span> <span class="nl">scaduto:</span> <span class="n">ricarica</span> <span class="n">la</span> <span class="n">pagina</span><span class="o">.</span><span class="err">'</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="cm">/* Per HTMX, configuro il token CSRF globalmente: */</span>
+<span class="n">document</span><span class="o">.</span><span class="na">addEventListener</span><span class="o">(</span><span class="err">'</span><span class="nl">htmx:</span><span class="n">configRequest</span><span class="err">'</span><span class="o">,</span> <span class="o">(</span><span class="n">event</span><span class="o">)</span> <span class="o">=&gt;</span> <span class="o">{</span>
+    <span class="c1">// HTMX legge i meta-tag automaticamente se configurato correttamente</span>
+        <span class="n">event</span><span class="o">.</span><span class="na">detail</span><span class="o">.</span><span class="na">headers</span><span class="o">[</span><span class="nc">CsrfUtils</span><span class="o">.</span><span class="na">headerName</span><span class="o">]</span> <span class="o">=</span> <span class="nc">CsrfUtils</span><span class="o">.</span><span class="na">token</span>
+    <span class="o">;</span>
+<span class="o">}</span>
+<span class="o">);</span>
+<span class="cm">/* Configurazione Spring Security per accettare il token sia come header che
+    come parametro: */</span>
+<span class="nd">@Configuration</span> <span class="kd">public</span> <span class="kd">class</span> <span class="nc">SecurityConfig</span> <span class="o">{</span>
+    <span class="nd">@Bean</span> <span class="kd">public</span> <span class="nc">SecurityFilterChain</span> <span class="nf">filterChain</span><span class="o">(</span><span class="nc">HttpSecurity</span> <span class="n">http</span><span class="o">)</span> <span class="kd">throws</span>
+        <span class="nc">Exception</span> <span class="o">{</span>
+        <span class="n">http</span> <span class="o">.</span><span class="na">csrf</span><span class="o">(</span><span class="n">csrf</span> <span class="o">-&gt;</span> <span class="n">csrf</span>
+            <span class="o">.</span><span class="na">csrfTokenRepository</span><span class="o">(</span><span class="nc">CookieCsrfTokenRepository</span><span class="o">.</span><span class="na">withHttpOnlyFalse</span><span class="o">())</span>
+        <span class="c1">// Permette la lettura del token via JS per SPA</span>
+            <span class="o">.</span><span class="na">csrfTokenRequestHandler</span><span class="o">(</span><span class="k">new</span> <span class="nc">CsrfTokenRequestAttributeHandler</span><span class="o">())</span> <span class="o">)</span>
+            <span class="c1">// ... resto della configurazione</span>
+        <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="na">build</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
         </article>
 

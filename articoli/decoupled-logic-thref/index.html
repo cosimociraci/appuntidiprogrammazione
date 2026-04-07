@@ -89,139 +89,213 @@
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 
-<pre><code class="language-thymeleaf">/* STRUTTURA DEL PROGETTO con Decoupled Logic: src/main/resources/templates/ ├──
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+</pre></td><td class="rouge-code"><pre><span class="cm">/* STRUTTURA DEL PROGETTO con Decoupled Logic: src/main/resources/templates/ ├──
     user-profile.html (HTML puro: il designer lo modifica liberamente) └──
-    user-profile.th.xml (Logica Thymeleaf: separata dall'HTML) */
-/* FILE: user-profile.html (HTML puro, visualizzabile in qualsiasi browser) */
-//
-&lt;!DOCTYPE html&gt;
-//
-&lt;html&gt;
-    //
-    &lt;head&gt;
-        &lt;title&gt;
-            Profilo Utente
-        &lt;/title&gt;
-    &lt;/head&gt;
-    //
-    &lt;body&gt;
-        //
-        &lt;div id="user-card"&gt;
-            //
-            &lt;img id="user-avatar" src="/img/placeholder.png" alt="Avatar"&gt;
-                //
-                &lt;h1 id="user-name"&gt;
-                    Nome Cognome
-                &lt;/h1&gt;
-                //
-                &lt;span id="user-role" class="badge badge-primary"&gt;
-                    Ruolo
-                &lt;/span&gt;
-                //
-                &lt;p id="user-bio"&gt;
-                    Biografia dell'utente placeholder...
-                &lt;/p&gt;
-                //
-                &lt;ul id="order-list"&gt;
-                    //
-                    &lt;li class="order-item"&gt;
-                        //
-                        &lt;span class="order-id"&gt;
-                            #00001
-                        &lt;/span&gt;
-                        //
-                        &lt;span class="order-date"&gt;
-                            01/01/2026
-                        &lt;/span&gt;
-                        //
-                        &lt;span class="order-total"&gt;
-                            € 100,00
-                        &lt;/span&gt;
-                        //
-                    &lt;/li&gt;
-                    //
-                &lt;/ul&gt;
-                //
-                &lt;div id="no-orders" style="display:none"&gt;
-                    //
-                    &lt;p&gt;
-                        Nessun ordine presente
-                    &lt;/p&gt;
-                    //
-                &lt;/div&gt;
-                //
-            &lt;/div&gt;
-            //
-        &lt;/body&gt;
-        //
-    &lt;/html&gt;
+    user-profile.th.xml (Logica Thymeleaf: separata dall'HTML) */</span>
+<span class="cm">/* FILE: user-profile.html (HTML puro, visualizzabile in qualsiasi browser) */</span>
+<span class="c1">// &lt;!DOCTYPE html&gt; // &lt;html&gt; // &lt;head&gt;&lt;title&gt;Profilo Utente&lt;/title&gt;&lt;/head&gt; //</span>
+    <span class="o">&lt;</span><span class="n">body</span><span class="o">&gt;</span> <span class="c1">// &lt;div id="user-card"&gt; // &lt;img id="user-avatar"</span>
+    <span class="n">src</span><span class="o">=</span><span class="s">"/img/placeholder.png"</span> <span class="n">alt</span><span class="o">=</span><span class="s">"Avatar"</span><span class="o">&gt;</span> <span class="c1">// &lt;h1 id="user-name"&gt;Nome</span>
+    <span class="nc">Cognome</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span> <span class="c1">// &lt;span id="user-role" class="badge</span>
+    <span class="n">badge</span><span class="o">-</span><span class="n">primary</span><span class="s">"&gt;Ruolo&lt;/span&gt; // &lt;p id="</span><span class="n">user</span><span class="o">-</span><span class="n">bio</span><span class="s">"&gt;Biografia dell'utente
+    placeholder...&lt;/p&gt; // &lt;ul id="</span><span class="n">order</span><span class="o">-</span><span class="n">list</span><span class="s">"&gt; // &lt;li class="</span><span class="n">order</span><span class="o">-</span><span class="n">item</span><span class="s">"&gt; //
+    &lt;span class="</span><span class="n">order</span><span class="o">-</span><span class="n">id</span><span class="s">"&gt;#00001&lt;/span&gt; // &lt;span
+    class="</span><span class="n">order</span><span class="o">-</span><span class="n">date</span><span class="s">"&gt;01/01/2026&lt;/span&gt; // &lt;span class="</span><span class="n">order</span><span class="o">-</span><span class="n">total</span><span class="s">"&gt;€
+    100,00&lt;/span&gt; // &lt;/li&gt; // &lt;/ul&gt; // &lt;div id="</span><span class="n">no</span><span class="o">-</span><span class="n">orders</span><span class="s">" style="</span><span class="nl">display:</span><span class="n">none</span><span class="s">"&gt;
+    // &lt;p&gt;Nessun ordine presente&lt;/p&gt; // &lt;/div&gt; // &lt;/div&gt; // &lt;/body&gt; // &lt;/html&gt;
     /* FILE: user-profile.th.xml (Logica Thymeleaf separata: usa selettori CSS
-        per riferirsi agli elementi HTML) */
-    //
-    &lt;?xml version="1.0"?&gt;
-        //
-        &lt;thlogic&gt;
-            //
-            &lt;!-- Seleziono l'elemento tramite id CSS e applico th:src e th:alt
-                --&gt;
-            //
-            &lt;attr sel="#user-avatar" th:src="@{'/api/users/' + ${user.id} +
-                '/avatar'}" th:alt="${user.name}" /&gt;
-            //   //
-            &lt;!-- Binding del testo: il designer vede "Nome Cognome", il server
-                inietta il valore reale --&gt;
-            //
-            &lt;attr sel="#user-name" th:text="${user.fullName}" /&gt;
-            //   //
-            &lt;!-- Classe CSS dinamica basata sul ruolo --&gt;
-            //
-            &lt;attr sel="#user-role" th:text="${user.role}" th:class="'badge ' +
-                ${user.roleBadgeClass}" /&gt;
-            //   //
-            &lt;!-- Testo con formattazione da Expression Object custom --&gt;
-            //
-            &lt;attr sel="#user-bio" th:text="${#strUtils.truncate(user.bio, 300)}"
-                /&gt;
-            //   //
-            &lt;!-- Iterazione sulla lista ordini: replico il primo li per ogni
-                ordine --&gt;
-            //
-            &lt;attr sel="#order-list/li" th:each="order : ${user.recentOrders}" &gt;
-                //
-                &lt;attr sel=".order-id" th:text="'#' + ${order.id}" /&gt;
-                //
-                &lt;attr sel=".order-date" th:text="${#temporals.format(order.date,
-                    'dd/MM/yyyy')}" /&gt;
-                //
-                &lt;attr sel=".order-total"
-                    th:text="${#finance.formatCurrency(order.total, 'EUR')}" /&gt;
-                //
-            &lt;/attr&gt;
-            //   //
-            &lt;!-- Mostra il messaggio se la lista è vuota --&gt;
-            //
-            &lt;attr sel="#no-orders" th:if="${user.recentOrders.isEmpty()}" /&gt;
-            //
-        &lt;/thlogic&gt;
-        /* Abilito il Decoupled Logic in Spring Boot configurando il resolver:
-            */
-        @Configuration public class ThymeleafDecoupledConfig { @Bean public
-            SpringResourceTemplateResolver templateResolver() {
-            SpringResourceTemplateResolver resolver = new
+    per riferirsi agli elementi HTML) */ // &lt;?xml version="</span><span class="mf">1.0</span><span class="s">"?&gt; // &lt;thlogic&gt;
+    // &lt;!-- Seleziono l'elemento tramite id CSS e applico th:src e th:alt --&gt; //
+    &lt;attr sel="</span><span class="err">#</span><span class="n">user</span><span class="o">-</span><span class="n">avatar</span><span class="s">" th:src="</span><span class="err">@</span>
+<span class="o">{</span>
+    <span class="err">'</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">users</span><span class="o">/</span><span class="err">'</span> <span class="o">+</span> <span class="err">$</span><span class="o">{</span>
+        <span class="n">user</span><span class="o">.</span><span class="na">id</span>
+    <span class="o">}</span>
+    <span class="o">+</span> <span class="err">'</span><span class="o">/</span><span class="n">avatar</span><span class="err">'</span>
+<span class="o">}</span>
+<span class="s">" th:alt="</span><span class="err">$</span><span class="o">{</span>
+    <span class="n">user</span><span class="o">.</span><span class="na">name</span>
+<span class="o">}</span>
+<span class="s">" /&gt;
+// // &lt;!-- Binding del testo: il designer vede "</span><span class="nc">Nome</span> <span class="nc">Cognome</span><span class="s">", il server inietta
+    il valore reale --&gt; // &lt;attr sel="</span><span class="err">#</span><span class="n">user</span><span class="o">-</span><span class="n">name</span><span class="s">" th:text="</span><span class="err">$</span>
+<span class="o">{</span>
+    <span class="n">user</span><span class="o">.</span><span class="na">fullName</span>
+<span class="o">}</span>
+<span class="s">" /&gt;
+// // &lt;!-- Classe CSS dinamica basata sul ruolo --&gt; // &lt;attr sel="</span><span class="err">#</span><span class="n">user</span><span class="o">-</span><span class="n">role</span><span class="s">"
+    th:text="</span><span class="err">$</span>
+<span class="o">{</span>
+    <span class="n">user</span><span class="o">.</span><span class="na">role</span>
+<span class="o">}</span>
+<span class="s">" th:class="</span><span class="err">'</span><span class="n">badge</span> <span class="err">'</span> <span class="o">+</span> <span class="err">$</span><span class="o">{</span>
+    <span class="n">user</span><span class="o">.</span><span class="na">roleBadgeClass</span>
+<span class="o">}</span>
+<span class="s">" /&gt;
+// // &lt;!-- Testo con formattazione da Expression Object custom --&gt; // &lt;attr
+    sel="</span><span class="err">#</span><span class="n">user</span><span class="o">-</span><span class="n">bio</span><span class="s">" th:text="</span><span class="err">$</span>
+<span class="o">{</span>
+    <span class="err">#</span><span class="n">strUtils</span><span class="o">.</span><span class="na">truncate</span><span class="o">(</span><span class="n">user</span><span class="o">.</span><span class="na">bio</span><span class="o">,</span> <span class="mi">300</span><span class="o">)</span>
+<span class="o">}</span>
+<span class="s">" /&gt;
+// // &lt;!-- Iterazione sulla lista ordini: replico il primo li per ogni ordine
+    --&gt; // &lt;attr sel="</span><span class="err">#</span><span class="n">order</span><span class="o">-</span><span class="n">list</span><span class="o">/</span><span class="n">li</span><span class="s">" th:each="</span><span class="n">order</span> <span class="o">:</span> <span class="err">$</span>
+<span class="o">{</span>
+    <span class="n">user</span><span class="o">.</span><span class="na">recentOrders</span>
+<span class="o">}</span>
+<span class="s">" &gt;
+// &lt;attr sel="</span><span class="o">.</span><span class="na">order</span><span class="o">-</span><span class="n">id</span><span class="s">" th:text="</span><span class="sc">'#'</span> <span class="o">+</span> <span class="err">$</span>
+<span class="o">{</span>
+    <span class="n">order</span><span class="o">.</span><span class="na">id</span>
+<span class="o">}</span>
+<span class="s">" /&gt;
+// &lt;attr sel="</span><span class="o">.</span><span class="na">order</span><span class="o">-</span><span class="n">date</span><span class="s">" th:text="</span><span class="err">$</span>
+<span class="o">{</span>
+    <span class="err">#</span><span class="n">temporals</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="n">order</span><span class="o">.</span><span class="na">date</span><span class="o">,</span> <span class="err">'</span><span class="n">dd</span><span class="o">/</span><span class="no">MM</span><span class="o">/</span><span class="n">yyyy</span><span class="err">'</span><span class="o">)</span>
+<span class="o">}</span>
+<span class="s">" /&gt;
+// &lt;attr sel="</span><span class="o">.</span><span class="na">order</span><span class="o">-</span><span class="n">total</span><span class="s">" th:text="</span><span class="err">$</span>
+<span class="o">{</span>
+    <span class="err">#</span><span class="n">finance</span><span class="o">.</span><span class="na">formatCurrency</span><span class="o">(</span><span class="n">order</span><span class="o">.</span><span class="na">total</span><span class="o">,</span> <span class="err">'</span><span class="no">EUR</span><span class="err">'</span><span class="o">)</span>
+<span class="o">}</span>
+<span class="s">" /&gt;
+// &lt;/attr&gt; // // &lt;!-- Mostra il messaggio se la lista è vuota --&gt; // &lt;attr
+    sel="</span><span class="err">#</span><span class="n">no</span><span class="o">-</span><span class="n">orders</span><span class="s">" th:if="</span><span class="err">$</span>
+<span class="o">{</span>
+    <span class="n">user</span><span class="o">.</span><span class="na">recentOrders</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()</span>
+<span class="o">}</span>
+<span class="s">" /&gt;
+// &lt;/thlogic&gt; /* Abilito il Decoupled Logic in Spring Boot configurando il
+    resolver: */ @Configuration public class ThymeleafDecoupledConfig
+{
+    @Bean public SpringResourceTemplateResolver templateResolver() {
+        SpringResourceTemplateResolver resolver = new
             SpringResourceTemplateResolver();
-            resolver.setPrefix("classpath:/templates/");
-            resolver.setSuffix(".html");
-            resolver.setTemplateMode(TemplateMode.HTML);
-            resolver.setUseDecoupledLogic(true); // Abilito la lettura del file
-            .th.xml parallelo resolver.setCacheable(false); // Disabilito in
-            sviluppo return resolver; } }
-        /* Il controller rimane invariato: non sa nulla della separazione
-            HTML/XML. */
-        @GetMapping("/profile/{id}") public String userProfile(@PathVariable
-            Long id, Model model) { model.addAttribute("user",
-            userService.findById(id)); return "user-profile"; // Thymeleaf
-            carica automaticamente user-profile.html + user-profile.th.xml }
-</code></pre>
+        resolver.setPrefix("</span><span class="nl">classpath:</span><span class="o">/</span><span class="n">templates</span><span class="o">/</span><span class="s">");
+        resolver.setSuffix("</span><span class="o">.</span><span class="na">html</span><span class="s">");
+        resolver.setTemplateMode(TemplateMode.HTML);
+        resolver.setUseDecoupledLogic(true);
+        // Abilito la lettura del file .th.xml parallelo
+            resolver.setCacheable(false)
+        ;
+        // Disabilito in sviluppo
+        return resolver;
+    }
+}
+/* Il controller rimane invariato: non sa nulla della separazione HTML/XML. */
+@GetMapping("</span><span class="o">/</span><span class="n">profile</span><span class="o">/{</span>
+    <span class="n">id</span>
+<span class="o">}</span>
+<span class="s">") public String userProfile(
+@PathVariable Long id, Model model) {
+    model.addAttribute("</span><span class="n">user</span><span class="s">", userService.findById(id));
+    return "</span><span class="n">user</span><span class="o">-</span><span class="n">profile</span><span class="err">"</span><span class="o">;</span>
+    <span class="c1">// Thymeleaf carica automaticamente user-profile.html + user-profile.th.xml</span>
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
         </article>
 

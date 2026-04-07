@@ -89,78 +89,159 @@
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 
-<pre><code class="language-thymeleaf">&lt;!-- DEFINIZIONE DEL COMPONENTE: fragments/components.html --&gt;
-&lt;!-- Il componente Button accetta label, variant, icon e disabled come
-    parametri. Il token _ come valore default garantisce che il template sia
-    apribile nel browser senza server: il designer vede "Salva" con classe
-    "btn-primary". --&gt;
-&lt;div th:fragment="button(label, variant, icon, disabled)" th:remove="tag"&gt;
-    &lt;button th:type="'button'" th:class="'btn btn-' + ${variant ?: 'primary'}"
-        th:disabled="${disabled ?: false}" th:attr="aria-label=${label ?:
-        'Azione'}"&gt;
-        &lt;!-- Icona opzionale: se icon è _ o null, il tag span non viene
-            renderizzato --&gt;
-        &lt;span th:if="${icon != null and icon != _}" th:class="'icon icon-' +
-            ${icon}"&gt;
-        &lt;/span&gt;
-        &lt;span th:text="${label ?: 'Salva'}"&gt;
-            Salva
-        &lt;/span&gt;
-    &lt;/button&gt;
-&lt;/div&gt;
-&lt;!-- COMPONENTE Card con parametri multipli e contenuto innestato --&gt;
-&lt;div th:fragment="card(title, subtitle, cssClass, collapsible)" th:class="'card
-    ' + ${cssClass ?: ''}" th:remove="tag"&gt;
-    &lt;div class="card-header"&gt;
-        &lt;h5 class="card-title" th:text="${title ?: 'Titolo Card'}"&gt;
-            Titolo Card
-        &lt;/h5&gt;
-        &lt;p th:if="${subtitle != null and subtitle != _}" class="card-subtitle"
-            th:text="${subtitle}"&gt;
-            Sottotitolo
-        &lt;/p&gt;
-        &lt;!-- Pulsante collapse: visibile solo se collapsible=true --&gt;
-        &lt;button th:if="${collapsible ?: false}" class="btn btn-sm
-            btn-outline-secondary" data-bs-toggle="collapse"
-            th:attr="data-bs-target='#card-body-' + ${#ids.seq('card')}"&gt;
-            Comprimi
-        &lt;/button&gt;
-    &lt;/div&gt;
-    &lt;div class="card-body"&gt;
-        &lt;!-- Layout placeholder (slot): il contenuto viene iniettato dal
-            chiamante --&gt;
-        &lt;th:block th:replace="~{::card-content}"&gt;
-            &lt;p&gt;
-                Contenuto di default visibile nel browser senza server.
-            &lt;/p&gt;
-        &lt;/th:block&gt;
-    &lt;/div&gt;
-&lt;/div&gt;
-&lt;!-- UTILIZZO DEI COMPONENTI nel template pagina: --&gt;
-&lt;!-- Button con tutti i parametri --&gt;
-&lt;th:block th:replace="~{fragments/components :: button('Elimina', 'danger',
-    'trash', false)}"&gt;
-&lt;/th:block&gt;
-&lt;!-- Button con solo label: gli altri parametri usano il default --&gt;
-&lt;th:block th:replace="~{fragments/components :: button('Salva', _, _, _)}"&gt;
-&lt;/th:block&gt;
-&lt;!-- Card completa con contenuto iniettato --&gt;
-&lt;th:block th:replace="~{fragments/components :: card('Ordini Recenti', 'Ultimi
-    30 giorni', 'shadow-sm', true)}"&gt;
-    &lt;th:block th:fragment="card-content"&gt;
-        &lt;table class="table"&gt;
-            &lt;tr th:each="order : ${orders}"&gt;
-                &lt;td th:text="${order.id}"&gt;
-                    ID
-                &lt;/td&gt;
-                &lt;td th:text="${order.total}"&gt;
-                    Totale
-                &lt;/td&gt;
-            &lt;/tr&gt;
-        &lt;/table&gt;
-    &lt;/th:block&gt;
-&lt;/th:block&gt;
-</code></pre>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+</pre></td><td class="rouge-code"><pre><span class="o">&lt;!--</span> <span class="no">DEFINIZIONE</span> <span class="no">DEL</span> <span class="nl">COMPONENTE:</span> <span class="n">fragments</span><span class="o">/</span><span class="n">components</span><span class="o">.</span><span class="na">html</span> <span class="o">--&gt;</span> <span class="o">&lt;!--</span> <span class="nc">Il</span>
+    <span class="n">componente</span> <span class="nc">Button</span> <span class="n">accetta</span> <span class="n">label</span><span class="o">,</span> <span class="n">variant</span><span class="o">,</span> <span class="n">icon</span> <span class="n">e</span> <span class="n">disabled</span> <span class="n">come</span> <span class="n">parametri</span><span class="o">.</span> <span class="nc">Il</span>
+    <span class="n">token</span> <span class="n">_</span> <span class="n">come</span> <span class="n">valore</span> <span class="k">default</span> <span class="n">garantisce</span> <span class="n">che</span> <span class="n">il</span> <span class="n">template</span> <span class="n">sia</span> <span class="n">apribile</span> <span class="n">nel</span>
+    <span class="n">browser</span> <span class="n">senza</span> <span class="nl">server:</span> <span class="n">il</span> <span class="n">designer</span> <span class="n">vede</span> <span class="s">"Salva"</span> <span class="n">con</span> <span class="n">classe</span> <span class="s">"btn-primary"</span><span class="o">.</span> <span class="o">--&gt;</span>
+    <span class="o">&lt;</span><span class="n">div</span> <span class="nl">th:</span><span class="n">fragment</span><span class="o">=</span><span class="s">"button(label, variant, icon, disabled)"</span> <span class="nl">th:</span><span class="n">remove</span><span class="o">=</span><span class="s">"tag"</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">button</span> <span class="nl">th:</span><span class="n">type</span><span class="o">=</span><span class="s">"'button'"</span> <span class="nl">th:</span><span class="kd">class</span><span class="err">="'</span><span class="nc">btn</span> <span class="n">btn</span><span class="o">-</span><span class="err">'</span> <span class="o">+</span> <span class="err">$</span><span class="o">{</span>
+    <span class="n">variant</span> <span class="o">?:</span> <span class="err">'</span><span class="n">primary</span><span class="err">'</span>
+<span class="o">}</span>
+<span class="s">" th:disabled="</span><span class="err">$</span><span class="o">{</span>
+    <span class="n">disabled</span> <span class="o">?:</span> <span class="kc">false</span>
+<span class="o">}</span>
+<span class="s">" th:attr="</span><span class="n">aria</span><span class="o">-</span><span class="n">label</span><span class="o">=</span><span class="err">$</span><span class="o">{</span>
+    <span class="n">label</span> <span class="o">?:</span> <span class="err">'</span><span class="nc">Azione</span><span class="err">'</span>
+<span class="o">}</span>
+<span class="s">"&gt; &lt;!-- Icona opzionale: se icon è _ o null, il tag span non viene renderizzato
+    --&gt; &lt;span th:if="</span><span class="err">$</span><span class="o">{</span>
+    <span class="n">icon</span> <span class="o">!=</span> <span class="kc">null</span> <span class="n">and</span> <span class="n">icon</span> <span class="o">!=</span> <span class="n">_</span>
+<span class="o">}</span>
+<span class="s">" th:class="</span><span class="err">'</span><span class="n">icon</span> <span class="n">icon</span><span class="o">-</span><span class="err">'</span> <span class="o">+</span> <span class="err">$</span><span class="o">{</span>
+    <span class="n">icon</span>
+<span class="o">}</span>
+<span class="s">"&gt;&lt;/span&gt; &lt;span th:text="</span><span class="err">$</span><span class="o">{</span>
+    <span class="n">label</span> <span class="o">?:</span> <span class="err">'</span><span class="nc">Salva</span><span class="err">'</span>
+<span class="o">}</span>
+<span class="s">"&gt;Salva&lt;/span&gt; &lt;/button&gt; &lt;/div&gt; &lt;!-- COMPONENTE Card con parametri multipli e
+    contenuto innestato --&gt; &lt;div th:fragment="</span><span class="n">card</span><span class="o">(</span><span class="n">title</span><span class="o">,</span> <span class="n">subtitle</span><span class="o">,</span> <span class="n">cssClass</span><span class="o">,</span>
+    <span class="n">collapsible</span><span class="o">)</span><span class="s">" th:class="</span><span class="err">'</span><span class="n">card</span> <span class="err">'</span> <span class="o">+</span> <span class="err">$</span><span class="o">{</span>
+    <span class="n">cssClass</span> <span class="o">?:</span> <span class="err">''</span>
+<span class="o">}</span>
+<span class="s">" th:remove="</span><span class="n">tag</span><span class="s">"&gt; &lt;div class="</span><span class="n">card</span><span class="o">-</span><span class="n">header</span><span class="s">"&gt; &lt;h5 class="</span><span class="n">card</span><span class="o">-</span><span class="n">title</span><span class="s">" th:text="</span><span class="err">$</span><span class="o">{</span>
+    <span class="n">title</span> <span class="o">?:</span> <span class="err">'</span><span class="nc">Titolo</span> <span class="nc">Card</span><span class="err">'</span>
+<span class="o">}</span>
+<span class="s">"&gt;Titolo Card&lt;/h5&gt; &lt;p th:if="</span><span class="err">$</span><span class="o">{</span>
+    <span class="n">subtitle</span> <span class="o">!=</span> <span class="kc">null</span> <span class="n">and</span> <span class="n">subtitle</span> <span class="o">!=</span> <span class="n">_</span>
+<span class="o">}</span>
+<span class="s">" class="</span><span class="n">card</span><span class="o">-</span><span class="n">subtitle</span><span class="s">" th:text="</span><span class="err">$</span><span class="o">{</span>
+    <span class="n">subtitle</span>
+<span class="o">}</span>
+<span class="s">"&gt;Sottotitolo&lt;/p&gt; &lt;!-- Pulsante collapse: visibile solo se collapsible=true --&gt;
+    &lt;button th:if="</span><span class="err">$</span><span class="o">{</span>
+    <span class="n">collapsible</span> <span class="o">?:</span> <span class="kc">false</span>
+<span class="o">}</span>
+<span class="s">" class="</span><span class="n">btn</span> <span class="n">btn</span><span class="o">-</span><span class="n">sm</span> <span class="n">btn</span><span class="o">-</span><span class="n">outline</span><span class="o">-</span><span class="n">secondary</span><span class="s">" data-bs-toggle="</span><span class="n">collapse</span><span class="s">"
+    th:attr="</span><span class="n">data</span><span class="o">-</span><span class="n">bs</span><span class="o">-</span><span class="n">target</span><span class="o">=</span><span class="err">'#</span><span class="n">card</span><span class="o">-</span><span class="n">body</span><span class="o">-</span><span class="err">'</span> <span class="o">+</span> <span class="err">$</span><span class="o">{</span>
+    <span class="err">#</span><span class="n">ids</span><span class="o">.</span><span class="na">seq</span><span class="o">(</span><span class="err">'</span><span class="n">card</span><span class="err">'</span><span class="o">)</span>
+<span class="o">}</span>
+<span class="s">"&gt; Comprimi &lt;/button&gt; &lt;/div&gt; &lt;div class="</span><span class="n">card</span><span class="o">-</span><span class="n">body</span><span class="s">"&gt; &lt;!-- Layout placeholder
+    (slot): il contenuto viene iniettato dal chiamante --&gt; &lt;th:block
+    th:replace="</span><span class="o">~{</span>
+    <span class="o">::</span><span class="n">card</span><span class="o">-</span><span class="n">content</span>
+<span class="o">}</span>
+<span class="s">"&gt; &lt;p&gt;Contenuto di default visibile nel browser senza server.&lt;/p&gt; &lt;/th:block&gt;
+    &lt;/div&gt; &lt;/div&gt; &lt;!-- UTILIZZO DEI COMPONENTI nel template pagina: --&gt; &lt;!--
+    Button con tutti i parametri --&gt; &lt;th:block th:replace="</span><span class="o">~{</span>
+    <span class="n">fragments</span><span class="o">/</span><span class="n">components</span> <span class="o">::</span> <span class="n">button</span><span class="o">(</span><span class="err">'</span><span class="nc">Elimina</span><span class="err">'</span><span class="o">,</span> <span class="err">'</span><span class="n">danger</span><span class="err">'</span><span class="o">,</span> <span class="err">'</span><span class="n">trash</span><span class="err">'</span><span class="o">,</span> <span class="kc">false</span><span class="o">)</span>
+<span class="o">}</span>
+<span class="s">"&gt;&lt;/th:block&gt; &lt;!-- Button con solo label: gli altri parametri usano il default
+    --&gt; &lt;th:block th:replace="</span><span class="o">~{</span>
+    <span class="n">fragments</span><span class="o">/</span><span class="n">components</span> <span class="o">::</span> <span class="n">button</span><span class="o">(</span><span class="err">'</span><span class="nc">Salva</span><span class="err">'</span><span class="o">,</span> <span class="n">_</span><span class="o">,</span> <span class="n">_</span><span class="o">,</span> <span class="n">_</span><span class="o">)</span>
+<span class="o">}</span>
+<span class="s">"&gt;&lt;/th:block&gt; &lt;!-- Card completa con contenuto iniettato --&gt; &lt;th:block
+    th:replace="</span><span class="o">~{</span>
+    <span class="n">fragments</span><span class="o">/</span><span class="n">components</span> <span class="o">::</span> <span class="n">card</span><span class="o">(</span><span class="err">'</span><span class="nc">Ordini</span> <span class="nc">Recenti</span><span class="err">'</span><span class="o">,</span> <span class="err">'</span><span class="nc">Ultimi</span> <span class="mi">30</span> <span class="n">giorni</span><span class="err">'</span><span class="o">,</span>
+        <span class="err">'</span><span class="n">shadow</span><span class="o">-</span><span class="n">sm</span><span class="err">'</span><span class="o">,</span> <span class="kc">true</span><span class="o">)</span>
+<span class="o">}</span>
+<span class="s">"&gt; &lt;th:block th:fragment="</span><span class="n">card</span><span class="o">-</span><span class="n">content</span><span class="s">"&gt; &lt;table class="</span><span class="n">table</span><span class="s">"&gt; &lt;tr
+    th:each="</span><span class="n">order</span> <span class="o">:</span> <span class="err">$</span><span class="o">{</span>
+    <span class="n">orders</span>
+<span class="o">}</span>
+<span class="s">"&gt; &lt;td th:text="</span><span class="err">$</span><span class="o">{</span>
+    <span class="n">order</span><span class="o">.</span><span class="na">id</span>
+<span class="o">}</span>
+<span class="s">"&gt;ID&lt;/td&gt; &lt;td th:text="</span><span class="err">$</span><span class="o">{</span>
+    <span class="n">order</span><span class="o">.</span><span class="na">total</span>
+<span class="o">}</span>
+<span class="err">"</span><span class="o">&gt;</span><span class="nc">Totale</span><span class="o">&lt;/</span><span class="n">td</span><span class="o">&gt;</span> <span class="o">&lt;/</span><span class="n">tr</span><span class="o">&gt;</span> <span class="o">&lt;/</span><span class="n">table</span><span class="o">&gt;</span> <span class="o">&lt;/</span><span class="nl">th:</span><span class="n">block</span><span class="o">&gt;</span> <span class="o">&lt;/</span><span class="nl">th:</span><span class="n">block</span><span class="o">&gt;</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
         </article>
 

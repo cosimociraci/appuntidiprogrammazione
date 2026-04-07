@@ -89,64 +89,199 @@
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 
-<pre><code class="language-thymeleaf">/* Controller che implementa PRG con Flash Attributes strutturati. */
-@Controller @RequestMapping("/orders") public class OrderController {
-    @PostMapping public String createOrder( @ModelAttribute @Valid OrderFormDto
-    form, BindingResult result, Model model, RedirectAttributes redirectAttrs) {
-    if (result.hasErrors()) { // NON faccio redirect in caso di errori: devo
-    mostrare i campi valorizzati model.addAttribute("orderFormDto", form);
-    return "orders/new"; // Rendering diretto, no redirect } try { Order created
-    = orderService.create(form); // Flash attribute strutturato: sopravvive a UN
-    solo redirect, poi viene eliminato // Uso un oggetto FlashMessage per
-    supportare tipi diversi (success, warning, error)
-    redirectAttrs.addFlashAttribute("flashMessage", new FlashMessage(
-    FlashMessage.Type.SUCCESS, "Ordine #" + created.getId() + " creato con
-    successo!", "/orders/" + created.getId() // Link opzionale per azione
-    successiva )); return "redirect:/orders/" + created.getId(); } catch
-    (InsufficientStockException e) {
-    redirectAttrs.addFlashAttribute("flashMessage", new
-    FlashMessage(FlashMessage.Type.WARNING, "Stock insufficiente per: " +
-    e.getProductName())); return "redirect:/orders/new"; } catch (Exception e) {
-    log.error("Errore creazione ordine", e);
-    redirectAttrs.addFlashAttribute("flashMessage", new
-    FlashMessage(FlashMessage.Type.ERROR, "Errore imprevisto. Riprova più
-    tardi.")); return "redirect:/orders/new"; } } @PostMapping("/{id}/delete")
-    public String deleteOrder(@PathVariable Long id, RedirectAttributes
-    redirectAttrs) { orderService.delete(id);
-    redirectAttrs.addFlashAttribute("flashMessage", new
-    FlashMessage(FlashMessage.Type.SUCCESS, "Ordine #" + id + " eliminato."));
-    // Redirect alla lista: il browser vede GET /orders, refresh sicuro return
-    "redirect:/orders"; } }
-/* FlashMessage: oggetto tipizzato per messaggi con varianti visive. */
-public record FlashMessage(Type type, String text, String actionUrl) { public
-    FlashMessage(Type type, String text) { this(type, text, null); } public
-    String getCssClass() { return switch (type) { case SUCCESS -&gt;
-    "alert-success"; case WARNING -&gt; "alert-warning"; case ERROR -&gt;
-    "alert-danger"; case INFO -&gt; "alert-info"; }; } public enum Type { SUCCESS,
-    WARNING, ERROR, INFO } }
-&lt;!-- Frammento riutilizzabile per i flash message: incluso nel layout base.
-    Thymeleaf lo trova automaticamente nel model dopo il redirect perché Spring
-    lo copia dalla sessione flash. --&gt;
-&lt;!-- fragments/flash-message.html --&gt;
-&lt;div th:fragment="flash-alert" th:if="${flashMessage != null}" th:class="'alert
-    ' + ${flashMessage.cssClass} + ' alert-dismissible fade show'" role="alert"&gt;
-    &lt;span th:text="${flashMessage.text}"&gt;
-        Messaggio
-    &lt;/span&gt;
-    &lt;!-- Link opzionale all'azione successiva --&gt;
-    &lt;a th:if="${flashMessage.actionUrl != null}"
-        th:href="${flashMessage.actionUrl}" class="alert-link ms-2"&gt;
-        Visualizza
-    &lt;/a&gt;
-    &lt;button type="button" class="btn-close" data-bs-dismiss="alert"
-        aria-label="Chiudi"&gt;
-    &lt;/button&gt;
-&lt;/div&gt;
-&lt;!-- Nel layout base: il frammento è presente in tutte le pagine. --&gt;
-&lt;!-- &lt;th:block th:replace="~{fragments/flash-message :: flash-alert}"&gt;
-&lt;/th:block&gt;
---&gt;
-</code></pre>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+</pre></td><td class="rouge-code"><pre><span class="cm">/* Controller che implementa PRG con Flash Attributes strutturati. */</span>
+<span class="nd">@Controller</span>
+<span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/orders"</span><span class="o">)</span> <span class="kd">public</span> <span class="kd">class</span> <span class="nc">OrderController</span> <span class="o">{</span>
+    <span class="nd">@PostMapping</span> <span class="kd">public</span> <span class="nc">String</span> <span class="nf">createOrder</span><span class="o">(</span>
+    <span class="nd">@ModelAttribute</span>
+    <span class="nd">@Valid</span> <span class="nc">OrderFormDto</span> <span class="n">form</span><span class="o">,</span> <span class="nc">BindingResult</span> <span class="n">result</span><span class="o">,</span> <span class="nc">Model</span> <span class="n">model</span><span class="o">,</span>
+        <span class="nc">RedirectAttributes</span> <span class="n">redirectAttrs</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">result</span><span class="o">.</span><span class="na">hasErrors</span><span class="o">())</span> <span class="o">{</span>
+            <span class="c1">// NON faccio redirect in caso di errori: devo mostrare i campi</span>
+                <span class="n">valorizzati</span> <span class="n">model</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">"orderFormDto"</span><span class="o">,</span> <span class="n">form</span><span class="o">)</span>
+            <span class="o">;</span>
+            <span class="k">return</span> <span class="s">"orders/new"</span><span class="o">;</span>
+            <span class="c1">// Rendering diretto, no redirect</span>
+        <span class="o">}</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="nc">Order</span> <span class="n">created</span> <span class="o">=</span> <span class="n">orderService</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">form</span><span class="o">);</span>
+            <span class="c1">// Flash attribute strutturato: sopravvive a UN solo redirect, poi</span>
+                <span class="n">viene</span> <span class="n">eliminato</span> <span class="c1">// Uso un oggetto FlashMessage per supportare</span>
+                <span class="n">tipi</span> <span class="nf">diversi</span> <span class="o">(</span><span class="n">success</span><span class="o">,</span> <span class="n">warning</span><span class="o">,</span> <span class="n">error</span><span class="o">)</span>
+                <span class="n">redirectAttrs</span><span class="o">.</span><span class="na">addFlashAttribute</span><span class="o">(</span><span class="s">"flashMessage"</span><span class="o">,</span> <span class="k">new</span>
+                <span class="nc">FlashMessage</span><span class="o">(</span> <span class="nc">FlashMessage</span><span class="o">.</span><span class="na">Type</span><span class="o">.</span><span class="na">SUCCESS</span><span class="o">,</span> <span class="s">"Ordine #"</span> <span class="o">+</span>
+                <span class="n">created</span><span class="o">.</span><span class="na">getId</span><span class="o">()</span> <span class="o">+</span> <span class="s">" creato con successo!"</span><span class="o">,</span> <span class="s">"/orders/"</span> <span class="o">+</span>
+                <span class="n">created</span><span class="o">.</span><span class="na">getId</span><span class="o">()</span> <span class="c1">// Link opzionale per azione successiva ))</span>
+            <span class="o">;</span>
+            <span class="k">return</span> <span class="s">"redirect:/orders/"</span> <span class="o">+</span> <span class="n">created</span><span class="o">.</span><span class="na">getId</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="k">catch</span> <span class="o">(</span><span class="nc">InsufficientStockException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">redirectAttrs</span><span class="o">.</span><span class="na">addFlashAttribute</span><span class="o">(</span><span class="s">"flashMessage"</span><span class="o">,</span> <span class="k">new</span>
+                <span class="nc">FlashMessage</span><span class="o">(</span><span class="nc">FlashMessage</span><span class="o">.</span><span class="na">Type</span><span class="o">.</span><span class="na">WARNING</span><span class="o">,</span> <span class="s">"Stock insufficiente
+                per: "</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">getProductName</span><span class="o">()));</span>
+            <span class="k">return</span> <span class="s">"redirect:/orders/new"</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">catch</span> <span class="o">(</span><span class="nc">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">log</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">"Errore creazione ordine"</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+            <span class="n">redirectAttrs</span><span class="o">.</span><span class="na">addFlashAttribute</span><span class="o">(</span><span class="s">"flashMessage"</span><span class="o">,</span> <span class="k">new</span>
+                <span class="nc">FlashMessage</span><span class="o">(</span><span class="nc">FlashMessage</span><span class="o">.</span><span class="na">Type</span><span class="o">.</span><span class="na">ERROR</span><span class="o">,</span> <span class="s">"Errore imprevisto.
+                Riprova più tardi."</span><span class="o">));</span>
+            <span class="k">return</span> <span class="s">"redirect:/orders/new"</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="nd">@PostMapping</span><span class="o">(</span><span class="s">"/{
+        id
+    }
+    /delete"</span><span class="o">)</span> <span class="kd">public</span> <span class="nc">String</span> <span class="nf">deleteOrder</span><span class="o">(</span>
+    <span class="nd">@PathVariable</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">,</span> <span class="nc">RedirectAttributes</span> <span class="n">redirectAttrs</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">orderService</span><span class="o">.</span><span class="na">delete</span><span class="o">(</span><span class="n">id</span><span class="o">);</span>
+        <span class="n">redirectAttrs</span><span class="o">.</span><span class="na">addFlashAttribute</span><span class="o">(</span><span class="s">"flashMessage"</span><span class="o">,</span> <span class="k">new</span>
+            <span class="nc">FlashMessage</span><span class="o">(</span><span class="nc">FlashMessage</span><span class="o">.</span><span class="na">Type</span><span class="o">.</span><span class="na">SUCCESS</span><span class="o">,</span> <span class="s">"Ordine #"</span> <span class="o">+</span> <span class="n">id</span> <span class="o">+</span> <span class="s">"
+            eliminato."</span><span class="o">));</span>
+        <span class="c1">// Redirect alla lista: il browser vede GET /orders, refresh sicuro</span>
+        <span class="k">return</span> <span class="s">"redirect:/orders"</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="cm">/* FlashMessage: oggetto tipizzato per messaggi con varianti visive. */</span>
+<span class="kd">public</span> <span class="n">record</span> <span class="nf">FlashMessage</span><span class="o">(</span><span class="nc">Type</span> <span class="n">type</span><span class="o">,</span> <span class="nc">String</span> <span class="n">text</span><span class="o">,</span> <span class="nc">String</span> <span class="n">actionUrl</span><span class="o">)</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">FlashMessage</span><span class="o">(</span><span class="nc">Type</span> <span class="n">type</span><span class="o">,</span> <span class="nc">String</span> <span class="n">text</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">(</span><span class="n">type</span><span class="o">,</span> <span class="n">text</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">getCssClass</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="nf">switch</span> <span class="o">(</span><span class="n">type</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">case</span> <span class="no">SUCCESS</span> <span class="o">-&gt;</span> <span class="s">"alert-success"</span><span class="o">;</span>
+            <span class="k">case</span> <span class="no">WARNING</span> <span class="o">-&gt;</span> <span class="s">"alert-warning"</span><span class="o">;</span>
+            <span class="k">case</span> <span class="no">ERROR</span> <span class="o">-&gt;</span> <span class="s">"alert-danger"</span><span class="o">;</span>
+            <span class="k">case</span> <span class="no">INFO</span> <span class="o">-&gt;</span> <span class="s">"alert-info"</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kd">enum</span> <span class="nc">Type</span> <span class="o">{</span>
+        <span class="no">SUCCESS</span><span class="o">,</span> <span class="no">WARNING</span><span class="o">,</span> <span class="no">ERROR</span><span class="o">,</span> <span class="no">INFO</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="o">&lt;!--</span> <span class="nc">Frammento</span> <span class="n">riutilizzabile</span> <span class="n">per</span> <span class="n">i</span> <span class="n">flash</span> <span class="nl">message:</span> <span class="n">incluso</span> <span class="n">nel</span> <span class="n">layout</span> <span class="n">base</span><span class="o">.</span>
+    <span class="nc">Thymeleaf</span> <span class="n">lo</span> <span class="n">trova</span> <span class="n">automaticamente</span> <span class="n">nel</span> <span class="n">model</span> <span class="n">dopo</span> <span class="n">il</span> <span class="n">redirect</span> <span class="n">perché</span> <span class="nc">Spring</span>
+    <span class="n">lo</span> <span class="n">copia</span> <span class="n">dalla</span> <span class="n">sessione</span> <span class="n">flash</span><span class="o">.</span> <span class="o">--&gt;</span> <span class="o">&lt;!--</span> <span class="n">fragments</span><span class="o">/</span><span class="n">flash</span><span class="o">-</span><span class="n">message</span><span class="o">.</span><span class="na">html</span> <span class="o">--&gt;</span>
+    <span class="o">&lt;</span><span class="n">div</span> <span class="nl">th:</span><span class="n">fragment</span><span class="o">=</span><span class="s">"flash-alert"</span> <span class="nl">th:</span><span class="k">if</span><span class="o">=</span><span class="s">"${
+    flashMessage != null
+}
+"</span> <span class="nl">th:</span><span class="kd">class</span><span class="err">="'</span><span class="nc">alert</span> <span class="err">'</span> <span class="o">+</span> <span class="err">$</span><span class="o">{</span>
+    <span class="n">flashMessage</span><span class="o">.</span><span class="na">cssClass</span>
+<span class="o">}</span>
+<span class="o">+</span> <span class="err">'</span> <span class="n">alert</span><span class="o">-</span><span class="n">dismissible</span> <span class="n">fade</span> <span class="n">show</span><span class="err">'</span><span class="s">" role="</span><span class="n">alert</span><span class="s">"&gt; &lt;span th:text="</span><span class="err">$</span><span class="o">{</span>
+    <span class="n">flashMessage</span><span class="o">.</span><span class="na">text</span>
+<span class="o">}</span>
+<span class="s">"&gt;Messaggio&lt;/span&gt; &lt;!-- Link opzionale all'azione successiva --&gt; &lt;a th:if="</span><span class="err">$</span><span class="o">{</span>
+    <span class="n">flashMessage</span><span class="o">.</span><span class="na">actionUrl</span> <span class="o">!=</span> <span class="kc">null</span>
+<span class="o">}</span>
+<span class="s">" th:href="</span><span class="err">$</span><span class="o">{</span>
+    <span class="n">flashMessage</span><span class="o">.</span><span class="na">actionUrl</span>
+<span class="o">}</span>
+<span class="s">" class="</span><span class="n">alert</span><span class="o">-</span><span class="n">link</span> <span class="n">ms</span><span class="o">-</span><span class="mi">2</span><span class="s">"&gt;Visualizza&lt;/a&gt; &lt;button type="</span><span class="n">button</span><span class="s">" class="</span><span class="n">btn</span><span class="o">-</span><span class="n">close</span><span class="s">"
+    data-bs-dismiss="</span><span class="n">alert</span><span class="s">" aria-label="</span><span class="nc">Chiudi</span><span class="s">"&gt;&lt;/button&gt; &lt;/div&gt; &lt;!-- Nel layout
+    base: il frammento è presente in tutte le pagine. --&gt; &lt;!-- &lt;th:block
+    th:replace="</span><span class="o">~{</span>
+    <span class="n">fragments</span><span class="o">/</span><span class="n">flash</span><span class="o">-</span><span class="n">message</span> <span class="o">::</span> <span class="n">flash</span><span class="o">-</span><span class="n">alert</span>
+<span class="o">}</span>
+<span class="err">"</span><span class="o">&gt;&lt;/</span><span class="nl">th:</span><span class="n">block</span><span class="o">&gt;</span> <span class="o">--&gt;</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
         </article>
 

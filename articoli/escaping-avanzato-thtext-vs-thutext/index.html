@@ -89,93 +89,193 @@
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 
-<pre><code class="language-thymeleaf">/* Aggiungo OWASP Java HTML Sanitizer al pom.xml: */
-//
-&lt;dependency&gt;
-    //
-    &lt;groupId&gt;
-        com.googlecode.owasp-java-html-sanitizer
-    &lt;/groupId&gt;
-    //
-    &lt;artifactId&gt;
-        owasp-java-html-sanitizer
-    &lt;/artifactId&gt;
-    //
-    &lt;version&gt;
-        20220608.1
-    &lt;/version&gt;
-    //
-&lt;/dependency&gt;
-/* Definisco le policy di sanitizzazione per diversi contesti di utilizzo. */
-@Configuration public class HtmlSanitizerConfig {
-    /* Policy per commenti e descrizioni utente: solo formattazione base. */
-    @Bean("basicHtmlPolicy") public PolicyFactory basicHtmlPolicy() { return new
-        HtmlPolicyBuilder() .allowElements("b", "i", "em", "strong", "u", "s",
-        "br", "p") // Nessun tag strutturale, nessun link, nessuna immagine
-        .toFactory(); }
-    /* Policy per articoli del CMS: formattazione ricca ma senza JS. */
-    @Bean("richHtmlPolicy") public PolicyFactory richHtmlPolicy() { return new
-        HtmlPolicyBuilder() .allowElements("b", "i", "em", "strong", "u", "s",
-        "br", "p", "h2", "h3", "h4", "ul", "ol", "li", "blockquote", "code",
-        "pre") .allowElements("a") .onElements("a")
-        .allowAttributes("href").matching(Pattern.compile("https?://.*")) //
-        Solo URL assoluti HTTPS .allowAttributes("target").matching(Pattern.comp
-        ile("_blank")).onElements("a") .requireRelNofollowOnLinks() // Aggiunge
-        rel="nofollow" automaticamente .allowElements("img") .onElements("img")
-        .allowAttributes("src").matching(Pattern.compile("https://.*")) // Solo
-        immagini HTTPS .allowAttributes("alt", "width",
-        "height").onElements("img") .toFactory(); } }
-    /* Service che applica la sanitizzazione prima che il dato raggiunga il
-        modello. */
-    @Service public class ContentSanitizationService { @Autowired
-        @Qualifier("basicHtmlPolicy") private PolicyFactory basicHtmlPolicy;
-        @Autowired @Qualifier("richHtmlPolicy") private PolicyFactory
-        richHtmlPolicy;
-    /* Sanitizzazione di base per commenti e bio utente. */
-    public String sanitizeBasic(String userInput) { if (userInput == null)
-        return ""; return basicHtmlPolicy.sanitize(userInput); }
-    /* Sanitizzazione ricca per articoli del CMS. */
-    public String sanitizeRich(String cmsContent) { if (cmsContent == null)
-        return ""; return richHtmlPolicy.sanitize(cmsContent); }
-    /* Sanitizzazione per output JSON (prevenzione XSS in API REST): */
-    public String sanitizeForJson(String input) { if (input == null) return
-        null; // Escape caratteri pericolosi in contesti JSON return
-        input.replace("
-    &lt;", "\\u003C").replace("&gt;
-        ", "\\u003E").replace("&amp;", "\\u0026"); } }
-        /* Controller che usa la sanitizzazione prima di passare i dati al
-            modello: */
-        @Controller public class ArticleController { @Autowired private
-            ContentSanitizationService sanitizer; @Autowired private
-            ArticleRepository articleRepository; @GetMapping("/articles/{id}")
-            public String showArticle(@PathVariable Long id, Model model) {
-            Article article = articleRepository.findById(id).orElseThrow(); //
-            Sanitizzo nel controller: il modello contiene solo HTML sicuro
-            model.addAttribute("title", article.getTitle()); // th:text: escaped
-            automaticamente model.addAttribute("safeBody",
-            sanitizer.sanitizeRich(article.getBody())); // th:utext: sicuro
-            perché già sanitizzato model.addAttribute("safeExcerpt",
-            sanitizer.sanitizeBasic(article.getExcerpt())); return
-            "articles/show"; } }
-        &lt;!-- Template: th:utext è sicuro perché i dati sono già stati
-            sanitizzati nel Service. --&gt;
-        &lt;!-- th:text per contenuto plain text: Thymeleaf fa l'escaping
-            automaticamente --&gt;
-        &lt;h1 th:text="${title}"&gt;
-            Titolo Articolo
-        &lt;/h1&gt;
-        &lt;!-- th:utext SOLO per contenuto pre-sanitizzato: il commento documenta
-            la scelta --&gt;
-        &lt;!-- safeBody è stato passato attraverso richHtmlPolicy: nessun tag
-            script possibile --&gt;
-        &lt;div th:utext="${safeBody}"&gt;
-            Corpo dell'articolo...
-        &lt;/div&gt;
-        &lt;!-- th:utext per excerpt pre-sanitizzato con basicHtmlPolicy --&gt;
-        &lt;p th:utext="${safeExcerpt}"&gt;
-            Anteprima...
-        &lt;/p&gt;
-</code></pre>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+</pre></td><td class="rouge-code"><pre><span class="cm">/* Aggiungo OWASP Java HTML Sanitizer al pom.xml: */</span>
+<span class="c1">// &lt;dependency&gt; // &lt;groupId&gt;com.googlecode.owasp-java-html-sanitizer&lt;/groupId&gt;</span>
+    <span class="c1">// &lt;artifactId&gt;owasp-java-html-sanitizer&lt;/artifactId&gt; //</span>
+    <span class="o">&lt;</span><span class="n">version</span><span class="o">&gt;</span><span class="mf">20220608.1</span><span class="o">&lt;/</span><span class="n">version</span><span class="o">&gt;</span> <span class="c1">// &lt;/dependency&gt; /* Definisco le policy di</span>
+    <span class="n">sanitizzazione</span> <span class="n">per</span> <span class="n">diversi</span> <span class="n">contesti</span> <span class="n">di</span> <span class="n">utilizzo</span><span class="o">.</span> <span class="o">*/</span> <span class="nd">@Configuration</span> <span class="kd">public</span>
+    <span class="kd">class</span> <span class="nc">HtmlSanitizerConfig</span>
+<span class="o">{</span>
+    <span class="cm">/* Policy per commenti e descrizioni utente: solo formattazione base. */</span>
+    <span class="nd">@Bean</span><span class="o">(</span><span class="s">"basicHtmlPolicy"</span><span class="o">)</span> <span class="kd">public</span> <span class="nc">PolicyFactory</span> <span class="nf">basicHtmlPolicy</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">HtmlPolicyBuilder</span><span class="o">()</span> <span class="o">.</span><span class="na">allowElements</span><span class="o">(</span><span class="s">"b"</span><span class="o">,</span> <span class="s">"i"</span><span class="o">,</span> <span class="s">"em"</span><span class="o">,</span> <span class="s">"strong"</span><span class="o">,</span>
+            <span class="s">"u"</span><span class="o">,</span> <span class="s">"s"</span><span class="o">,</span> <span class="s">"br"</span><span class="o">,</span> <span class="s">"p"</span><span class="o">)</span>
+        <span class="c1">// Nessun tag strutturale, nessun link, nessuna immagine .toFactory()</span>
+        <span class="o">;</span>
+    <span class="o">}</span>
+    <span class="cm">/* Policy per articoli del CMS: formattazione ricca ma senza JS. */</span>
+    <span class="nd">@Bean</span><span class="o">(</span><span class="s">"richHtmlPolicy"</span><span class="o">)</span> <span class="kd">public</span> <span class="nc">PolicyFactory</span> <span class="nf">richHtmlPolicy</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">HtmlPolicyBuilder</span><span class="o">()</span> <span class="o">.</span><span class="na">allowElements</span><span class="o">(</span><span class="s">"b"</span><span class="o">,</span> <span class="s">"i"</span><span class="o">,</span> <span class="s">"em"</span><span class="o">,</span> <span class="s">"strong"</span><span class="o">,</span>
+            <span class="s">"u"</span><span class="o">,</span> <span class="s">"s"</span><span class="o">,</span> <span class="s">"br"</span><span class="o">,</span> <span class="s">"p"</span><span class="o">,</span> <span class="s">"h2"</span><span class="o">,</span> <span class="s">"h3"</span><span class="o">,</span> <span class="s">"h4"</span><span class="o">,</span> <span class="s">"ul"</span><span class="o">,</span> <span class="s">"ol"</span><span class="o">,</span> <span class="s">"li"</span><span class="o">,</span>
+            <span class="s">"blockquote"</span><span class="o">,</span> <span class="s">"code"</span><span class="o">,</span> <span class="s">"pre"</span><span class="o">)</span> <span class="o">.</span><span class="na">allowElements</span><span class="o">(</span><span class="s">"a"</span><span class="o">)</span> <span class="o">.</span><span class="na">onElements</span><span class="o">(</span><span class="s">"a"</span><span class="o">)</span>
+            <span class="o">.</span><span class="na">allowAttributes</span><span class="o">(</span><span class="s">"href"</span><span class="o">).</span><span class="na">matching</span><span class="o">(</span><span class="nc">Pattern</span><span class="o">.</span><span class="na">compile</span><span class="o">(</span><span class="s">"https?:
+        //.*"</span><span class="o">))</span> <span class="c1">// Solo URL assoluti HTTPS</span>
+            <span class="o">.</span><span class="na">allowAttributes</span><span class="o">(</span><span class="s">"target"</span><span class="o">).</span><span class="na">matching</span><span class="o">(</span><span class="nc">Pattern</span><span class="o">.</span><span class="na">compile</span><span class="o">(</span><span class="s">"_blank"</span><span class="o">)).</span><span class="na">onEle</span>
+            <span class="n">ments</span><span class="o">(</span><span class="s">"a"</span><span class="o">)</span> <span class="o">.</span><span class="na">requireRelNofollowOnLinks</span><span class="o">()</span> <span class="c1">// Aggiunge rel="nofollow"</span>
+            <span class="n">automaticamente</span> <span class="o">.</span><span class="na">allowElements</span><span class="o">(</span><span class="s">"img"</span><span class="o">)</span> <span class="o">.</span><span class="na">onElements</span><span class="o">(</span><span class="s">"img"</span><span class="o">)</span>
+            <span class="o">.</span><span class="na">allowAttributes</span><span class="o">(</span><span class="s">"src"</span><span class="o">).</span><span class="na">matching</span><span class="o">(</span><span class="nc">Pattern</span><span class="o">.</span><span class="na">compile</span><span class="o">(</span><span class="s">"https://.*"</span><span class="o">))</span> <span class="c1">//</span>
+            <span class="nc">Solo</span> <span class="n">immagini</span> <span class="no">HTTPS</span> <span class="o">.</span><span class="na">allowAttributes</span><span class="o">(</span><span class="s">"alt"</span><span class="o">,</span> <span class="s">"width"</span><span class="o">,</span>
+            <span class="s">"height"</span><span class="o">).</span><span class="na">onElements</span><span class="o">(</span><span class="s">"img"</span><span class="o">)</span> <span class="o">.</span><span class="na">toFactory</span><span class="o">()</span>
+        <span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="cm">/* Service che applica la sanitizzazione prima che il dato raggiunga il modello.
+    */</span>
+<span class="nd">@Service</span> <span class="kd">public</span> <span class="kd">class</span> <span class="nc">ContentSanitizationService</span> <span class="o">{</span>
+    <span class="nd">@Autowired</span>
+    <span class="nd">@Qualifier</span><span class="o">(</span><span class="s">"basicHtmlPolicy"</span><span class="o">)</span> <span class="kd">private</span> <span class="nc">PolicyFactory</span> <span class="n">basicHtmlPolicy</span><span class="o">;</span>
+    <span class="nd">@Autowired</span>
+    <span class="nd">@Qualifier</span><span class="o">(</span><span class="s">"richHtmlPolicy"</span><span class="o">)</span> <span class="kd">private</span> <span class="nc">PolicyFactory</span> <span class="n">richHtmlPolicy</span><span class="o">;</span>
+    <span class="cm">/* Sanitizzazione di base per commenti e bio utente. */</span>
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">sanitizeBasic</span><span class="o">(</span><span class="nc">String</span> <span class="n">userInput</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">userInput</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="s">""</span><span class="o">;</span>
+        <span class="k">return</span> <span class="n">basicHtmlPolicy</span><span class="o">.</span><span class="na">sanitize</span><span class="o">(</span><span class="n">userInput</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="cm">/* Sanitizzazione ricca per articoli del CMS. */</span>
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">sanitizeRich</span><span class="o">(</span><span class="nc">String</span> <span class="n">cmsContent</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">cmsContent</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="s">""</span><span class="o">;</span>
+        <span class="k">return</span> <span class="n">richHtmlPolicy</span><span class="o">.</span><span class="na">sanitize</span><span class="o">(</span><span class="n">cmsContent</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="cm">/* Sanitizzazione per output JSON (prevenzione XSS in API REST): */</span>
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">sanitizeForJson</span><span class="o">(</span><span class="nc">String</span> <span class="n">input</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">input</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="c1">// Escape caratteri pericolosi in contesti JSON</span>
+        <span class="k">return</span> <span class="n">input</span><span class="o">.</span><span class="na">replace</span><span class="o">(</span><span class="s">"&lt;"</span><span class="o">,</span> <span class="s">"\\u003C"</span><span class="o">).</span><span class="na">replace</span><span class="o">(</span><span class="s">"&gt;"</span><span class="o">,</span>
+            <span class="s">"\\u003E"</span><span class="o">).</span><span class="na">replace</span><span class="o">(</span><span class="s">"&amp;"</span><span class="o">,</span> <span class="s">"\\u0026"</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="cm">/* Controller che usa la sanitizzazione prima di passare i dati al modello: */</span>
+<span class="nd">@Controller</span> <span class="kd">public</span> <span class="kd">class</span> <span class="nc">ArticleController</span> <span class="o">{</span>
+    <span class="nd">@Autowired</span> <span class="kd">private</span> <span class="nc">ContentSanitizationService</span> <span class="n">sanitizer</span><span class="o">;</span>
+    <span class="nd">@Autowired</span> <span class="kd">private</span> <span class="nc">ArticleRepository</span> <span class="n">articleRepository</span><span class="o">;</span>
+    <span class="nd">@GetMapping</span><span class="o">(</span><span class="s">"/articles/{
+        id
+    }
+    "</span><span class="o">)</span> <span class="kd">public</span> <span class="nc">String</span> <span class="nf">showArticle</span><span class="o">(</span>
+    <span class="nd">@PathVariable</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">,</span> <span class="nc">Model</span> <span class="n">model</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">Article</span> <span class="n">article</span> <span class="o">=</span> <span class="n">articleRepository</span><span class="o">.</span><span class="na">findById</span><span class="o">(</span><span class="n">id</span><span class="o">).</span><span class="na">orElseThrow</span><span class="o">();</span>
+        <span class="c1">// Sanitizzo nel controller: il modello contiene solo HTML sicuro</span>
+            <span class="n">model</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">"title"</span><span class="o">,</span> <span class="n">article</span><span class="o">.</span><span class="na">getTitle</span><span class="o">())</span>
+        <span class="o">;</span>
+        <span class="c1">// th:text: escaped automaticamente model.addAttribute("safeBody",</span>
+            <span class="n">sanitizer</span><span class="o">.</span><span class="na">sanitizeRich</span><span class="o">(</span><span class="n">article</span><span class="o">.</span><span class="na">getBody</span><span class="o">()))</span>
+        <span class="o">;</span>
+        <span class="c1">// th:utext: sicuro perché già sanitizzato</span>
+            <span class="n">model</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">"safeExcerpt"</span><span class="o">,</span>
+            <span class="n">sanitizer</span><span class="o">.</span><span class="na">sanitizeBasic</span><span class="o">(</span><span class="n">article</span><span class="o">.</span><span class="na">getExcerpt</span><span class="o">()))</span>
+        <span class="o">;</span>
+        <span class="k">return</span> <span class="s">"articles/show"</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="o">&lt;!--</span> <span class="nl">Template:</span> <span class="nl">th:</span><span class="n">utext</span> <span class="n">è</span> <span class="n">sicuro</span> <span class="n">perché</span> <span class="n">i</span> <span class="n">dati</span> <span class="n">sono</span> <span class="n">già</span> <span class="n">stati</span> <span class="n">sanitizzati</span> <span class="n">nel</span>
+    <span class="nc">Service</span><span class="o">.</span> <span class="o">--&gt;</span> <span class="o">&lt;!--</span> <span class="nl">th:</span><span class="n">text</span> <span class="n">per</span> <span class="n">contenuto</span> <span class="n">plain</span> <span class="nl">text:</span> <span class="nc">Thymeleaf</span> <span class="n">fa</span> <span class="n">l</span><span class="err">'</span><span class="n">escaping</span>
+    <span class="n">automaticamente</span> <span class="o">--&gt;</span> <span class="o">&lt;</span><span class="n">h1</span> <span class="nl">th:</span><span class="n">text</span><span class="o">=</span><span class="s">"${
+    title
+}
+"</span><span class="o">&gt;</span><span class="nc">Titolo</span> <span class="nc">Articolo</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span> <span class="o">&lt;!--</span> <span class="nl">th:</span><span class="n">utext</span> <span class="no">SOLO</span> <span class="n">per</span> <span class="n">contenuto</span> <span class="n">pre</span><span class="o">-</span><span class="nl">sanitizzato:</span> <span class="n">il</span>
+    <span class="n">commento</span> <span class="n">documenta</span> <span class="n">la</span> <span class="n">scelta</span> <span class="o">--&gt;</span> <span class="o">&lt;!--</span> <span class="n">safeBody</span> <span class="n">è</span> <span class="n">stato</span> <span class="n">passato</span> <span class="n">attraverso</span>
+    <span class="nl">richHtmlPolicy:</span> <span class="n">nessun</span> <span class="n">tag</span> <span class="n">script</span> <span class="n">possibile</span> <span class="o">--&gt;</span> <span class="o">&lt;</span><span class="n">div</span> <span class="nl">th:</span><span class="n">utext</span><span class="o">=</span><span class="s">"${
+    safeBody
+}
+"</span><span class="o">&gt;</span><span class="nc">Corpo</span> <span class="n">dell</span><span class="err">'</span><span class="n">articolo</span><span class="o">...&lt;/</span><span class="n">div</span><span class="o">&gt;</span> <span class="o">&lt;!--</span> <span class="nl">th:</span><span class="n">utext</span> <span class="n">per</span> <span class="n">excerpt</span> <span class="n">pre</span><span class="o">-</span><span class="n">sanitizzato</span> <span class="n">con</span>
+    <span class="n">basicHtmlPolicy</span> <span class="o">--&gt;</span> <span class="o">&lt;</span><span class="n">p</span> <span class="nl">th:</span><span class="n">utext</span><span class="o">=</span><span class="s">"${
+    safeExcerpt
+}
+"</span><span class="o">&gt;</span><span class="nc">Anteprima</span><span class="o">...&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
         </article>
 
