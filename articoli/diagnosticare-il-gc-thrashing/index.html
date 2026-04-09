@@ -85,7 +85,8 @@
 <p>Implementare un sistema di “fail-fast” per istanze di microservizi che sono entrate in uno stato di degrado irreversibile della memoria.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** L’applicazione non risponde più ma il processo risulta attivo, consumando il 100% della CPU in cicli di GC inutili. <strong>Perché:</strong> Uso le soglie di overhead del GC. Ho scelto di forzare un crash controllato per permettere all’orchestratore (K8s) di riavviare l’istanza su un altro nodo, ripristinando il servizio.</p>
+<p><strong>Problema:</strong> L’applicazione non risponde più ma il processo risulta attivo, consumando il 100% della CPU in cicli di GC inutili.
+<strong>Perché:</strong> Uso le soglie di overhead del GC. Ho scelto di forzare un crash controllato per permettere all’orchestratore (K8s) di riavviare l’istanza su un altro nodo, ripristinando il servizio.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

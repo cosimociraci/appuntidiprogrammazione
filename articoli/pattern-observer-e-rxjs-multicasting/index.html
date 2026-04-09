@@ -85,7 +85,8 @@
 <p>Gestire aggiornamenti real-time della dashboard dove più widget devono reagire allo stesso stream di dati WebSocket.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Memory leak e comportamenti inconsistenti dovuti a sottoscrizioni multiple non coordinate a flussi di dati asincroni. <strong>Perché:</strong> Uso il Multicasting controllato. Ho scelto di centralizzare lo stream per inviare dati a tutti i listener attivi con un’unica esecuzione della logica sorgente.</p>
+<p><strong>Problema:</strong> Memory leak e comportamenti inconsistenti dovuti a sottoscrizioni multiple non coordinate a flussi di dati asincroni.
+<strong>Perché:</strong> Uso il Multicasting controllato. Ho scelto di centralizzare lo stream per inviare dati a tutti i listener attivi con un’unica esecuzione della logica sorgente.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

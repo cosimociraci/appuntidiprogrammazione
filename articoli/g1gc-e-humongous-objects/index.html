@@ -85,7 +85,8 @@
 <p>Ottimizzare la gestione di grandi buffer di byte usati per processare immagini o file PDF caricati in memoria.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Frammentazione prematura dell’heap e cicli di GC frequenti dovuti a allocazioni di oggetti troppo grandi per le regioni standard. <strong>Perché:</strong> Aumento la dimensione della regione G1. Ho scelto questa configurazione per permettere al GC di trattare i buffer come oggetti a vita breve, pulendoli durante le “Young GC” senza sporcare la Old Gen.</p>
+<p><strong>Problema:</strong> Frammentazione prematura dell’heap e cicli di GC frequenti dovuti a allocazioni di oggetti troppo grandi per le regioni standard.
+<strong>Perché:</strong> Aumento la dimensione della regione G1. Ho scelto questa configurazione per permettere al GC di trattare i buffer come oggetti a vita breve, pulendoli durante le “Young GC” senza sporcare la Old Gen.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

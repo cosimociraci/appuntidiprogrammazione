@@ -85,7 +85,8 @@
 <p>Allocare grandi buffer per elaborazione grafica off-heap che devono essere liberati non appena l’operazione termina.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Difficoltà nel tracciare la liberazione della memoria off-heap in applicazioni multithreaded. <strong>Perché:</strong> Uso Arena.ofConfined(). Ho scelto questo modello perché garantisce che la memoria appartenga a un solo thread e venga pulita deterministicamente, evitando dangling pointers.</p>
+<p><strong>Problema:</strong> Difficoltà nel tracciare la liberazione della memoria off-heap in applicazioni multithreaded.
+<strong>Perché:</strong> Uso Arena.ofConfined(). Ho scelto questo modello perché garantisce che la memoria appartenga a un solo thread e venga pulita deterministicamente, evitando dangling pointers.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

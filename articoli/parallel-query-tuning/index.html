@@ -85,7 +85,8 @@
 <p>Sfruttare tutti i core di un server moderno per accelerare il calcolo di aggregati su tabelle da centinaia di milioni di righe.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Query pesanti che utilizzano un solo core mentre gli altri 31 rimangono inattivi. <strong>Perché:</strong> Ho regolato i parametri di parallelismo. Ho scelto di forzare il parallelismo su questa tabella specifica perché la scansione sequenziale è inevitabile ma può essere divisa tra più worker.</p>
+<p><strong>Problema:</strong> Query pesanti che utilizzano un solo core mentre gli altri 31 rimangono inattivi.
+<strong>Perché:</strong> Ho regolato i parametri di parallelismo. Ho scelto di forzare il parallelismo su questa tabella specifica perché la scansione sequenziale è inevitabile ma può essere divisa tra più worker.</p>
 
 
         </article>

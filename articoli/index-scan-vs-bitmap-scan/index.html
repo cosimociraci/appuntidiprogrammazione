@@ -85,7 +85,8 @@
 <p>Ottimizzare query che filtrano per categorie non troppo selettive (es. tutti gli ordini “In lavorazione”).</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** L’accesso casuale alla tabella tramite Index Scan diventa inefficiente se le righe da recuperare sono migliaia. <strong>Perché:</strong> Il database sceglie il Bitmap Scan. Ho accettato questo piano perché riduce il numero di IOPS casuali raggruppando gli accessi alla tabella.</p>
+<p><strong>Problema:</strong> L’accesso casuale alla tabella tramite Index Scan diventa inefficiente se le righe da recuperare sono migliaia.
+<strong>Perché:</strong> Il database sceglie il Bitmap Scan. Ho accettato questo piano perché riduce il numero di IOPS casuali raggruppando gli accessi alla tabella.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

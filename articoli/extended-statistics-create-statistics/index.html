@@ -85,7 +85,8 @@
 <p>Ottimizzare le ricerche in un catalogo e-commerce dove i filtri (es. Colore e Taglia) sono fortemente correlati e causano stime di righe errate.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Stime di cardinalità errate portano alla scelta di join inefficienti (Nested Loop invece di Hash Join). <strong>Perché:</strong> Ho creato statistiche di dipendenza. In questo modo il database “impara” che certi valori viaggiano insieme, permettendogli di calcolare la selettività reale del filtro combinato.</p>
+<p><strong>Problema:</strong> Stime di cardinalità errate portano alla scelta di join inefficienti (Nested Loop invece di Hash Join).
+<strong>Perché:</strong> Ho creato statistiche di dipendenza. In questo modo il database “impara” che certi valori viaggiano insieme, permettendogli di calcolare la selettività reale del filtro combinato.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

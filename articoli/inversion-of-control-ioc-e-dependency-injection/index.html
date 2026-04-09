@@ -85,7 +85,8 @@
 <p>Disaccoppiare la logica di business di un servizio di fatturazione dal client HTTP specifico o dal database utilizzato.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Codice difficile da testare a causa di dipendenze hard-coded nei file (es. require(‘./db’)). <strong>Perché:</strong> Uso la Dependency Inversion. Ho scelto di definire “Porte” (interfacce) e “Adattatori” affinché il dominio non sappia nulla dell’infrastruttura esterna.</p>
+<p><strong>Problema:</strong> Codice difficile da testare a causa di dipendenze hard-coded nei file (es. require(‘./db’)).
+<strong>Perché:</strong> Uso la Dependency Inversion. Ho scelto di definire “Porte” (interfacce) e “Adattatori” affinché il dominio non sappia nulla dell’infrastruttura esterna.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

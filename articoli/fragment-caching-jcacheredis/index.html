@@ -85,7 +85,8 @@
 <p>Ridurre il Time To First Byte (TTFB) servendo parti comuni del layout istantaneamente.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Il motore di template ri-elabora frammenti identici (es. header/footer) per ogni singola richiesta HTTP. <strong>Perché:</strong> Implemento il caching dei frammenti. Ho scelto un approccio basato su cache distribuita per garantire che il lavoro di rendering venga fatto una sola volta per tutti i nodi del cluster.</p>
+<p><strong>Problema:</strong> Il motore di template ri-elabora frammenti identici (es. header/footer) per ogni singola richiesta HTTP.
+<strong>Perché:</strong> Implemento il caching dei frammenti. Ho scelto un approccio basato su cache distribuita per garantire che il lavoro di rendering venga fatto una sola volta per tutti i nodi del cluster.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

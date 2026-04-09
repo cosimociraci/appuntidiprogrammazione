@@ -85,7 +85,8 @@
 <p>Recuperare i dati dopo che un errore nel codice applicativo ha corrotto migliaia di record alle ore 10:15 di mattina.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Impossibilità di recuperare dati cancellati per errore se non si dispone della sequenza esatta dei cambiamenti dal momento del backup. <strong>Perché:</strong> Configuro l’archiviazione continua dei WAL. Ho scelto di usare pgBackRest perché gestisce nativamente la compressione, la verifica dell’integrità e i retry degli archivi meglio di uno script manuale.</p>
+<p><strong>Problema:</strong> Impossibilità di recuperare dati cancellati per errore se non si dispone della sequenza esatta dei cambiamenti dal momento del backup.
+<strong>Perché:</strong> Configuro l’archiviazione continua dei WAL. Ho scelto di usare pgBackRest perché gestisce nativamente la compressione, la verifica dell’integrità e i retry degli archivi meglio di uno script manuale.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

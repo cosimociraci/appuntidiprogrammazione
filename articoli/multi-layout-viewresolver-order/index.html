@@ -85,7 +85,8 @@
 <p>Integrare nuovi moduli Thymeleaf in una vecchia applicazione Enterprise che usa ancora tecnologie di templating legacy.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Conflitti tra motori di template diversi che tentano di risolvere la stessa vista, causando errori di “Template Not Found”. <strong>Perché:</strong> Configuro la catena dei ViewResolver. Ho scelto di assegnare indici di priorità espliciti per garantire che il DispatcherServlet trovi sempre il renderer corretto nel minor tempo possibile.</p>
+<p><strong>Problema:</strong> Conflitti tra motori di template diversi che tentano di risolvere la stessa vista, causando errori di “Template Not Found”.
+<strong>Perché:</strong> Configuro la catena dei ViewResolver. Ho scelto di assegnare indici di priorità espliciti per garantire che il DispatcherServlet trovi sempre il renderer corretto nel minor tempo possibile.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

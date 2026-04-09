@@ -85,7 +85,8 @@
 <p>Coordinare un processo di migrazione dati dove il numero di chunk da processare viene scoperto solo durante l’esecuzione.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Impossibilità di coordinare thread il cui numero varia dinamicamente durante le fasi di elaborazione. <strong>Perché:</strong> Uso Phaser. Ho scelto questo strumento perché mi permette di aggiungere o rimuovere “party” al volo, gestendo l’avanzamento delle fasi in modo fluido e adattivo.</p>
+<p><strong>Problema:</strong> Impossibilità di coordinare thread il cui numero varia dinamicamente durante le fasi di elaborazione.
+<strong>Perché:</strong> Uso Phaser. Ho scelto questo strumento perché mi permette di aggiungere o rimuovere “party” al volo, gestendo l’avanzamento delle fasi in modo fluido e adattivo.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

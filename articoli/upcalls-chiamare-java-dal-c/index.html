@@ -85,7 +85,8 @@
 <p>Implementare un sistema di monitoraggio dove una libreria C notifica a Java il superamento di una soglia di temperatura.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Necessità di gestire eventi asincroni generati dal mondo nativo senza bloccare l’esecuzione. <strong>Perché:</strong> Creo un upcallStub. Ho scelto di mappare un metodo Java come puntatore a funzione C, permettendo alla libreria esterna di “chiamare casa” in modo sicuro e controllato.</p>
+<p><strong>Problema:</strong> Necessità di gestire eventi asincroni generati dal mondo nativo senza bloccare l’esecuzione.
+<strong>Perché:</strong> Creo un upcallStub. Ho scelto di mappare un metodo Java come puntatore a funzione C, permettendo alla libreria esterna di “chiamare casa” in modo sicuro e controllato.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

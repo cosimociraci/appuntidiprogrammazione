@@ -85,7 +85,8 @@
 <p>Ottimizzare cicli th:each molto lunghi che effettuano calcoli o trasformazioni su ogni riga.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Degradazione delle performance dovuta a chiamate ridondanti a metodi del modello o dei bean all’interno dei loop. <strong>Perché:</strong> Uso variabili locali di template. Ho scelto th:with per “congelare” il valore calcolato, riducendo il carico sul processore SpEL e migliorando la leggibilità del codice.</p>
+<p><strong>Problema:</strong> Degradazione delle performance dovuta a chiamate ridondanti a metodi del modello o dei bean all’interno dei loop.
+<strong>Perché:</strong> Uso variabili locali di template. Ho scelto th:with per “congelare” il valore calcolato, riducendo il carico sul processore SpEL e migliorando la leggibilità del codice.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

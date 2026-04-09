@@ -85,7 +85,8 @@
 <p>Gestire milioni di nodi in una struttura dati in memoria (come un grafo o una cache custom) minimizzando l’occupazione di RAM.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Eccessivo consumo di memoria dovuto all’allocazione di oggetti wrapper per ogni singola variabile atomica. <strong>Perché:</strong> Uso gli static field updaters. Ho scelto questa tecnica per mantenere l’atomicità tramite reflection interna (CAS) senza pagare il prezzo dell’allocazione di milioni di piccoli oggetti wrapper.</p>
+<p><strong>Problema:</strong> Eccessivo consumo di memoria dovuto all’allocazione di oggetti wrapper per ogni singola variabile atomica.
+<strong>Perché:</strong> Uso gli static field updaters. Ho scelto questa tecnica per mantenere l’atomicità tramite reflection interna (CAS) senza pagare il prezzo dell’allocazione di milioni di piccoli oggetti wrapper.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

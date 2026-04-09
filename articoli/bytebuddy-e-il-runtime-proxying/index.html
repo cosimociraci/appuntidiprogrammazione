@@ -85,7 +85,8 @@
 <p>Creare un sistema di logging automatico che intercetta i metodi di classi service che non implementano interfacce.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Impossibilità di applicare proxy a classi legacy o final senza modificare il codice sorgente. <strong>Perché:</strong> Uso ByteBuddy per la generazione di bytecode. Ho scelto questo approccio perché mi permette di manipolare il comportamento delle classi “al volo” con un impatto minimo sulle prestazioni di esecuzione.</p>
+<p><strong>Problema:</strong> Impossibilità di applicare proxy a classi legacy o final senza modificare il codice sorgente.
+<strong>Perché:</strong> Uso ByteBuddy per la generazione di bytecode. Ho scelto questo approccio perché mi permette di manipolare il comportamento delle classi “al volo” con un impatto minimo sulle prestazioni di esecuzione.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

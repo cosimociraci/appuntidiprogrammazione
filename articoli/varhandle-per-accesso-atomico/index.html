@@ -85,7 +85,8 @@
 <p>Implementare un contatore ad alta concorrenza o una coda non-bloccante senza usare lock pesanti.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Necessità di eseguire operazioni atomiche su campi di classi esistenti senza alterare la struttura dell’oggetto o usare wrapper. <strong>Perché:</strong> Uso VarHandle. Ho scelto questa API perché mi permette di agire direttamente sulla memoria con istruzioni hardware native (Compare-And-Swap) garantendo la massima velocità possibile.</p>
+<p><strong>Problema:</strong> Necessità di eseguire operazioni atomiche su campi di classi esistenti senza alterare la struttura dell’oggetto o usare wrapper.
+<strong>Perché:</strong> Uso VarHandle. Ho scelto questa API perché mi permette di agire direttamente sulla memoria con istruzioni hardware native (Compare-And-Swap) garantendo la massima velocità possibile.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

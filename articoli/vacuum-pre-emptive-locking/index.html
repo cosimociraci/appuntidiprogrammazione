@@ -85,7 +85,8 @@
 <p>Gestire il bloat in tabelle di “sessioni utente” che vengono aggiornate ogni secondo e non lasciano mai spazio al Vacuum.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Il Vacuum viene costantemente interrotto dalle transazioni utente, rendendolo inefficace contro la crescita del database. <strong>Perché:</strong> Eseguo un VACUUM ANALYZE manuale durante i minimi di traffico. Ho scelto di intervenire proattivamente per evitare che la tabella raddoppi di dimensione inutilmente.</p>
+<p><strong>Problema:</strong> Il Vacuum viene costantemente interrotto dalle transazioni utente, rendendolo inefficace contro la crescita del database.
+<strong>Perché:</strong> Eseguo un VACUUM ANALYZE manuale durante i minimi di traffico. Ho scelto di intervenire proattivamente per evitare che la tabella raddoppi di dimensione inutilmente.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

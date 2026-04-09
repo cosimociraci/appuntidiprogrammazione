@@ -85,7 +85,8 @@
 <p>Rendere fluide le transazioni di inserimento massivo evitando che i processi utente rimangano bloccati dall’attesa dell’I/O disco.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Picchi di latenza improvvisi durante le scritture pesanti, dovuti a un inefficiente scaricamento della cache sul disco. <strong>Perché:</strong> Analizzo le statistiche del bgwriter. Ho scelto di calibrare i parametri di scrittura in background per “spalmare” l’I/O nel tempo, garantendo che ci sia sempre spazio libero nei buffer per le nuove transazioni.</p>
+<p><strong>Problema:</strong> Picchi di latenza improvvisi durante le scritture pesanti, dovuti a un inefficiente scaricamento della cache sul disco.
+<strong>Perché:</strong> Analizzo le statistiche del bgwriter. Ho scelto di calibrare i parametri di scrittura in background per “spalmare” l’I/O nel tempo, garantendo che ci sia sempre spazio libero nei buffer per le nuove transazioni.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

@@ -85,7 +85,8 @@
 <p>Proteggere un’infrastruttura a microservizi da attacchi di escalation dei privilegi tramite manipolazione dei token.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Validazione insicura dei token JWT che si fida dell’algoritmo dichiarato nell’header del pacchetto ricevuto. <strong>Perché:</strong> Implemento una “Allow-list” di algoritmi. Ho scelto di ignorare l’header alg del client, forzando il runtime di verifica a usare solo il protocollo crittografico predefinito dal sistema.</p>
+<p><strong>Problema:</strong> Validazione insicura dei token JWT che si fida dell’algoritmo dichiarato nell’header del pacchetto ricevuto.
+<strong>Perché:</strong> Implemento una “Allow-list” di algoritmi. Ho scelto di ignorare l’header alg del client, forzando il runtime di verifica a usare solo il protocollo crittografico predefinito dal sistema.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

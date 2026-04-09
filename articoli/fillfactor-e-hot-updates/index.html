@@ -85,7 +85,8 @@
 <p>Ottimizzare una tabella di contatori o stati che viene aggiornata frequentemente, evitando l’overhead di scrittura sugli indici a ogni modifica.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Ogni aggiornamento di riga genera una nuova voce in tutti gli indici della tabella, raddoppiando il lavoro di I/O. <strong>Perché:</strong> Uso un fillfactor ridotto. Ho scelto di sacrificare un po’ di spazio disco per permettere gli HOT updates, garantendo che le versioni aggiornate delle righe restino nella stessa pagina fisica.</p>
+<p><strong>Problema:</strong> Ogni aggiornamento di riga genera una nuova voce in tutti gli indici della tabella, raddoppiando il lavoro di I/O.
+<strong>Perché:</strong> Uso un fillfactor ridotto. Ho scelto di sacrificare un po’ di spazio disco per permettere gli HOT updates, garantendo che le versioni aggiornate delle righe restino nella stessa pagina fisica.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

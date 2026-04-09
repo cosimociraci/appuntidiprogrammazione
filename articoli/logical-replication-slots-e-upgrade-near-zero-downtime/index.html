@@ -85,7 +85,8 @@
 <p>Aggiornare il database di produzione a una nuova major version senza fermare il servizio per più di 30 secondi.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** I metodi di upgrade tradizionali (pg_upgrade) richiedono che il database sia spento durante l’intera procedura di migrazione dei file. <strong>Perché:</strong> Uso la replica logica come ponte. Ho scelto questa tecnica perché mi permette di testare il nuovo database “caldo” con dati reali prima di migrare definitivamente il traffico.</p>
+<p><strong>Problema:</strong> I metodi di upgrade tradizionali (pg_upgrade) richiedono che il database sia spento durante l’intera procedura di migrazione dei file.
+<strong>Perché:</strong> Uso la replica logica come ponte. Ho scelto questa tecnica perché mi permette di testare il nuovo database “caldo” con dati reali prima di migrare definitivamente il traffico.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

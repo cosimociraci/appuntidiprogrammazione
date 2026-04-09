@@ -85,7 +85,8 @@
 <p>Scalare un gateway API che effettua chiamate sincrone a servizi esterni senza esaurire i thread del server Tomcat.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Ogni thread dell’OS occupa circa 1MB di memoria; con migliaia di connessioni concorrenti, il server va in OutOfMemoryError. <strong>Perché:</strong> Uso Executors.newVirtualThreadPerTaskExecutor(). Ho deciso di delegare alla JVM lo scheduling, permettendo di gestire milioni di thread con un footprint minimo di memoria.</p>
+<p><strong>Problema:</strong> Ogni thread dell’OS occupa circa 1MB di memoria; con migliaia di connessioni concorrenti, il server va in OutOfMemoryError.
+<strong>Perché:</strong> Uso Executors.newVirtualThreadPerTaskExecutor(). Ho deciso di delegare alla JVM lo scheduling, permettendo di gestire milioni di thread con un footprint minimo di memoria.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

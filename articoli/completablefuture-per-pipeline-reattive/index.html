@@ -85,7 +85,8 @@
 <p>Comporre un profilo utente aggregando dati provenienti da tre diversi microservizi (Ordini, Preferenze, Anagrafica) in parallelo.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Codice asincrono difficile da mantenere, debuggare e testare a causa di logiche di sincronizzazione manuali. <strong>Perché:</strong> Uso l’API fluent di CompletableFuture. Ho scelto questo approccio per rendere esplicita la sequenza delle operazioni e gestire le eccezioni in modo centralizzato lungo tutta la catena.</p>
+<p><strong>Problema:</strong> Codice asincrono difficile da mantenere, debuggare e testare a causa di logiche di sincronizzazione manuali.
+<strong>Perché:</strong> Uso l’API fluent di CompletableFuture. Ho scelto questo approccio per rendere esplicita la sequenza delle operazioni e gestire le eccezioni in modo centralizzato lungo tutta la catena.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

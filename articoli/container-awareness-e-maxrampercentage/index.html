@@ -85,7 +85,8 @@
 <p>Evitare che i microservizi su Kubernetes vengano terminati dal sistema operativo (OOMKilled) a causa di una visione errata della memoria disponibile.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Disallineamento tra i limiti di memoria del container e i limiti di allocazione dell’heap della JVM. <strong>Perché:</strong> Uso le percentuali dinamiche. Ho scelto questo approccio per semplificare il deployment: se cambio le risorse del pod K8s, la JVM si ridimensiona da sola senza dover cambiare la stringa di avvio.</p>
+<p><strong>Problema:</strong> Disallineamento tra i limiti di memoria del container e i limiti di allocazione dell’heap della JVM.
+<strong>Perché:</strong> Uso le percentuali dinamiche. Ho scelto questo approccio per semplificare il deployment: se cambio le risorse del pod K8s, la JVM si ridimensiona da sola senza dover cambiare la stringa di avvio.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

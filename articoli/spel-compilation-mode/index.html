@@ -85,7 +85,8 @@
 <p>Accelerare il rendering di dashboard complesse con centinaia di punti dati e accessi a proprietà annidate.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Overhead eccessivo di CPU dovuto all’interpretazione continua di espressioni dinamiche durante il rendering. <strong>Perché:</strong> Uso la compilazione JIT di SpEL. Ho scelto la modalità IMMEDIATE per trasformare le lookup di proprietà in chiamate a metodi dirette nel bytecode, eliminando la riflessione runtime.</p>
+<p><strong>Problema:</strong> Overhead eccessivo di CPU dovuto all’interpretazione continua di espressioni dinamiche durante il rendering.
+<strong>Perché:</strong> Uso la compilazione JIT di SpEL. Ho scelto la modalità IMMEDIATE per trasformare le lookup di proprietà in chiamate a metodi dirette nel bytecode, eliminando la riflessione runtime.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

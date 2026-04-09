@@ -85,7 +85,8 @@
 <p>Creare una dashboard che si aggiorna automaticamente man mano che arrivano nuovi dati dal database o da un message broker.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Necessità di aggiornamenti real-time che solitamente richiederebbero polling pesante o l’overhead di un server WebSocket. <strong>Perché:</strong> Uso il Data-Driven Streaming. Ho scelto SSE con Thymeleaf Reactive per inviare chunk di HTML pronti per il DOM non appena il backend produce un nuovo evento, riducendo la latenza percepita.</p>
+<p><strong>Problema:</strong> Necessità di aggiornamenti real-time che solitamente richiederebbero polling pesante o l’overhead di un server WebSocket.
+<strong>Perché:</strong> Uso il Data-Driven Streaming. Ho scelto SSE con Thymeleaf Reactive per inviare chunk di HTML pronti per il DOM non appena il backend produce un nuovo evento, riducendo la latenza percepita.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

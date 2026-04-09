@@ -85,7 +85,8 @@
 <p>Parallelizzare l’elaborazione di un dataset di grandi dimensioni o il calcolo di una complessa serie statistica in memoria.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Distribuzione non uniforme del carico di lavoro tra i core della CPU, con alcuni core al 100% e altri in idle. <strong>Perché:</strong> Implemento RecursiveTask. Ho scelto questo pattern perché permette di decomporre il problema ricorsivamente, sfruttando al massimo l’hardware multi-core disponibile.</p>
+<p><strong>Problema:</strong> Distribuzione non uniforme del carico di lavoro tra i core della CPU, con alcuni core al 100% e altri in idle.
+<strong>Perché:</strong> Implemento RecursiveTask. Ho scelto questo pattern perché permette di decomporre il problema ricorsivamente, sfruttando al massimo l’hardware multi-core disponibile.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

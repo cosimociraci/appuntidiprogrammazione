@@ -85,7 +85,8 @@
 <p>Evitare che un tentativo di aggiungere una colonna a una tabella “clienti” blocchi tutte le login degli utenti per minuti.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Una richiesta di manutenzione pesante si mette in testa alla coda e blocca tutte le letture successive, svuotando il pool di connessioni. <strong>Perché:</strong> Imposto lock_timeout. Ho scelto di far fallire il mio script di migrazione se non ottiene il lock entro 2 secondi, per non disturbare gli utenti.</p>
+<p><strong>Problema:</strong> Una richiesta di manutenzione pesante si mette in testa alla coda e blocca tutte le letture successive, svuotando il pool di connessioni.
+<strong>Perché:</strong> Imposto lock_timeout. Ho scelto di far fallire il mio script di migrazione se non ottiene il lock entro 2 secondi, per non disturbare gli utenti.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

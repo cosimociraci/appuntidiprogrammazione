@@ -85,7 +85,8 @@
 <p>Gestire un sistema di prenotazione medica dove un medico non può avere più di 10 appuntamenti al giorno, evitando che due inserimenti simultanei superino il limite.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Il controllo del conteggio (COUNT) in una transazione non vede gli inserimenti “in volo” di altre transazioni concorrenti. <strong>Perché:</strong> Uso il livello SERIALIZABLE. Ho scelto questa strada perché il database rileva automaticamente il conflitto logico tra la lettura del conteggio e l’inserimento, senza che io debba usare lock pesanti su intere tabelle.</p>
+<p><strong>Problema:</strong> Il controllo del conteggio (COUNT) in una transazione non vede gli inserimenti “in volo” di altre transazioni concorrenti.
+<strong>Perché:</strong> Uso il livello SERIALIZABLE. Ho scelto questa strada perché il database rileva automaticamente il conflitto logico tra la lettura del conteggio e l’inserimento, senza che io debba usare lock pesanti su intere tabelle.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

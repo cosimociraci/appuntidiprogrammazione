@@ -85,7 +85,8 @@
 <p>Risolvere rallentamenti improvvisi del database quando si eseguono script di importazione dati che usano molti blocchi TRY-CATCH.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Ogni blocco EXCEPTION crea una subtransazione. Se sono troppe, il meccanismo di caching dei lock fallisce. <strong>Perché:</strong> Riscrivo la logica per validare i dati prima dell’inserimento invece di “provare e catturare l’errore”. Ho scelto la validazione preventiva per mantenere pulito lo stack delle transazioni.</p>
+<p><strong>Problema:</strong> Ogni blocco EXCEPTION crea una subtransazione. Se sono troppe, il meccanismo di caching dei lock fallisce.
+<strong>Perché:</strong> Riscrivo la logica per validare i dati prima dell’inserimento invece di “provare e catturare l’errore”. Ho scelto la validazione preventiva per mantenere pulito lo stack delle transazioni.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

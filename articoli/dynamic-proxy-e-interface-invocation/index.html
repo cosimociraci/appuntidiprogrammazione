@@ -85,7 +85,8 @@
 <p>Creare un client HTTP dichiarativo dove basta definire l’interfaccia per avere l’implementazione automatica.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Overhead introdotto dal layer di intercettazione dei proxy dinamici nelle interfacce dei repository o dei client. <strong>Perché:</strong> Implemento una cache dei Method all’interno dell’InvocationHandler. Ho scelto di pre-risolvere i riferimenti ai metodi per minimizzare il tempo speso nella gestione dei metadati durante la chiamata.</p>
+<p><strong>Problema:</strong> Overhead introdotto dal layer di intercettazione dei proxy dinamici nelle interfacce dei repository o dei client.
+<strong>Perché:</strong> Implemento una cache dei Method all’interno dell’InvocationHandler. Ho scelto di pre-risolvere i riferimenti ai metodi per minimizzare il tempo speso nella gestione dei metadati durante la chiamata.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

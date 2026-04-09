@@ -85,7 +85,8 @@
 <p>Accelerare i tempi di risposta di un’API REST che restituisce grandi liste di oggetti complessi.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Il tempo speso nella serializzazione JSON domina il tempo totale della richiesta a causa della lentezza della reflection. <strong>Perché:</strong> Abilito la generazione di bytecode dinamico. Ho scelto di ottimizzare il layer di trasporto delegando a Jackson la creazione di invocatori ottimizzati per i miei DTO specifici.</p>
+<p><strong>Problema:</strong> Il tempo speso nella serializzazione JSON domina il tempo totale della richiesta a causa della lentezza della reflection.
+<strong>Perché:</strong> Abilito la generazione di bytecode dinamico. Ho scelto di ottimizzare il layer di trasporto delegando a Jackson la creazione di invocatori ottimizzati per i miei DTO specifici.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

@@ -85,7 +85,8 @@
 <p>Scalare un server che effettua pesanti operazioni di cifratura o hashing (bcrypt) senza bloccare le altre richieste.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Latenza elevata in operazioni asincrone non-network a causa della coda di attesa nella thread pool di Libuv. <strong>Perché:</strong> Espando il pool di thread. Ho scelto di configurare UV_THREADPOOL_SIZE per allinearlo al carico previsto, permettendo l’esecuzione parallela di task bloccanti a livello di sistema operativo.</p>
+<p><strong>Problema:</strong> Latenza elevata in operazioni asincrone non-network a causa della coda di attesa nella thread pool di Libuv.
+<strong>Perché:</strong> Espando il pool di thread. Ho scelto di configurare UV_THREADPOOL_SIZE per allinearlo al carico previsto, permettendo l’esecuzione parallela di task bloccanti a livello di sistema operativo.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

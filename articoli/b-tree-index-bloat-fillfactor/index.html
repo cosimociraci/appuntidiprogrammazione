@@ -85,7 +85,8 @@
 <p>Mantenere alte le performance di ricerca su una tabella di “sessioni attive” che subisce migliaia di cancellazioni e inserimenti al minuto.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Il degrado delle performance dovuto alla frammentazione fisica dell’indice che costringe a scansioni di pagine quasi vuote. <strong>Perché:</strong> Ho scelto di abbassare il fillfactor. In questo modo permetto a Postgres di inserire nuove versioni delle chiavi nella stessa pagina, riducendo l’overhead di riorganizzazione dell’albero.</p>
+<p><strong>Problema:</strong> Il degrado delle performance dovuto alla frammentazione fisica dell’indice che costringe a scansioni di pagine quasi vuote.
+<strong>Perché:</strong> Ho scelto di abbassare il fillfactor. In questo modo permetto a Postgres di inserire nuove versioni delle chiavi nella stessa pagina, riducendo l’overhead di riorganizzazione dell’albero.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

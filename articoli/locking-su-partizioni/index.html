@@ -85,7 +85,8 @@
 <p>Eseguire il “detach” di una partizione di log vecchia di un anno senza interrompere l’inserimento dei nuovi log di oggi.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Un lock eccessivo sulla tabella master impedisce l’accesso a tutte le sottotabelle, anche se fisicamente separate. <strong>Perché:</strong> Uso ALTER TABLE … DETACH PARTITION CONCURRENTLY. Ho scelto la modalità concurrent perché evita di prendere un Access Exclusive Lock sulla tabella padre, permettendo il traffico dati durante l’operazione.</p>
+<p><strong>Problema:</strong> Un lock eccessivo sulla tabella master impedisce l’accesso a tutte le sottotabelle, anche se fisicamente separate.
+<strong>Perché:</strong> Uso ALTER TABLE … DETACH PARTITION CONCURRENTLY. Ho scelto la modalità concurrent perché evita di prendere un Access Exclusive Lock sulla tabella padre, permettendo il traffico dati durante l’operazione.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

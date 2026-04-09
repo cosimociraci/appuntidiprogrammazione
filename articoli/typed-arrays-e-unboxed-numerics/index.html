@@ -85,7 +85,8 @@
 <p>Implementare un motore di calcolo per segnali audio o manipolazione di pixel in tempo reale nel browser o Node.js.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Latenza computazionale e picchi di GC causati dall’allocazione continua di numeri ad alta precisione in array dinamici. <strong>Perché:</strong> Uso i Typed Arrays. Ho scelto questa struttura per forzare il runtime a usare memoria fissa e contigua, permettendo ottimizzazioni SIMD e un accesso ai dati estremamente più veloce.</p>
+<p><strong>Problema:</strong> Latenza computazionale e picchi di GC causati dall’allocazione continua di numeri ad alta precisione in array dinamici.
+<strong>Perché:</strong> Uso i Typed Arrays. Ho scelto questa struttura per forzare il runtime a usare memoria fissa e contigua, permettendo ottimizzazioni SIMD e un accesso ai dati estremamente più veloce.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

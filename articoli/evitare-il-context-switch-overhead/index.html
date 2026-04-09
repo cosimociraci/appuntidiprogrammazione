@@ -85,7 +85,8 @@
 <p>Ottimizzare un convertitore di formati audio che effettua migliaia di micro-trasformazioni al secondo.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Il costo del “salto” tra Java e C è superiore al tempo di esecuzione della funzione nativa stessa. <strong>Perché:</strong> Riduco le chiamate cross-boundary. Ho scelto di spostare la logica iterativa nel codice C o di usare segmenti di memoria mappati per far sì che il C legga i dati che Java ha preparato in un’unica soluzione.</p>
+<p><strong>Problema:</strong> Il costo del “salto” tra Java e C è superiore al tempo di esecuzione della funzione nativa stessa.
+<strong>Perché:</strong> Riduco le chiamate cross-boundary. Ho scelto di spostare la logica iterativa nel codice C o di usare segmenti di memoria mappati per far sì che il C legga i dati che Java ha preparato in un’unica soluzione.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

@@ -85,7 +85,8 @@
 <p>Estrarre tag e valori da log giganteschi o messaggi di protocollo senza raddoppiare l’occupazione di memoria.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Esplosione della memoria dovuta alla creazione di migliaia di stringhe “frammento” durante le operazioni di split e substring. <strong>Perché:</strong> Uso l’interfaccia CharSequence. Ho scelto di passare riferimenti all’oggetto originale uniti a indici di inizio e fine, evitando di copiare i dati finché non è strettamente necessario.</p>
+<p><strong>Problema:</strong> Esplosione della memoria dovuta alla creazione di migliaia di stringhe “frammento” durante le operazioni di split e substring.
+<strong>Perché:</strong> Uso l’interfaccia CharSequence. Ho scelto di passare riferimenti all’oggetto originale uniti a indici di inizio e fine, evitando di copiare i dati finché non è strettamente necessario.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

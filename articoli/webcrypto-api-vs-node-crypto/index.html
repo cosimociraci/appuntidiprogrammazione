@@ -85,7 +85,8 @@
 <p>Implementare la cifratura end-to-end (E2EE) in una chat web dove il server non deve mai leggere i messaggi in chiaro.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Esposizione di chiavi crittografiche a script malevoli (XSS) che possono leggere la memoria heap di JavaScript. <strong>Perché:</strong> Uso chiavi non estraibili. Ho scelto la WebCrypto API per garantire che le operazioni di firma e cifratura avvengano senza mai esporre i byte della chiave al codice applicativo.</p>
+<p><strong>Problema:</strong> Esposizione di chiavi crittografiche a script malevoli (XSS) che possono leggere la memoria heap di JavaScript.
+<strong>Perché:</strong> Uso chiavi non estraibili. Ho scelto la WebCrypto API per garantire che le operazioni di firma e cifratura avvengano senza mai esporre i byte della chiave al codice applicativo.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

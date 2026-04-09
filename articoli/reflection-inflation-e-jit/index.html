@@ -85,7 +85,8 @@
 <p>Comprendere perché le performance di un modulo di importazione dati migliorano improvvisamente dopo i primi secondi di esecuzione.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Comportamento prestazionale incostante (jitter) durante le prime invocazioni dinamiche del sistema. <strong>Perché:</strong> Conosco il meccanismo di Inflation. Ho scelto di lasciare che la JVM gestisca la transizione automatica, ma monitoro il numero di classi generate per evitare un consumo eccessivo di Metaspace.</p>
+<p><strong>Problema:</strong> Comportamento prestazionale incostante (jitter) durante le prime invocazioni dinamiche del sistema.
+<strong>Perché:</strong> Conosco il meccanismo di Inflation. Ho scelto di lasciare che la JVM gestisca la transizione automatica, ma monitoro il numero di classi generate per evitare un consumo eccessivo di Metaspace.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

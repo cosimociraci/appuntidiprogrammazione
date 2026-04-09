@@ -85,7 +85,8 @@
 <p>Ridurre l’impronta di memoria di un gateway che manipola grossi payload JSON con chiavi e valori ripetitivi.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** L’heap si riempie di istanze diverse di stringhe che hanno lo stesso identico contenuto testuale. <strong>Perché:</strong> Attivo la deduplicazione automatica. Ho scelto questa via per ottimizzare la memoria in modo trasparente, evitando di gestire manualmente pool di stringhe o logiche di caching complesse nel codice.</p>
+<p><strong>Problema:</strong> L’heap si riempie di istanze diverse di stringhe che hanno lo stesso identico contenuto testuale.
+<strong>Perché:</strong> Attivo la deduplicazione automatica. Ho scelto questa via per ottimizzare la memoria in modo trasparente, evitando di gestire manualmente pool di stringhe o logiche di caching complesse nel codice.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

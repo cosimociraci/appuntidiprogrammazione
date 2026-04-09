@@ -85,7 +85,8 @@
 <p>Chiamare funzioni di sistema Unix/Linux complesse che richiedono flag e parametri dinamici.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Difficoltà nel chiamare funzioni C flessibili che non hanno una firma fissa di parametri. <strong>Perché:</strong> Uso i descrittori variabili. Ho scelto di creare handle specifici per le diverse chiamate variadiche necessarie, garantendo che lo stack nativo venga preparato correttamente per ogni invocazione.</p>
+<p><strong>Problema:</strong> Difficoltà nel chiamare funzioni C flessibili che non hanno una firma fissa di parametri.
+<strong>Perché:</strong> Uso i descrittori variabili. Ho scelto di creare handle specifici per le diverse chiamate variadiche necessarie, garantendo che lo stack nativo venga preparato correttamente per ogni invocazione.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

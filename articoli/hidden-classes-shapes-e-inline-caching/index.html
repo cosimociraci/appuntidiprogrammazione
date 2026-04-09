@@ -85,7 +85,8 @@
 <p>Ottimizzare il throughput di un server che manipola milioni di oggetti “User” simili in loop stretti.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Calo drastico delle performance dovuto alla polimorfizzazione delle funzioni che accettano oggetti con strutture (shapes) leggermente diverse. <strong>Perché:</strong> Mantengo la stabilità delle forme. Ho scelto di inizializzare tutti i campi nel costruttore, anche come null, per garantire che ogni istanza condivida la stessa transizione di classe nascosta.</p>
+<p><strong>Problema:</strong> Calo drastico delle performance dovuto alla polimorfizzazione delle funzioni che accettano oggetti con strutture (shapes) leggermente diverse.
+<strong>Perché:</strong> Mantengo la stabilità delle forme. Ho scelto di inizializzare tutti i campi nel costruttore, anche come null, per garantire che ogni istanza condivida la stessa transizione di classe nascosta.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

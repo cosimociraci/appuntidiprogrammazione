@@ -85,7 +85,8 @@
 <p>Gestire un alto volume di messaggi cifrati dove l’inizializzazione del motore di cifratura richiede millisecondi preziosi.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Latenza elevata dovuta alla continua creazione e distruzione di oggetti che allocano memoria nativa o socket. <strong>Perché:</strong> Uso un pool di oggetti. Ho scelto di pre-allocare queste risorse pesanti per trasformare un costo di inizializzazione in un semplice “checkout” da una coda concorrente.</p>
+<p><strong>Problema:</strong> Latenza elevata dovuta alla continua creazione e distruzione di oggetti che allocano memoria nativa o socket.
+<strong>Perché:</strong> Uso un pool di oggetti. Ho scelto di pre-allocare queste risorse pesanti per trasformare un costo di inizializzazione in un semplice “checkout” da una coda concorrente.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

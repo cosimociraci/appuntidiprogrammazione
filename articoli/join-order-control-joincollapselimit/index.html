@@ -85,7 +85,8 @@
 <p>Velocizzare la fase di pianificazione di query enormi prodotte da software di BI che uniscono decine di tabelle.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>**Problema:</strong>** Tempi di pianificazione (Planning Time) superiori ai tempi di esecuzione a causa della complessità combinatoria dei join. <strong>Perché:</strong> Ho aumentato il limite di collasso. Ho deciso di dare al Planner più spazio di manovra per query complesse, ma raccomando di scrivere i join nell’ordine di selettività decrescente per aiutare il motore.</p>
+<p><strong>Problema:</strong> Tempi di pianificazione (Planning Time) superiori ai tempi di esecuzione a causa della complessità combinatoria dei join.
+<strong>Perché:</strong> Ho aumentato il limite di collasso. Ho deciso di dare al Planner più spazio di manovra per query complesse, ma raccomando di scrivere i join nell’ordine di selettività decrescente per aiutare il motore.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 
