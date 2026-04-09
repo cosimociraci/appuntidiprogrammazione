@@ -85,7 +85,7 @@
 <p>Ottimizzare la ricerca di ordini “da processare” in una tabella che contiene milioni di ordini già conclusi.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> L’indice sulla colonna ‘status’ è enorme e poco selettivo perché la stragrande maggioranza dei record è nello stato ‘COMPLETED’. Perché: Uso un indice parziale. Ho deciso di indicizzare solo le righe dove status != ‘COMPLETED’, riducendo la dimensione dell’indice del 95% e rendendo i lookup istantanei.</p>
+<p><strong>**Problema:</strong>** L’indice sulla colonna ‘status’ è enorme e poco selettivo perché la stragrande maggioranza dei record è nello stato ‘COMPLETED’. <strong>Perché:</strong> Uso un indice parziale. Ho deciso di indicizzare solo le righe dove status != ‘COMPLETED’, riducendo la dimensione dell’indice del 95% e rendendo i lookup istantanei.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

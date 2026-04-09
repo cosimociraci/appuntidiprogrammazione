@@ -85,7 +85,7 @@
 <p>Implementare un motore di calcolo per segnali audio o manipolazione di pixel in tempo reale nel browser o Node.js.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> Latenza computazionale e picchi di GC causati dall’allocazione continua di numeri ad alta precisione in array dinamici. Perché: Uso i Typed Arrays. Ho scelto questa struttura per forzare il runtime a usare memoria fissa e contigua, permettendo ottimizzazioni SIMD e un accesso ai dati estremamente più veloce.</p>
+<p><strong>**Problema:</strong>** Latenza computazionale e picchi di GC causati dall’allocazione continua di numeri ad alta precisione in array dinamici. <strong>Perché:</strong> Uso i Typed Arrays. Ho scelto questa struttura per forzare il runtime a usare memoria fissa e contigua, permettendo ottimizzazioni SIMD e un accesso ai dati estremamente più veloce.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 
@@ -223,7 +223,7 @@
     <span class="nx">sum2</span> <span class="o">+=</span> <span class="nx">typedArray</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
     <span class="c1">// Loop ottimizzato con istruzioni vettoriali dalla CPU</span>
 <span class="p">}</span>
-<span class="cm">/* Scelgo il tipo corretto in base al dominio del problema: */</span>
+<span class="cm">/* Scelgo il tipo corretto in base al dominio del **Problema:** */</span>
 <span class="c1">// Float64Array: calcolo scientifico, audio (range completo double IEEE 754) //</span>
     <span class="nl">Float32Array</span><span class="p">:</span> <span class="nx">grafica</span> <span class="mi">3</span><span class="nx">D</span><span class="p">,</span> <span class="nx">WebGL</span> <span class="p">(</span><span class="nx">meno</span> <span class="nx">preciso</span> <span class="nx">ma</span> <span class="mi">2</span><span class="nx">x</span> <span class="nx">più</span> <span class="nx">compatto</span><span class="p">)</span> <span class="c1">//</span>
     <span class="nb">Int32Array</span><span class="p">:</span> <span class="nx">contatori</span><span class="p">,</span> <span class="nx">indici</span><span class="p">,</span> <span class="nx">coordinate</span> <span class="nx">pixel</span> <span class="c1">// Uint8Array: buffer raw,</span>

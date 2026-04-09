@@ -85,7 +85,7 @@
 <p>Interagire con i file header di un driver hardware o di una libreria di rete che usa strutture dati binarie fisse.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> Rischio di errori di allineamento e offset durante la lettura di dati complessi provenienti da librerie esterne. Perché: Definisco un StructLayout. Ho deciso di modellare la memoria in modo dichiarativo per lasciare che sia la JVM a calcolare gli offset corretti, evitando errori manuali di calcolo dei byte.</p>
+<p><strong>**Problema:</strong>** Rischio di errori di allineamento e offset durante la lettura di dati complessi provenienti da librerie esterne. <strong>Perché:</strong> Definisco un StructLayout. Ho deciso di modellare la memoria in modo dichiarativo per lasciare che sia la JVM a calcolare gli offset corretti, evitando errori manuali di calcolo dei byte.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

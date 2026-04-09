@@ -85,7 +85,7 @@
 <p>Modellare lo stato di una richiesta HTTP (Idle, Loading, Success, Error) evitando che l’app acceda ai dati quando è in errore.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> Accesso a proprietà inesistenti in determinati stati (es. leggere data quando loading è true) e bug logici dovuti a casi non gestiti. Perché: Uso il controllo di esaustività. Ho scelto questa tecnica per rendere illegali gli stati impossibili già a livello di compilatore.</p>
+<p><strong>**Problema:</strong>** Accesso a proprietà inesistenti in determinati stati (es. leggere data quando loading è true) e bug logici dovuti a casi non gestiti. <strong>Perché:</strong> Uso il controllo di esaustività. Ho scelto questa tecnica per rendere illegali gli stati impossibili già a livello di compilatore.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

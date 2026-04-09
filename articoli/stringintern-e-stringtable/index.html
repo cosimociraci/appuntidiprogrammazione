@@ -85,7 +85,7 @@
 <p>Ottimizzare la memoria di un sistema di reportistica che carica milioni di record con molti campi testuali ripetuti.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> Milioni di istanze diverse di stringhe identiche che consumano l’80% dell’heap disponibile. Perché: Uso l’interning controllato. Ho scelto di centralizzare i valori ripetitivi per ridurre drasticamente l’impronta di memoria, configurando però la JVM per gestire un pool di stringhe di dimensioni adeguate.</p>
+<p><strong>**Problema:</strong>** Milioni di istanze diverse di stringhe identiche che consumano l’80% dell’heap disponibile. <strong>Perché:</strong> Uso l’interning controllato. Ho scelto di centralizzare i valori ripetitivi per ridurre drasticamente l’impronta di memoria, configurando però la JVM per gestire un pool di stringhe di dimensioni adeguate.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

@@ -85,7 +85,7 @@
 <p>Gestire validazioni di input ad alta frequenza dove il fallimento è un evento previsto e comune, non un errore di sistema.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> Overhead della CPU enorme quando le eccezioni vengono usate per gestire la logica di business ordinaria. Perché: Disabilito lo stacktrace. Ho deciso di ottimizzare le eccezioni ricorrenti perché in questi casi il “dove” è successo l’errore è già noto e non giustifica il costo del dump dello stack.</p>
+<p><strong>**Problema:</strong>** Overhead della CPU enorme quando le eccezioni vengono usate per gestire la logica di business ordinaria. <strong>Perché:</strong> Disabilito lo stacktrace. Ho deciso di ottimizzare le eccezioni ricorrenti perché in questi casi il “dove” è successo l’errore è già noto e non giustifica il costo del dump dello stack.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

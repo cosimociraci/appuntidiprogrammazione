@@ -85,7 +85,7 @@
 <p>Velocizzare l’indicizzazione di migliaia di documenti al minuto in un motore di ricerca interno.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> L’aggiornamento simultaneo degli indici GIN da parte di più transazioni causa rallentamenti significativi (lock contention). Perché: Aumento la dimensione della pending list. Ho scelto di bufferizzare gli aggiornamenti dell’indice in memoria per consolidarli in operazioni batch più rare ma più efficienti.</p>
+<p><strong>**Problema:</strong>** L’aggiornamento simultaneo degli indici GIN da parte di più transazioni causa rallentamenti significativi (lock contention). <strong>Perché:</strong> Aumento la dimensione della pending list. Ho scelto di bufferizzare gli aggiornamenti dell’indice in memoria per consolidarli in operazioni batch più rare ma più efficienti.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

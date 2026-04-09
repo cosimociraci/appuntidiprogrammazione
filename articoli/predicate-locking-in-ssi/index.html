@@ -85,7 +85,7 @@
 <p>Garantire la coerenza di un sistema di allocazione budget dove la somma delle spese non deve mai superare il tetto massimo, anche se le spese vengono inserite contemporaneamente.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> Come bloccare una “condizione” (la somma) invece di singole righe che potrebbero non esistere ancora. Perché: Sfrutto l’infrastruttura SSI di Postgres. Ho scelto questo metodo perché è l’unico che garantisce l’assenza di anomalie senza dover bloccare l’intera tabella dei pagamenti.</p>
+<p><strong>**Problema:</strong>** Come bloccare una “condizione” (la somma) invece di singole righe che potrebbero non esistere ancora. <strong>Perché:</strong> Sfrutto l’infrastruttura SSI di Postgres. Ho scelto questo metodo perché è l’unico che garantisce l’assenza di anomalie senza dover bloccare l’intera tabella dei pagamenti.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

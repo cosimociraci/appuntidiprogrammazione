@@ -85,7 +85,7 @@
 <p>Ottimizzare le performance di un database migrato da un vecchio server fisico a un’istanza Cloud con storage SSD ad alte prestazioni.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> Il Planner evita l’uso degli indici perché sovrastima il costo di lettura delle pagine sparse sul disco. Perché: Ho deciso di allineare random_page_cost a seq_page_cost. In questo modo elimino il bias contro gli indici, riflettendo la realtà fisica dell’hardware SSD dove la latenza di seek è trascurabile.</p>
+<p><strong>**Problema:</strong>** Il Planner evita l’uso degli indici perché sovrastima il costo di lettura delle pagine sparse sul disco. <strong>Perché:</strong> Ho deciso di allineare random_page_cost a seq_page_cost. In questo modo elimino il bias contro gli indici, riflettendo la realtà fisica dell’hardware SSD dove la latenza di seek è trascurabile.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

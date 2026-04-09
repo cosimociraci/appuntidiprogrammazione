@@ -85,7 +85,7 @@
 <p>Ripristinare le performance di ricerca su una tabella di messaggistica dove gli indici sono diventati tre volte più grandi dei dati reali.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> Indici massivi che non entrano più in RAM a causa della frammentazione interna, causando swap su disco. Perché: Eseguo il reindex online. Ho scelto la modalità CONCURRENTLY perché non posso permettermi di fermare l’applicazione, ma ho bisogno di un indice compatto per velocizzare i join.</p>
+<p><strong>**Problema:</strong>** Indici massivi che non entrano più in RAM a causa della frammentazione interna, causando swap su disco. <strong>Perché:</strong> Eseguo il reindex online. Ho scelto la modalità CONCURRENTLY perché non posso permettermi di fermare l’applicazione, ma ho bisogno di un indice compatto per velocizzare i join.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

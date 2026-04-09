@@ -85,7 +85,7 @@
 <p>Passare configurazioni o dataset di medie dimensioni dal backend al frontend senza appesantire il rendering server-side.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> Il rendering dei dati in blocchi th:inline=”javascript” diventa un collo di bottiglia se gli oggetti sono complessi. Perché: Uso l’iniezione JSON raw. Ho scelto di bypassare l’inliner di Thymeleaf per i dati strutturati, trattandoli come stringhe statiche già pronte per il client.</p>
+<p><strong>**Problema:</strong>** Il rendering dei dati in blocchi th:inline=”javascript” diventa un collo di bottiglia se gli oggetti sono complessi. <strong>Perché:</strong> Uso l’iniezione JSON raw. Ho scelto di bypassare l’inliner di Thymeleaf per i dati strutturati, trattandoli come stringhe statiche già pronte per il client.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

@@ -85,7 +85,7 @@
 <p>Risolvere bug di precedenza in sistemi ad alta frequenza dove i timer sembrano “scattare” in ritardo rispetto alle promesse.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> L’applicazione non risponde all’I/O esterno perché saturata da una catena infinita di microtask ricorsivi. Perché: Uso setImmediate per task non urgenti. Ho scelto di differire la logica alla fase di “Check” dell’Event Loop per permettere al ciclo di completare il polling dell’I/O di rete.</p>
+<p><strong>**Problema:</strong>** L’applicazione non risponde all’I/O esterno perché saturata da una catena infinita di microtask ricorsivi. <strong>Perché:</strong> Uso setImmediate per task non urgenti. Ho scelto di differire la logica alla fase di “Check” dell’Event Loop per permettere al ciclo di completare il polling dell’I/O di rete.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 
@@ -194,7 +194,7 @@
 <span class="nx">setTimeout</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">5. setTimeout (Timers phase)</span><span class="dl">'</span><span class="p">),</span> <span class="mi">0</span><span class="p">);</span>
 <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">6. More synchronous code</span><span class="dl">'</span><span class="p">);</span>
 <span class="c1">// Output garantito: 1, 6, 2, 3, 4 o 5 (4 e 5 dipendono dal sistema), ma SEMPRE</span>
-    <span class="mi">2</span> <span class="nx">prima</span> <span class="nx">di</span> <span class="mi">3</span> <span class="cm">/* Il problema: starvation da nextTick ricorsivo. Questo codice
+    <span class="mi">2</span> <span class="nx">prima</span> <span class="nx">di</span> <span class="mi">3</span> <span class="cm">/* Il **Problema:** starvation da nextTick ricorsivo. Questo codice
     blocca l'I/O indefinitamente. */</span> <span class="kd">function</span> <span class="nx">starveIo</span><span class="p">()</span>
 <span class="p">{</span>
     <span class="nx">process</span><span class="p">.</span><span class="nx">nextTick</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>

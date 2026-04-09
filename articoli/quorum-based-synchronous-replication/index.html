@@ -85,7 +85,7 @@
 <p>Garantire la sicurezza dei dati anche se uno dei tre nodi della server farm va offline per un guasto hardware improvviso.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> In una replica sincrona 1-a-1, se la replica cade, il Master smette di accettare scritture, causando un downtime totale. Perché: Uso il Quorum Commit. Ho scelto ANY 1 (standby1, standby2) così il Master prosegue finché almeno una delle due repliche è viva e sincronizzata.</p>
+<p><strong>**Problema:</strong>** In una replica sincrona 1-a-1, se la replica cade, il Master smette di accettare scritture, causando un downtime totale. <strong>Perché:</strong> Uso il Quorum Commit. Ho scelto ANY 1 (standby1, standby2) così il Master prosegue finché almeno una delle due repliche è viva e sincronizzata.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

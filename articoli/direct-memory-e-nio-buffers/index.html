@@ -85,7 +85,7 @@
 <p>Gestire le performance di un server socket ad alto throughput che usa buffer diretti per evitare la copia dei dati tra Java e OS.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> Memoria di sistema che sparisce nonostante l’heap Java risulti perfettamente stabile e sotto controllo. Perché: Imposto un limite alla memoria diretta. Ho scelto di allineare la Direct Memory alla dimensione dei buffer previsti, garantendo che lo storage off-heap non diventi una mina vagante per la stabilità del server.</p>
+<p><strong>**Problema:</strong>** Memoria di sistema che sparisce nonostante l’heap Java risulti perfettamente stabile e sotto controllo. <strong>Perché:</strong> Imposto un limite alla memoria diretta. Ho scelto di allineare la Direct Memory alla dimensione dei buffer previsti, garantendo che lo storage off-heap non diventi una mina vagante per la stabilità del server.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

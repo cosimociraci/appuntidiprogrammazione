@@ -85,7 +85,7 @@
 <p>Gestire il parsing di un file CSV da 500MB senza freezare l’interfaccia utente o bloccare altre richieste API.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> Blocco dell’Event Loop dovuto a task sincroni CPU-bound che impediscono il rendering o la gestione di I/O. Perché: Delegazione asincrona via Workers. Ho scelto di spostare il calcolo pesante su un thread isolato, usando i messaggi solo per i risultati finali, evitando la contesa sulla memoria principale.</p>
+<p><strong>**Problema:</strong>** Blocco dell’Event Loop dovuto a task sincroni CPU-bound che impediscono il rendering o la gestione di I/O. <strong>Perché:</strong> Delegazione asincrona via Workers. Ho scelto di spostare il calcolo pesante su un thread isolato, usando i messaggi solo per i risultati finali, evitando la contesa sulla memoria principale.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

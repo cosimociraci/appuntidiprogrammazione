@@ -85,7 +85,7 @@
 <p>Recuperare 200GB di spazio disco “fantasma” su una tabella che ha subito una cancellazione massiva di dati storici.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> Tabella enorme che occupa molto più spazio della somma reale dei record, rallentando le query sequenziali. Perché: Identifico il bloat tramite query su pg_stat_user_tables. Ho scelto di usare un approccio di ricostruzione online per minimizzare il downtime pur riorganizzando fisicamente i dati sul disco.</p>
+<p><strong>**Problema:</strong>** Tabella enorme che occupa molto più spazio della somma reale dei record, rallentando le query sequenziali. <strong>Perché:</strong> Identifico il bloat tramite query su pg_stat_user_tables. Ho scelto di usare un approccio di ricostruzione online per minimizzare il downtime pur riorganizzando fisicamente i dati sul disco.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

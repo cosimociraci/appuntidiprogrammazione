@@ -2,10 +2,11 @@ import os
 import re
 
 def process_articles(directory):
-    # Pattern per individuare le righe specifiche
-    # Cerco 'Problema:' e 'Perché:' all'inizio della riga o dopo uno spazio
-    problema_regex = re.compile(r'^(Problema:)', re.MULTILINE)
-    perche_regex = re.compile(r'^(Perché:)', re.MULTILINE)
+    # Pattern aggiornati:
+    # \b assicura che siano parole isolate e non parti di altre parole
+    # Il flag re.IGNORECASE è opzionale, ma utile se scrivi 'PROBLEMA:'
+    problema_regex = re.compile(r'\bProblema:', re.IGNORECASE)
+    perche_regex = re.compile(r'\bPerch[eéè]:', re.IGNORECASE)
 
     if not os.path.exists(directory):
         print(f"Errore: La cartella '{directory}' non esiste.")
@@ -18,20 +19,16 @@ def process_articles(directory):
             with open(filepath, 'r', encoding='utf-8') as f:
                 content = f.read()
 
-            # Verifico se il contenuto ha la sezione Analisi Tecnica
+            # Verifico se siamo nella sezione corretta
             if "## Analisi Tecnica" in content:
-                # Trasformo 'Problema:' in '**Problema:**'
-                # e 'Perché:' in '**Perché:**'
-                new_content = problema_regex.sub(r'**\1**', content)
-                new_content = perche_regex.sub(r'**\1**', new_content)
+                # Sostituzione globale nel testo
+                new_content = problema_regex.sub(r'**Problema:**', content)
+                new_content = perche_regex.sub(r'**Perché:**', new_content)
 
-                # Salvo solo se ci sono state modifiche
                 if new_content != content:
                     with open(filepath, 'w', encoding='utf-8') as f:
                         f.write(new_content)
                     print(f"Aggiornato: {filename}")
-                else:
-                    print(f"Nessuna modifica necessaria per: {filename}")
 
 if __name__ == "__main__":
     # Assicurati che lo script sia nella cartella superiore a _articoli 

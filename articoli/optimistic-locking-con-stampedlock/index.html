@@ -85,7 +85,7 @@
 <p>Ottimizzare l’accesso a una configurazione globale caricata in memoria che viene letta da migliaia di thread al secondo ma aggiornata raramente.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> La contesa tra lettori e scrittori causa micro-latenze inutili in uno scenario read-heavy. Perché: Uso StampedLock. Ho scelto il lock ottimistico perché presuppongo che il dato non cambi durante la lettura; se succede, rifaccio il lavoro, evitando però di acquisire un lock reale il 99% delle volte.</p>
+<p><strong>**Problema:</strong>** La contesa tra lettori e scrittori causa micro-latenze inutili in uno scenario read-heavy. <strong>Perché:</strong> Uso StampedLock. Ho scelto il lock ottimistico perché presuppongo che il dato non cambi durante la lettura; se succede, rifaccio il lavoro, evitando però di acquisire un lock reale il 99% delle volte.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

@@ -85,7 +85,7 @@
 <p>Massimizzare le performance di contatori atomici globali usati intensivamente in un sistema di trading ad alta frequenza.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> Degradazione invisibile delle prestazioni dovuta alla contesa della cache line tra core diversi. Perché: Uso @jdk.internal.vm.annotation.Contended. Ho deciso di forzare l’allineamento della memoria per evitare il ping-pong della cache line tra i core, aumentando il throughput delle operazioni atomiche.</p>
+<p><strong>**Problema:</strong>** Degradazione invisibile delle prestazioni dovuta alla contesa della cache line tra core diversi. <strong>Perché:</strong> Uso @jdk.internal.vm.annotation.Contended. Ho deciso di forzare l’allineamento della memoria per evitare il ping-pong della cache line tra i core, aumentando il throughput delle operazioni atomiche.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 
@@ -162,7 +162,7 @@
 71
 72
 73
-</pre></td><td class="rouge-code"><pre><span class="cm">/* Il problema: due contatori nello stesso oggetto probabilmente finiscono nella
+</pre></td><td class="rouge-code"><pre><span class="cm">/* Il **Problema:** due contatori nello stesso oggetto probabilmente finiscono nella
     stessa cache line da 64 byte. Quando il thread A incrementa successCount e
     il thread B incrementa errorCount, si invalidano le cache line a vicenda
     anche se lavorano su dati diversi. */</span>

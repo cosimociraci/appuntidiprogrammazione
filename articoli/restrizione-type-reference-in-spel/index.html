@@ -85,7 +85,7 @@
 <p>Mettere in sicurezza ambienti CMS dove gli utenti “Power User” possono modificare parzialmente i template HTML.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> Un utente malintenzionato potrebbe inserire un’espressione nel database che, una volta renderizzata, esegue codice sulla JVM. Perché: Sandbox dell’engine SpEL. Ho scelto di limitare le classi risolvibili dal compilatore SpEL per impedire l’invocazione di metodi di sistema pericolosi.</p>
+<p><strong>**Problema:</strong>** Un utente malintenzionato potrebbe inserire un’espressione nel database che, una volta renderizzata, esegue codice sulla JVM. <strong>Perché:</strong> Sandbox dell’engine SpEL. Ho scelto di limitare le classi risolvibili dal compilatore SpEL per impedire l’invocazione di metodi di sistema pericolosi.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

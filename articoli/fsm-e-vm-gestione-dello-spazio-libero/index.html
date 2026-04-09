@@ -85,7 +85,7 @@
 <p>Evitare la crescita ingiustificata del database in scenari di continuo riciclo di dati (delete seguiti da insert).</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> Il database chiede nuovo spazio al sistema operativo anche se sono stati appena cancellati milioni di record. Perché: Il Vacuum non sta aggiornando la FSM correttamente. Ho scelto di aumentare la frequenza di analisi per assicurarmi che le mappe di spazio libero siano sempre precise per il motore di inserimento.</p>
+<p><strong>**Problema:</strong>** Il database chiede nuovo spazio al sistema operativo anche se sono stati appena cancellati milioni di record. <strong>Perché:</strong> Il Vacuum non sta aggiornando la FSM correttamente. Ho scelto di aumentare la frequenza di analisi per assicurarmi che le mappe di spazio libero siano sempre precise per il motore di inserimento.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

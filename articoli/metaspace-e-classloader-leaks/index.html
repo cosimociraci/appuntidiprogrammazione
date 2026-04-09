@@ -85,7 +85,7 @@
 <p>Diagnosticare memory leak in applicazioni che usano pesantemente Reflection, Groovy o framework di plugin dinamici.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> Crescita incontrollata della memoria non-heap (Metaspace) che porta all’esaurimento della RAM del server. Perché: Imposto un tetto massimo al Metaspace. Ho scelto di rendere esplicito l’errore OutOfMemoryError: Metaspace per identificare bug nei ClassLoader invece di lasciare che il processo venga ucciso dall’OS senza spiegazioni.</p>
+<p><strong>**Problema:</strong>** Crescita incontrollata della memoria non-heap (Metaspace) che porta all’esaurimento della RAM del server. <strong>Perché:</strong> Imposto un tetto massimo al Metaspace. Ho scelto di rendere esplicito l’errore OutOfMemoryError: Metaspace per identificare bug nei ClassLoader invece di lasciare che il processo venga ucciso dall’OS senza spiegazioni.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

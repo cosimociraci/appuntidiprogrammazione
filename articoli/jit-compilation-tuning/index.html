@@ -85,7 +85,7 @@
 <p>Eliminare micro-latenze fastidiose su query di lookup di chiavi primarie che inspiegabilmente impiegano più tempo del previsto.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> L’overhead di compilazione JIT aggiunge 50-100ms a query che dovrebbero girare in 1ms. Perché: Disabilito JIT a livello di sessione o transazione. Ho scelto questa configurazione perché le mie query sono semplici e il guadagno della compilazione non copre il costo iniziale della stessa.</p>
+<p><strong>**Problema:</strong>** L’overhead di compilazione JIT aggiunge 50-100ms a query che dovrebbero girare in 1ms. <strong>Perché:</strong> Disabilito JIT a livello di sessione o transazione. Ho scelto questa configurazione perché le mie query sono semplici e il guadagno della compilazione non copre il costo iniziale della stessa.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

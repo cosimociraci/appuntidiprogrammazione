@@ -85,7 +85,7 @@
 <p>Progettare un indice efficiente per una tabella di log che viene interrogata spesso per ‘applicazione’ e ‘livello_errore’.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> Le query che filtrano solo per la seconda colonna dell’indice non ottengono i benefici prestazionali sperati. Perché: Ho riordinato le colonne basandomi sulla frequenza d’uso. Ho messo ‘app_id’ per primo perché è presente nel 90% delle query, massimizzando il riutilizzo dello stesso indice.</p>
+<p><strong>**Problema:</strong>** Le query che filtrano solo per la seconda colonna dell’indice non ottengono i benefici prestazionali sperati. <strong>Perché:</strong> Ho riordinato le colonne basandomi sulla frequenza d’uso. Ho messo ‘app_id’ per primo perché è presente nel 90% delle query, massimizzando il riutilizzo dello stesso indice.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

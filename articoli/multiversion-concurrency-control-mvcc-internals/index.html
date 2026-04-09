@@ -85,7 +85,7 @@
 <p>Ottimizzare un database che subisce migliaia di update al secondo, evitando che la tabella diventi enorme e lenta a causa delle versioni “morte” delle righe.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> Le vecchie versioni delle righe (dead tuples) occupano spazio e rallentano le scansioni degli indici. Perché: Analizzo xmin e xmax. Ho deciso di monitorare queste colonne di sistema per capire quali transazioni “long-running” stanno impedendo la pulizia MVCC.</p>
+<p><strong>**Problema:</strong>** Le vecchie versioni delle righe (dead tuples) occupano spazio e rallentano le scansioni degli indici. <strong>Perché:</strong> Analizzo xmin e xmax. Ho deciso di monitorare queste colonne di sistema per capire quali transazioni “long-running” stanno impedendo la pulizia MVCC.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

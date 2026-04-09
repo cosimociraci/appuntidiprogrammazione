@@ -85,7 +85,7 @@
 <p>Prevenire il congelamento di un microservizio quando si verifica una contesa imprevista su una risorsa critica condivisa.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> Thread bloccati indefinitamente in attesa di un lock, causando l’esaurimento delle risorse del server. Perché: Uso tryLock con timeout. Ho scelto questa strategia per garantire la resilienza del sistema: preferisco un fallimento controllato con timeout piuttosto che un blocco totale silenzioso.</p>
+<p><strong>**Problema:</strong>** Thread bloccati indefinitamente in attesa di un lock, causando l’esaurimento delle risorse del server. <strong>Perché:</strong> Uso tryLock con timeout. Ho scelto questa strategia per garantire la resilienza del sistema: preferisco un fallimento controllato con timeout piuttosto che un blocco totale silenzioso.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

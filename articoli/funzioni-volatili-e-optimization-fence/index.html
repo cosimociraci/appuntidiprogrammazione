@@ -85,7 +85,7 @@
 <p>Evitare che il database chiami una funzione di conversione valuta 1 milione di volte quando potrebbe farlo una volta sola per l’intera query.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> Degrado prestazionale dovuto all’impossibilità del Planner di ottimizzare o “cacheare” i risultati delle funzioni. Perché: Ho marcato la funzione come IMMUTABLE. Ho scelto questo approccio perché i dati di input determinano univocamente l’output, permettendo al Planner di ottimizzare aggressivamente.</p>
+<p><strong>**Problema:</strong>** Degrado prestazionale dovuto all’impossibilità del Planner di ottimizzare o “cacheare” i risultati delle funzioni. <strong>Perché:</strong> Ho marcato la funzione come IMMUTABLE. Ho scelto questo approccio perché i dati di input determinano univocamente l’output, permettendo al Planner di ottimizzare aggressivamente.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

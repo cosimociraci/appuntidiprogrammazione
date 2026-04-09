@@ -85,7 +85,7 @@
 <p>Garantire tempi di risposta costanti per un motore di ricerca interno che gestisce un indice in memoria da 200GB.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> Picchi di latenza imprevedibili causati dalle pause di garbage collection su heap di grandi dimensioni. Perché: Scelgo ZGC. Ho deciso di dare priorità alla latenza minima rispetto al throughput massimo, configurando la JVM per sfruttare il parallelismo estremo nella marcatura degli oggetti.</p>
+<p><strong>**Problema:</strong>** Picchi di latenza imprevedibili causati dalle pause di garbage collection su heap di grandi dimensioni. <strong>Perché:</strong> Scelgo ZGC. Ho deciso di dare priorità alla latenza minima rispetto al throughput massimo, configurando la JVM per sfruttare il parallelismo estremo nella marcatura degli oggetti.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

@@ -85,7 +85,7 @@
 <p>Gestire input di date e valute in form internazionali senza scrivere logica di parsing manuale per ogni richiesta.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> Errori di binding (400 Bad Request) dovuti a formati stringa non corrispondenti ai tipi Java del modello. Perché: Uso il sistema di conversione di Spring. Ho scelto di centralizzare le regole di formattazione nei Bean tramite annotazioni, permettendo a Thymeleaf di riflettere queste regole sia in lettura che in scrittura (binding).</p>
+<p><strong>**Problema:</strong>** Errori di binding (400 Bad Request) dovuti a formati stringa non corrispondenti ai tipi Java del modello. <strong>Perché:</strong> Uso il sistema di conversione di Spring. Ho scelto di centralizzare le regole di formattazione nei Bean tramite annotazioni, permettendo a Thymeleaf di riflettere queste regole sia in lettura che in scrittura (binding).</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

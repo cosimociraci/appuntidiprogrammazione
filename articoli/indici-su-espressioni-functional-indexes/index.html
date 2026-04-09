@@ -85,7 +85,7 @@
 <p>Ottimizzare la ricerca per data (escludendo l’orario) su una colonna di tipo TIMESTAMP senza dover castare ogni riga durante la query.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> L’indice non viene usato perché la clausola WHERE trasforma il dato della colonna, rendendolo non confrontabile con i valori grezzi dell’indice. Perché: Ho creato un indice funzionale. Ho scelto di pre-calcolare il cast a DATE nell’indice per rendere le ricerche cronologiche veloci quanto un lookup di intero.</p>
+<p><strong>**Problema:</strong>** L’indice non viene usato perché la clausola WHERE trasforma il dato della colonna, rendendolo non confrontabile con i valori grezzi dell’indice. <strong>Perché:</strong> Ho creato un indice funzionale. Ho scelto di pre-calcolare il cast a DATE nell’indice per rendere le ricerche cronologiche veloci quanto un lookup di intero.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

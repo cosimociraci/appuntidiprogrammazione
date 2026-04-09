@@ -85,7 +85,7 @@
 <p>Evitare che una tabella di log da 500GB diventi lenta a causa dell’accumulo di milioni di record eliminati che il vacuum non riesce a processare in tempo.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> Il Vacuum è troppo lento rispetto alla velocità di generazione delle dead tuples, causando il “bloat” della tabella. Perché: Ho alzato il budget di costo e ridotto il delay. Ho scelto di dare più priorità all’I/O di manutenzione per garantire che lo spazio venga riutilizzato immediatamente, evitando l’espansione indefinita del file su disco.</p>
+<p><strong>**Problema:</strong>** Il Vacuum è troppo lento rispetto alla velocità di generazione delle dead tuples, causando il “bloat” della tabella. <strong>Perché:</strong> Ho alzato il budget di costo e ridotto il delay. Ho scelto di dare più priorità all’I/O di manutenzione per garantire che lo spazio venga riutilizzato immediatamente, evitando l’espansione indefinita del file su disco.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

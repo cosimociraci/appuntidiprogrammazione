@@ -85,7 +85,7 @@
 <p>Ottimizzare il conteggio di righe o la ricerca di colonne indicizzate su tabelle massicce, garantendo che il database non legga mai la tabella heap.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> Query che dovrebbero usare solo l’indice risultano lente perché devono accedere continuamente ai dati della tabella per confermare la visibilità MVCC. Perché: Monitoro lo stato della Visibility Map. Ho scelto di forzare il vacuum sulle tabelle critiche per “congelare” le pagine e abilitare l’ottimizzazione Index-Only Scan in modo costante.</p>
+<p><strong>**Problema:</strong>** Query che dovrebbero usare solo l’indice risultano lente perché devono accedere continuamente ai dati della tabella per confermare la visibilità MVCC. <strong>Perché:</strong> Monitoro lo stato della Visibility Map. Ho scelto di forzare il vacuum sulle tabelle critiche per “congelare” le pagine e abilitare l’ottimizzazione Index-Only Scan in modo costante.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

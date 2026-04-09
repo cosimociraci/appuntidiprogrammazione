@@ -85,7 +85,7 @@
 <p>Velocizzare una query frequente che cerca l’email di un utente partendo dal suo ID, evitando il “Table Access” dopo aver trovato l’ID nell’indice.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> Anche se l’ID è indicizzato, il database deve comunque leggere la tabella per recuperare la colonna ‘email’. Perché: Uso INCLUDE. Ho scelto di “portare” l’email dentro l’indice dell’ID per permettere un Index-Only Scan, dimezzando di fatto il numero di blocchi letti dal disco.</p>
+<p><strong>**Problema:</strong>** Anche se l’ID è indicizzato, il database deve comunque leggere la tabella per recuperare la colonna ‘email’. <strong>Perché:</strong> Uso INCLUDE. Ho scelto di “portare” l’email dentro l’indice dell’ID per permettere un Index-Only Scan, dimezzando di fatto il numero di blocchi letti dal disco.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

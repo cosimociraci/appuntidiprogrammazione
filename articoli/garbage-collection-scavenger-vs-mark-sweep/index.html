@@ -85,7 +85,7 @@
 <p>Ridurre la latenza di “tail” (P99) in un’applicazione real-time soggetta a stop del GC.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> Latenze imprevedibili causate da cicli di Garbage Collection pesante sull’Old Generation. Perché: Ottimizzo il ciclo di vita degli oggetti. Ho scelto di favorire oggetti a vita brevissima che possono essere puliti dai cicli veloci dello Scavenger, riducendo la promozione alla memoria a lungo termine.</p>
+<p><strong>**Problema:</strong>** Latenze imprevedibili causate da cicli di Garbage Collection pesante sull’Old Generation. <strong>Perché:</strong> Ottimizzo il ciclo di vita degli oggetti. Ho scelto di favorire oggetti a vita brevissima che possono essere puliti dai cicli veloci dello Scavenger, riducendo la promozione alla memoria a lungo termine.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

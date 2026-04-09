@@ -85,7 +85,7 @@
 <p>Proteggere le transazioni finanziarie critiche garantendo che siano scritte su due server prima di rispondere “OK” all’utente.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> L’overhead della rete rallenta ogni singola scrittura se configurato globalmente in modalità sincrona. Perché: Uso la configurazione granulare. Ho scelto di impostare la sincronia solo per le sessioni che gestiscono bilanci economici, lasciando le altre transazioni in modalità asincrona per massimizzare il throughput.</p>
+<p><strong>**Problema:</strong>** L’overhead della rete rallenta ogni singola scrittura se configurato globalmente in modalità sincrona. <strong>Perché:</strong> Uso la configurazione granulare. Ho scelto di impostare la sincronia solo per le sessioni che gestiscono bilanci economici, lasciando le altre transazioni in modalità asincrona per massimizzare il throughput.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

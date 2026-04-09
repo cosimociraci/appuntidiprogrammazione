@@ -85,7 +85,7 @@
 <p>Ridurre i colli di bottiglia durante i picchi di traffico in un’applicazione che crea milioni di oggetti DTO temporanei per ogni richiesta.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> Rallentamento delle allocazioni di memoria dovuto alla sincronizzazione tra i thread nel Memory Manager della JVM. Perché: Verifico e ottimizzo i TLAB. Ho scelto di assicurarmi che l’allocazione sia “lock-free” per la stragrande maggioranza degli oggetti, riducendo drasticamente il tempo speso nei safepoint.</p>
+<p><strong>**Problema:</strong>** Rallentamento delle allocazioni di memoria dovuto alla sincronizzazione tra i thread nel Memory Manager della JVM. <strong>Perché:</strong> Verifico e ottimizzo i TLAB. Ho scelto di assicurarmi che l’allocazione sia “lock-free” per la stragrande maggioranza degli oggetti, riducendo drasticamente il tempo speso nei safepoint.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 
@@ -142,7 +142,7 @@
     default è sufficiente per il mio carico. */</span>
 <span class="n">java</span> <span class="o">-</span><span class="nl">XX:</span><span class="o">+</span><span class="nc">UnlockDiagnosticVMOptions</span> <span class="err">\</span> <span class="o">-</span><span class="nl">XX:</span><span class="o">+</span><span class="nc">PrintTLAB</span> <span class="err">\</span> <span class="o">-</span><span class="nl">XX:</span><span class="o">+</span><span class="nc">UseTLAB</span> <span class="err">\</span>
     <span class="o">-</span><span class="nl">Xlog:</span><span class="n">tlab</span><span class="o">*=</span><span class="nl">debug:</span><span class="n">file</span><span class="o">=</span><span class="n">tlab</span><span class="o">.</span><span class="na">log</span><span class="o">:</span><span class="n">time</span> <span class="err">\</span> <span class="o">-</span><span class="n">jar</span> <span class="n">my</span><span class="o">-</span><span class="n">app</span><span class="o">.</span><span class="na">jar</span>
-<span class="cm">/* Nel log cerco i seguenti indicatori di problema: */</span>
+<span class="cm">/* Nel log cerco i seguenti indicatori di **Problema:** */</span>
 <span class="c1">// [tlab] TLAB: gc thread: 0x... [id: 23] desired_size: 512KB slow allocs: 142</span>
     <span class="c1">// Se 'slow allocs' è alto, il thread sta chiedendo nuovo TLAB troppo spesso</span>
     <span class="cm">/* Aumento la dimensione minima del TLAB per ridurre la frequenza di

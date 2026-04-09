@@ -85,7 +85,7 @@
 <p>Sostituire un vecchio bridge JNI instabile con una soluzione moderna per chiamare una libreria di compressione dati ultra-veloce in C.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> Complessità di mantenimento del codice C JNI e instabilità della JVM in caso di errori nei puntatori. Perché: Uso SymbolLookup e Linker. Ho scelto Panama perché mi permette di mappare la firma della funzione C direttamente in Java, garantendo una gestione della memoria più sicura tramite le “Arene”.</p>
+<p><strong>**Problema:</strong>** Complessità di mantenimento del codice C JNI e instabilità della JVM in caso di errori nei puntatori. <strong>Perché:</strong> Uso SymbolLookup e Linker. Ho scelto Panama perché mi permette di mappare la firma della funzione C direttamente in Java, garantendo una gestione della memoria più sicura tramite le “Arene”.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

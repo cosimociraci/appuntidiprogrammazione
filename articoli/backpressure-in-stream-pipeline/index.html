@@ -85,7 +85,7 @@
 <p>Trasferire file di diversi gigabyte tra un client e un server senza esaurire la memoria RAM del processo Node.js.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> OutOfMemoryError causato dall’accumulo di chunk di dati nel buffer di scrittura (writable.write() restituisce false). Perché: Implemento il controllo del flusso. Ho scelto pipeline perché mette in pausa il “Readable” finché il “Writable” non ha terminato di svuotare il buffer verso il kernel (drain).</p>
+<p><strong>**Problema:</strong>** OutOfMemoryError causato dall’accumulo di chunk di dati nel buffer di scrittura (writable.write() restituisce false). <strong>Perché:</strong> Implemento il controllo del flusso. Ho scelto pipeline perché mette in pausa il “Readable” finché il “Writable” non ha terminato di svuotare il buffer verso il kernel (drain).</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

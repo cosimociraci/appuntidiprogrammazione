@@ -85,7 +85,7 @@
 <p>Ottimizzare l’indicizzazione di un flusso massivo di log applicativi salvati in formato JSONB per analisi in tempo reale.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> Latenza in scrittura inaccettabile dovuta al continuo aggiornamento della struttura ad albero invertito dell’indice GIN. Perché: Ho aumentato il buffer della pending list. Ho scelto di accumulare più dati in memoria prima di scrivere sul disco, trasformando tanti piccoli aggiornamenti casuali in un’unica operazione sequenziale efficiente.</p>
+<p><strong>**Problema:</strong>** Latenza in scrittura inaccettabile dovuta al continuo aggiornamento della struttura ad albero invertito dell’indice GIN. <strong>Perché:</strong> Ho aumentato il buffer della pending list. Ho scelto di accumulare più dati in memoria prima di scrivere sul disco, trasformando tanti piccoli aggiornamenti casuali in un’unica operazione sequenziale efficiente.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

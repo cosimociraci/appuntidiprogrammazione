@@ -85,7 +85,7 @@
 <p>Evitare che un database “fantasma” continui ad accettare ordini dai clienti mentre il sistema ha già eletto un nuovo master ufficiale.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> Due istanze Master attive contemporaneamente scrivono dati diversi, rendendo impossibile la riconciliazione futura. Perché: Utilizzo un cluster manager con Distributed Configuration Store (DCS). Ho scelto Patroni perché gestisce nativamente il ciclo di vita del leader tramite chiavi TTL su etcd, garantendo l’univocità del ruolo.</p>
+<p><strong>**Problema:</strong>** Due istanze Master attive contemporaneamente scrivono dati diversi, rendendo impossibile la riconciliazione futura. <strong>Perché:</strong> Utilizzo un cluster manager con Distributed Configuration Store (DCS). Ho scelto Patroni perché gestisce nativamente il ciclo di vita del leader tramite chiavi TTL su etcd, garantendo l’univocità del ruolo.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 

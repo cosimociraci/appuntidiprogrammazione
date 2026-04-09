@@ -85,7 +85,7 @@
 <p>Evitare che i report di fine mese eseguiti sulla replica falliscano a causa dell’attività di pulizia del database principale.</p>
 
 <h2 id="analisi-tecnica">Analisi Tecnica</h2>
-<p><strong>Problema:</strong> Disallineamento tra la pulizia dei dati (Vacuum) sul Master e le necessità di lettura delle transazioni aperte sulla Replica. Perché: Attivo hot_standby_feedback = on. Ho scelto di accettare un po’ di spazio extra occupato sul Master pur di garantire la stabilità dei report sulla Replica.</p>
+<p><strong>**Problema:</strong>** Disallineamento tra la pulizia dei dati (Vacuum) sul Master e le necessità di lettura delle transazioni aperte sulla Replica. <strong>Perché:</strong> Attivo hot_standby_feedback = on. Ho scelto di accettare un po’ di spazio extra occupato sul Master pur di garantire la stabilità dei report sulla Replica.</p>
 
 <h2 id="esempio-implementativo">Esempio Implementativo</h2>
 
