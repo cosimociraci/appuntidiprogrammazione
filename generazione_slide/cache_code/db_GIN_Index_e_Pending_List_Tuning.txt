@@ -1,0 +1,24 @@
+CREATE INDEX CONCURRENTLY idx_app_logs_gin ON app_logs USING GIN 
+    (payload jsonb_path_ops) WITH (fastupdate = on, 
+    gin_pending_list_limit = 16384); -- 16MB
+ALTER TABLE app_logs SET (gin_pending_list_limit = 16384);
+ANALYZE app_logs;
+SELECT indexrelname, pg_size_pretty(pg_relation_size(indexrelid))
+     AS index_size FROM pg_stat_user_indexes WHERE relname = 
+    'app_logs' AND indexrelname = 'idx_app_logs_gin';
+SELECT gin_clean_pending_list('idx_app_logs_gin'::regclass);
+-- Confastupdate = on: ogni INSERT scrive solo nella lista 
+    pendente (veloce)
+-- Con fastupdate = off: ogni INSERT aggiorna direttamente 
+    l'albero GIN (lento ma ricerche sempre coerenti)
+ALTER INDEX idx_app_logs_gin SET (fastupdate = off);
+COPY app_logs FROM '/data/logs_import.csv' WITH (FORMAT csv);
+ALTER INDEX idx_app_logs_gin SET (fastupdate = on);
+REINDEX INDEX CONCURRENTLY idx_app_logs_gin;
+@Transactional
+public void flushLogBuffer(List<AppLog> buffer) {
+    if (buffer.size() >= 500) {
+        logRepository.saveAll(buffer);
+        buffer.clear();
+    }
+}

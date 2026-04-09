@@ -1,0 +1,132 @@
+/* Confronto il costo delle diverse strategie di allocazione 
+    buffer. */
+const BUFFER_SIZE = 10 * 1024 * 1024;
+// 10MB
+const {
+    performance
+}
+= require('perf_hooks');
+// Buffer.alloc: azzera tutta la memoria -> sicuro ma lento
+let t0 = performance.now();
+const safeBuffer = Buffer.alloc(BUFFER_SIZE);
+console.log(`Buffer.alloc: ${
+    (performance.now() - t0).toFixed(2)
+}
+ms`);
+// Buffer.allocUnsafe: nessuna inizializzazione -> veloce ma 
+    "sporco"
+t0 = performance.now();
+const unsafeBuffer = Buffer.allocUnsafe(BUFFER_SIZE);
+console.log(`Buffer.allocUnsafe: ${
+    (performance.now() - t0).toFixed(2)
+}
+ms`);
+// Risultato tipico: allocUnsafe è 5-20x più veloce su buffer 
+    grandi
+/* Implemento un parser di pacchetti di rete binari con 
+    allocUnsafe. La regola d'oro: devo sovrascrivere TUTTI i byte
+     prima di leggere o inviare il buffer. */
+class BinaryPacketParser {
+    constructor() {
+        // Pre-alloco un pool di buffer riusabili per evitare 
+            allocazioni continue
+        this._pool = [];
+        this._poolSize = 20;
+        for (let i = 0;
+        i < this._poolSize;
+        i++) {
+            this._pool.push(Buffer.allocUnsafe(64 * 1024));
+            // 64KB ciascuno
+        }
+    }
+    acquireBuffer() {
+        return this._pool.pop() ?? Buffer.allocUnsafe(64 * 1024);
+        // Fallback se pool esaurito
+    }
+    releaseBuffer(buf) {
+        if (this._pool.length < this._poolSize) {
+            this._pool.push(buf);
+            // Restituisco al pool: zero nuove allocazioni
+        }
+    }
+    /* Costruisco un pacchetto di risposta binario. Sovrascivo 
+        ogni byte: nessun dato "sporco" trapela. */
+    buildResponsePacket(requestId, statusCode, payload) {
+        const payloadLength = payload.length;
+        const HEADER_SIZE = 12;
+        // 4 (magic) + 4 (requestId) + 2 (statusCode) + 2 
+            (payloadLength)
+        const totalSize = HEADER_SIZE + payloadLength;
+        const buffer = this.acquireBuffer();
+        // Potrebbe contenere dati vecchi: devo sovrascrivere 
+            tutto
+        // Header: ogni campo viene scritto esplicitamente
+        buffer.writeUInt32BE(0xDEADBEEF, 0);
+        // Magic number: 4 byte
+        buffer.writeUInt32BE(requestId, 4);
+        // Request ID: 4 byte
+        buffer.writeUInt16BE(statusCode, 8);
+        // Status code: 2 byte
+        buffer.writeUInt16BE(payloadLength, 10);
+        // Payload length: 2 byte
+        // Payload: copio i dati nel buffer (sovrascrittura 
+            completa)
+        payload.copy(buffer, HEADER_SIZE, 0, payloadLength);
+        // Ritorno solo la slice usata: non il buffer intero 
+            (potrebbe avere dati vecchi oltre totalSize)
+        return buffer.slice(0, totalSize);
+    }
+    /* Parser del pacchetto ricevuto: leggo i campi dal buffer 
+        binario. */
+    parsePacket(rawBuffer) {
+        if (rawBuffer.length < 12) throw new Error('Pacchetto 
+            troppo corto');
+        const magic = rawBuffer.readUInt32BE(0);
+        if (magic !== 0xDEADBEEF) throw new Error('Magic number 
+            non valido: ' + magic.toString(16));
+        return {
+            requestId: rawBuffer.readUInt32BE(4), statusCode: 
+                rawBuffer.readUInt16BE(8), payloadLength: 
+                rawBuffer.readUInt16BE(10), payload: 
+                rawBuffer.slice(12, 12 + 
+                rawBuffer.readUInt16BE(10))
+        }
+        ;
+    }
+}
+/* Uso Buffer.concat() con preallocazione per assemblare più 
+    chunk senza copie intermedie. */
+function assemblePackets(chunks) {
+    // Calcolo la dimensione totale in anticipo: Buffer.concat 
+        può pre-allocare
+    const totalLength = chunks.reduce((sum, chunk) => sum + 
+        chunk.length, 0);
+    // Buffer.concat con totalLength evita una scansione 
+        aggiuntiva per calcolare la dimensione
+    return Buffer.concat(chunks, totalLength);
+}
+/* Sicurezza: scrivo zero nei buffer che contengono dati 
+    sensibili prima di rilasciarli. */
+function secureRelease(buffer) {
+    buffer.fill(0);
+    // Sovrascrive tutti i byte con zero: nessun dato sensibile 
+        in memoria residua
+    parser.releaseBuffer(buffer);
+}
+/* In un server TCP Node.js ad alto throughput: */
+const net = require('net');
+const parser = new BinaryPacketParser();
+const server = net.createServer((socket) => {
+    socket.on('data', (rawData) => {
+        const packet = parser.parsePacket(rawData);
+        const response = 
+            parser.buildResponsePacket(packet.requestId, 200, 
+            Buffer.from('OK'));
+        socket.write(response);
+        parser.releaseBuffer(response);
+        // Restituzione al pool: zero allocazioni nella hot path
+    }
+    );
+}
+);
+server.listen(9000);

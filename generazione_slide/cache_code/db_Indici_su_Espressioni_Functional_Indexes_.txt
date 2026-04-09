@@ -1,0 +1,18 @@
+CREATE INDEX idx_orders_day ON orders ((created_at::DATE));
+EXPLAIN (ANALYZE, BUFFERS) SELECT id, customer_id, total_amount 
+    FROM orders WHERE created_at::DATE = '2026-03-15';
+CREATE INDEX idx_customers_lastname_lower ON customers 
+    (lower(last_name));
+SELECT id, first_name, last_name FROM customers WHERE 
+    lower(last_name) = 'rossi';
+CREATE INDEX idx_orders_year_month ON orders (date_trunc('month',
+     created_at));
+EXPLAIN (ANALYZE) SELECT date_trunc('month', created_at) AS 
+    month, sum(total_amount) FROM orders WHERE 
+    date_trunc('month', created_at) = '2026-03-01' GROUP BY 1;
+SELECT proname, provolatile FROM pg_proc WHERE proname IN 
+    ('lower', 'date_trunc', 'to_tsvector') AND pronamespace = 
+    'pg_catalog'::regnamespace;
+@Query(value = "SELECT * FROM orders WHERE created_at::DATE = 
+    :targetDate", nativeQuery = true) List<Order> 
+    findByDate(@Param("targetDate") LocalDate targetDate);

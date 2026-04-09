@@ -1,0 +1,5 @@
+/* Query per stimare il bloat (approssimativa). */
+SELECT schemaname, relname, n_dead_tup, n_live_tup
+FROM pg_stat_user_tables
+WHERE n_dead_tup > 10000; -- Se n_dead_tup è molto alto rispetto 
+    a n_live_tup, il bloat è critico.

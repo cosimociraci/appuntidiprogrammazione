@@ -1,0 +1,59 @@
+<tr th:each="user : ${users}" 
+    th:with="isAdmin=${user.hasRole('ADMIN')}, 
+    formattedSpent=${#finance.formatCurrency(user.totalSpent, 
+    'EUR')}, isVip=${user.totalSpent.compareTo(T(java.math.BigDec
+    imal).valueOf(1000)) >
+    0}, rowCssClass=${user.active ? '' : 'table-secondary'}" 
+        th:class="${rowCssClass}">
+    <td th:text="${user.name}">
+        Nome
+    </td>
+    <!-- Uso la variabile locale: zero reflection aggiuntiva -->
+    <td th:class="${isAdmin} ? 'badge-danger' : 'badge-
+        secondary'" th:text="${isAdmin} ? 'Admin' : 'User'">
+        Ruolo
+    </td>
+    <td th:text="${formattedSpent}">
+        € 0
+    </td>
+    <td th:class="${isVip} ? 'text-gold' : ''" th:text="${isVip} 
+        ? 'VIP' : 'Standard'">
+        Tier
+    </td>
+</tr>
+<tbody th:each="order : ${orders}" 
+    th:with="subtotal=${order.items.stream().mapToDouble(i ->
+    i.price * i.quantity).sum()}, hasDiscount=${order.coupon != 
+        null and order.coupon.active}, 
+        discountAmount=${order.coupon != null} ? ${subtotal * 
+        order.coupon.rate} : 0, finalTotal=${subtotal - 
+        discountAmount}">
+    <tr>
+        <td th:text="${order.id}">
+            ID
+        </td>
+        <td th:text="${#finance.formatCurrency(subtotal, 
+            'EUR')}">
+            Subtotale
+        </td>
+        <td th:if="${hasDiscount}" th:text="'-' + 
+            ${#finance.formatCurrency(discountAmount, 'EUR')}">
+            Sconto
+        </td>
+        <td th:text="${#finance.formatCurrency(finalTotal, 
+            'EUR')}">
+            Totale
+        </td>
+    </tr>
+</tbody>
+<div th:with="config=${@appConfigBean.getDisplayConfig()}">
+    <span th:text="${config.maxItems}">
+        10
+    </span>
+    <span th:text="${config.dateFormat}">
+        dd/MM/yyyy
+    </span>
+    <span th:text="${config.currency}">
+        EUR
+    </span>
+</div>

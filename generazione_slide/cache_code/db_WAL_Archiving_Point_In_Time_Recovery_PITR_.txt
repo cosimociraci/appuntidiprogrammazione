@@ -1,0 +1,49 @@
+/* Nel postgresql.conf abilito l'archiviazione WAL verso una 
+    destinazione remota sicura. */
+-- archive_mode = on
+-- archive_command = 'pgbackrest --stanza=myapp archive-push %p'
+-- wal_level = replica
+/* Eseguo il base backup iniziale con pgBackRest: */
+-- pgbackrest --stanza=myapp --type=full backup
+/* Verifico che l'archivio WAL sia continuo e integro: */
+-- pgbackrest --stanza=myapp info
+/* In caso di corruzione dei dati, avvio il ripristino su un 
+    server separato specificando il target temporale (un minuto 
+    prima del disastro): */
+-- pgbackrest --stanza=myapp --type=time "--target=2026-03-25 
+    10:14:00+01" restore
+/* Creo il file recovery.signal per attivare la modalità di 
+    recovery e specifico il target nel postgresql.conf del server
+     di ripristino: */
+-- recovery_target_time = '2026-03-25 10:14:00+01'
+-- recovery_target_action = 'promote'
+/* Una volta raggiunto il target, promuove il DB a primario */
+/* Verifico la continuità della catena WAL controllando che non 
+    ci siano buchi nella sequenza dei file archiviati: */
+SELECT wal_filename, archived_count, failed_count, 
+    last_archived_wal, last_archived_time, last_failed_wal, 
+    last_failed_time FROM pg_stat_archiver;
+/* Se last_failed_wal è valorizzato, l'archiviazione ha avuto 
+    problemi: forzo manualmente il retry sull'ultimo WAL fallito.
+     */
+SELECT pg_switch_wal();
+/* Forza la chiusura del WAL segment corrente e il tentativo di 
+    archiviazione */
+/* In Spring Boot, schedulo un job che verifica quotidianamente 
+    l'integrità dell'archivio e la freschezza dell'ultimo backup:
+@Scheduled(cron = "0 0 6 * * *")
+// Ogni mattina alle 06:00
+public void verifyBackupHealth() {
+    try {
+        Process p = Runtime.getRuntime().exec("pgbackrest 
+            --stanza=myapp check");
+        int exit = p.waitFor();
+        if (exit != 0) {
+            alertService.sendCritical("pgBackRest check fallito: 
+                backup PITR non affidabile");
+        }
+    } catch (Exception e) {
+        alertService.sendCritical("Impossibile verificare il 
+            backup: " + e.getMessage());
+    }
+}

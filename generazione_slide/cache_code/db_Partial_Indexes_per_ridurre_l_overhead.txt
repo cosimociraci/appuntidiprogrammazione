@@ -1,0 +1,21 @@
+CREATE INDEX idx_orders_pending ON orders (created_at) WHERE 
+    status = 'PENDING';
+EXPLAIN (ANALYZE, BUFFERS)
+SELECT id, customer_id, created_at FROM orders WHERE status = 
+    'PENDING' ORDER BY created_at;
+SELECT pg_size_pretty(pg_relation_size('idx_orders_pending')) AS 
+    partial_index_size;
+CREATE INDEX idx_jobs_queue ON background_jobs (priority DESC, 
+    scheduled_at ASC) WHERE status IN ('QUEUED', 'RETRY');
+EXPLAIN (ANALYZE, BUFFERS)
+SELECT id, payload FROM background_jobs WHERE status IN 
+    ('QUEUED', 'RETRY') ORDER BY priority DESC, scheduled_at ASC 
+    FOR UPDATE SKIP LOCKED LIMIT 1;
+CREATE INDEX idx_users_unverified ON users (created_at) WHERE 
+    email_verified = false;
+SELECT indexrelname, idx_scan, idx_tup_read, idx_tup_fetch FROM 
+    pg_stat_user_indexes WHERE relname = 'orders' AND 
+    indexrelname = 'idx_orders_pending';
+@Query("SELECT o FROM Order o WHERE o.status = 'PENDING' ORDER BY
+     o.createdAt ASC")
+List<Order> findPendingOrders(Pageable pageable);

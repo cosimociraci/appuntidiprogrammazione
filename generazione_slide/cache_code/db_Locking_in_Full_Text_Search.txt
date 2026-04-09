@@ -1,0 +1,39 @@
+/* Creo l'indice GIN con l'opzione fastupdate abilitata (è il 
+    default ma lo rendo esplicito) e aumento il buffer della 
+    pending list per ridurre la frequenza dei merge sull'entry 
+    tree principale. */
+CREATE INDEX CONCURRENTLY idx_documents_fts ON documents USING 
+    GIN (to_tsvector('italian', coalesce(title, '') || ' ' || 
+    coalesce(body, ''))) WITH (fastupdate = on, 
+    gin_pending_list_limit = 8192); -- 8MB di buffer
+/* Verifico la dimensione attuale della pending list per capire 
+    se il merge viene triggerato troppo spesso. */
+SELECT indexrelid::regclass AS index_name, 
+    pg_size_pretty(pg_relation_size(indexrelid)) AS index_size 
+    FROM pg_stat_user_indexes WHERE indexrelname = 
+    'idx_documents_fts';
+/* Per inserimenti massivi in batch (es. importazione iniziale), 
+    disabilito temporaneamente fastupdate e ricostruisco l'indice
+     alla fine: è più veloce che gestire migliaia di merge 
+    intermedi. */
+ALTER INDEX idx_documents_fts SET (fastupdate = off); -- Eseguo 
+    il bulk insert
+INSERT INTO documents (title, body) SELECT title, body FROM 
+    staging_documents; -- Riabilito fastupdate e forzo un reindex
+     pulito
+ALTER INDEX idx_documents_fts SET (fastupdate = on);
+REINDEX INDEX CONCURRENTLY idx_documents_fts;
+/* Monitoro la lock contention sull'indice durante un inserimento
+     concorrente per verificare il miglioramento: */
+SELECT pid, wait_event_type, wait_event, query FROM 
+    pg_stat_activity WHERE wait_event_type = 'Lock' AND query 
+    ILIKE '%documents%';
+/* In Spring Boot, per l'inserimento massivo di documenti uso un 
+    executor con thread pool limitato per controllare la 
+    concorrenza sui lock GIN: @Autowired private 
+    ThreadPoolTaskExecutor taskExecutor;
+public void bulkIndex(List<Document> docs) {
+    List<List<Document>> batches = Lists.partition(docs, 500);
+    batches.forEach(batch -> taskExecutor.execute(() -> 
+        documentRepository.saveAll(batch)));
+}

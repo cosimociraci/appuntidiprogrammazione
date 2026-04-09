@@ -1,0 +1,28 @@
+CREATE INDEX idx_products_attrs_path ON products USING GIN 
+    (attributes jsonb_path_ops);
+EXPLAIN (ANALYZE, BUFFERS) SELECT id, name, price FROM products 
+    WHERE attributes @> '{"color": "red", "size": "XL"}';
+CREATE INDEX idx_products_attrs_ops ON products USING GIN 
+    (attributes);
+-- Con jsonb_ops posso fare query su esistenza di chiave (non 
+    supportata da jsonb_path_ops):
+SELECT id, name FROM products WHERE attributes ? 'discount_code';
+SELECT id, name FROM products WHERE attributes ?| ARRAY['color', 
+    'size'];
+CREATE INDEX idx_articles_tags ON articles USING GIN (tags);
+-- Trova articoli che contengono TUTTI i tag specificati:
+SELECT id, title FROM articles WHERE tags @> ARRAY['postgresql', 
+    'performance'];
+-- Trova articoli che contengono ALMENO UNO dei tag specificati:
+SELECT id, title FROM articles WHERE tags && ARRAY['postgresql', 
+    'indexing'];
+EXPLAIN (ANALYZE, BUFFERS) SELECT id, title FROM articles WHERE 
+    tags @> ARRAY['postgresql'];
+@Query(value = "SELECT * FROM products WHERE attributes @> 
+    :filter::jsonb", nativeQuery = true)
+List<Product> findByAttributes(@Param("filter") String 
+    jsonFilter);
+String filter = objectMapper.writeValueAsString(Map.of("color", 
+    "red", "size", "XL"));
+List<Product> results = 
+    productRepository.findByAttributes(filter);

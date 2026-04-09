@@ -1,0 +1,88 @@
+public class TemperatureMonitor {
+    // Questo metodo viene chiamato dalla libreria C quando la 
+        temperatura supera la soglia
+    public static void onTemperatureAlert(float temperature, int 
+        sensorId) {
+        log.warn("ALERT: sensore {
+        }
+        ha raggiunto {
+        }
+        °C", sensorId, temperature);
+        meterRegistry.counter("temperature.alert", "sensor", 
+            String.valueOf(sensorId)).increment();
+        alertService.sendCritical("Temperatura critica: " + 
+            temperature + "°C su sensore " + sensorId);
+    }
+}
+@Service public class HardwareMonitoringService {
+    private final Arena callbackArena = Arena.ofShared();
+    // Shared: il C può chiamarlo da qualsiasi thread
+    private MemorySegment callbackPtr;
+    @PostConstruct public void init() throws Throwable {
+        Linker linker = Linker.nativeLinker();
+        SymbolLookup monitorLib = 
+            SymbolLookup.libraryLookup("libhw_monitor.so", 
+            Arena.global());
+        // Creo il MethodHandle per il metodo Java di callback
+        MethodHandle onAlertHandle = 
+            MethodHandles.lookup().findStatic( 
+            TemperatureMonitor.class, "onTemperatureAlert", 
+            MethodType.methodType(void.class, float.class, 
+            int.class) );
+        // Descrivo la firma della funzione C del callback: void 
+            (*callback)(float temp, int sensor_id)
+        FunctionDescriptor callbackDescriptor = 
+            FunctionDescriptor.ofVoid( ValueLayout.JAVA_FLOAT, 
+            ValueLayout.JAVA_INT );
+        // Trasformo il MethodHandle in un puntatore a funzione 
+            che il C può chiamare
+        callbackPtr = linker.upcallStub(onAlertHandle, 
+            callbackDescriptor, callbackArena);
+        // Registro il callback con la libreria nativa
+        MethodHandle registerCallback = linker.downcallHandle( 
+            monitorLib.find("register_temperature_callback").orEl
+            seThrow(), 
+            FunctionDescriptor.ofVoid(ValueLayout.ADDRESS) );
+        registerCallback.invokeExact(callbackPtr, 85.0f);
+        // Soglia: 85°C
+        log.info("Callback temperatura registrato: soglia 85°C");
+    }
+    @PreDestroy public void cleanup() {
+        // Deregistro il callback prima di chiudere l'Arena per 
+            evitare che il C chiami un puntatore pendente
+        deregisterCallbackFromLibrary();
+        callbackArena.close();
+        // Ora il puntatore è invalido: nessun dangling pointer
+    }
+}
+@Service public class HighFrequencyEventService {
+    private final MemorySegment ringBuffer;
+    private final MemorySegment writeIndex;
+    private final MemorySegment readIndex;
+    public HighFrequencyEventService() {
+        Arena arena = Arena.ofShared();
+        // Buffer ad anello da 1MB per 65536 eventi da 16 byte 
+            ciascuno
+        ringBuffer = arena.allocate(65536 * 16);
+        writeIndex = arena.allocate(ValueLayout.JAVA_INT);
+        readIndex = arena.allocate(ValueLayout.JAVA_INT);
+        // Il C riceve il puntatore al buffer e scrive 
+            direttamente senza upcall
+        initNativeRingBuffer(ringBuffer, writeIndex, 65536);
+    }
+    @Scheduled(fixedDelay = 1)
+    // Poll ogni millisecondo
+    public void pollEvents() {
+        int wIdx = (int) 
+            ValueLayout.JAVA_INT.varHandle().get(writeIndex, 0L);
+        int rIdx = (int) 
+            ValueLayout.JAVA_INT.varHandle().get(readIndex, 0L);
+        while (rIdx != wIdx) {
+            long offset = (long)(rIdx % 65536) * 16;
+            processEvent(ringBuffer.asSlice(offset, 16));
+            rIdx = (rIdx + 1) & 0xFFFF;
+        }
+        ValueLayout.JAVA_INT.varHandle().set(readIndex, 0L, 
+            rIdx);
+    }
+}

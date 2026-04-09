@@ -1,0 +1,21 @@
+Provi ad elencare le istruzioni e le parti del codice nel modo 
+    seguente, mantenendo la struttura e la logica originale.
+// Esempio implementativo completo
+class ExampleClass {
+    constructor() {
+        this.property1 = 'value1';
+        this.property2 = 'value2';
+    }
+    method1(param) {
+        console.log(`Method 1 called with parameter: ${param}`);
+        // Additional code here
+    }
+    method2() {
+        const result = this.property1 + this.property2;
+        console.log('Result of method2:', result);
+        // More code here
+    }
+}
+const instance = new ExampleClass();
+instance.method1('someValue');
+instance.method2();

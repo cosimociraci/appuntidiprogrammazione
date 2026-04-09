@@ -1,0 +1,20 @@
+/* Analizzo lo spazio libero medio nelle pagine della tabella */
+SELECT *
+FROM pg_freespace('my_table')
+ORDER BY avail DESC
+LIMIT 20; /* Se le pagine mostrano avail = 0 nonostante recenti 
+    DELETE, la FSM non è aggiornata */
+/* Forzo un vacuum per aggiornare la FSM immediatamente */
+VACUUM my_table;
+/* Aumento la memoria dedicata alla manutenzione per gestire FSM 
+    di tabelle grandi */
+ALTER SYSTEM SET maintenance_work_mem = '512MB';
+SELECT pg_reload_conf();
+/* Verifico che i nuovi INSERT riutilizzino le pagine libere 
+    invece di allocarne di nuove */
+SELECT relpages,
+pg_size_pretty(pg_relation_size('my_table')) AS table_size
+FROM pg_class
+WHERE relname = 'my_table';
+/* Confronto relpages prima e dopo un ciclo delete+insert+vacuum:
+     deve restare stabile */

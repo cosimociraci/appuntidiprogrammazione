@@ -8,6 +8,7 @@ import os
 import re
 import sys
 import subprocess
+import json
 
 # Indentazione standard 4 spazi per la logica custom
 INDENT = "    "
@@ -15,6 +16,9 @@ INDENT = "    "
 CURLY_BRACE_LANGUAGES = {"java", "javascript", "js", "typescript", "ts", "c", "cpp", "csharp", "cs", "php", "kotlin"}
 SQL_LANGUAGES = {"sql", "plpgsql"}
 MARKUP_LANGUAGES = {"html", "xml", "thymeleaf", "svg"}
+
+# Definisci il modello preferito (assicurati di aver fatto: ollama pull qwen2.5-coder:3b)
+OLLAMA_MODEL = "qwen2.5-coder:3b" #mistral, mistral:7b-instruct-v0.3-q2_K
 
 _CODE = 0
 _STRING_DOUBLE = 1
@@ -84,6 +88,47 @@ def format_with_prettier(code_string: str, language: str) -> str:
             
     except FileNotFoundError:
         return f"/* Prettier non trovato nel sistema */\n{code_string}"
+
+# ─────────────────────────────────────────────
+# INTEGRAZIONE OLLAMA (MISTRAL)
+# ─────────────────────────────────────────────
+
+def format_with_ollama(code_string: str, model: str = OLLAMA_MODEL) -> str:
+    """
+    Invia il codice a Ollama per correggere anomalie strutturali 
+    (es. codice attaccato ai commenti //).
+    """
+    prompt = (
+        "Agisci come un formattatore di codice professionale. "
+        "Il tuo compito è inserire newline dove mancano. "
+        "REGOLE FERREE: \n"
+        "1. Se un commento '//' è seguito da codice sulla stessa riga, sposta il codice a capo.\n"
+        "2. Non aggiungere testo introduttivo o conclusivo.\n"
+        "3. Restituisci esclusivamente il codice.\n"
+        f"Codice da elaborare:\n\n{code_string}"
+    )
+
+    try:
+        # Chiamata via CLI di Ollama (più semplice da gestire senza librerie extra)
+        process = subprocess.Popen(
+            ['ollama', 'run', model, prompt],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            encoding='utf-8'
+        )
+        stdout, stderr = process.communicate()
+
+        if process.returncode == 0 and stdout.strip():
+            # Rimuoviamo eventuali blocchi markdown ``` se il modello li aggiunge
+            clean_code = re.sub(r'^```[a-z]*\n|```$', '', stdout.strip(), flags=re.MULTILINE)
+            return clean_code
+        else:
+            print(f"⚠️ Ollama Error: {stderr}")
+            return code_string
+    except Exception as e:
+        print(f"⚠️ Errore connessione Ollama: {e}")
+        return code_string
 
 # ─────────────────────────────────────────────
 # NORMALIZZAZIONE E INDENTAZIONE
@@ -158,13 +203,26 @@ def _normalize_curly_logic(code: str) -> list:
     emit_buf()
     return [l for l in result if l]
 
-def normalize_to_lines(code: str, language: str) -> list:
+def normalize_to_lines(code: str, language: str, use_llm: bool = False) -> list:
+    """
+    Parametro use_llm: se True, usa Mistral per pre-elaborare il codice 
+    e risolvere ambiguità commenti/istruzioni.
+    """
+    working_code = code
+
+    if use_llm:
+        print("🤖 Elaborazione con Mistral (Ollama)...")
+        working_code = format_with_ollama(code, model=OLLAMA_MODEL)
+
     if language in CURLY_BRACE_LANGUAGES:
-        return _normalize_curly_logic(code)
+        return _normalize_curly_logic(working_code)
+    
     if language in MARKUP_LANGUAGES:
-        parts = re.split(r'(<[^>]+>|/\*.*?\*/|//.*?\n)', code, flags=re.DOTALL)
+        # Per markup, separiamo i tag con newline prima della logica standard
+        parts = re.split(r'(<[^>]+>|/\*.*?\*/|//.*?\n)', working_code, flags=re.DOTALL)
         return [p.strip() for p in parts if p.strip()]
-    return [l.strip() for l in code.splitlines() if l.strip()]
+    
+    return [l.strip() for l in working_code.splitlines() if l.strip()]
 
 def indent_lines(lines: list, language: str) -> list:
     formatted = []

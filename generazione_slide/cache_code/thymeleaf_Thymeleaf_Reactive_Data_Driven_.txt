@@ -1,0 +1,138 @@
+@Controller
+public class InventoryController {
+    @Autowired
+    
+    private ProductRepository productRepository;
+// Repository R2DBC reattivo
+@GetMapping("/inventory")
+    public String inventory(Model 
+    model) {
+    // Flux<Product>: i dati arrivano dal DB in modo asincrono
+    Flux
+    <Product>
+        products = productRepository.findAllByOrderByNameAsc()
+            
+            .map(this::enrichProduct)
+        // Arricchimento asincrono
+        .onErrorResume(e -> {
+                log.error("Errore 
+            nel recupero prodotti", e);
+                return 
+            Flux.empty();
+            });
+        // ReactiveDataDriverContextVariable:
+        // - Primo parametro: il Flux con i dati
+        // - Secondo parametro: chunk size (10 = invia 10 righe 
+            HTML alla volta al browser)
+        model.addAttribute("products", new 
+            ReactiveDataDriverContextVariable(products, 10));
+        // I dati non-reattivi vengono aggiunti normalmente
+        model.addAttribute("pageTitle", "Inventario Prodotti");
+            
+        model.addAttribute("totalCount", 
+            productRepository.count());
+        // Mono<Long>: gestito automaticamente
+        return "inventory";
+    }
+
+    @GetMapping("/search")
+            
+    public String search(@RequestParam String query,
+             Model model) {
+            // Combino stream reattivi: ricerca full-text + dati 
+                di stock in parallelo
+            Flux
+            <ProductSearchResult>
+                results = productRepository
+            
+                    .findByNameContainingIgnoreCase(query)
+                    
+                
+                    .zipWith(stockService.getStockLevels())
+                // Join reattivo
+                .map(tuple -> new 
+                    ProductSearchResult(tuple.getT1(), 
+                    tuple.getT2()));
+                // Chunk di 5: i risultati appaiono nel browser 
+                    appena sono disponibili
+                model.addAttribute("results", new 
+                    ReactiveDataDriverContextVariable(results, 
+                    5));
+        model.addAttribute("query", 
+                    query);
+
+        return "search-results";
+                    
+    }
+}
+                /* Template inventory.html: il th:each su un Flux
+                     viene renderizzato in streaming. */
+                // <!DOCTYPE html>
+                // <html xmlns:th="http://www.thymeleaf.org">
+                // <head>
+                //   <title 
+                    th:text="${pageTitle}">Inventario</title>
+                // </head>
+                // <body>
+                //   <h1 th:text="${pageTitle}">Inventario 
+                    Prodotti</h1>
+                //   <p>Totale: <span 
+                    th:text="${totalCount}">...</span> 
+                    prodotti</p>
+                //   <!-- Questa tabella viene inviata al browser
+                     in chunk da 10 righe: -->
+                //   <!-- Le prime 10 righe appaiono nel browser 
+                    mentre le altre 990 sono ancora in 
+                    elaborazione -->
+                //   <table class="table">
+                //     <thead><tr><th>Nome</th><th>Prezzo</th><th
+                    >Stock</th></tr></thead>
+                //     <tbody>
+                //       <tr th:each="product : ${products}"> 
+                    <!-- products è un 
+                    ReactiveDataDriverContextVariable -->
+                //         <td 
+                    th:text="${product.name}">Nome</td>
+                //         <td 
+                    th:text="${#finance.formatCurrency(product.pr
+                    ice, 'EUR')}">€ 0</td>
+                //         <td th:class="${product.stock > 0 ? 
+                    'text-success' : 'text-danger'}"
+                //             th:text="${product.stock > 0 ? 
+                    product.stock + ' unità' : 
+                    'Esaurito'}">-</td>
+                //       </tr>
+                //     </tbody>
+                //   </table>
+                // </body>
+                // </html>
+                /* Configurazione WebFlux per ottimizzare lo 
+                    streaming: */
+                @Configuration
+public class WebFluxConfig 
+                    implements WebFluxConfigurer {
+    @Override
+                    
+    public void configureHttpMessageCodecs(S
+                    erverCodecConfigurer configurer) {
+        
+                    configurer.defaultCodecs().maxInMemorySize(16
+                     * 1024 * 1024);
+                // 16MB buffer
+            }
+
+    @Bean
+    public ThymeleafReactiveViewResolver
+                 thymeleafReactiveViewResolver(SpringWebFluxTempl
+                ateEngine engine) {
+        
+                ThymeleafReactiveViewResolver resolver = new 
+                ThymeleafReactiveViewResolver();
+        
+                resolver.setTemplateEngine(engine);
+        
+                resolver.setResponseMaxChunkSizeBytes(8192);
+            // 8KB per chunk HTTP
+            return resolver;
+    }
+}

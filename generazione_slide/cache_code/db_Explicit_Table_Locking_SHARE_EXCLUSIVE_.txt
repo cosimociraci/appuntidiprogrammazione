@@ -1,0 +1,21 @@
+BEGIN;
+LOCK TABLE votes IN SHARE MODE;
+/* Ricalcolo la classifica in modo atomico partendo dai dati 
+    "congelati". Nessun voto può essere inserito mentre sono qui.
+     */
+TRUNCATE user_rankings;
+INSERT INTO user_rankings (user_id, score, rank) SELECT user_id, 
+    sum(points) AS score, rank() OVER (ORDER BY sum(points) DESC)
+     AS rank FROM votes GROUP BY user_id;
+/* Rilascio il lock implicitamente con il COMMIT. La durata del 
+    lock deve essere la minima possibile: preparo i dati in una 
+    tabella temporanea prima di acquisirlo, ed eseguo solo la 
+    TRUNCATE + INSERT finale dentro la transazione. */
+COMMIT;
+/* Per confronto, ecco la gerarchia dei lock dal meno al più 
+    restrittivo:
+ACCESS SHARE -> ROW SHARE -> ROW EXCLUSIVE -> SHARE UPDATE 
+    EXCLUSIVE -> SHARE -> SHARE ROW EXCLUSIVE -> EXCLUSIVE -> 
+    ACCESS EXCLUSIVE
+Uso ACCESS EXCLUSIVE solo per DDL (ALTER TABLE, DROP, TRUNCATE). 
+    */

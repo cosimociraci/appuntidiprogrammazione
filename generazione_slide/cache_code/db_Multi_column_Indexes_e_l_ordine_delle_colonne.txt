@@ -1,0 +1,31 @@
+CREATE INDEX idx_logs_app_severity ON logs (app_id, severity);
+-- Pattern 1: filtro solo su app_id (usa il prefisso dell'indice)
+EXPLAIN (ANALYZE, BUFFERS) SELECT id, message, created_at FROM 
+    logs WHERE app_id = 7;
+-- Pattern 2: filtro su entrambe le colonne (usa l'indice 
+    completo)
+EXPLAIN (ANALYZE, BUFFERS) SELECT id, message, created_at FROM 
+    logs WHERE app_id = 7 AND severity = 'ERROR';
+-- Pattern 3: filtro solo su severity (NON usa l'indice: serve un
+     indice separato)
+EXPLAIN (ANALYZE, BUFFERS) SELECT id, message, created_at FROM 
+    logs WHERE severity = 'ERROR';
+CREATE INDEX idx_logs_severity_errors ON logs (created_at DESC) 
+    WHERE severity = 'ERROR';
+CREATE INDEX idx_logs_app_severity_time ON logs (app_id, 
+    severity, created_at DESC);
+EXPLAIN (ANALYZE) SELECT id, message, created_at FROM logs WHERE 
+    app_id = 7 AND severity = 'ERROR' ORDER BY created_at DESC 
+    LIMIT 50;
+SELECT indexrelname, idx_scan, idx_tup_read, 
+    pg_size_pretty(pg_relation_size(indexrelid)) AS size
+FROM pg_stat_user_indexes
+WHERE relname = 'logs'
+ORDER BY idx_scan ASC;
+-- Un idx_scan = 0 dopo settimane di produzione è un forte 
+    segnale che l'indice è ridondante e va rimosso per 
+    alleggerire il carico sugli INSERT.
+@Query("SELECT l FROM Log l WHERE l.appId = :appId AND l.severity
+     = :severity ORDER BY l.createdAt DESC")
+Page<Log> findByAppIdAndSeverity(@Param("appId") Long appId, 
+    @Param("severity") String severity, Pageable pageable);

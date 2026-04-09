@@ -1,0 +1,12 @@
+/* Sulla replica intermedia (Hub regionale) */
+primary_conninfo = 'host=master_italy port=5432 user=rep_user';
+wal_level = replica;
+hot_standby = on;
+max_wal_senders = 5;
+/* Le repliche locali si collegano a questo hub, non al master 
+    originale */
+primary_conninfo = 'host=hub_usa port=5432 user=rep_user';
+/* Verifica della cascata dal Master */
+SELECT application_name, client_addr, 
+    pg_wal_lsn_diff(pg_current_wal_lsn(), replay_lsn) AS 
+    lag_bytes FROM pg_stat_replication ORDER BY application_name;

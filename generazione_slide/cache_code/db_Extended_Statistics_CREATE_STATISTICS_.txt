@@ -1,0 +1,25 @@
+CREATE STATISTICS city_zip_dep (dependencies) ON city, zip_code 
+    FROM addresses;
+/* Creo anche statistiche di tipo MCV (Most Common Values) 
+    multidimensionale per la coppia brand/model nel catalogo 
+    prodotti: un Planner senza queste statistiche potrebbe 
+    stimare "Ferrari Panda" come un insieme di righe realistico. 
+    */
+CREATE STATISTICS product_brand_model (dependencies, mcv) ON 
+    brand, model FROM products;
+/* Aggiorno le statistiche per rendere effettive le nuove 
+    definizioni. */
+ANALYZE addresses;
+ANALYZE products;
+/* Verifico che le statistiche siano state create correttamente e
+     che Postgres le stia effettivamente usando: */
+SELECT stxname, stxkeys, stxkind, stxdependencies
+FROM pg_statistic_ext
+JOIN pg_statistic_ext_data ON pg_statistic_ext.oid = 
+    pg_statistic_ext_data.stxoid
+WHERE stxname IN ('city_zip_dep', 'product_brand_model');
+/* Confronto la stima del Planner prima e dopo ANALYZE. Il campo 
+    "rows" nell'EXPLAIN dovrebbe avvicinarsi al valore reale 
+    "actual rows". */
+EXPLAIN (ANALYZE) SELECT * FROM products WHERE brand = 'Levi''s' 
+    AND model = '501';

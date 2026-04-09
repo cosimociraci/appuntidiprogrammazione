@@ -1,0 +1,107 @@
+/* Implemento il contenitore Either completo con i metodi 
+    fondamentali. */
+const Right = value => ({
+    isRight: true, isLeft: false, map: fn => Right(fn(value)), 
+        chain: fn => fn(value), getOrElse: _ => value, fold: 
+        (leftFn, rightFn) => rightFn(value), toString: () => 
+        `Right(${
+        value
+    }
+    )`
+}
+);
+const Left = error => ({
+    isRight: false, isLeft: true, map: _ => Left(error), chain: _
+         => Left(error), getOrElse: defaultVal => defaultVal, 
+        fold: (leftFn, _) => leftFn(error), toString: () => 
+        `Left(${
+        error
+    }
+    )`
+}
+);
+/* Helper per convertire valori nullable in Either. */
+const fromNullable = value => value != null ? Right(value) : 
+    Left('Valore nullo o undefined');
+/* Helper per wrappare funzioni che possono lanciare eccezioni. 
+    */
+const tryCatch = fn => {
+    try {
+        return Right(fn());
+    }
+    catch (e) {
+        return Left(e.message);
+    }
+}
+;
+/* Pipeline di validazione che usa Either per gestire gli errori 
+    senza try/catch. */
+function validateEmail(email) {
+    return /^[^\s
+    @]+
+    @[^\s
+    @]+\.[^\s
+    @]+$/.test(email) ? Right(email) : Left('Email non valida: ' 
+        + email);
+}
+function validateAge(age) {
+    return Number.isInteger(age) && age >= 18 && age <= 120 ? 
+        Right(age) : Left('Età non valida: deve essere tra 18 e 
+        120');
+}
+function validateName(name) {
+    return typeof name === 'string' && name.trim().length >= 2 ? 
+        Right(name.trim()) : Left('Nome non valido: minimo 2 
+        caratteri');
+}
+/* Compongo la validazione in una pipeline: il primo Left 
+    cortocircuita l'intera catena. */
+function validateUserInput(rawInput) {
+    return fromNullable(rawInput) .chain(input => 
+        validateName(input.name) .chain(name => 
+        validateEmail(input.email) .chain(email => 
+        validateAge(input.age) .map(age => ({
+        name, email, age
+    }
+    ))
+    // Costruisco l'oggetto validato )))
+    ;
+}
+/* Uso la pipeline nella gestione delle richieste Express senza 
+    nessun try/catch. */
+app.post('/users', async (req, res) => {
+    await validateUserInput(req.body) .chain(validData => 
+        tryCatch(() => db.users.create(validData))) .fold(error 
+        => res.status(400).json({
+        success: false, error
+    }
+    ), user => res.status(201).json({
+        success: true, user
+    }
+    ) );
+}
+);
+/* Per operazioni asincrone, implemento AsyncEither (o uso una 
+    libreria come fp-ts). */
+const AsyncRight = value => ({
+    map: async fn => AsyncRight(await fn(value)), chain: async fn
+         => fn(value), fold: async (leftFn, rightFn) => 
+        rightFn(value)
+}
+);
+/* Esempio di pipeline asincrona senza try/catch: */
+async function processRegistration(rawInput) {
+    return validateUserInput(rawInput) .chain(async validData => 
+        {
+        const exists = await 
+            db.users.findByEmail(validData.email);
+        return exists ? Left('Email già registrata') : 
+            Right(validData);
+    }
+    ) .chain(async data => {
+        const user = await db.users.create(data);
+        await emailService.sendWelcome(user.email);
+        return Right(user);
+    }
+    );
+}

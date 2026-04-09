@@ -1,0 +1,19 @@
+BEGIN;
+SELECT id, title, content, version FROM documents WHERE id = 1024
+     FOR UPDATE NOWAIT;
+IF FOUND THEN
+BEGIN
+UPDATE documents SET content = 'nuovo contenuto', version = 
+    version + 1, updated_at = now() WHERE id = 1024 AND version =
+     3;
+GET DIAGNOSTICS rows_affected = ROW_COUNT;
+IF rows_affected = 0 THEN
+RAISE EXCEPTION 'Conflitto di versione: il documento è stato 
+    modificato da un altro utente.';
+END IF;
+COMMIT;
+END;
+ELSE
+RAISE EXCEPTION 'La riga non è disponibile per l'update.';
+END IF;
+END;

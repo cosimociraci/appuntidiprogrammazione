@@ -1,0 +1,8 @@
+BEGIN ISOLATION LEVEL SERIALIZABLE;
+SELECT count(*) INTO v_count FROM appuntamenti WHERE medico_id = 
+    1 AND data = '2026-05-10';
+IF v_count < 10 THEN
+INSERT INTO appuntamenti (medico_id, paziente_id, data) VALUES 
+    (1, 42, '2026-05-10');
+END IF;
+COMMIT;

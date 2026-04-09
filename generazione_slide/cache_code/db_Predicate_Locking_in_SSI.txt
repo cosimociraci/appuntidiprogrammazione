@@ -1,0 +1,27 @@
+BEGIN ISOLATION LEVEL SERIALIZABLE;
+/* Leggo il budget disponibile e la spesa corrente. Questi due 
+    SELECT creano predicate lock su entrambe le tabelle per le 
+    condizioni usate. */
+SELECT budget_limit INTO v_limit FROM projects WHERE id = 5 FOR 
+    SHARE;
+SELECT coalesce(sum(amount), 0) INTO v_spent FROM expenses WHERE 
+    project_id = 5;
+/* Verifico il vincolo a livello applicativo prima di inserire. 
+    */
+IF v_spent + 100 > v_limit THEN
+RAISE EXCEPTION 'Budget superato: disponibile %, richiesto %', 
+    v_limit - v_spent, 100;
+END IF;
+INSERT INTO expenses (project_id, amount, description) VALUES (5,
+     100, 'Acquisto hardware');
+COMMIT;
+/* Monitoro i predicate lock attivi per capire cosa sta 
+    proteggendo il sistema in un dato momento: */
+SELECT database, relation::regclass, mode, pid
+FROM pg_locks
+WHERE locktype IN ('relation', 'page', 'tuple', 'object', 
+    'advisory')
+AND mode LIKE '%SIREAD%';
+/* SIREAD è il tipo di lock usato da SSI: è invisibile agli altri
+     processi (non li blocca) ma viene confrontato con i nuovi 
+    lock per rilevare cicli di dipendenze. */

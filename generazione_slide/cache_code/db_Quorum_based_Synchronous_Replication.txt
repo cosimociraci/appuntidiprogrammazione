@@ -1,0 +1,12 @@
+/* Nel postgresql.conf del Master */
+synchronous_standby_names = 'ANY 2 (node_a, node_b, node_c)';
+synchronous_commit = on; /* Monitoraggio del quorum in tempo 
+    reale */
+SELECT application_name, sync_state, pg_wal_lsn_diff(sent_lsn, 
+    flush_lsn) AS bytes_not_flushed
+FROM pg_stat_replication ORDER BY sync_state DESC;
+/* Test di durabilità */
+BEGIN;
+INSERT INTO ordini (cliente_id, importo, stato) VALUES (42, 
+    1500.00, 'confermato');
+COMMIT;
