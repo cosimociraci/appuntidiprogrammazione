@@ -13,7 +13,8 @@ pdf_file: "subresource-integrity-sri.pdf"
 Garantire la sicurezza degli asset statici caricati da infrastrutture di terze parti non controllate direttamente.
 
 ## Analisi Tecnica
-****Problema:**** Rischio di "Supply Chain Attack" tramite la manomissione di script distribuiti via reti CDN globali. **Perché:** Uso il controllo di integrità crittografica. Ho scelto SRI per delegare al browser il compito di verificare che il codice di terze parti non sia stato alterato durante il transito o sulla sorgente.
+**Problema:** Rischio di "Supply Chain Attack" tramite la manomissione di script distribuiti via reti CDN globali.
+**Perché:** Uso il controllo di integrità crittografica. Ho scelto SRI per delegare al browser il compito di verificare che il codice di terze parti non sia stato alterato durante il transito o sulla sorgente.
 
 ## Esempio Implementativo
 

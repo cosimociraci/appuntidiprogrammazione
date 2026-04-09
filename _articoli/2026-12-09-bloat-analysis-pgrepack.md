@@ -13,7 +13,8 @@ pdf_file: "bloat-analysis-pgrepack.pdf"
 Recuperare 200GB di spazio disco "fantasma" su una tabella che ha subito una cancellazione massiva di dati storici.
 
 ## Analisi Tecnica
-****Problema:**** Tabella enorme che occupa molto più spazio della somma reale dei record, rallentando le query sequenziali. **Perché:** Identifico il bloat tramite query su pg_stat_user_tables. Ho scelto di usare un approccio di ricostruzione online per minimizzare il downtime pur riorganizzando fisicamente i dati sul disco.
+**Problema:** Tabella enorme che occupa molto più spazio della somma reale dei record, rallentando le query sequenziali.
+**Perché:** Identifico il bloat tramite query su pg_stat_user_tables. Ho scelto di usare un approccio di ricostruzione online per minimizzare il downtime pur riorganizzando fisicamente i dati sul disco.
 
 ## Esempio Implementativo
 

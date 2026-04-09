@@ -13,7 +13,8 @@ pdf_file: "materialized-cte-vs-inline.pdf"
 Risolvere query con molteplici join dove il Planner tenta di applicare filtri troppo tardi, causando scansioni enormi su tabelle intermedie.
 
 ## Analisi Tecnica
-****Problema:**** Il Planner "sposta" i predicati dentro la CTE in modo inefficiente, causando ricalcoli continui di funzioni volatili. **Perché:** Uso AS MATERIALIZED. Ho scelto questa strada per creare un confine netto: il database deve risolvere prima la CTE e poi usare il risultato statico, evitando piani di esecuzione instabili.
+**Problema:** Il Planner "sposta" i predicati dentro la CTE in modo inefficiente, causando ricalcoli continui di funzioni volatili.
+**Perché:** Uso AS MATERIALIZED. Ho scelto questa strada per creare un confine netto: il database deve risolvere prima la CTE e poi usare il risultato statico, evitando piani di esecuzione instabili.
 
 ## Esempio Implementativo
 

@@ -13,7 +13,8 @@ pdf_file: "inversion-of-control-ioc-e-dependency-injection.pdf"
 Disaccoppiare la logica di business di un servizio di fatturazione dal client HTTP specifico o dal database utilizzato.
 
 ## Analisi Tecnica
-****Problema:**** Codice difficile da testare a causa di dipendenze hard-coded nei file (es. require('./db')). **Perché:** Uso la Dependency Inversion. Ho scelto di definire "Porte" (interfacce) e "Adattatori" affinché il dominio non sappia nulla dell'infrastruttura esterna.
+**Problema:** Codice difficile da testare a causa di dipendenze hard-coded nei file (es. require('./db')).
+**Perché:** Uso la Dependency Inversion. Ho scelto di definire "Porte" (interfacce) e "Adattatori" affinché il dominio non sappia nulla dell'infrastruttura esterna.
 
 ## Esempio Implementativo
 

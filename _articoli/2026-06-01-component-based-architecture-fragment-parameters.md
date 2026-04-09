@@ -13,7 +13,8 @@ pdf_file: "component-based-architecture-fragment-parameters.pdf"
 Creare un componente "Button" o "Card" universale che accetta varianti di colore, icone e label senza riscrivere l'HTML.
 
 ## Analisi Tecnica
-****Problema:**** Frammenti troppo rigidi che forzano a passare parametri vuoti o nulli, rendendo il codice verboso. **Perché:** Uso i parametri con default. Ho scelto il token _ per permettere al designer di vedere un'anteprima statica pur lasciando al programmatore il controllo dinamico totale.
+**Problema:** Frammenti troppo rigidi che forzano a passare parametri vuoti o nulli, rendendo il codice verboso.
+**Perché:** Uso i parametri con default. Ho scelto il token _ per permettere al designer di vedere un'anteprima statica pur lasciando al programmatore il controllo dinamico totale.
 
 ## Esempio Implementativo
 

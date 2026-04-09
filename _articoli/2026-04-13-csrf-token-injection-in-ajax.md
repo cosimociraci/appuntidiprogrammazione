@@ -13,7 +13,8 @@ pdf_file: "csrf-token-injection-in-ajax.pdf"
 Proteggere le chiamate asincrone effettuate via fetch() o XMLHttpRequest contro attacchi di falsificazione della richiesta.
 
 ## Analisi Tecnica
-****Problema:**** Le richieste asincrone falliscono con errore 403 perché non includono il segreto crittografico richiesto da Spring Security. **Perché:** Esposizione sicura del token. Ho scelto di usare i meta-tag per centralizzare il segreto CSRF, rendendolo accessibile in modo trasparente a tutti i moduli JavaScript della pagina.
+**Problema:** Le richieste asincrone falliscono con errore 403 perché non includono il segreto crittografico richiesto da Spring Security.
+**Perché:** Esposizione sicura del token. Ho scelto di usare i meta-tag per centralizzare il segreto CSRF, rendendolo accessibile in modo trasparente a tutti i moduli JavaScript della pagina.
 
 ## Esempio Implementativo
 

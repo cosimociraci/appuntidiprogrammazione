@@ -13,7 +13,8 @@ pdf_file: "fillfactor-e-hot-updates.pdf"
 Ottimizzare una tabella di contatori o stati che viene aggiornata frequentemente, evitando l'overhead di scrittura sugli indici a ogni modifica.
 
 ## Analisi Tecnica
-****Problema:**** Ogni aggiornamento di riga genera una nuova voce in tutti gli indici della tabella, raddoppiando il lavoro di I/O. **Perché:** Uso un fillfactor ridotto. Ho scelto di sacrificare un po' di spazio disco per permettere gli HOT updates, garantendo che le versioni aggiornate delle righe restino nella stessa pagina fisica.
+**Problema:** Ogni aggiornamento di riga genera una nuova voce in tutti gli indici della tabella, raddoppiando il lavoro di I/O.
+**Perché:** Uso un fillfactor ridotto. Ho scelto di sacrificare un po' di spazio disco per permettere gli HOT updates, garantendo che le versioni aggiornate delle righe restino nella stessa pagina fisica.
 
 ## Esempio Implementativo
 

@@ -13,7 +13,8 @@ pdf_file: "autovacuum-tuning-cost-based.pdf"
 Evitare che una tabella di log da 500GB diventi lenta a causa dell'accumulo di milioni di record eliminati che il vacuum non riesce a processare in tempo.
 
 ## Analisi Tecnica
-****Problema:**** Il Vacuum è troppo lento rispetto alla velocità di generazione delle dead tuples, causando il "bloat" della tabella. **Perché:** Ho alzato il budget di costo e ridotto il delay. Ho scelto di dare più priorità all'I/O di manutenzione per garantire che lo spazio venga riutilizzato immediatamente, evitando l'espansione indefinita del file su disco.
+**Problema:** Il Vacuum è troppo lento rispetto alla velocità di generazione delle dead tuples, causando il "bloat" della tabella.
+**Perché:** Ho alzato il budget di costo e ridotto il delay. Ho scelto di dare più priorità all'I/O di manutenzione per garantire che lo spazio venga riutilizzato immediatamente, evitando l'espansione indefinita del file su disco.
 
 ## Esempio Implementativo
 

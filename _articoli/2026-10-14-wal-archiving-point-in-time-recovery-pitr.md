@@ -13,7 +13,8 @@ pdf_file: "wal-archiving-point-in-time-recovery-pitr.pdf"
 Recuperare i dati dopo che un errore nel codice applicativo ha corrotto migliaia di record alle ore 10:15 di mattina.
 
 ## Analisi Tecnica
-****Problema:**** Impossibilità di recuperare dati cancellati per errore se non si dispone della sequenza esatta dei cambiamenti dal momento del backup. **Perché:** Configuro l'archiviazione continua dei WAL. Ho scelto di usare pgBackRest perché gestisce nativamente la compressione, la verifica dell'integrità e i retry degli archivi meglio di uno script manuale.
+**Problema:** Impossibilità di recuperare dati cancellati per errore se non si dispone della sequenza esatta dei cambiamenti dal momento del backup.
+**Perché:** Configuro l'archiviazione continua dei WAL. Ho scelto di usare pgBackRest perché gestisce nativamente la compressione, la verifica dell'integrità e i retry degli archivi meglio di uno script manuale.
 
 ## Esempio Implementativo
 

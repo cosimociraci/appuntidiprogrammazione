@@ -13,7 +13,8 @@ pdf_file: "subtransactions-e-lock-overflow.pdf"
 Risolvere rallentamenti improvvisi del database quando si eseguono script di importazione dati che usano molti blocchi TRY-CATCH.
 
 ## Analisi Tecnica
-****Problema:**** Ogni blocco EXCEPTION crea una subtransazione. Se sono troppe, il meccanismo di caching dei lock fallisce. **Perché:** Riscrivo la logica per validare i dati prima dell'inserimento invece di "provare e catturare l'errore". Ho scelto la validazione preventiva per mantenere pulito lo stack delle transazioni.
+**Problema:** Ogni blocco EXCEPTION crea una subtransazione. Se sono troppe, il meccanismo di caching dei lock fallisce.
+**Perché:** Riscrivo la logica per validare i dati prima dell'inserimento invece di "provare e catturare l'errore". Ho scelto la validazione preventiva per mantenere pulito lo stack delle transazioni.
 
 ## Esempio Implementativo
 

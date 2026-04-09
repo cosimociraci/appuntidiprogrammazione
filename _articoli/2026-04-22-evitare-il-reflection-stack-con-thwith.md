@@ -13,7 +13,8 @@ pdf_file: "evitare-il-reflection-stack-con-thwith.pdf"
 Ottimizzare cicli th:each molto lunghi che effettuano calcoli o trasformazioni su ogni riga.
 
 ## Analisi Tecnica
-****Problema:**** Degradazione delle performance dovuta a chiamate ridondanti a metodi del modello o dei bean all'interno dei loop. **Perché:** Uso variabili locali di template. Ho scelto th:with per "congelare" il valore calcolato, riducendo il carico sul processore SpEL e migliorando la leggibilità del codice.
+**Problema:** Degradazione delle performance dovuta a chiamate ridondanti a metodi del modello o dei bean all'interno dei loop.
+**Perché:** Uso variabili locali di template. Ho scelto th:with per "congelare" il valore calcolato, riducendo il carico sul processore SpEL e migliorando la leggibilità del codice.
 
 ## Esempio Implementativo
 

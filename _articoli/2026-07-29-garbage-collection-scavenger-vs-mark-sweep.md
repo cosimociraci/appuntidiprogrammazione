@@ -13,7 +13,8 @@ pdf_file: "garbage-collection-scavenger-vs-mark-sweep.pdf"
 Ridurre la latenza di "tail" (P99) in un'applicazione real-time soggetta a stop del GC.
 
 ## Analisi Tecnica
-****Problema:**** Latenze imprevedibili causate da cicli di Garbage Collection pesante sull'Old Generation. **Perché:** Ottimizzo il ciclo di vita degli oggetti. Ho scelto di favorire oggetti a vita brevissima che possono essere puliti dai cicli veloci dello Scavenger, riducendo la promozione alla memoria a lungo termine.
+**Problema:** Latenze imprevedibili causate da cicli di Garbage Collection pesante sull'Old Generation.
+**Perché:** Ottimizzo il ciclo di vita degli oggetti. Ho scelto di favorire oggetti a vita brevissima che possono essere puliti dai cicli veloci dello Scavenger, riducendo la promozione alla memoria a lungo termine.
 
 ## Esempio Implementativo
 

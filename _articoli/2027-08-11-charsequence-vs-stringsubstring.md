@@ -13,7 +13,8 @@ pdf_file: "charsequence-vs-stringsubstring.pdf"
 Estrarre tag e valori da log giganteschi o messaggi di protocollo senza raddoppiare l'occupazione di memoria.
 
 ## Analisi Tecnica
-****Problema:**** Esplosione della memoria dovuta alla creazione di migliaia di stringhe "frammento" durante le operazioni di split e substring. **Perché:** Uso l'interfaccia CharSequence. Ho scelto di passare riferimenti all'oggetto originale uniti a indici di inizio e fine, evitando di copiare i dati finché non è strettamente necessario.
+**Problema:** Esplosione della memoria dovuta alla creazione di migliaia di stringhe "frammento" durante le operazioni di split e substring.
+**Perché:** Uso l'interfaccia CharSequence. Ho scelto di passare riferimenti all'oggetto originale uniti a indici di inizio e fine, evitando di copiare i dati finché non è strettamente necessario.
 
 ## Esempio Implementativo
 

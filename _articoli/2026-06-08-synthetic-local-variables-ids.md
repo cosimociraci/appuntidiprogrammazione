@@ -13,7 +13,8 @@ pdf_file: "synthetic-local-variables-ids.pdf"
 Generare ID univoci per i campi di un form dinamico dove l'utente può aggiungere righe a piacimento.
 
 ## Analisi Tecnica
-****Problema:**** ID duplicati nel DOM che causano malfunzionamenti negli script JS e violazioni delle norme di accessibilità. **Perché:** Uso il generatore di sequenze di Thymeleaf. Ho scelto #ids per delegare al motore di template la gestione della numerazione progressiva dei componenti riutilizzabili.
+**Problema:** ID duplicati nel DOM che causano malfunzionamenti negli script JS e violazioni delle norme di accessibilità.
+**Perché:** Uso il generatore di sequenze di Thymeleaf. Ho scelto #ids per delegare al motore di template la gestione della numerazione progressiva dei componenti riutilizzabili.
 
 ## Esempio Implementativo
 

@@ -13,7 +13,8 @@ pdf_file: "indici-gin-su-array-e-jsonb.pdf"
 Implementare un sistema di ricerca filtri per un e-commerce dove ogni prodotto ha attributi variabili salvati in un campo JSONB.
 
 ## Analisi Tecnica
-****Problema:**** Le query che cercano chiavi nidificate dentro il JSONB eseguono un Sequential Scan perché il database non sa come "entrare" nell'oggetto. **Perché:** Uso un indice GIN con jsonb_path_ops. Ho scelto questa opzione perché mi interessano solo le query di contenimento (@>), ottenendo un indice più snello e performante rispetto a quello standard.
+**Problema:** Le query che cercano chiavi nidificate dentro il JSONB eseguono un Sequential Scan perché il database non sa come "entrare" nell'oggetto.
+**Perché:** Uso un indice GIN con jsonb_path_ops. Ho scelto questa opzione perché mi interessano solo le query di contenimento (@>), ottenendo un indice più snello e performante rispetto a quello standard.
 
 ## Esempio Implementativo
 

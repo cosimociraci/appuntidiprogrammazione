@@ -13,7 +13,8 @@ pdf_file: "gin-index-e-pending-list-tuning.pdf"
 Ottimizzare l'indicizzazione di un flusso massivo di log applicativi salvati in formato JSONB per analisi in tempo reale.
 
 ## Analisi Tecnica
-****Problema:**** Latenza in scrittura inaccettabile dovuta al continuo aggiornamento della struttura ad albero invertito dell'indice GIN. **Perché:** Ho aumentato il buffer della pending list. Ho scelto di accumulare più dati in memoria prima di scrivere sul disco, trasformando tanti piccoli aggiornamenti casuali in un'unica operazione sequenziale efficiente.
+**Problema:** Latenza in scrittura inaccettabile dovuta al continuo aggiornamento della struttura ad albero invertito dell'indice GIN.
+**Perché:** Ho aumentato il buffer della pending list. Ho scelto di accumulare più dati in memoria prima di scrivere sul disco, trasformando tanti piccoli aggiornamenti casuali in un'unica operazione sequenziale efficiente.
 
 ## Esempio Implementativo
 

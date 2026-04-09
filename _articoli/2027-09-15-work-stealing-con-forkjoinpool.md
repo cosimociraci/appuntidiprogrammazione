@@ -13,7 +13,8 @@ pdf_file: "work-stealing-con-forkjoinpool.pdf"
 Parallelizzare l'elaborazione di un dataset di grandi dimensioni o il calcolo di una complessa serie statistica in memoria.
 
 ## Analisi Tecnica
-****Problema:**** Distribuzione non uniforme del carico di lavoro tra i core della CPU, con alcuni core al 100% e altri in idle. **Perché:** Implemento RecursiveTask. Ho scelto questo pattern perché permette di decomporre il problema ricorsivamente, sfruttando al massimo l'hardware multi-core disponibile.
+**Problema:** Distribuzione non uniforme del carico di lavoro tra i core della CPU, con alcuni core al 100% e altri in idle.
+**Perché:** Implemento RecursiveTask. Ho scelto questo pattern perché permette di decomporre il problema ricorsivamente, sfruttando al massimo l'hardware multi-core disponibile.
 
 ## Esempio Implementativo
 

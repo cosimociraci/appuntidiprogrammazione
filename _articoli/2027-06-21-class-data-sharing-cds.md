@@ -13,7 +13,8 @@ pdf_file: "class-data-sharing-cds.pdf"
 Ridurre drasticamente il tempo di avvio di istanze serverless o pod Kubernetes che devono scalare rapidamente.
 
 ## Analisi Tecnica
-****Problema:**** Tempo di avvio dei microservizi troppo lungo, ostacolando le architetture a scaling rapido. **Perché:** Genero un archivio CDS. Ho scelto di pre-processare le classi dell'applicazione per evitare che la JVM debba rifare lo stesso lavoro di analisi a ogni singolo riavvio del container.
+**Problema:** Tempo di avvio dei microservizi troppo lungo, ostacolando le architetture a scaling rapido.
+**Perché:** Genero un archivio CDS. Ho scelto di pre-processare le classi dell'applicazione per evitare che la JVM debba rifare lo stesso lavoro di analisi a ogni singolo riavvio del container.
 
 ## Esempio Implementativo
 

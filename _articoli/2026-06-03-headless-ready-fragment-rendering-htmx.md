@@ -13,7 +13,8 @@ pdf_file: "headless-ready-fragment-rendering-htmx.pdf"
 Implementare un pulsante "Carica altro" che aggiunge elementi a una lista senza ricaricare la pagina intera.
 
 ## Analisi Tecnica
-****Problema:**** Overhead di banda e tempi di caricamento dovuti al re-rendering dell'intero layout per piccole modifiche alla UI. **Perché:** Uso il rendering parziale dei frammenti. Ho scelto questo approccio per servire "HTML over the wire", permettendo a Spring Boot di comportarsi come un'API di frammenti UI per HTMX.
+**Problema:** Overhead di banda e tempi di caricamento dovuti al re-rendering dell'intero layout per piccole modifiche alla UI.
+**Perché:** Uso il rendering parziale dei frammenti. Ho scelto questo approccio per servire "HTML over the wire", permettendo a Spring Boot di comportarsi come un'API di frammenti UI per HTMX.
 
 ## Esempio Implementativo
 

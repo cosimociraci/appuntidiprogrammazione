@@ -13,7 +13,8 @@ pdf_file: "zero-copy-con-bufferallocunsafe.pdf"
 Ottimizzare la creazione di buffer temporanei in un parser binario ad altissime prestazioni dove ogni millisecondo conta.
 
 ## Analisi Tecnica
-****Problema:**** Latenza eccessiva nella pre-allocazione di grandi aree di memoria per la manipolazione di pacchetti di rete. **Perché:** Scelgo l'allocazione raw. Ho deciso di usare allocUnsafe per guadagnare performance grezze, gestendo manualmente la scrittura completa dei dati per garantire la coerenza binaria.
+**Problema:** Latenza eccessiva nella pre-allocazione di grandi aree di memoria per la manipolazione di pacchetti di rete.
+**Perché:** Scelgo l'allocazione raw. Ho deciso di usare allocUnsafe per guadagnare performance grezze, gestendo manualmente la scrittura completa dei dati per garantire la coerenza binaria.
 
 ## Esempio Implementativo
 

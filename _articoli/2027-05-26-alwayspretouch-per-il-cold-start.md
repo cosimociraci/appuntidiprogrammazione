@@ -13,7 +13,8 @@ pdf_file: "alwayspretouch-per-il-cold-start.pdf"
 Eliminare le micro-latenze iniziali nei nodi di un cluster che vengono accesi durante i picchi di traffico (autoscaling).
 
 ## Analisi Tecnica
-****Problema:**** Latenze elevate nelle prime transazioni post-avvio a causa del page-faulting dell'OS durante l'espansione dell'heap. **Perché:** Uso il PreTouch. Ho scelto di pagare un prezzo in fase di boot per garantire che tutta la memoria dichiarata sia fisicamente pronta e "calda" prima che l'applicazione inizi ad accettare traffico.
+**Problema:** Latenze elevate nelle prime transazioni post-avvio a causa del page-faulting dell'OS durante l'espansione dell'heap.
+**Perché:** Uso il PreTouch. Ho scelto di pagare un prezzo in fase di boot per garantire che tutta la memoria dichiarata sia fisicamente pronta e "calda" prima che l'applicazione inizi ad accettare traffico.
 
 ## Esempio Implementativo
 

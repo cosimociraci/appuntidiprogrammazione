@@ -13,7 +13,8 @@ pdf_file: "backpressure-con-semaphores.pdf"
 Proteggere un servizio di invio email che non può gestire più di 50 richieste concorrenti verso il provider SMTP.
 
 ## Analisi Tecnica
-****Problema:**** Rischio di crash dell'applicazione dovuto a un accumulo infinito di task nella coda della memoria. **Perché:** Uso un Semaphore. Ho scelto questa via per implementare un limite fisico immediato: se non c'è capacità, il thread chiamante aspetta, applicando pressione inversa naturale lungo la catena di chiamata.
+**Problema:** Rischio di crash dell'applicazione dovuto a un accumulo infinito di task nella coda della memoria.
+**Perché:** Uso un Semaphore. Ho scelto questa via per implementare un limite fisico immediato: se non c'è capacità, il thread chiamante aspetta, applicando pressione inversa naturale lungo la catena di chiamata.
 
 ## Esempio Implementativo
 

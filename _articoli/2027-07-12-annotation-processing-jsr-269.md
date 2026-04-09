@@ -13,7 +13,8 @@ pdf_file: "annotation-processing-jsr-269.pdf"
 Generare automaticamente il codice di mapping tra DTO e Entity senza usare librerie basate su reflection a runtime.
 
 ## Analisi Tecnica
-****Problema:**** Latenza di avvio elevata (startup time) dovuta allo scanning intensivo delle annotazioni su migliaia di classi. **Perché:** Implemento un Annotation Processor. Ho scelto di generare il codice sorgente durante la build così che a runtime l'applicazione esegua solo codice Java "plain", senza introspezione.
+**Problema:** Latenza di avvio elevata (startup time) dovuta allo scanning intensivo delle annotazioni su migliaia di classi.
+**Perché:** Implemento un Annotation Processor. Ho scelto di generare il codice sorgente durante la build così che a runtime l'applicazione esegua solo codice Java "plain", senza introspezione.
 
 ## Esempio Implementativo
 

@@ -13,7 +13,8 @@ pdf_file: "migrazione-a-ffm-api-panama.pdf"
 Sostituire un vecchio bridge JNI instabile con una soluzione moderna per chiamare una libreria di compressione dati ultra-veloce in C.
 
 ## Analisi Tecnica
-****Problema:**** Complessità di mantenimento del codice C JNI e instabilità della JVM in caso di errori nei puntatori. **Perché:** Uso SymbolLookup e Linker. Ho scelto Panama perché mi permette di mappare la firma della funzione C direttamente in Java, garantendo una gestione della memoria più sicura tramite le "Arene".
+**Problema:** Complessità di mantenimento del codice C JNI e instabilità della JVM in caso di errori nei puntatori.
+**Perché:** Uso SymbolLookup e Linker. Ho scelto Panama perché mi permette di mappare la firma della funzione C direttamente in Java, garantendo una gestione della memoria più sicura tramite le "Arene".
 
 ## Esempio Implementativo
 

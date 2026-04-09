@@ -13,7 +13,8 @@ pdf_file: "security-dialect-secauthorize.pdf"
 Mostrare il pannello di controllo o i pulsanti di eliminazione solo agli utenti con privilegi amministrativi.
 
 ## Analisi Tecnica
-****Problema:**** Esposizione di informazioni riservate o strutture URL sensibili nel codice sorgente della pagina inviata a utenti comuni. **Perché:** Autorizzazione lato server. Ho scelto il dialetto di sicurezza per rimuovere i nodi DOM alla radice, garantendo che nessun dato sensibile lasci mai la memoria del server per utenti non autorizzati.
+**Problema:** Esposizione di informazioni riservate o strutture URL sensibili nel codice sorgente della pagina inviata a utenti comuni.
+**Perché:** Autorizzazione lato server. Ho scelto il dialetto di sicurezza per rimuovere i nodi DOM alla radice, garantendo che nessun dato sensibile lasci mai la memoria del server per utenti non autorizzati.
 
 ## Esempio Implementativo
 

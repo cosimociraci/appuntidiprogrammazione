@@ -13,7 +13,8 @@ pdf_file: "object-pooling-per-risorse-native.pdf"
 Gestire un alto volume di messaggi cifrati dove l'inizializzazione del motore di cifratura richiede millisecondi preziosi.
 
 ## Analisi Tecnica
-****Problema:**** Latenza elevata dovuta alla continua creazione e distruzione di oggetti che allocano memoria nativa o socket. **Perché:** Uso un pool di oggetti. Ho scelto di pre-allocare queste risorse pesanti per trasformare un costo di inizializzazione in un semplice "checkout" da una coda concorrente.
+**Problema:** Latenza elevata dovuta alla continua creazione e distruzione di oggetti che allocano memoria nativa o socket.
+**Perché:** Uso un pool di oggetti. Ho scelto di pre-allocare queste risorse pesanti per trasformare un costo di inizializzazione in un semplice "checkout" da una coda concorrente.
 
 ## Esempio Implementativo
 

@@ -13,7 +13,8 @@ pdf_file: "backpressure-in-stream-pipeline.pdf"
 Trasferire file di diversi gigabyte tra un client e un server senza esaurire la memoria RAM del processo Node.js.
 
 ## Analisi Tecnica
-****Problema:**** OutOfMemoryError causato dall'accumulo di chunk di dati nel buffer di scrittura (writable.write() restituisce false). **Perché:** Implemento il controllo del flusso. Ho scelto pipeline perché mette in pausa il "Readable" finché il "Writable" non ha terminato di svuotare il buffer verso il kernel (drain).
+**Problema:** OutOfMemoryError causato dall'accumulo di chunk di dati nel buffer di scrittura (writable.write() restituisce false).
+**Perché:** Implemento il controllo del flusso. Ho scelto pipeline perché mette in pausa il "Readable" finché il "Writable" non ha terminato di svuotare il buffer verso il kernel (drain).
 
 ## Esempio Implementativo
 

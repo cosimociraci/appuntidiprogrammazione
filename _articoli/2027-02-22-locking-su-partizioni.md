@@ -13,7 +13,8 @@ pdf_file: "locking-su-partizioni.pdf"
 Eseguire il "detach" di una partizione di log vecchia di un anno senza interrompere l'inserimento dei nuovi log di oggi.
 
 ## Analisi Tecnica
-****Problema:**** Un lock eccessivo sulla tabella master impedisce l'accesso a tutte le sottotabelle, anche se fisicamente separate. **Perché:** Uso ALTER TABLE ... DETACH PARTITION CONCURRENTLY. Ho scelto la modalità concurrent perché evita di prendere un Access Exclusive Lock sulla tabella padre, permettendo il traffico dati durante l'operazione.
+**Problema:** Un lock eccessivo sulla tabella master impedisce l'accesso a tutte le sottotabelle, anche se fisicamente separate.
+**Perché:** Uso ALTER TABLE ... DETACH PARTITION CONCURRENTLY. Ho scelto la modalità concurrent perché evita di prendere un Access Exclusive Lock sulla tabella padre, permettendo il traffico dati durante l'operazione.
 
 ## Esempio Implementativo
 

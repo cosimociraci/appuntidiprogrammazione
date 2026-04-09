@@ -13,7 +13,8 @@ pdf_file: "vacuum-pre-emptive-locking.pdf"
 Gestire il bloat in tabelle di "sessioni utente" che vengono aggiornate ogni secondo e non lasciano mai spazio al Vacuum.
 
 ## Analisi Tecnica
-****Problema:**** Il Vacuum viene costantemente interrotto dalle transazioni utente, rendendolo inefficace contro la crescita del database. **Perché:** Eseguo un VACUUM ANALYZE manuale durante i minimi di traffico. Ho scelto di intervenire proattivamente per evitare che la tabella raddoppi di dimensione inutilmente.
+**Problema:** Il Vacuum viene costantemente interrotto dalle transazioni utente, rendendolo inefficace contro la crescita del database.
+**Perché:** Eseguo un VACUUM ANALYZE manuale durante i minimi di traffico. Ho scelto di intervenire proattivamente per evitare che la tabella raddoppi di dimensione inutilmente.
 
 ## Esempio Implementativo
 

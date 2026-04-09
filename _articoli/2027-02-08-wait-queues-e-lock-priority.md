@@ -13,7 +13,8 @@ pdf_file: "wait-queues-e-lock-priority.pdf"
 Evitare che un tentativo di aggiungere una colonna a una tabella "clienti" blocchi tutte le login degli utenti per minuti.
 
 ## Analisi Tecnica
-****Problema:**** Una richiesta di manutenzione pesante si mette in testa alla coda e blocca tutte le letture successive, svuotando il pool di connessioni. **Perché:** Imposto lock_timeout. Ho scelto di far fallire il mio script di migrazione se non ottiene il lock entro 2 secondi, per non disturbare gli utenti.
+**Problema:** Una richiesta di manutenzione pesante si mette in testa alla coda e blocca tutte le letture successive, svuotando il pool di connessioni.
+**Perché:** Imposto lock_timeout. Ho scelto di far fallire il mio script di migrazione se non ottiene il lock entro 2 secondi, per non disturbare gli utenti.
 
 ## Esempio Implementativo
 

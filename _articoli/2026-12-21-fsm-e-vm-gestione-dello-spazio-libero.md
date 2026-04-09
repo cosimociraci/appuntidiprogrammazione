@@ -13,7 +13,8 @@ pdf_file: "fsm-e-vm-gestione-dello-spazio-libero.pdf"
 Evitare la crescita ingiustificata del database in scenari di continuo riciclo di dati (delete seguiti da insert).
 
 ## Analisi Tecnica
-****Problema:**** Il database chiede nuovo spazio al sistema operativo anche se sono stati appena cancellati milioni di record. **Perché:** Il Vacuum non sta aggiornando la FSM correttamente. Ho scelto di aumentare la frequenza di analisi per assicurarmi che le mappe di spazio libero siano sempre precise per il motore di inserimento.
+**Problema:** Il database chiede nuovo spazio al sistema operativo anche se sono stati appena cancellati milioni di record.
+**Perché:** Il Vacuum non sta aggiornando la FSM correttamente. Ho scelto di aumentare la frequenza di analisi per assicurarmi che le mappe di spazio libero siano sempre precise per il motore di inserimento.
 
 ## Esempio Implementativo
 

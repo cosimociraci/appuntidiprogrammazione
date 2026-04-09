@@ -13,7 +13,8 @@ pdf_file: "interpretazione-di-explain-buffers.pdf"
 Diagnosticare perché una query è veloce a volte e lenta altre (spesso dovuto alla presenza o meno dei dati nel buffer cache).
 
 ## Analisi Tecnica
-****Problema:**** La latenza variabile delle query rende difficile capire se l'ottimizzazione sta funzionando davvero. **Perché:** Uso BUFFERS. Ho scelto di basarmi sul numero di pagine toccate perché è un valore costante che non dipende dal "calore" della cache al momento del test.
+**Problema:** La latenza variabile delle query rende difficile capire se l'ottimizzazione sta funzionando davvero.
+**Perché:** Uso BUFFERS. Ho scelto di basarmi sul numero di pagine toccate perché è un valore costante che non dipende dal "calore" della cache al momento del test.
 
 ## Esempio Implementativo
 

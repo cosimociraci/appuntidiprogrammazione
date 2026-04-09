@@ -13,7 +13,8 @@ pdf_file: "element-tag-processors-web-components.pdf"
 Implementare un sistema di menu dinamico che si auto-genera leggendo le rotte di Spring Security.
 
 ## Analisi Tecnica
-****Problema:**** Markup del menu di navigazione enorme e difficile da manutenere se copiato in ogni pagina. **Perché:** Uso la manipolazione del modello (IModel). Ho scelto di generare il codice HTML del menu lato server così da poter cambiare la struttura in un unico punto del codice Java.
+**Problema:** Markup del menu di navigazione enorme e difficile da manutenere se copiato in ogni pagina.
+**Perché:** Uso la manipolazione del modello (IModel). Ho scelto di generare il codice HTML del menu lato server così da poter cambiare la struttura in un unico punto del codice Java.
 
 ## Esempio Implementativo
 

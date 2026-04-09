@@ -13,7 +13,8 @@ pdf_file: "row-level-security-rls-e-concorrenza.pdf"
 Implementare un sistema multi-tenant dove ogni azienda vede solo i propri ordini, garantendo che i lock presi da un tenant non interferiscano con quelli di un altro.
 
 ## Analisi Tecnica
-****Problema:**** Le policy RLS troppo complesse rallentano l'acquisizione dei lock e possono causare timeout inaspettati. **Perché:** Uso variabili di sessione personalizzate. Ho scelto di filtrare tramite current_setting('app.tenant_id') perché è un'operazione in memoria che non richiede join aggiuntivi durante il controllo del lock.
+**Problema:** Le policy RLS troppo complesse rallentano l'acquisizione dei lock e possono causare timeout inaspettati.
+**Perché:** Uso variabili di sessione personalizzate. Ho scelto di filtrare tramite current_setting('app.tenant_id') perché è un'operazione in memoria che non richiede join aggiuntivi durante il controllo del lock.
 
 ## Esempio Implementativo
 

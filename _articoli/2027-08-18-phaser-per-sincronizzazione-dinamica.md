@@ -13,7 +13,8 @@ pdf_file: "phaser-per-sincronizzazione-dinamica.pdf"
 Coordinare un processo di migrazione dati dove il numero di chunk da processare viene scoperto solo durante l'esecuzione.
 
 ## Analisi Tecnica
-****Problema:**** Impossibilità di coordinare thread il cui numero varia dinamicamente durante le fasi di elaborazione. **Perché:** Uso Phaser. Ho scelto questo strumento perché mi permette di aggiungere o rimuovere "party" al volo, gestendo l'avanzamento delle fasi in modo fluido e adattivo.
+**Problema:** Impossibilità di coordinare thread il cui numero varia dinamicamente durante le fasi di elaborazione.
+**Perché:** Uso Phaser. Ho scelto questo strumento perché mi permette di aggiungere o rimuovere "party" al volo, gestendo l'avanzamento delle fasi in modo fluido e adattivo.
 
 ## Esempio Implementativo
 

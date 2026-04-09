@@ -13,7 +13,8 @@ pdf_file: "thymeleaf-layout-dialect-decoration.pdf"
 Gestire un sito con diverse sezioni (Pubblica, Admin, Dashboard) che condividono lo stesso scheletro ma hanno head/footer differenti.
 
 ## Analisi Tecnica
-****Problema:**** Gestione difficoltosa dei meta-tag SEO e degli script specifici per pagina quando si usa l'inclusione classica "bottom-up". **Perché:** Uso il pattern Decorator. Ho scelto questo dialetto per invertire la responsabilità: è la pagina specifica che decide quale layout riempire, non il layout che "tira dentro" i pezzi.
+**Problema:** Gestione difficoltosa dei meta-tag SEO e degli script specifici per pagina quando si usa l'inclusione classica "bottom-up".
+**Perché:** Uso il pattern Decorator. Ho scelto questo dialetto per invertire la responsabilità: è la pagina specifica che decide quale layout riempire, non il layout che "tira dentro" i pezzi.
 
 ## Esempio Implementativo
 

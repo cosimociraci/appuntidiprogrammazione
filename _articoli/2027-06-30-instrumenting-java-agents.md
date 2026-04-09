@@ -13,7 +13,8 @@ pdf_file: "instrumenting-java-agents.pdf"
 Aggiungere metriche di performance a una vecchia applicazione legacy senza toccare un solo file del codice sorgente.
 
 ## Analisi Tecnica
-****Problema:**** Necessità di monitorare o modificare il comportamento di un'applicazione blindata o di terze parti. **Perché:** Sviluppo un Java Agent. Ho scelto questa tecnica perché agisce a livello di JVM, permettendomi di "riscrivere" le classi mentre vengono caricate in memoria in modo totalmente trasparente all'app.
+**Problema:** Necessità di monitorare o modificare il comportamento di un'applicazione blindata o di terze parti.
+**Perché:** Sviluppo un Java Agent. Ho scelto questa tecnica perché agisce a livello di JVM, permettendomi di "riscrivere" le classi mentre vengono caricate in memoria in modo totalmente trasparente all'app.
 
 ## Esempio Implementativo
 

@@ -13,7 +13,8 @@ pdf_file: "g1gc-e-humongous-objects.pdf"
 Ottimizzare la gestione di grandi buffer di byte usati per processare immagini o file PDF caricati in memoria.
 
 ## Analisi Tecnica
-****Problema:**** Frammentazione prematura dell'heap e cicli di GC frequenti dovuti a allocazioni di oggetti troppo grandi per le regioni standard. **Perché:** Aumento la dimensione della regione G1. Ho scelto questa configurazione per permettere al GC di trattare i buffer come oggetti a vita breve, pulendoli durante le "Young GC" senza sporcare la Old Gen.
+**Problema:** Frammentazione prematura dell'heap e cicli di GC frequenti dovuti a allocazioni di oggetti troppo grandi per le regioni standard.
+**Perché:** Aumento la dimensione della regione G1. Ho scelto questa configurazione per permettere al GC di trattare i buffer come oggetti a vita breve, pulendoli durante le "Young GC" senza sporcare la Old Gen.
 
 ## Esempio Implementativo
 

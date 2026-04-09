@@ -13,7 +13,8 @@ pdf_file: "toast-storage-strategies.pdf"
 Migliorare la velocità di accesso a documenti JSONB di medie dimensioni che vengono letti in quasi tutte le query della dashboard.
 
 ## Analisi Tecnica
-****Problema:**** Latenza extra introdotta dal recupero dei dati dai chunk della tabella TOAST esterna. **Perché:** Cambio la storage strategy in MAIN. Ho scelto questa tecnica per mantenere i dati vicini alla riga principale, riducendo il numero di letture I/O necessarie per ricostruire l'oggetto.
+**Problema:** Latenza extra introdotta dal recupero dei dati dai chunk della tabella TOAST esterna.
+**Perché:** Cambio la storage strategy in MAIN. Ho scelto questa tecnica per mantenere i dati vicini alla riga principale, riducendo il numero di letture I/O necessarie per ricostruire l'oggetto.
 
 ## Esempio Implementativo
 

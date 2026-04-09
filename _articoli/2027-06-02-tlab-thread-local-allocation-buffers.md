@@ -13,7 +13,8 @@ pdf_file: "tlab-thread-local-allocation-buffers.pdf"
 Ridurre i colli di bottiglia durante i picchi di traffico in un'applicazione che crea milioni di oggetti DTO temporanei per ogni richiesta.
 
 ## Analisi Tecnica
-****Problema:**** Rallentamento delle allocazioni di memoria dovuto alla sincronizzazione tra i thread nel Memory Manager della JVM. **Perché:** Verifico e ottimizzo i TLAB. Ho scelto di assicurarmi che l'allocazione sia "lock-free" per la stragrande maggioranza degli oggetti, riducendo drasticamente il tempo speso nei safepoint.
+**Problema:** Rallentamento delle allocazioni di memoria dovuto alla sincronizzazione tra i thread nel Memory Manager della JVM.
+**Perché:** Verifico e ottimizzo i TLAB. Ho scelto di assicurarmi che l'allocazione sia "lock-free" per la stragrande maggioranza degli oggetti, riducendo drasticamente il tempo speso nei safepoint.
 
 ## Esempio Implementativo
 

@@ -13,7 +13,8 @@ pdf_file: "synchronous-commit-performance-trade-off.pdf"
 Proteggere le transazioni finanziarie critiche garantendo che siano scritte su due server prima di rispondere "OK" all'utente.
 
 ## Analisi Tecnica
-****Problema:**** L'overhead della rete rallenta ogni singola scrittura se configurato globalmente in modalità sincrona. **Perché:** Uso la configurazione granulare. Ho scelto di impostare la sincronia solo per le sessioni che gestiscono bilanci economici, lasciando le altre transazioni in modalità asincrona per massimizzare il throughput.
+**Problema:** L'overhead della rete rallenta ogni singola scrittura se configurato globalmente in modalità sincrona.
+**Perché:** Uso la configurazione granulare. Ho scelto di impostare la sincronia solo per le sessioni che gestiscono bilanci economici, lasciando le altre transazioni in modalità asincrona per massimizzare il throughput.
 
 ## Esempio Implementativo
 

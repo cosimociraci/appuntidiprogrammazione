@@ -13,7 +13,8 @@ pdf_file: "typed-arrays-e-unboxed-numerics.pdf"
 Implementare un motore di calcolo per segnali audio o manipolazione di pixel in tempo reale nel browser o Node.js.
 
 ## Analisi Tecnica
-****Problema:**** Latenza computazionale e picchi di GC causati dall'allocazione continua di numeri ad alta precisione in array dinamici. **Perché:** Uso i Typed Arrays. Ho scelto questa struttura per forzare il runtime a usare memoria fissa e contigua, permettendo ottimizzazioni SIMD e un accesso ai dati estremamente più veloce.
+**Problema:** Latenza computazionale e picchi di GC causati dall'allocazione continua di numeri ad alta precisione in array dinamici.
+**Perché:** Uso i Typed Arrays. Ho scelto questa struttura per forzare il runtime a usare memoria fissa e contigua, permettendo ottimizzazioni SIMD e un accesso ai dati estremamente più veloce.
 
 ## Esempio Implementativo
 

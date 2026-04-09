@@ -13,7 +13,8 @@ pdf_file: "memory-layouts-e-c-structs.pdf"
 Interagire con i file header di un driver hardware o di una libreria di rete che usa strutture dati binarie fisse.
 
 ## Analisi Tecnica
-****Problema:**** Rischio di errori di allineamento e offset durante la lettura di dati complessi provenienti da librerie esterne. **Perché:** Definisco un StructLayout. Ho deciso di modellare la memoria in modo dichiarativo per lasciare che sia la JVM a calcolare gli offset corretti, evitando errori manuali di calcolo dei byte.
+**Problema:** Rischio di errori di allineamento e offset durante la lettura di dati complessi provenienti da librerie esterne.
+**Perché:** Definisco un StructLayout. Ho deciso di modellare la memoria in modo dichiarativo per lasciare che sia la JVM a calcolare gli offset corretti, evitando errori manuali di calcolo dei byte.
 
 ## Esempio Implementativo
 

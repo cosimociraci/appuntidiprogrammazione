@@ -13,7 +13,8 @@ pdf_file: "multiversion-concurrency-control-mvcc-internals.pdf"
 Ottimizzare un database che subisce migliaia di update al secondo, evitando che la tabella diventi enorme e lenta a causa delle versioni "morte" delle righe.
 
 ## Analisi Tecnica
-****Problema:**** Le vecchie versioni delle righe (dead tuples) occupano spazio e rallentano le scansioni degli indici. **Perché:** Analizzo xmin e xmax. Ho deciso di monitorare queste colonne di sistema per capire quali transazioni "long-running" stanno impedendo la pulizia MVCC.
+**Problema:** Le vecchie versioni delle righe (dead tuples) occupano spazio e rallentano le scansioni degli indici.
+**Perché:** Analizzo xmin e xmax. Ho deciso di monitorare queste colonne di sistema per capire quali transazioni "long-running" stanno impedendo la pulizia MVCC.
 
 ## Esempio Implementativo
 

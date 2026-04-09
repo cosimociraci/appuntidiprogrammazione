@@ -13,7 +13,8 @@ pdf_file: "transaction-id-xid-wraparound.pdf"
 Prevenire il blocco totale di un database di data-logging che genera milioni di transazioni al giorno.
 
 ## Analisi Tecnica
-****Problema:**** Esaurimento dei numeri identificativi delle transazioni, che renderebbe i dati storici illeggibili. **Perché:** Monitoro datfrozenxid. Ho scelto di automatizzare il controllo dell'età delle transazioni per forzare un VACUUM FREEZE prima di raggiungere la soglia critica del 70% dei bit disponibili.
+**Problema:** Esaurimento dei numeri identificativi delle transazioni, che renderebbe i dati storici illeggibili.
+**Perché:** Monitoro datfrozenxid. Ho scelto di automatizzare il controllo dell'età delle transazioni per forzare un VACUUM FREEZE prima di raggiungere la soglia critica del 70% dei bit disponibili.
 
 ## Esempio Implementativo
 

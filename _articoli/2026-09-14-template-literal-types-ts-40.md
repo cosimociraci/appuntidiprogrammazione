@@ -13,7 +13,8 @@ pdf_file: "template-literal-types-ts-40.pdf"
 Creare un Event Emitter dove i nomi degli eventi sono generati automaticamente come user_created, user_deleted, ecc.
 
 ## Analisi Tecnica
-****Problema:**** Perdita di type-safety quando si usano stringhe dinamiche come chiavi o identificatori. **Perché:** Uso i Template Literal Types. Ho scelto di automatizzare la creazione di tipi stringa per evitare errori di battitura in sistemi basati su convenzioni di naming.
+**Problema:** Perdita di type-safety quando si usano stringhe dinamiche come chiavi o identificatori.
+**Perché:** Uso i Template Literal Types. Ho scelto di automatizzare la creazione di tipi stringa per evitare errori di battitura in sistemi basati su convenzioni di naming.
 
 ## Esempio Implementativo
 

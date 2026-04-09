@@ -13,7 +13,8 @@ pdf_file: "optimistic-locking-con-stampedlock.pdf"
 Ottimizzare l'accesso a una configurazione globale caricata in memoria che viene letta da migliaia di thread al secondo ma aggiornata raramente.
 
 ## Analisi Tecnica
-****Problema:**** La contesa tra lettori e scrittori causa micro-latenze inutili in uno scenario read-heavy. **Perché:** Uso StampedLock. Ho scelto il lock ottimistico perché presuppongo che il dato non cambi durante la lettura; se succede, rifaccio il lavoro, evitando però di acquisire un lock reale il 99% delle volte.
+**Problema:** La contesa tra lettori e scrittori causa micro-latenze inutili in uno scenario read-heavy.
+**Perché:** Uso StampedLock. Ho scelto il lock ottimistico perché presuppongo che il dato non cambi durante la lettura; se succede, rifaccio il lavoro, evitando però di acquisire un lock reale il 99% delle volte.
 
 ## Esempio Implementativo
 

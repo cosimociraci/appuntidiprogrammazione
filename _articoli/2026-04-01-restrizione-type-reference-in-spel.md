@@ -13,7 +13,8 @@ pdf_file: "restrizione-type-reference-in-spel.pdf"
 Mettere in sicurezza ambienti CMS dove gli utenti "Power User" possono modificare parzialmente i template HTML.
 
 ## Analisi Tecnica
-****Problema:**** Un utente malintenzionato potrebbe inserire un'espressione nel database che, una volta renderizzata, esegue codice sulla JVM. **Perché:** Sandbox dell'engine SpEL. Ho scelto di limitare le classi risolvibili dal compilatore SpEL per impedire l'invocazione di metodi di sistema pericolosi.
+**Problema:** Un utente malintenzionato potrebbe inserire un'espressione nel database che, una volta renderizzata, esegue codice sulla JVM.
+**Perché:** Sandbox dell'engine SpEL. Ho scelto di limitare le classi risolvibili dal compilatore SpEL per impedire l'invocazione di metodi di sistema pericolosi.
 
 ## Esempio Implementativo
 

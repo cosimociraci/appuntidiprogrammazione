@@ -13,7 +13,8 @@ pdf_file: "deep-reflection-e-moduli-project-jigsaw.pdf"
 Far funzionare librerie di serializzazione legacy all'interno di un'architettura a moduli Java 17+.
 
 ## Analisi Tecnica
-****Problema:**** Crash dell'applicazione durante l'accesso via reflection a campi privati di classi interne del JDK o di terze parti. **Perché:** Configuro l'apertura selettiva dei moduli. Ho scelto di dichiarare esplicitamente quali pacchetti devono essere "aperti" alla reflection per mantenere il controllo sulla sicurezza del sistema.
+**Problema:** Crash dell'applicazione durante l'accesso via reflection a campi privati di classi interne del JDK o di terze parti.
+**Perché:** Configuro l'apertura selettiva dei moduli. Ho scelto di dichiarare esplicitamente quali pacchetti devono essere "aperti" alla reflection per mantenere il controllo sulla sicurezza del sistema.
 
 ## Esempio Implementativo
 

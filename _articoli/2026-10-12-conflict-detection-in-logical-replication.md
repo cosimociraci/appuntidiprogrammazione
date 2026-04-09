@@ -13,7 +13,8 @@ pdf_file: "conflict-detection-in-logical-replication.pdf"
 Gestire flussi di dati bidirezionali tra filiali regionali dove è possibile che vengano generati ID duplicati se non coordinati.
 
 ## Analisi Tecnica
-****Problema:**** Interruzione del flusso di replica dovuto a violazioni di vincoli di integrità sul nodo di destinazione. **Perché:** Implemento il monitoraggio del lag e logica di skipping. Ho scelto di non permettere scritture locali sulla replica per minimizzare i conflitti strutturali alla radice.
+**Problema:** Interruzione del flusso di replica dovuto a violazioni di vincoli di integrità sul nodo di destinazione.
+**Perché:** Implemento il monitoraggio del lag e logica di skipping. Ho scelto di non permettere scritture locali sulla replica per minimizzare i conflitti strutturali alla radice.
 
 ## Esempio Implementativo
 

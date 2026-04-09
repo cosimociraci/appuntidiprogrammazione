@@ -13,7 +13,8 @@ pdf_file: "exception-handling-il-costo-dello-stacktrace.pdf"
 Gestire validazioni di input ad alta frequenza dove il fallimento è un evento previsto e comune, non un errore di sistema.
 
 ## Analisi Tecnica
-****Problema:**** Overhead della CPU enorme quando le eccezioni vengono usate per gestire la logica di business ordinaria. **Perché:** Disabilito lo stacktrace. Ho deciso di ottimizzare le eccezioni ricorrenti perché in questi casi il "dove" è successo l'errore è già noto e non giustifica il costo del dump dello stack.
+**Problema:** Overhead della CPU enorme quando le eccezioni vengono usate per gestire la logica di business ordinaria.
+**Perché:** Disabilito lo stacktrace. Ho deciso di ottimizzare le eccezioni ricorrenti perché in questi casi il "dove" è successo l'errore è già noto e non giustifica il costo del dump dello stack.
 
 ## Esempio Implementativo
 

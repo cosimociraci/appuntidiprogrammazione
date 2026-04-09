@@ -13,7 +13,8 @@ pdf_file: "escaping-avanzato-thtext-vs-thutext.pdf"
 Visualizzare correttamente descrizioni formattate (RTF) inserite dagli utenti senza esporsi a iniezioni di script.
 
 ## Analisi Tecnica
-****Problema:**** Iniezione di JavaScript malevolo che viene eseguito nel browser di altri utenti quando visualizzano contenuti non filtrati. **Perché:** Sanitizzazione "White-list". Ho scelto di pulire il markup a livello di backend prima di inviarlo al modello, garantendo che solo i tag HTML sicuri (b, i, p) arrivino al motore di rendering.
+**Problema:** Iniezione di JavaScript malevolo che viene eseguito nel browser di altri utenti quando visualizzano contenuti non filtrati.
+**Perché:** Sanitizzazione "White-list". Ho scelto di pulire il markup a livello di backend prima di inviarlo al modello, garantendo che solo i tag HTML sicuri (b, i, p) arrivino al motore di rendering.
 
 ## Esempio Implementativo
 

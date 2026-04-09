@@ -13,7 +13,8 @@ pdf_file: "evitare-il-context-switch-overhead.pdf"
 Ottimizzare un convertitore di formati audio che effettua migliaia di micro-trasformazioni al secondo.
 
 ## Analisi Tecnica
-****Problema:**** Il costo del "salto" tra Java e C è superiore al tempo di esecuzione della funzione nativa stessa. **Perché:** Riduco le chiamate cross-boundary. Ho scelto di spostare la logica iterativa nel codice C o di usare segmenti di memoria mappati per far sì che il C legga i dati che Java ha preparato in un'unica soluzione.
+**Problema:** Il costo del "salto" tra Java e C è superiore al tempo di esecuzione della funzione nativa stessa.
+**Perché:** Riduco le chiamate cross-boundary. Ho scelto di spostare la logica iterativa nel codice C o di usare segmenti di memoria mappati per far sì che il C legga i dati che Java ha preparato in un'unica soluzione.
 
 ## Esempio Implementativo
 

@@ -13,7 +13,8 @@ pdf_file: "java-flight-recorder-jfr-in-prod.pdf"
 Risolvere bug intermittenti o rallentamenti che si verificano solo sotto carichi di produzione particolari e non sono riproducibili localmente.
 
 ## Analisi Tecnica
-****Problema:**** Mancanza di visibilità granulare sui micro-eventi interni della JVM durante i picchi di traffico reale. **Perché:** Attivo JFR in modalità continua. Ho scelto questa tecnologia perché l'impatto sulle prestazioni è trascurabile, ma il valore dei dati raccolti per il debugging post-mortem è inestimabile.
+**Problema:** Mancanza di visibilità granulare sui micro-eventi interni della JVM durante i picchi di traffico reale.
+**Perché:** Attivo JFR in modalità continua. Ho scelto questa tecnologia perché l'impatto sulle prestazioni è trascurabile, ma il valore dei dati raccolti per il debugging post-mortem è inestimabile.
 
 ## Esempio Implementativo
 

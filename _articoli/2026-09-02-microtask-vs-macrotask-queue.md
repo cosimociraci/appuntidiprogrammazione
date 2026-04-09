@@ -13,7 +13,8 @@ pdf_file: "microtask-vs-macrotask-queue.pdf"
 Risolvere bug di precedenza in sistemi ad alta frequenza dove i timer sembrano "scattare" in ritardo rispetto alle promesse.
 
 ## Analisi Tecnica
-****Problema:**** L'applicazione non risponde all'I/O esterno perché saturata da una catena infinita di microtask ricorsivi. **Perché:** Uso setImmediate per task non urgenti. Ho scelto di differire la logica alla fase di "Check" dell'Event Loop per permettere al ciclo di completare il polling dell'I/O di rete.
+**Problema:** L'applicazione non risponde all'I/O esterno perché saturata da una catena infinita di microtask ricorsivi.
+**Perché:** Uso setImmediate per task non urgenti. Ho scelto di differire la logica alla fase di "Check" dell'Event Loop per permettere al ciclo di completare il polling dell'I/O di rete.
 
 ## Esempio Implementativo
 

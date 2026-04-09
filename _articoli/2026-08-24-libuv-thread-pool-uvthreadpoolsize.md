@@ -13,7 +13,8 @@ pdf_file: "libuv-thread-pool-uvthreadpoolsize.pdf"
 Scalare un server che effettua pesanti operazioni di cifratura o hashing (bcrypt) senza bloccare le altre richieste.
 
 ## Analisi Tecnica
-****Problema:**** Latenza elevata in operazioni asincrone non-network a causa della coda di attesa nella thread pool di Libuv. **Perché:** Espando il pool di thread. Ho scelto di configurare UV_THREADPOOL_SIZE per allinearlo al carico previsto, permettendo l'esecuzione parallela di task bloccanti a livello di sistema operativo.
+**Problema:** Latenza elevata in operazioni asincrone non-network a causa della coda di attesa nella thread pool di Libuv.
+**Perché:** Espando il pool di thread. Ho scelto di configurare UV_THREADPOOL_SIZE per allinearlo al carico previsto, permettendo l'esecuzione parallela di task bloccanti a livello di sistema operativo.
 
 ## Esempio Implementativo
 

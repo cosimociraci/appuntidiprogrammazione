@@ -13,7 +13,8 @@ pdf_file: "multi-layout-viewresolver-order.pdf"
 Integrare nuovi moduli Thymeleaf in una vecchia applicazione Enterprise che usa ancora tecnologie di templating legacy.
 
 ## Analisi Tecnica
-****Problema:**** Conflitti tra motori di template diversi che tentano di risolvere la stessa vista, causando errori di "Template Not Found". **Perché:** Configuro la catena dei ViewResolver. Ho scelto di assegnare indici di priorità espliciti per garantire che il DispatcherServlet trovi sempre il renderer corretto nel minor tempo possibile.
+**Problema:** Conflitti tra motori di template diversi che tentano di risolvere la stessa vista, causando errori di "Template Not Found".
+**Perché:** Configuro la catena dei ViewResolver. Ho scelto di assegnare indici di priorità espliciti per garantire che il DispatcherServlet trovi sempre il renderer corretto nel minor tempo possibile.
 
 ## Esempio Implementativo
 

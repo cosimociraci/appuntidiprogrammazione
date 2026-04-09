@@ -13,7 +13,8 @@ pdf_file: "zgc-e-low-latency-sotto-i-10ms.pdf"
 Garantire tempi di risposta costanti per un motore di ricerca interno che gestisce un indice in memoria da 200GB.
 
 ## Analisi Tecnica
-****Problema:**** Picchi di latenza imprevedibili causati dalle pause di garbage collection su heap di grandi dimensioni. **Perché:** Scelgo ZGC. Ho deciso di dare priorità alla latenza minima rispetto al throughput massimo, configurando la JVM per sfruttare il parallelismo estremo nella marcatura degli oggetti.
+**Problema:** Picchi di latenza imprevedibili causati dalle pause di garbage collection su heap di grandi dimensioni.
+**Perché:** Scelgo ZGC. Ho deciso di dare priorità alla latenza minima rispetto al throughput massimo, configurando la JVM per sfruttare il parallelismo estremo nella marcatura degli oggetti.
 
 ## Esempio Implementativo
 

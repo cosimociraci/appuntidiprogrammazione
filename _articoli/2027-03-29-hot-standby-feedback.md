@@ -13,7 +13,8 @@ pdf_file: "hot-standby-feedback.pdf"
 Evitare che i report di fine mese eseguiti sulla replica falliscano a causa dell'attività di pulizia del database principale.
 
 ## Analisi Tecnica
-****Problema:**** Disallineamento tra la pulizia dei dati (Vacuum) sul Master e le necessità di lettura delle transazioni aperte sulla Replica. **Perché:** Attivo hot_standby_feedback = on. Ho scelto di accettare un po' di spazio extra occupato sul Master pur di garantire la stabilità dei report sulla Replica.
+**Problema:** Disallineamento tra la pulizia dei dati (Vacuum) sul Master e le necessità di lettura delle transazioni aperte sulla Replica.
+**Perché:** Attivo hot_standby_feedback = on. Ho scelto di accettare un po' di spazio extra occupato sul Master pur di garantire la stabilità dei report sulla Replica.
 
 ## Esempio Implementativo
 

@@ -13,7 +13,8 @@ pdf_file: "visibility-map-e-index-scans.pdf"
 Ottimizzare il conteggio di righe o la ricerca di colonne indicizzate su tabelle massicce, garantendo che il database non legga mai la tabella heap.
 
 ## Analisi Tecnica
-****Problema:**** Query che dovrebbero usare solo l'indice risultano lente perché devono accedere continuamente ai dati della tabella per confermare la visibilità MVCC. **Perché:** Monitoro lo stato della Visibility Map. Ho scelto di forzare il vacuum sulle tabelle critiche per "congelare" le pagine e abilitare l'ottimizzazione Index-Only Scan in modo costante.
+**Problema:** Query che dovrebbero usare solo l'indice risultano lente perché devono accedere continuamente ai dati della tabella per confermare la visibilità MVCC.
+**Perché:** Monitoro lo stato della Visibility Map. Ho scelto di forzare il vacuum sulle tabelle critiche per "congelare" le pagine e abilitare l'ottimizzazione Index-Only Scan in modo costante.
 
 ## Esempio Implementativo
 

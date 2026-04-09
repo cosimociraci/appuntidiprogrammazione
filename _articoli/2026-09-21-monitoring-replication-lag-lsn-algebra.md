@@ -13,7 +13,8 @@ pdf_file: "monitoring-replication-lag-lsn-algebra.pdf"
 Verificare in tempo reale se il database di disaster recovery è allineato a quello di produzione prima di autorizzare un aggiornamento applicativo.
 
 ## Analisi Tecnica
-****Problema:**** I secondi di lag sono una metrica ingannevole: una replica può essere "a 0 secondi" ma avere megabyte di dati non ancora processati in coda. **Perché:** Calcolo il lag basandomi sulla differenza di byte. Ho scelto questa metrica perché è assoluta e mi dice esattamente quanta "distanza" separa i due nodi in termini di record scritti.
+**Problema:** I secondi di lag sono una metrica ingannevole: una replica può essere "a 0 secondi" ma avere megabyte di dati non ancora processati in coda.
+**Perché:** Calcolo il lag basandomi sulla differenza di byte. Ho scelto questa metrica perché è assoluta e mi dice esattamente quanta "distanza" separa i due nodi in termini di record scritti.
 
 ## Esempio Implementativo
 

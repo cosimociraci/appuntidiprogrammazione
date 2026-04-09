@@ -13,7 +13,8 @@ pdf_file: "event-sourcing-e-state-reconstitution.pdf"
 Implementare un sistema di carrello acquisti dove ogni aggiunta, rimozione o modifica deve essere tracciabile e reversibile.
 
 ## Analisi Tecnica
-****Problema:**** Perdita di contesto storico sullo stato dell'applicazione e difficoltà nel gestire la persistenza offline complessa. **Perché:** Implemento un registro di eventi. Ho scelto questo pattern per garantire l'integrità dei dati e permettere la sincronizzazione parziale tra client e server basata su delta di eventi.
+**Problema:** Perdita di contesto storico sullo stato dell'applicazione e difficoltà nel gestire la persistenza offline complessa.
+**Perché:** Implemento un registro di eventi. Ho scelto questo pattern per garantire l'integrità dei dati e permettere la sincronizzazione parziale tra client e server basata su delta di eventi.
 
 ## Esempio Implementativo
 

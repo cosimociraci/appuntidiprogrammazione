@@ -13,7 +13,8 @@ pdf_file: "multi-column-indexes-e-lordine-delle-colonne.pdf"
 Progettare un indice efficiente per una tabella di log che viene interrogata spesso per 'applicazione' e 'livello_errore'.
 
 ## Analisi Tecnica
-****Problema:**** Le query che filtrano solo per la seconda colonna dell'indice non ottengono i benefici prestazionali sperati. **Perché:** Ho riordinato le colonne basandomi sulla frequenza d'uso. Ho messo 'app_id' per primo perché è presente nel 90% delle query, massimizzando il riutilizzo dello stesso indice.
+**Problema:** Le query che filtrano solo per la seconda colonna dell'indice non ottengono i benefici prestazionali sperati.
+**Perché:** Ho riordinato le colonne basandomi sulla frequenza d'uso. Ho messo 'app_id' per primo perché è presente nel 90% delle query, massimizzando il riutilizzo dello stesso indice.
 
 ## Esempio Implementativo
 

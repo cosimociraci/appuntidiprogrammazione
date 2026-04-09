@@ -13,7 +13,8 @@ pdf_file: "spel-compilation-mode.pdf"
 Accelerare il rendering di dashboard complesse con centinaia di punti dati e accessi a proprietà annidate.
 
 ## Analisi Tecnica
-****Problema:**** Overhead eccessivo di CPU dovuto all'interpretazione continua di espressioni dinamiche durante il rendering. **Perché:** Uso la compilazione JIT di SpEL. Ho scelto la modalità IMMEDIATE per trasformare le lookup di proprietà in chiamate a metodi dirette nel bytecode, eliminando la riflessione runtime.
+**Problema:** Overhead eccessivo di CPU dovuto all'interpretazione continua di espressioni dinamiche durante il rendering.
+**Perché:** Uso la compilazione JIT di SpEL. Ho scelto la modalità IMMEDIATE per trasformare le lookup di proprietà in chiamate a metodi dirette nel bytecode, eliminando la riflessione runtime.
 
 ## Esempio Implementativo
 

@@ -13,7 +13,8 @@ pdf_file: "custom-dialects-e-iprocessor.pdf"
 Creare una libreria di componenti UI aziendali (bottoni, card, grafici) coerenti e riutilizzabili in tutti i microservizi Spring.
 
 ## Analisi Tecnica
-****Problema:**** Duplicazione di codice HTML e logica CSS/JS in decine di template diversi. **Perché:** Uso i Custom Processors. Ho scelto di estendere AbstractAttributeTagProcessor per intercettare attributi specifici e iniettare dinamicamente classi CSS o attributi ARIA senza sporcare il sorgente HTML.
+**Problema:** Duplicazione di codice HTML e logica CSS/JS in decine di template diversi.
+**Perché:** Uso i Custom Processors. Ho scelto di estendere AbstractAttributeTagProcessor per intercettare attributi specifici e iniettare dinamicamente classi CSS o attributi ARIA senza sporcare il sorgente HTML.
 
 ## Esempio Implementativo
 

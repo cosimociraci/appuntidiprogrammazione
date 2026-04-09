@@ -13,7 +13,8 @@ pdf_file: "dynamic-proxy-e-interface-invocation.pdf"
 Creare un client HTTP dichiarativo dove basta definire l'interfaccia per avere l'implementazione automatica.
 
 ## Analisi Tecnica
-****Problema:**** Overhead introdotto dal layer di intercettazione dei proxy dinamici nelle interfacce dei repository o dei client. **Perché:** Implemento una cache dei Method all'interno dell'InvocationHandler. Ho scelto di pre-risolvere i riferimenti ai metodi per minimizzare il tempo speso nella gestione dei metadati durante la chiamata.
+**Problema:** Overhead introdotto dal layer di intercettazione dei proxy dinamici nelle interfacce dei repository o dei client.
+**Perché:** Implemento una cache dei Method all'interno dell'InvocationHandler. Ho scelto di pre-risolvere i riferimenti ai metodi per minimizzare il tempo speso nella gestione dei metadati durante la chiamata.
 
 ## Esempio Implementativo
 

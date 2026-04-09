@@ -13,7 +13,8 @@ pdf_file: "logical-decoding-replication-slots.pdf"
 Sincronizzare tabelle specifiche tra un database di produzione e un database di data-warehouse per analisi in tempo reale senza replicare l'intero cluster.
 
 ## Analisi Tecnica
-****Problema:**** Rischio di saturazione del disco sul nodo primario se i subscriber non confermano la ricezione dei dati. **Perché:** Uso i Logical Replication Slots. Ho scelto questa strada perché garantisce "zero data loss" nella sincronizzazione, a patto di avere un sistema di monitoring che elimina i slot inattivi da troppo tempo.
+**Problema:** Rischio di saturazione del disco sul nodo primario se i subscriber non confermano la ricezione dei dati.
+**Perché:** Uso i Logical Replication Slots. Ho scelto questa strada perché garantisce "zero data loss" nella sincronizzazione, a patto di avere un sistema di monitoring che elimina i slot inattivi da troppo tempo.
 
 ## Esempio Implementativo
 

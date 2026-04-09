@@ -13,7 +13,8 @@ pdf_file: "zero-copy-io-con-memory-mapping.pdf"
 Analizzare log di dimensioni enormi o database su file senza saturare l'heap Java.
 
 ## Analisi Tecnica
-****Problema:**** L'heap si riempie di byte array temporanei durante la lettura di file di grandi dimensioni. **Perché:** Uso il Memory Mapping (mmap). Ho scelto di mappare il file direttamente nello spazio di indirizzamento del processo per permettere al kernel di gestire il caching in modo trasparente ed efficiente.
+**Problema:** L'heap si riempie di byte array temporanei durante la lettura di file di grandi dimensioni.
+**Perché:** Uso il Memory Mapping (mmap). Ho scelto di mappare il file direttamente nello spazio di indirizzamento del processo per permettere al kernel di gestire il caching in modo trasparente ed efficiente.
 
 ## Esempio Implementativo
 

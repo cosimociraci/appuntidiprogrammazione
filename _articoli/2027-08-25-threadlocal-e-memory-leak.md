@@ -13,7 +13,8 @@ pdf_file: "threadlocal-e-memory-leak.pdf"
 Passare l'ID della transazione o le informazioni sull'utente autenticato attraverso i vari layer (Service, Repository) in modo trasparente.
 
 ## Analisi Tecnica
-****Problema:**** Memory leak nei server web dovuto alla persistenza dei dati nel contesto del thread anche dopo la fine della richiesta. **Perché:** Uso il pattern try-finally con remove(). Ho scelto questo rigore implementativo per assicurarmi che il thread torni nel pool "pulito", evitando contaminazioni di dati tra utenti diversi.
+**Problema:** Memory leak nei server web dovuto alla persistenza dei dati nel contesto del thread anche dopo la fine della richiesta.
+**Perché:** Uso il pattern try-finally con remove(). Ho scelto questo rigore implementativo per assicurarmi che il thread torni nel pool "pulito", evitando contaminazioni di dati tra utenti diversi.
 
 ## Esempio Implementativo
 

@@ -13,7 +13,8 @@ pdf_file: "microbenchmarking-con-jmh.pdf"
 Decidere oggettivamente quale tra due implementazioni di un algoritmo è la più efficiente per il sistema.
 
 ## Analisi Tecnica
-****Problema:**** Ottimizzazioni basate su misurazioni empiriche errate che non tengono conto del comportamento del compilatore JIT. **Perché:** Uso lo standard industriale JMH. Ho scelto questo strumento per isolare il codice sotto test e ottenere metriche statisticamente significative, eliminando il rumore della JVM.
+**Problema:** Ottimizzazioni basate su misurazioni empiriche errate che non tengono conto del comportamento del compilatore JIT.
+**Perché:** Uso lo standard industriale JMH. Ho scelto questo strumento per isolare il codice sotto test e ottenere metriche statisticamente significative, eliminando il rumore della JVM.
 
 ## Esempio Implementativo
 

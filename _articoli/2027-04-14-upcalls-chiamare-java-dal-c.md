@@ -13,7 +13,8 @@ pdf_file: "upcalls-chiamare-java-dal-c.pdf"
 Implementare un sistema di monitoraggio dove una libreria C notifica a Java il superamento di una soglia di temperatura.
 
 ## Analisi Tecnica
-****Problema:**** Necessità di gestire eventi asincroni generati dal mondo nativo senza bloccare l'esecuzione. **Perché:** Creo un upcallStub. Ho scelto di mappare un metodo Java come puntatore a funzione C, permettendo alla libreria esterna di "chiamare casa" in modo sicuro e controllato.
+**Problema:** Necessità di gestire eventi asincroni generati dal mondo nativo senza bloccare l'esecuzione.
+**Perché:** Creo un upcallStub. Ho scelto di mappare un metodo Java come puntatore a funzione C, permettendo alla libreria esterna di "chiamare casa" in modo sicuro e controllato.
 
 ## Esempio Implementativo
 

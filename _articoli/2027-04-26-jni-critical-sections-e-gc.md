@@ -13,7 +13,8 @@ pdf_file: "jni-critical-sections-e-gc.pdf"
 Risolvere problemi di pause GC estreme in applicazioni che usano pesantemente calcoli matriciali in C.
 
 ## Analisi Tecnica
-****Problema:**** Il Garbage Collector non riesce a terminare i cicli perché i thread JNI tengono "bloccato" l'heap. **Perché:** Uso le sezioni critiche solo per operazioni atomiche. Ho scelto di minimizzare il tempo speso con i puntatori "critici" per garantire che la JVM possa eseguire i suoi compiti di manutenzione senza ritardi.
+**Problema:** Il Garbage Collector non riesce a terminare i cicli perché i thread JNI tengono "bloccato" l'heap.
+**Perché:** Uso le sezioni critiche solo per operazioni atomiche. Ho scelto di minimizzare il tempo speso con i puntatori "critici" per garantire che la JVM possa eseguire i suoi compiti di manutenzione senza ritardi.
 
 ## Esempio Implementativo
 

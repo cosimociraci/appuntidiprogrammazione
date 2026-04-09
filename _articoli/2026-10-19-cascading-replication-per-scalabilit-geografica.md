@@ -13,7 +13,8 @@ pdf_file: "cascading-replication-per-scalabilit-geografica.pdf"
 Distribuire i dati di un'app globale in Europa, USA e Asia senza sovraccaricare il database centrale situato in Italia.
 
 ## Analisi Tecnica
-****Problema:**** Saturazione delle risorse di rete e CPU del nodo Master a causa del numero eccessivo di repliche dirette. **Perché:** Implemento la replica a cascata. Ho scelto questo design per far sì che solo un nodo per regione geografica parli con il Master, distribuendo poi i dati localmente agli altri nodi della regione.
+**Problema:** Saturazione delle risorse di rete e CPU del nodo Master a causa del numero eccessivo di repliche dirette.
+**Perché:** Implemento la replica a cascata. Ho scelto questo design per far sì che solo un nodo per regione geografica parli con il Master, distribuendo poi i dati localmente agli altri nodi della regione.
 
 ## Esempio Implementativo
 

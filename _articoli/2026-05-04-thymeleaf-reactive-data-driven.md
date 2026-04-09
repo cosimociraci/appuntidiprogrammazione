@@ -13,7 +13,8 @@ pdf_file: "thymeleaf-reactive-data-driven.pdf"
 Visualizzare i primi risultati di una ricerca massiva mentre il server sta ancora elaborando il resto della query.
 
 ## Analisi Tecnica
-****Problema:**** Latenza percepita alta (schermata bianca) durante l'elaborazione di grandi volumi di dati lato server. **Perché:** Uso il rendering reattivo. Ho scelto di inviare i dati in streaming per permettere al browser di iniziare il parsing del DOM prima che la risposta HTTP sia completata.
+**Problema:** Latenza percepita alta (schermata bianca) durante l'elaborazione di grandi volumi di dati lato server.
+**Perché:** Uso il rendering reattivo. Ho scelto di inviare i dati in streaming per permettere al browser di iniziare il parsing del DOM prima che la risposta HTTP sia completata.
 
 ## Esempio Implementativo
 

@@ -13,7 +13,8 @@ pdf_file: "partial-indexes-per-ridurre-loverhead.pdf"
 Ottimizzare la ricerca di ordini "da processare" in una tabella che contiene milioni di ordini già conclusi.
 
 ## Analisi Tecnica
-****Problema:**** L'indice sulla colonna 'status' è enorme e poco selettivo perché la stragrande maggioranza dei record è nello stato 'COMPLETED'. **Perché:** Uso un indice parziale. Ho deciso di indicizzare solo le righe dove status != 'COMPLETED', riducendo la dimensione dell'indice del 95% e rendendo i lookup istantanei.
+**Problema:** L'indice sulla colonna 'status' è enorme e poco selettivo perché la stragrande maggioranza dei record è nello stato 'COMPLETED'.
+**Perché:** Uso un indice parziale. Ho deciso di indicizzare solo le righe dove status != 'COMPLETED', riducendo la dimensione dell'indice del 95% e rendendo i lookup istantanei.
 
 ## Esempio Implementativo
 

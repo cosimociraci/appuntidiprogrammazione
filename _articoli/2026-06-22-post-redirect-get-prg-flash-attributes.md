@@ -13,7 +13,8 @@ pdf_file: "post-redirect-get-prg-flash-attributes.pdf"
 Evitare la duplicazione di transazioni e gestire notifiche utente "one-shot" dopo operazioni di scrittura (POST).
 
 ## Analisi Tecnica
-****Problema:**** Perdita dei messaggi di feedback utente dopo un redirect o esecuzione multipla accidentale di azioni lato server. **Perché:** Implemento il pattern PRG con Flash Scope. Ho scelto questa strategia per separare nettamente le azioni di modifica dello stato dalle azioni di visualizzazione, migliorando l'esperienza utente e la coerenza dei dati.
+**Problema:** Perdita dei messaggi di feedback utente dopo un redirect o esecuzione multipla accidentale di azioni lato server.
+**Perché:** Implemento il pattern PRG con Flash Scope. Ho scelto questa strategia per separare nettamente le azioni di modifica dello stato dalle azioni di visualizzazione, migliorando l'esperienza utente e la coerenza dei dati.
 
 ## Esempio Implementativo
 

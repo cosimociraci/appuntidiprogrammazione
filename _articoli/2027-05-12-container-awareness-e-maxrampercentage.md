@@ -13,7 +13,8 @@ pdf_file: "container-awareness-e-maxrampercentage.pdf"
 Evitare che i microservizi su Kubernetes vengano terminati dal sistema operativo (OOMKilled) a causa di una visione errata della memoria disponibile.
 
 ## Analisi Tecnica
-****Problema:**** Disallineamento tra i limiti di memoria del container e i limiti di allocazione dell'heap della JVM. **Perché:** Uso le percentuali dinamiche. Ho scelto questo approccio per semplificare il deployment: se cambio le risorse del pod K8s, la JVM si ridimensiona da sola senza dover cambiare la stringa di avvio.
+**Problema:** Disallineamento tra i limiti di memoria del container e i limiti di allocazione dell'heap della JVM.
+**Perché:** Uso le percentuali dinamiche. Ho scelto questo approccio per semplificare il deployment: se cambio le risorse del pod K8s, la JVM si ridimensiona da sola senza dover cambiare la stringa di avvio.
 
 ## Esempio Implementativo
 

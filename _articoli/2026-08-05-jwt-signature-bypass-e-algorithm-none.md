@@ -13,7 +13,8 @@ pdf_file: "jwt-signature-bypass-e-algorithm-none.pdf"
 Proteggere un'infrastruttura a microservizi da attacchi di escalation dei privilegi tramite manipolazione dei token.
 
 ## Analisi Tecnica
-****Problema:**** Validazione insicura dei token JWT che si fida dell'algoritmo dichiarato nell'header del pacchetto ricevuto. **Perché:** Implemento una "Allow-list" di algoritmi. Ho scelto di ignorare l'header alg del client, forzando il runtime di verifica a usare solo il protocollo crittografico predefinito dal sistema.
+**Problema:** Validazione insicura dei token JWT che si fida dell'algoritmo dichiarato nell'header del pacchetto ricevuto.
+**Perché:** Implemento una "Allow-list" di algoritmi. Ho scelto di ignorare l'header alg del client, forzando il runtime di verifica a usare solo il protocollo crittografico predefinito dal sistema.
 
 ## Esempio Implementativo
 

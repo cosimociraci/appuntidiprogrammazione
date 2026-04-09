@@ -13,7 +13,8 @@ pdf_file: "fencing-e-stonith-in-high-availability.pdf"
 Evitare che un database "fantasma" continui ad accettare ordini dai clienti mentre il sistema ha già eletto un nuovo master ufficiale.
 
 ## Analisi Tecnica
-****Problema:**** Due istanze Master attive contemporaneamente scrivono dati diversi, rendendo impossibile la riconciliazione futura. **Perché:** Utilizzo un cluster manager con Distributed Configuration Store (DCS). Ho scelto Patroni perché gestisce nativamente il ciclo di vita del leader tramite chiavi TTL su etcd, garantendo l'univocità del ruolo.
+**Problema:** Due istanze Master attive contemporaneamente scrivono dati diversi, rendendo impossibile la riconciliazione futura.
+**Perché:** Utilizzo un cluster manager con Distributed Configuration Store (DCS). Ho scelto Patroni perché gestisce nativamente il ciclo di vita del leader tramite chiavi TTL su etcd, garantendo l'univocità del ruolo.
 
 ## Esempio Implementativo
 

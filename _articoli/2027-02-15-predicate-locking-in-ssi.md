@@ -13,7 +13,8 @@ pdf_file: "predicate-locking-in-ssi.pdf"
 Garantire la coerenza di un sistema di allocazione budget dove la somma delle spese non deve mai superare il tetto massimo, anche se le spese vengono inserite contemporaneamente.
 
 ## Analisi Tecnica
-****Problema:**** Come bloccare una "condizione" (la somma) invece di singole righe che potrebbero non esistere ancora. **Perché:** Sfrutto l'infrastruttura SSI di Postgres. Ho scelto questo metodo perché è l'unico che garantisce l'assenza di anomalie senza dover bloccare l'intera tabella dei pagamenti.
+**Problema:** Come bloccare una "condizione" (la somma) invece di singole righe che potrebbero non esistere ancora.
+**Perché:** Sfrutto l'infrastruttura SSI di Postgres. Ho scelto questo metodo perché è l'unico che garantisce l'assenza di anomalie senza dover bloccare l'intera tabella dei pagamenti.
 
 ## Esempio Implementativo
 

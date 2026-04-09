@@ -13,7 +13,8 @@ pdf_file: "expression-objects-custom.pdf"
 Fornire ai designer un modo semplice per formattare valute o gestire traduzioni complesse direttamente nel template.
 
 ## Analisi Tecnica
-****Problema:**** Inserimento di logica di formattazione pesante nei Controller o nei DTO, violando la separazione delle responsabilità. **Perché:** Implemento un Expression Object. Ho scelto di creare un oggetto utility registrato nel dialetto per centralizzare le funzioni di supporto alla view.
+**Problema:** Inserimento di logica di formattazione pesante nei Controller o nei DTO, violando la separazione delle responsabilità.
+**Perché:** Implemento un Expression Object. Ho scelto di creare un oggetto utility registrato nel dialetto per centralizzare le funzioni di supporto alla view.
 
 ## Esempio Implementativo
 

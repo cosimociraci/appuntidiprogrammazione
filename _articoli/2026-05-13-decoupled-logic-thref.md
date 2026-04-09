@@ -13,7 +13,8 @@ pdf_file: "decoupled-logic-thref.pdf"
 Permettere a un team di designer esterni di aggiornare il layout HTML senza che debbano conoscere la sintassi di Thymeleaf.
 
 ## Analisi Tecnica
-****Problema:**** I file di template diventano illeggibili per i tool di design a causa dell'eccessiva presenza di attributi logici. **Perché:** Uso il Decoupled Template Logic. Ho scelto di spostare gli attributi th:text e th:each in un file XML parallelo per mantenere il file HTML visualizzabile in un normale browser senza server.
+**Problema:** I file di template diventano illeggibili per i tool di design a causa dell'eccessiva presenza di attributi logici.
+**Perché:** Uso il Decoupled Template Logic. Ho scelto di spostare gli attributi th:text e th:each in un file XML parallelo per mantenere il file HTML visualizzabile in un normale browser senza server.
 
 ## Esempio Implementativo
 

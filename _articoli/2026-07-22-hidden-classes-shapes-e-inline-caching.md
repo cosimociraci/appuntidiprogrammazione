@@ -13,7 +13,8 @@ pdf_file: "hidden-classes-shapes-e-inline-caching.pdf"
 Ottimizzare il throughput di un server che manipola milioni di oggetti "User" simili in loop stretti.
 
 ## Analisi Tecnica
-****Problema:**** Calo drastico delle performance dovuto alla polimorfizzazione delle funzioni che accettano oggetti con strutture (shapes) leggermente diverse. **Perché:** Mantengo la stabilità delle forme. Ho scelto di inizializzare tutti i campi nel costruttore, anche come null, per garantire che ogni istanza condivida la stessa transizione di classe nascosta.
+**Problema:** Calo drastico delle performance dovuto alla polimorfizzazione delle funzioni che accettano oggetti con strutture (shapes) leggermente diverse.
+**Perché:** Mantengo la stabilità delle forme. Ho scelto di inizializzare tutti i campi nel costruttore, anche come null, per garantire che ogni istanza condivida la stessa transizione di classe nascosta.
 
 ## Esempio Implementativo
 

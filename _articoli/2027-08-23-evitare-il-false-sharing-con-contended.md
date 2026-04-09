@@ -13,7 +13,8 @@ pdf_file: "evitare-il-false-sharing-con-contended.pdf"
 Massimizzare le performance di contatori atomici globali usati intensivamente in un sistema di trading ad alta frequenza.
 
 ## Analisi Tecnica
-****Problema:**** Degradazione invisibile delle prestazioni dovuta alla contesa della cache line tra core diversi. **Perché:** Uso @jdk.internal.vm.annotation.Contended. Ho deciso di forzare l'allineamento della memoria per evitare il ping-pong della cache line tra i core, aumentando il throughput delle operazioni atomiche.
+**Problema:** Degradazione invisibile delle prestazioni dovuta alla contesa della cache line tra core diversi.
+**Perché:** Uso @jdk.internal.vm.annotation.Contended. Ho deciso di forzare l'allineamento della memoria per evitare il ping-pong della cache line tra i core, aumentando il throughput delle operazioni atomiche.
 
 ## Esempio Implementativo
 

@@ -13,7 +13,8 @@ pdf_file: "conditional-types-e-inferenza-infer.pdf"
 Estrarre automaticamente il tipo dei dati contenuti in una risposta API complessa senza doverlo ridefinire manualmente.
 
 ## Analisi Tecnica
-****Problema:**** Duplicazione di codice e disallineamento tra le definizioni delle funzioni e i tipi dei loro risultati. **Perché:** Uso l'inferenza condizionale. Ho scelto infer per "scoperchiare" i tipi generici e recuperare informazioni strutturali che altrimenti andrebbero perse o richiederebbero cast manuali insicuri.
+**Problema:** Duplicazione di codice e disallineamento tra le definizioni delle funzioni e i tipi dei loro risultati.
+**Perché:** Uso l'inferenza condizionale. Ho scelto infer per "scoperchiare" i tipi generici e recuperare informazioni strutturali che altrimenti andrebbero perse o richiederebbero cast manuali insicuri.
 
 ## Esempio Implementativo
 

@@ -13,7 +13,8 @@ pdf_file: "varhandle-per-accesso-atomico.pdf"
 Implementare un contatore ad alta concorrenza o una coda non-bloccante senza usare lock pesanti.
 
 ## Analisi Tecnica
-****Problema:**** Necessità di eseguire operazioni atomiche su campi di classi esistenti senza alterare la struttura dell'oggetto o usare wrapper. **Perché:** Uso VarHandle. Ho scelto questa API perché mi permette di agire direttamente sulla memoria con istruzioni hardware native (Compare-And-Swap) garantendo la massima velocità possibile.
+**Problema:** Necessità di eseguire operazioni atomiche su campi di classi esistenti senza alterare la struttura dell'oggetto o usare wrapper.
+**Perché:** Uso VarHandle. Ho scelto questa API perché mi permette di agire direttamente sulla memoria con istruzioni hardware native (Compare-And-Swap) garantendo la massima velocità possibile.
 
 ## Esempio Implementativo
 

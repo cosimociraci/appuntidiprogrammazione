@@ -13,7 +13,8 @@ pdf_file: "diagnosticare-il-gc-thrashing.pdf"
 Implementare un sistema di "fail-fast" per istanze di microservizi che sono entrate in uno stato di degrado irreversibile della memoria.
 
 ## Analisi Tecnica
-****Problema:**** L'applicazione non risponde più ma il processo risulta attivo, consumando il 100% della CPU in cicli di GC inutili. **Perché:** Uso le soglie di overhead del GC. Ho scelto di forzare un crash controllato per permettere all'orchestratore (K8s) di riavviare l'istanza su un altro nodo, ripristinando il servizio.
+**Problema:** L'applicazione non risponde più ma il processo risulta attivo, consumando il 100% della CPU in cicli di GC inutili.
+**Perché:** Uso le soglie di overhead del GC. Ho scelto di forzare un crash controllato per permettere all'orchestratore (K8s) di riavviare l'istanza su un altro nodo, ripristinando il servizio.
 
 ## Esempio Implementativo
 

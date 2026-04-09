@@ -13,7 +13,8 @@ pdf_file: "webcrypto-api-vs-node-crypto.pdf"
 Implementare la cifratura end-to-end (E2EE) in una chat web dove il server non deve mai leggere i messaggi in chiaro.
 
 ## Analisi Tecnica
-****Problema:**** Esposizione di chiavi crittografiche a script malevoli (XSS) che possono leggere la memoria heap di JavaScript. **Perché:** Uso chiavi non estraibili. Ho scelto la WebCrypto API per garantire che le operazioni di firma e cifratura avvengano senza mai esporre i byte della chiave al codice applicativo.
+**Problema:** Esposizione di chiavi crittografiche a script malevoli (XSS) che possono leggere la memoria heap di JavaScript.
+**Perché:** Uso chiavi non estraibili. Ho scelto la WebCrypto API per garantire che le operazioni di firma e cifratura avvengano senza mai esporre i byte della chiave al codice applicativo.
 
 ## Esempio Implementativo
 

@@ -13,7 +13,8 @@ pdf_file: "argon2-e-key-derivation-kdf.pdf"
 Memorizzare in modo sicuro le credenziali degli utenti in un database, garantendo resilienza contro leak massivi di dati.
 
 ## Analisi Tecnica
-****Problema:**** Vulnerabilità degli hash delle password ad attacchi brute-force accelerati da hardware specializzato. **Perché:** Uso un algoritmo Memory-Hard. Ho scelto Argon2id per bilanciare la protezione contro attacchi side-channel e la resistenza al cracking parallelo estremo.
+**Problema:** Vulnerabilità degli hash delle password ad attacchi brute-force accelerati da hardware specializzato.
+**Perché:** Uso un algoritmo Memory-Hard. Ho scelto Argon2id per bilanciare la protezione contro attacchi side-channel e la resistenza al cracking parallelo estremo.
 
 ## Esempio Implementativo
 

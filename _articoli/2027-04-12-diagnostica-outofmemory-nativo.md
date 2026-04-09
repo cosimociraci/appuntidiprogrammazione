@@ -13,7 +13,8 @@ pdf_file: "diagnostica-outofmemory-nativo.pdf"
 Identificare un leak di memoria silente che causa il riavvio dei pod K8s ogni 48 ore nonostante l'heap Java sia stabile.
 
 ## Analisi Tecnica
-****Problema:**** Crash improvvisi dell'applicazione dovuti all'esaurimento della RAM fisica, non rilevati dai normali monitor Java. **Perché:** Monitoro i contatori nativi della JVM. Ho scelto di abilitare i log di tracciamento delle Arene per verificare che ogni blocco di memoria nativa abbia un corrispondente evento di chiusura.
+**Problema:** Crash improvvisi dell'applicazione dovuti all'esaurimento della RAM fisica, non rilevati dai normali monitor Java.
+**Perché:** Monitoro i contatori nativi della JVM. Ho scelto di abilitare i log di tracciamento delle Arene per verificare che ogni blocco di memoria nativa abbia un corrispondente evento di chiusura.
 
 ## Esempio Implementativo
 
