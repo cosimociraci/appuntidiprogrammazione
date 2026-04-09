@@ -13,6 +13,17 @@ Questo documento descrive il flusso tecnico che permette di trasformare i dati g
 
 ---
 
+## 0. Processi attivi
+tagger.py: Il "cervello" Python. Usa il nuovo client google-genai per leggere i tuoi articoli, confrontarli con i tag esistenti e aggiungerne di nuovi (senza esagerare) usando Gemini. Ho notato la gestione intelligente del rate limiting (i 12 secondi di pausa e il backoff esponenziale).
+
+ai-tagger.yml: Il braccio meccanico. Si attiva ogni volta che carichi qualcosa nella cartella _articoli, lancia lo script Python e fa il commit automatico dei tag aggiornati direttamente nel repository.
+
+jekyll.yml: Il workflow standard di GitHub per compilare e pubblicare il sito su Pages usando gli artifact.
+
+daily-publish.yml: Una ridondanza utile che assicura che il sito venga compilato ogni sera alle 22:05, gestendo così i post programmati per il futuro.
+
+---
+
 ## 1. Il Ciclo di Vita dell'Informazione
 
 Il processo si divide in tre "mondi" distinti che comunicano tra loro:
