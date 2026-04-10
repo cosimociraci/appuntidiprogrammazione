@@ -1,3 +1,13 @@
+---
+layout: post
+title: "Nuovi sviluppi in AI, ML e Ingegneria delle Informazioni"
+sintesi: >
+  Il campo di AI, ML e IA continua a evolversi con nuove scoperte e sviluppi. Viene presentato il Summit della AAIF, Google Colab, Scion, Claude Code, TigerFS e altre innovative tecnologie.
+date: 2026-04-09 12:00:00
+tech: "ia"
+tags: ["ai", "ml", "intelligenza artificiale", "machine learning"]
+link: ""
+---
  Titolo: Nuovi sviluppi in AI, ML e Ingegneria delle Informazioni: un profondo approfondimento
 ----------------------------------------------------------------------------------------------
 

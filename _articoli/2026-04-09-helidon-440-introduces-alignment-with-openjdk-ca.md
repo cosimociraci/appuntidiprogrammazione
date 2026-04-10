@@ -1,3 +1,13 @@
+---
+layout: post
+title: "Helidon 4.4.0: Allineamento con OpenJDK Cadence e Supporto attraverso Java Verified Portfolio"
+sintesi: >
+  Oracle ha rilasciato Helidon 4.4.0 che adotta la cadenza di rilascio di OpenJDK, viene incluso nel Java Verified Portfolio e presenta nuove funzionalità come Helidon Declarative e JSON.
+date: 2026-04-09 12:00:00
+tech: "java"
+tags: ["helidon", "openjdk", "java verified portfolio"]
+link: ""
+---
  Titolo: Helidon 4.4.0: Alignimento con OpenJDK Cadence e Supporto attraverso Java Verified Portfolio
 
 Helidon, il framework microservices di Oracle, ha presentato la versione 4.4.0 che include l'allineamento alla cadenzarelease OpenJDK, supporto attraverso il nuovo Java Verified Portfolio, nuove capacità principali e supporto per LangChain4j con aiuti agenti.

@@ -1,0 +1,88 @@
+---
+layout: default
+---
+
+<!--
+    Layout post: struttura a due colonne.
+    - Sinistra (post-content): breadcrumb → tags → link PDF → articolo MD
+    - Destra (post-sidebar): tags argomento + libro consigliato
+    
+    Ordine DOM: post-content prima, post-sidebar dopo.
+    Grid-template-areas in CSS li posiziona visivamente:
+    "content sidebar" su desktop, stacked su mobile.
+-->
+<div class="post-container">
+
+    <!-- COLONNA SINISTRA: contenuto principale -->
+    <main class="post-content">
+
+        <!-- Breadcrumb: navigazione verso la home -->
+        <nav class="post-breadcrumb" aria-label="Breadcrumb">
+            <a href="{{ '/' | relative_url }}">Appunti di Programmazione</a>
+            <span class="separator" aria-hidden="true">/</span>
+            <span>{{ page.title }}</span>
+        </nav>
+
+        <!-- Tags legati all'articolo -->
+        {% if page.tags and page.tags.size > 0 %}
+        <div class="post-tags-header" aria-label="Argomenti">
+            {% for tag in page.tags %}
+                <span class="post-tag-chip">{{ tag }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Link al/ai PDF allegati all'articolo -->
+        {% if page.pdf_file %}
+        <div class="pdf-link-wrapper">
+            <a class="pdf-link"
+               href="{{ site.baseurl }}/assets/pdf/{{ page.pdf_file }}"
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="Scarica il PDF: {{ page.title }}">
+                Scarica PDF
+            </a>
+        </div>
+        {% endif %}
+
+        <!-- Corpo dell'articolo renderizzato da Kramdown -->
+        <article class="post-article-body">
+            {{ content }}
+        </article>
+
+    </main>
+
+    <!-- COLONNA DESTRA: sidebar post -->
+    <aside class="post-sidebar">
+
+        <!-- Box 1: tags argomento (stessa lista dei chip sopra, ma nella sidebar) -->
+        {% if page.tags and page.tags.size > 0 %}
+        <div class="sidebar-box tags-box">
+            <span class="box-label">Argomenti</span>
+            <div class="tag-cloud-sidebar">
+                {% for tag in page.tags %}
+                    <span class="sidebar-tag">{{ tag }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Box 2: libro consigliato -->
+        <div class="sidebar-box books-box">
+            <span class="box-label">Letture Consigliate</span>
+            <div class="book-card">
+                <a href="https://www.amazon.it/Appunti-Programmazione-Pensieri-soluzioni-Applicazioni-ebook/dp/B0FMFRHKTF/"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   aria-label="Acquista Appunti di Programmazione su Amazon">
+                    <img src="https://m.media-amazon.com/images/I/61Ck5eMzGYL._SY466_.jpg"
+                         alt="Copertina: Appunti di Programmazione"
+                         width="80">
+                    <p>Appunti di Programmazione: Pensieri e soluzioni per Applicazioni WEB</p>
+                </a>
+            </div>
+        </div>
+
+    </aside>
+
+</div>

@@ -1,3 +1,13 @@
+---
+layout: post
+title: "Sfida di un Senior Developer: La settimana tecnica in Java (aprile 2026)"
+sintesi: >
+  L'articolo descrive gli aggiornamenti più significativi del mondo Java della settimana, includendo la versione 4.0 di TornadoVM e Google ADK for Java 1.0.
+date: 2026-04-09 12:00:00
+tech: "java"
+tags: ["tornadovm", "google adk", "java framework"]
+link: "https://www.infoq.com/news/2026/04/java-news-roundup-mar30-2026"
+---
  # Sfida di un Senior Developer: La settimana tecnica in Java (aprile 2026)
 
 Ho trascorso questa settimana seguendo le notizie più importanti del mondo Java, e sono venuto a conoscenza di alcuni aggiornamenti interessanti. Ho scoperto che la versione 4.0 del framework TornadoVM è stata rilasciata ufficialmente, insieme al Google ADK for Java 1.0.
