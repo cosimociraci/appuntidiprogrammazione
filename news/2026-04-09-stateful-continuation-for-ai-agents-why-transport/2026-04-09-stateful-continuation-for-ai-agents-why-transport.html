@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transport Layer Matters per Agenti Intelligenti: Il Perché e Come — DevLog</title>
+    <meta name="description" content="L'articolo esplora l'importanza del livello di trasporto per gli agenti intelligenti, spiegando come i concetti come WebSocket di OpenAI migliorino la performance e la scalabilità. Viene presentato un esempio pratico del problema di reinvio della storia della conversazione ed evidenziati i vantaggi e disvantaggi dell'approccio.
+">
+    <link rel="stylesheet" href="/appuntidiprogrammazione/assets/css/style.css">
+
+    <script>
+        /*
+         * Applico il tema PRIMA del rendering per evitare il flash di contenuto
+         * (FOUC). Lo script è inline e bloccante di proposito: deve girare
+         * prima che il browser disegni qualsiasi elemento.
+         */
+        (function() {
+            var saved = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', saved);
+        })();
+    </script>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="logo" onclick="window.location.href='/appuntidiprogrammazione/'">
+            APPUNTI DI <span>PROGRAMMAZIONE</span>
+        </div>
+
+        <!-- 
+            Il pulsante aggiorna l'attributo data-theme sull'<html> e
+            persiste la scelta nel localStorage per le sessioni future.
+        -->
+        <button onclick="toggleTheme()" class="theme-toggle" aria-label="Cambia tema">🌓</button>
+    </header>
+
+    <!--
+    Layout post: struttura a due colonne.
+    - Sinistra (post-content): breadcrumb → tags → link PDF → link fonte → articolo MD
+    - Destra (post-sidebar): tags argomento + libro consigliato
+    
+    Ordine DOM: post-content prima, post-sidebar dopo.
+    Grid-template-areas in CSS li posiziona visivamente:
+    "content sidebar" su desktop, stacked su mobile.
+-->
+<div class="post-container">
+    <!-- COLONNA SINISTRA: contenuto principale -->
+    <main class="post-content">
+        <!-- Breadcrumb: navigazione verso la home -->
+        <nav class="post-breadcrumb" aria-label="Breadcrumb">
+            <a href="/appuntidiprogrammazione/">Appunti di Programmazione</a>
+            <span class="separator" aria-hidden="true">/</span>
+            <span>Transport Layer Matters per Agenti Intelligenti: Il Perché e Come</span>
+        </nav>
+        <!-- Tags legati all'articolo -->
+        
+        <div class="post-tags-header" aria-label="Argomenti">
+            
+                <span class="post-tag-chip">api</span>
+            
+                <span class="post-tag-chip">scalabilità</span>
+            
+                <span class="post-tag-chip">performance</span>
+            
+                <span class="post-tag-chip">chatbot</span>
+            
+                <span class="post-tag-chip">websocket</span>
+            
+        </div>
+        
+        <!-- Link al/ai PDF allegati all'articolo -->
+        
+        <!-- Corpo dell'articolo renderizzato da Kramdown -->
+        <article class="post-article-body">
+            <h1 id="titolo-transport-layer-matters-per-agenti-intelligenti-il-perché-e-come">Titolo: Transport Layer Matters per Agenti Intelligenti: Il Perché e Come</h1>
+
+<p>Nell’ambito dell’IT, il ruolo dei livelli di trasporto è sempre stato fondamentale, ma con la crescita dei sistemi intelligenti e della programmazione automatica, la sua rilevanza ha preso un nuovo profilo. Questo articolo esplora le ragioni per cui i livelli di trasporto sono diventati una preoccupazione prima ordine per gli agenti intelli, come il modo in cui le API stateless crescono male con il contesto e i vantaggi della continuità dello stato.</p>
+
+<h2 id="introduzione">Introduzione</h2>
+
+<p>Con l’avvento di strumenti come Claude Code, OpenAI Codex, Cursor e Cline che fanno parte del flusso di lavoro quotidiano di molte organizzazioni, soprattutto dopo dicembre 2025, la programmazione automatica degli agenti è diventata sempre più comune. Tuttavia, il trasporto di tali sistemi richiede un’attenzione maggiore rispetto al semplice chat. In questo articolo, vogliamo spiegare come il livello di trasporto può influire significativamente sulla performance e la scalabilità degli agenti intelli.</p>
+
+<h2 id="il-problema-del-volo-aereo">Il problema del volo aereo</h2>
+
+<p>Per dimostrare questa affermazione, possiamo prendere un esempio pratico. Durante un viaggio di linea aerea, ho cercato di usare Claude Code sul web per risolvere qualche problema di codifica. Il problema è stato che la connessione internet era tale che il terzo o quarto giro del loop avevano inizio timeout. Ogni giro richiedeva la ri-invio totale della storia della conversazione, che comprendeva l’intera struttura di codice, le modifiche proposte e i risultati dei test, con un payload che raggiungeva decine di chilobyte. In un link di banda limitata, questo payload era una bottiglia di rete.</p>
+
+<p>Questo esempio ci permette di capire come i livelli di trasporto diventino sempre più importanti per l’utilizzo degli agenti intelli: la conversazione tra il modello e l’utente è composta da molti giri consecutivi, in cui il modello legge il codice, propone modifiche, esegue i test, legge l’output di errore, corregge gli errori e iterando fino alla risoluzione del problema. Ogni giro richiede che il modello riceva la storia completa della conversazione finora; con HTTP, ciò significa che la storia della conversazione deve essere re-inviata ogni volta.</p>
+
+<h2 id="websocket-di-openai">WebSocket di OpenAI</h2>
+
+<p>In febbraio 2026, OpenAI ha introdotto il modo WebSocket per le risposte API, che memorizza la storia della conversazione nella connessione locale del server, evitando così la re-invio della storia della conversazione.</p>
+
+<h3 id="come-funziona">Come funziona?</h3>
+
+<p>Il client invia una richiesta di origine al server, contenente il sistema, la promessa e i tool (il codice per eseguire). Il server esegue la richiesta e restituisce una risposta. In questa fase iniziale, viene memorizzata nella connessione locale del server.</p>
+
+<p>In seguito, il client invia solo la richiesta seguente contenente l’ID della connessione precedente e le nuove modifiche al codice o i test eseguiti. Il server recupera la risposta memorizzata in cache sulla base dell’ID e restituisce la nuova risposta all’utente.</p>
+
+<h3 id="vantaggi">Vantaggi</h3>
+
+<p>Questo approccio permette di ridurre drasticamente il traffico di rete, consentendo una maggiore scalabilità. Inoltre, poiché il server non deve più ricostruire la storia della conversazione per ogni richiesta, la performance è significativamente migliorata.</p>
+
+<h3 id="disavanzi">Disavanzi</h3>
+
+<p>L’unico svantaggio consiste nel fatto che questa tecnologia non è ancora ampiamente supportata; tuttavia, alcune piattaforme come il WebSocket API forniscono un modo per integrare questa funzionalità in un sito web.</p>
+
+<h2 id="conclusione">Conclusione</h2>
+
+<p>Il livello di trasporto è sempre stato importante per la comunicazione fra le parti, ma con l’avvento di nuove tecnologie e dei sistemi intelligenti, questa importanza si è notevolmente amplificata. Ora che abbiamo capito come funziona WebSocket di OpenAI e come possono migliorare le performance degli agenti intelli, ci aspettiamo che questa tecnologia divenga sempre più diffusa.</p>
+
+        </article>
+        <!-- Link alla fonte originale: lo posiziono dopo il corpo perché è un
+             approfondimento opzionale, non un'azione primaria. L'icona SVG inline
+             evita dipendenze da font icon esterni. -->
+        
+        <div class="post-source-link">
+            <span class="source-link-label">Fonte originale</span>
+            <a class="source-link-anchor"
+               href=""
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="Leggi la fonte originale di: Transport Layer Matters per Agenti Intelligenti: Il Perché e Come">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="14" height="14"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                    <polyline points="15 3 21 3 21 9"/>
+                    <line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
+                
+            </a>
+        </div>
+        
+    </main>
+    <!-- COLONNA DESTRA: sidebar post -->
+    <aside class="post-sidebar">
+        <!-- Box 1: tags argomento (stessa lista dei chip sopra, ma nella sidebar) -->
+        
+        <div class="sidebar-box tags-box">
+            <span class="box-label">Argomenti</span>
+            <div class="tag-cloud-sidebar">
+                
+                    <span class="sidebar-tag">api</span>
+                
+                    <span class="sidebar-tag">scalabilità</span>
+                
+                    <span class="sidebar-tag">performance</span>
+                
+                    <span class="sidebar-tag">chatbot</span>
+                
+                    <span class="sidebar-tag">websocket</span>
+                
+            </div>
+        </div>
+        
+        <!-- Box 2: fonte originale nella sidebar, visibile a colpo d'occhio
+             senza dover scorrere fino in fondo all'articolo. -->
+        
+        <div class="sidebar-box source-box">
+            <span class="box-label">Fonte Originale</span>
+            <a class="sidebar-source-anchor"
+               href=""
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="Leggi la fonte originale di: Transport Layer Matters per Agenti Intelligenti: Il Perché e Come">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="14" height="14"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                    <polyline points="15 3 21 3 21 9"/>
+                    <line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
+                Leggi l'articolo originale
+            </a>
+        </div>
+        
+        <!-- Box 3: libro consigliato -->
+        <div class="sidebar-box books-box">
+            <span class="box-label">Letture Consigliate</span>
+            <div class="book-card">
+                <a href="https://www.amazon.it/Appunti-Programmazione-Pensieri-soluzioni-Applicazioni-ebook/dp/B0FMFRHKTF/"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   aria-label="Acquista Appunti di Programmazione su Amazon">
+                    <img src="https://m.media-amazon.com/images/I/61Ck5eMzGYL._SY466_.jpg"
+                         alt="Copertina: Appunti di Programmazione"
+                         width="80">
+                    <p>Appunti di Programmazione: Pensieri e soluzioni per Applicazioni WEB</p>
+                </a>
+            </div>
+        </div>
+    </aside>
+</div>
+
+    <footer class="main-footer">
+        DevLog — Appunti di Programmazione &nbsp;·&nbsp; cosimociraci@gmail.com
+    </footer>
+
+    <script>
+        /*
+         * toggleTheme: legge il tema corrente dall'attributo HTML,
+         * calcola l'opposto e lo salva. Il CSS reagisce via [data-theme].
+         * Non uso classi sul body per mantenere tutto centralizzato
+         * sull'elemento radice.
+         */
+        function toggleTheme() {
+            var html = document.documentElement;
+            var current = html.getAttribute('data-theme');
+            var next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+        }
+    </script>
+
+</body>
+</html>

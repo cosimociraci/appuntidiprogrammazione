@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARXivar Document & Workflow Platform 2.13: Innovazioni Tecnologiche per la Gestione dei Processi Aziendali — DevLog</title>
+    <meta name="description" content="Able Tech ha rilasciato ARXivar Document & Workflow Platform 2.13, una versione avanzata con nuovi moduli basati su Gen AI come il Chatbot Semantico e il Chatbot Documentale, migliorando la gestione dei documenti e dei processi aziendali.
+">
+    <link rel="stylesheet" href="/appuntidiprogrammazione/assets/css/style.css">
+
+    <script>
+        /*
+         * Applico il tema PRIMA del rendering per evitare il flash di contenuto
+         * (FOUC). Lo script è inline e bloccante di proposito: deve girare
+         * prima che il browser disegni qualsiasi elemento.
+         */
+        (function() {
+            var saved = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', saved);
+        })();
+    </script>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="logo" onclick="window.location.href='/appuntidiprogrammazione/'">
+            APPUNTI DI <span>PROGRAMMAZIONE</span>
+        </div>
+
+        <!-- 
+            Il pulsante aggiorna l'attributo data-theme sull'<html> e
+            persiste la scelta nel localStorage per le sessioni future.
+        -->
+        <button onclick="toggleTheme()" class="theme-toggle" aria-label="Cambia tema">🌓</button>
+    </header>
+
+    <!--
+    Layout post: struttura a due colonne.
+    - Sinistra (post-content): breadcrumb → tags → link PDF → link fonte → articolo MD
+    - Destra (post-sidebar): tags argomento + libro consigliato
+    
+    Ordine DOM: post-content prima, post-sidebar dopo.
+    Grid-template-areas in CSS li posiziona visivamente:
+    "content sidebar" su desktop, stacked su mobile.
+-->
+<div class="post-container">
+    <!-- COLONNA SINISTRA: contenuto principale -->
+    <main class="post-content">
+        <!-- Breadcrumb: navigazione verso la home -->
+        <nav class="post-breadcrumb" aria-label="Breadcrumb">
+            <a href="/appuntidiprogrammazione/">Appunti di Programmazione</a>
+            <span class="separator" aria-hidden="true">/</span>
+            <span>ARXivar Document & Workflow Platform 2.13: Innovazioni Tecnologiche per la Gestione dei Processi Aziendali</span>
+        </nav>
+        <!-- Tags legati all'articolo -->
+        
+        <div class="post-tags-header" aria-label="Argomenti">
+            
+                <span class="post-tag-chip">arxivardocument</span>
+            
+                <span class="post-tag-chip">workflowplatform</span>
+            
+                <span class="post-tag-chip">chatbots</span>
+            
+                <span class="post-tag-chip">documentmanagement</span>
+            
+                <span class="post-tag-chip">genai</span>
+            
+        </div>
+        
+        <!-- Link al/ai PDF allegati all'articolo -->
+        
+        <!-- Corpo dell'articolo renderizzato da Kramdown -->
+        <article class="post-article-body">
+            <p># ARXivar Document &amp; Workflow Platform 2.13: Un Passo Fondamentale per la Gestione dei Processi Aziendali</p>
+
+<p>In un passo fondamentale verso l’evoluzione della gestione dei documenti e dei processi aziendali, [Able Tech] ha presentato la nuova versione 2.13 di ARXivar Document &amp; Workflow Platform. La release offre importanti innovazioni tecnologiche e funzionali che possono rivoluzionare il modo in cui le imprese gestiscono i propri processi.</p>
+
+<p>Il cuore di questa nuova versione è costituito da due nuovi moduli basati su Gen AI: il Chatbot Semantico e il Chatbot Documentale. Questi strumenti, insieme alle funzionalità di ricerca semantica, classificazione dei documenti ed estrazione automatica delle informazioni, integrano l’automazione documentale con capacità di interazione conversazionale avanzata.</p>
+
+<h2 id="il-chatbot-semantico-una-risposta-personalizzata-in-tempo-reale">Il Chatbot Semantico: Una Risposta Personalizzata in Tempo Reale</h2>
+
+<p>Il nuovo Chatbot Semantico consente agli utenti di interrogare la piattaforma utilizzando un linguaggio naturale secondo il flusso di una conversazione reale. Il sistema è in grado di interpretare il significato delle richieste e fornire risposte chiare, precise e contestualizzate, estraendo le informazioni direttamente dal patrimonio documentale archiviato.</p>
+
+<p>L’approccio utilizza l’indice semantico dei documenti combinato con modelli LLM (Retrieval-Augmented Generation) e l’indicizzazione vettoriale nativa della piattaforma, consentendo di elaborare le informazioni recuperate senza perdere il collegamento diretto ai documenti originali. L’accesso ai contenuti rispetta automaticamente le restrizioni di sicurezza e riservatezza, filtrando i documenti non accessibili all’utente in base a permessi, aree organizzative, classi documentali e stato dei documenti.</p>
+
+<h2 id="il-chatbot-documentale-ottenere-rapidamente-i-dati-essenziali">Il Chatbot Documentale: Ottenere Rapidamente i Dati Essenziali</h2>
+
+<p>Il nuovo Chatbot Documentale consente di ottenere riassunti e sintesi, confrontare revisioni dello stesso documento, generare tabelle o estrarre informazioni strutturate, tradurre o riorganizzare contenuti. Il modulo sfrutta gli agenti AI e le funzionalità native di ARXivar, garantendo un’interazione intelligente con il patrimonio documentale. Le conversazioni vengono salvate secondo policy configurabili, consentendo di riprendere o archiviare chat rilevanti.</p>
+
+<p>Il Chatbot Documentale può essere fornito all’utente o preconfigurato con comandi verticali, che permettono di automatizzare le azioni ricorrenti attraverso la preconfigurazione dei prompt, e di standardizzare gli output e altre attività specifiche. In questo modo le organizzazioni possono modellare l’AI in funzione dei propri processi, trasformando il chatbot in un vero assistente operativo.</p>
+
+<h2 id="workflow-v2-una-nuova-interfaccia-e-funzionalità-evolute">Workflow v2: Una Nuova Interfaccia e Funzionalità Evolute</h2>
+
+<p>Nella nuova release di ARXivar, il Workflow v2 presenta una interfaccia grafica più intuitiva e nuove funzionalità che migliorano il controllo, l’automazione e la governance dei processi. Tra queste, l’evento di avvio schedulato, che consente di pianificare l’esecuzione automatica dei processi, di gestire eventuali mancate esecuzioni e di registrare informazioni puntuali su data e ora previste per l’avvio del processo.</p>
+
+<p>Altre importanti novità riguardano le funzionalità di creazione e istruzione di un processo di workflow, come la funzionale Formula Tester e il nuovo pannello di controllo Formula Manager. La Formula Tester semplifica lo sviluppo e la manutenzione dei workflow complessi, validando e provando le formule direttamente in fase di configurazione, verificando la sintassi, simulando valori di input e ottenendo un output immediato. Formula Manager offre una visibilità centralizzata di tutte le formule presenti in un workflow, consentendo all’utente di filtrare, ricercare e modificare le formule, oltre a identificare rapidamente dove ciascuna è utilizzata.</p>
+
+<p>Questa release rappresenta una grande opportunità per le imprese che cercano di migliorare la loro gestione dei documenti e dei processi, garantendo maggiore autonomia agli utenti, riducendo i tempi di risposta interni ed esterni, valorizzando il patrimonio documentale aziendale e fornendo un’interazione intelligente con l’AI.</p>
+
+        </article>
+        <!-- Link alla fonte originale: lo posiziono dopo il corpo perché è un
+             approfondimento opzionale, non un'azione primaria. L'icona SVG inline
+             evita dipendenze da font icon esterni. -->
+        
+        <div class="post-source-link">
+            <span class="source-link-label">Fonte originale</span>
+            <a class="source-link-anchor"
+               href=""
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="Leggi la fonte originale di: ARXivar Document & Workflow Platform 2.13: Innovazioni Tecnologiche per la Gestione dei Processi Aziendali">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="14" height="14"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                    <polyline points="15 3 21 3 21 9"/>
+                    <line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
+                
+            </a>
+        </div>
+        
+    </main>
+    <!-- COLONNA DESTRA: sidebar post -->
+    <aside class="post-sidebar">
+        <!-- Box 1: tags argomento (stessa lista dei chip sopra, ma nella sidebar) -->
+        
+        <div class="sidebar-box tags-box">
+            <span class="box-label">Argomenti</span>
+            <div class="tag-cloud-sidebar">
+                
+                    <span class="sidebar-tag">arxivardocument</span>
+                
+                    <span class="sidebar-tag">workflowplatform</span>
+                
+                    <span class="sidebar-tag">chatbots</span>
+                
+                    <span class="sidebar-tag">documentmanagement</span>
+                
+                    <span class="sidebar-tag">genai</span>
+                
+            </div>
+        </div>
+        
+        <!-- Box 2: fonte originale nella sidebar, visibile a colpo d'occhio
+             senza dover scorrere fino in fondo all'articolo. -->
+        
+        <div class="sidebar-box source-box">
+            <span class="box-label">Fonte Originale</span>
+            <a class="sidebar-source-anchor"
+               href=""
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="Leggi la fonte originale di: ARXivar Document & Workflow Platform 2.13: Innovazioni Tecnologiche per la Gestione dei Processi Aziendali">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="14" height="14"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                    <polyline points="15 3 21 3 21 9"/>
+                    <line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
+                Leggi l'articolo originale
+            </a>
+        </div>
+        
+        <!-- Box 3: libro consigliato -->
+        <div class="sidebar-box books-box">
+            <span class="box-label">Letture Consigliate</span>
+            <div class="book-card">
+                <a href="https://www.amazon.it/Appunti-Programmazione-Pensieri-soluzioni-Applicazioni-ebook/dp/B0FMFRHKTF/"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   aria-label="Acquista Appunti di Programmazione su Amazon">
+                    <img src="https://m.media-amazon.com/images/I/61Ck5eMzGYL._SY466_.jpg"
+                         alt="Copertina: Appunti di Programmazione"
+                         width="80">
+                    <p>Appunti di Programmazione: Pensieri e soluzioni per Applicazioni WEB</p>
+                </a>
+            </div>
+        </div>
+    </aside>
+</div>
+
+    <footer class="main-footer">
+        DevLog — Appunti di Programmazione &nbsp;·&nbsp; cosimociraci@gmail.com
+    </footer>
+
+    <script>
+        /*
+         * toggleTheme: legge il tema corrente dall'attributo HTML,
+         * calcola l'opposto e lo salva. Il CSS reagisce via [data-theme].
+         * Non uso classi sul body per mantenere tutto centralizzato
+         * sull'elemento radice.
+         */
+        function toggleTheme() {
+            var html = document.documentElement;
+            var current = html.getAttribute('data-theme');
+            var next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sfida di un Senior Developer: La settimana tecnica in Java (aprile 2026) — DevLog</title>
+    <meta name="description" content="L'articolo descrive gli aggiornamenti più significativi del mondo Java della settimana, includendo la versione 4.0 di TornadoVM e Google ADK for Java 1.0.
+">
+    <link rel="stylesheet" href="/appuntidiprogrammazione/assets/css/style.css">
+
+    <script>
+        /*
+         * Applico il tema PRIMA del rendering per evitare il flash di contenuto
+         * (FOUC). Lo script è inline e bloccante di proposito: deve girare
+         * prima che il browser disegni qualsiasi elemento.
+         */
+        (function() {
+            var saved = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', saved);
+        })();
+    </script>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="logo" onclick="window.location.href='/appuntidiprogrammazione/'">
+            APPUNTI DI <span>PROGRAMMAZIONE</span>
+        </div>
+
+        <!-- 
+            Il pulsante aggiorna l'attributo data-theme sull'<html> e
+            persiste la scelta nel localStorage per le sessioni future.
+        -->
+        <button onclick="toggleTheme()" class="theme-toggle" aria-label="Cambia tema">🌓</button>
+    </header>
+
+    <!--
+    Layout post: struttura a due colonne.
+    - Sinistra (post-content): breadcrumb → tags → link PDF → link fonte → articolo MD
+    - Destra (post-sidebar): tags argomento + libro consigliato
+    
+    Ordine DOM: post-content prima, post-sidebar dopo.
+    Grid-template-areas in CSS li posiziona visivamente:
+    "content sidebar" su desktop, stacked su mobile.
+-->
+<div class="post-container">
+    <!-- COLONNA SINISTRA: contenuto principale -->
+    <main class="post-content">
+        <!-- Breadcrumb: navigazione verso la home -->
+        <nav class="post-breadcrumb" aria-label="Breadcrumb">
+            <a href="/appuntidiprogrammazione/">Appunti di Programmazione</a>
+            <span class="separator" aria-hidden="true">/</span>
+            <span>Sfida di un Senior Developer: La settimana tecnica in Java (aprile 2026)</span>
+        </nav>
+        <!-- Tags legati all'articolo -->
+        
+        <div class="post-tags-header" aria-label="Argomenti">
+            
+                <span class="post-tag-chip">tornadovm</span>
+            
+                <span class="post-tag-chip">google adk</span>
+            
+                <span class="post-tag-chip">java framework</span>
+            
+        </div>
+        
+        <!-- Link al/ai PDF allegati all'articolo -->
+        
+        <!-- Corpo dell'articolo renderizzato da Kramdown -->
+        <article class="post-article-body">
+            <p># Sfida di un Senior Developer: La settimana tecnica in Java (aprile 2026)</p>
+
+<p>Ho trascorso questa settimana seguendo le notizie più importanti del mondo Java, e sono venuto a conoscenza di alcuni aggiornamenti interessanti. Ho scoperto che la versione 4.0 del framework TornadoVM è stata rilasciata ufficialmente, insieme al Google ADK for Java 1.0.</p>
+
+<h2 id="tornadovm-40">TornadoVM 4.0</h2>
+
+<p>Il team di sviluppo di TornadoVM ha annunciato la versione 4.0 del loro framework di accelerazione GPU. Il rilascio include varie correzioni dei bug, aggiornamenti delle dipendenze e alcune modifiche significative, tra cui un nuovo hardware backend che supporta Apple Silicon e l’API Metal, la possibilità di utilizzare le intrinseche SIMD shuffle e reduction nel backend PTX, e una nuova funzione <code class="language-plaintext highlighter-rouge">withCUDAGraph()</code> aggiunta alla classe <code class="language-plaintext highlighter-rouge">TornadoExecutionPlan</code>. A mio avviso, queste modifiche aprono la strada a nuove possibilità di sviluppo per gli utenti che usano TornadoVM.</p>
+
+<h2 id="google-adk-for-java-10">Google ADK for Java 1.0</h2>
+
+<p>Google ha annunciato l’uscita della versione 1.0 del loro framework open-source Agent Development Kit (ADK) per Java. Il rilascio include varie correzioni dei bug, miglioramenti della documentazione e alcune nuove funzionalità, tra cui l’utilizzo dell’<code class="language-plaintext highlighter-rouge">InMemoryArtifactService</code> classe nella classe <code class="language-plaintext highlighter-rouge">AgentExecutorProducer</code>, per permettere la costruzione di istanze dell’<code class="language-plaintext highlighter-rouge">AgentExecutor</code>, e la capacità di utilizzare simultaneamente le feature <code class="language-plaintext highlighter-rouge">output_schema</code> e <code class="language-plaintext highlighter-rouge">tools</code> in modelli che non supportano entrambi al contempo.</p>
+
+<h2 id="altri-aggiornamenti">Altri aggiornamenti</h2>
+
+<p>Altre notizie importanti della settimana include:</p>
+<ul>
+  <li>La versione 7.1.0 di Grails è stata rilasciata come prima release candidate, con bug fixes e modifiche significative come la configurazione del <code class="language-plaintext highlighter-rouge">Groovy invokedynamic</code> spostato dalla generata <code class="language-plaintext highlighter-rouge">build.gradle</code> file al Grails Gradle Plugin per centralizzare la configurazione, e il cambiamento dell’<code class="language-plaintext highlighter-rouge">@Service</code> annotation che ora eredita un datasource automaticamente dal mapping blocco della classe di dominio.</li>
+  <li>Google ha rilasciato le versioni 11.0.21, 10.1.54 e 9.0.117 di Apache Tomcat, con modifiche significative come la risoluzione di un problema che aveva impedito il bloccaggio della scrittura delle risposte in NIO e TLS fino alla chiusura della connessione, e miglioramenti dell’errore handling per HTTP/2 e l’intercettore <code class="language-plaintext highlighter-rouge">EncryptInterceptor</code>.</li>
+  <li>Apache Log4j ha rilasciato la versione 2.25.4 di loro framework di gestione dei log, con alcune modifiche significative come la correzione dell’allineamento tra gli attributi documentati e reali nella classe <code class="language-plaintext highlighter-rouge">Rfc5424Layout</code> dopo essere stato migrato dal metodo factory al pattern builder in versione 2.21.0, la correzione dei problemi di formattazione e sanitizzazione in XML e RFC5424 layouts, e miglioramenti nell’handling degli invalidi caratteri e valori non standard nella <code class="language-plaintext highlighter-rouge">XmlLayout</code>, <code class="language-plaintext highlighter-rouge">Log4j1XmlLayout</code> e <code class="language-plaintext highlighter-rouge">MapMessage</code> classe.</li>
+  <li>Gradle ha rilasciato la prima release candidate di Gradle 9.5.0 con varie modifiche significative, tra cui miglioramenti alla diagnosi e al reporting dei problemi delle task di build, che ora includono informazioni sulla provenienza e un logging più chiaro quando il JVM client non è compatibile, e miglioramenti alla creazione della build con una nuova funzione <code class="language-plaintext highlighter-rouge">disallowChanges()</code> aggiunta all’interfaccia <code class="language-plaintext highlighter-rouge">DomainObjectCollection</code>, che permette di impedire l’aggiunta o rimozione degli elementi dalla raccolta.</li>
+</ul>
+
+<hr />
+<p>Fonte originale: https://www.infoq.com/news/2026/04/java-news-roundup-mar30-2026/</p>
+
+        </article>
+        <!-- Link alla fonte originale: lo posiziono dopo il corpo perché è un
+             approfondimento opzionale, non un'azione primaria. L'icona SVG inline
+             evita dipendenze da font icon esterni. -->
+        
+        <div class="post-source-link">
+            <span class="source-link-label">Fonte originale</span>
+            <a class="source-link-anchor"
+               href="https://www.infoq.com/news/2026/04/java-news-roundup-mar30-2026"
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="Leggi la fonte originale di: Sfida di un Senior Developer: La settimana tecnica in Java (aprile 2026)">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="14" height="14"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                    <polyline points="15 3 21 3 21 9"/>
+                    <line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
+                https://www.infoq.com/news/2026/04/java-news-roundup-mar30-2026
+            </a>
+        </div>
+        
+    </main>
+    <!-- COLONNA DESTRA: sidebar post -->
+    <aside class="post-sidebar">
+        <!-- Box 1: tags argomento (stessa lista dei chip sopra, ma nella sidebar) -->
+        
+        <div class="sidebar-box tags-box">
+            <span class="box-label">Argomenti</span>
+            <div class="tag-cloud-sidebar">
+                
+                    <span class="sidebar-tag">tornadovm</span>
+                
+                    <span class="sidebar-tag">google adk</span>
+                
+                    <span class="sidebar-tag">java framework</span>
+                
+            </div>
+        </div>
+        
+        <!-- Box 2: fonte originale nella sidebar, visibile a colpo d'occhio
+             senza dover scorrere fino in fondo all'articolo. -->
+        
+        <div class="sidebar-box source-box">
+            <span class="box-label">Fonte Originale</span>
+            <a class="sidebar-source-anchor"
+               href="https://www.infoq.com/news/2026/04/java-news-roundup-mar30-2026"
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="Leggi la fonte originale di: Sfida di un Senior Developer: La settimana tecnica in Java (aprile 2026)">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="14" height="14"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                    <polyline points="15 3 21 3 21 9"/>
+                    <line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
+                Leggi l'articolo originale
+            </a>
+        </div>
+        
+        <!-- Box 3: libro consigliato -->
+        <div class="sidebar-box books-box">
+            <span class="box-label">Letture Consigliate</span>
+            <div class="book-card">
+                <a href="https://www.amazon.it/Appunti-Programmazione-Pensieri-soluzioni-Applicazioni-ebook/dp/B0FMFRHKTF/"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   aria-label="Acquista Appunti di Programmazione su Amazon">
+                    <img src="https://m.media-amazon.com/images/I/61Ck5eMzGYL._SY466_.jpg"
+                         alt="Copertina: Appunti di Programmazione"
+                         width="80">
+                    <p>Appunti di Programmazione: Pensieri e soluzioni per Applicazioni WEB</p>
+                </a>
+            </div>
+        </div>
+    </aside>
+</div>
+
+    <footer class="main-footer">
+        DevLog — Appunti di Programmazione &nbsp;·&nbsp; cosimociraci@gmail.com
+    </footer>
+
+    <script>
+        /*
+         * toggleTheme: legge il tema corrente dall'attributo HTML,
+         * calcola l'opposto e lo salva. Il CSS reagisce via [data-theme].
+         * Non uso classi sul body per mantenere tutto centralizzato
+         * sull'elemento radice.
+         */
+        function toggleTheme() {
+            var html = document.documentElement;
+            var current = html.getAttribute('data-theme');
+            var next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+        }
+    </script>
+
+</body>
+</html>

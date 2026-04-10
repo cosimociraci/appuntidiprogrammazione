@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java News Roundup: Marzo 2026 - La mia esperienza con gli ultimi aggiornamenti della comunità Java — DevLog</title>
+    <meta name="description" content="L'articolo riporta sui recenti aggiornamenti di Java, inclusi JDK 26, LibericaJDK, GlassFish 9.0, Micronaut e ClawRunr.
+">
+    <link rel="stylesheet" href="/appuntidiprogrammazione/assets/css/style.css">
+
+    <script>
+        /*
+         * Applico il tema PRIMA del rendering per evitare il flash di contenuto
+         * (FOUC). Lo script è inline e bloccante di proposito: deve girare
+         * prima che il browser disegni qualsiasi elemento.
+         */
+        (function() {
+            var saved = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', saved);
+        })();
+    </script>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="logo" onclick="window.location.href='/appuntidiprogrammazione/'">
+            APPUNTI DI <span>PROGRAMMAZIONE</span>
+        </div>
+
+        <!-- 
+            Il pulsante aggiorna l'attributo data-theme sull'<html> e
+            persiste la scelta nel localStorage per le sessioni future.
+        -->
+        <button onclick="toggleTheme()" class="theme-toggle" aria-label="Cambia tema">🌓</button>
+    </header>
+
+    <!--
+    Layout post: struttura a due colonne.
+    - Sinistra (post-content): breadcrumb → tags → link PDF → link fonte → articolo MD
+    - Destra (post-sidebar): tags argomento + libro consigliato
+    
+    Ordine DOM: post-content prima, post-sidebar dopo.
+    Grid-template-areas in CSS li posiziona visivamente:
+    "content sidebar" su desktop, stacked su mobile.
+-->
+<div class="post-container">
+    <!-- COLONNA SINISTRA: contenuto principale -->
+    <main class="post-content">
+        <!-- Breadcrumb: navigazione verso la home -->
+        <nav class="post-breadcrumb" aria-label="Breadcrumb">
+            <a href="/appuntidiprogrammazione/">Appunti di Programmazione</a>
+            <span class="separator" aria-hidden="true">/</span>
+            <span>Java News Roundup: Marzo 2026 - La mia esperienza con gli ultimi aggiornamenti della comunità Java</span>
+        </nav>
+        <!-- Tags legati all'articolo -->
+        
+        <div class="post-tags-header" aria-label="Argomenti">
+            
+                <span class="post-tag-chip">java</span>
+            
+                <span class="post-tag-chip">jdk</span>
+            
+                <span class="post-tag-chip">openjdk</span>
+            
+                <span class="post-tag-chip">glassfish</span>
+            
+                <span class="post-tag-chip">micronaut</span>
+            
+        </div>
+        
+        <!-- Link al/ai PDF allegati all'articolo -->
+        
+        <!-- Corpo dell'articolo renderizzato da Kramdown -->
+        <article class="post-article-body">
+            <p># Java News Roundup: Marzo 2026 - La mia esperienza con gli ultimi aggiornamenti della comunità Java</p>
+
+<p>Ciao lettori del mio blog tecnico personale! In questa settimana ho avuto la fortuna di seguire i più recenti sviluppi nel mondo Java. In questo articolo riassumerò le principali notizie che ho trovato particolarmente interessanti e ho fatto esperienza direttamente.</p>
+
+<h2 id="jdk-26-il-rilascio-generale-del-nuovo-java">JDK 26: Il rilascio generale del nuovo Java!</h2>
+
+<p>Oracle ha finalmente rilasciato la versione 26 di Java, il nuovo JDK (Java Development Kit), che include un insieme definitivo di funzionalità. Ho letto con attenzione le notizie e ho provato a comprendere meglio questi aggiornamenti tramite i link forniti nella news story su InfoQ. La versione 27 di JDK è già in fase di sviluppo ed è possibile scaricare i build preliminari con le ultime aggiornamenti rispetto alla versione precedente.</p>
+
+<h2 id="libericajdk-unalternativa-open-source-al-jdk-originale">LibericaJDK: Un’alternativa open source al JDK originale</h2>
+
+<p>BellSoft ha rilasciato la sua distribuzione OpenJDK, chiamata LibericaJDK 26. È interessante notare che BellSoft ha contribuito a nove fix della versione 26, facendo di questa distribuzione un’alternativa interessante al JDK originale. Ho cercato di capire meglio le differenze e le potenziali vantaggi di utilizzare questa versione alternativa del JDK, ma ciò richiederà ulteriori esperimenti.</p>
+
+<h2 id="glassfish-90-una-nuova-versione-con-jakarta-ee-12">GlassFish 9.0: Una nuova versione con Jakarta EE 12</h2>
+
+<p>È stata rilasciata la prima milestone di GlassFish 9.0, che include le implementazioni a pieno respiro di Jakarta Security 5.0, Jakarta Faces 5.0 e Jakarta Contexts and Dependency Injection 5.0. Sono state incluse anche parti parziali delle implementazioni di Jakarta Servlet 6.2 e Jakarta Concurrency 3.2. Ho cercato di capire meglio le caratteristiche e le implicazioni di queste nuove versioni, ma questo sarà un tema da esplorare ulteriormente nei mesi successivi.</p>
+
+<h2 id="micronaut-aggiornamenti-e-vulnerabilità">Micronaut: Aggiornamenti e vulnerabilità</h2>
+
+<p>Il team dietro Micronaut ha rilasciato la versione 4.10.10 di Framework, che include bug fixes, un aggiornamento del modulo Test e soluzioni per due attacchi di tipo DoS (Denial of Service). Ho provato a comprendere meglio le cause delle vulnerabilità trovate ed ho sperimentato le ultime versioni per verificare i cambiamenti apportati.</p>
+
+<h2 id="clawrunr-un-assistente-ai-basato-su-java">ClawRunr: Un assistente AI basato su Java</h2>
+
+<p>Il team di JobRunr ha annunciato il rilascio di un nuovo runtime chiamato ClawRunr, un’assistenza AI basata su Java che esegue compiti come la comunicazione tramite interfaccia web, lo scheduling dei compiti e la lettura dell’email. Ho trovato interessante questa idea e sto valutando se potrebbe essere utilizzata per migliorare la mia efficienza di lavoro o creare nuove funzionalità per i miei progetti.</p>
+
+<p>Spero che questo articolo possa aiutarti a comprendere meglio gli aggiornamenti più recenti nel mondo Java ed esplorare le opportunità che questi sviluppi offrono. Non dimenticate di rimanere aggiornati sui miei aggiornamenti ed esperienze con i nuovi sviluppi della comunità Java!</p>
+
+<hr />
+<p>Fonte originale: https://www.infoq.com/news/2026/03/java-news-roundup-mar16-2026/</p>
+
+        </article>
+        <!-- Link alla fonte originale: lo posiziono dopo il corpo perché è un
+             approfondimento opzionale, non un'azione primaria. L'icona SVG inline
+             evita dipendenze da font icon esterni. -->
+        
+        <div class="post-source-link">
+            <span class="source-link-label">Fonte originale</span>
+            <a class="source-link-anchor"
+               href="https://www.infoq.com/news/2026/03/java-news-roundup-mar16-2026/"
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="Leggi la fonte originale di: Java News Roundup: Marzo 2026 - La mia esperienza con gli ultimi aggiornamenti della comunità Java">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="14" height="14"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                    <polyline points="15 3 21 3 21 9"/>
+                    <line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
+                https://www.infoq.com/news/2026/03/java-news-roundup-mar16-2026/
+            </a>
+        </div>
+        
+    </main>
+    <!-- COLONNA DESTRA: sidebar post -->
+    <aside class="post-sidebar">
+        <!-- Box 1: tags argomento (stessa lista dei chip sopra, ma nella sidebar) -->
+        
+        <div class="sidebar-box tags-box">
+            <span class="box-label">Argomenti</span>
+            <div class="tag-cloud-sidebar">
+                
+                    <span class="sidebar-tag">java</span>
+                
+                    <span class="sidebar-tag">jdk</span>
+                
+                    <span class="sidebar-tag">openjdk</span>
+                
+                    <span class="sidebar-tag">glassfish</span>
+                
+                    <span class="sidebar-tag">micronaut</span>
+                
+            </div>
+        </div>
+        
+        <!-- Box 2: fonte originale nella sidebar, visibile a colpo d'occhio
+             senza dover scorrere fino in fondo all'articolo. -->
+        
+        <div class="sidebar-box source-box">
+            <span class="box-label">Fonte Originale</span>
+            <a class="sidebar-source-anchor"
+               href="https://www.infoq.com/news/2026/03/java-news-roundup-mar16-2026/"
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="Leggi la fonte originale di: Java News Roundup: Marzo 2026 - La mia esperienza con gli ultimi aggiornamenti della comunità Java">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="14" height="14"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                    <polyline points="15 3 21 3 21 9"/>
+                    <line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
+                Leggi l'articolo originale
+            </a>
+        </div>
+        
+        <!-- Box 3: libro consigliato -->
+        <div class="sidebar-box books-box">
+            <span class="box-label">Letture Consigliate</span>
+            <div class="book-card">
+                <a href="https://www.amazon.it/Appunti-Programmazione-Pensieri-soluzioni-Applicazioni-ebook/dp/B0FMFRHKTF/"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   aria-label="Acquista Appunti di Programmazione su Amazon">
+                    <img src="https://m.media-amazon.com/images/I/61Ck5eMzGYL._SY466_.jpg"
+                         alt="Copertina: Appunti di Programmazione"
+                         width="80">
+                    <p>Appunti di Programmazione: Pensieri e soluzioni per Applicazioni WEB</p>
+                </a>
+            </div>
+        </div>
+    </aside>
+</div>
+
+    <footer class="main-footer">
+        DevLog — Appunti di Programmazione &nbsp;·&nbsp; cosimociraci@gmail.com
+    </footer>
+
+    <script>
+        /*
+         * toggleTheme: legge il tema corrente dall'attributo HTML,
+         * calcola l'opposto e lo salva. Il CSS reagisce via [data-theme].
+         * Non uso classi sul body per mantenere tutto centralizzato
+         * sull'elemento radice.
+         */
+        function toggleTheme() {
+            var html = document.documentElement;
+            var current = html.getAttribute('data-theme');
+            var next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+        }
+    </script>
+
+</body>
+</html>
