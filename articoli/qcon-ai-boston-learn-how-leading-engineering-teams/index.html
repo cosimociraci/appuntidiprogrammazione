@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QCon AI Boston 2026: Un Approfondimento Sui Sistemi AI Produttivi — DevLog</title>
-    <meta name="description" content="Hub tecnico per appunti di programmazione, analisi di problemi reali  e soluzioni implementative in ambito Spring Boot, Java e Web Dev.">
+    <title>Il QCon AI Boston 2026: un approfondimento sui sistemi AI produttivi — DevLog</title>
+    <meta name="description" content="La conferenza QCon AI Boston si terrà a Boston nel giugno prossimo e si concentrerà sulla costruzione di sistemi AI robusti, affrontando temi come la latenza di inferimento e la sicurezza.
+">
     <link rel="stylesheet" href="/appuntidiprogrammazione/assets/css/style.css">
 
     <script>
@@ -35,7 +36,7 @@
 
     <!--
     Layout post: struttura a due colonne.
-    - Sinistra (post-content): breadcrumb → tags → link PDF → articolo MD
+    - Sinistra (post-content): breadcrumb → tags → link PDF → link fonte → articolo MD
     - Destra (post-sidebar): tags argomento + libro consigliato
     
     Ordine DOM: post-content prima, post-sidebar dopo.
@@ -43,29 +44,32 @@
     "content sidebar" su desktop, stacked su mobile.
 -->
 <div class="post-container">
-
     <!-- COLONNA SINISTRA: contenuto principale -->
     <main class="post-content">
-
         <!-- Breadcrumb: navigazione verso la home -->
         <nav class="post-breadcrumb" aria-label="Breadcrumb">
             <a href="/appuntidiprogrammazione/">Appunti di Programmazione</a>
             <span class="separator" aria-hidden="true">/</span>
-            <span>QCon AI Boston 2026: Un Approfondimento Sui Sistemi AI Produttivi</span>
+            <span>Il QCon AI Boston 2026: un approfondimento sui sistemi AI produttivi</span>
         </nav>
-
         <!-- Tags legati all'articolo -->
         
         <div class="post-tags-header" aria-label="Argomenti">
             
-                <span class="post-tag-chip">ia</span>
+                <span class="post-tag-chip">qcon</span>
+            
+                <span class="post-tag-chip">ai</span>
+            
+                <span class="post-tag-chip">latenza</span>
+            
+                <span class="post-tag-chip">sicurezza</span>
+            
+                <span class="post-tag-chip">ingegneria software</span>
             
         </div>
         
-
         <!-- Link al/ai PDF allegati all'articolo -->
         
-
         <!-- Corpo dell'articolo renderizzato da Kramdown -->
         <article class="post-article-body">
             <p># QCon AI Boston 2026: Un Approfondimento Sui Sistemi AI Produttivi</p>
@@ -93,25 +97,84 @@
 <p>Per iscriversi al QCon AI Boston 2026, è possibile farlo attraverso il sito ufficiale della conferenza. Per una registrazione più rapida e semplice, è anche possibile usare un codice sconto. Non dimenticare di seguire l’evento per ricevere aggiornamenti sul programma e sugli ospiti speciali.</p>
 
         </article>
-
+        <!-- Link alla fonte originale: lo posiziono dopo il corpo perché è un
+             approfondimento opzionale, non un'azione primaria. L'icona SVG inline
+             evita dipendenze da font icon esterni. -->
+        
+        <div class="post-source-link">
+            <span class="source-link-label">Fonte originale</span>
+            <a class="source-link-anchor"
+               href=""
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="Leggi la fonte originale di: Il QCon AI Boston 2026: un approfondimento sui sistemi AI produttivi">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="14" height="14"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                    <polyline points="15 3 21 3 21 9"/>
+                    <line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
+                
+            </a>
+        </div>
+        
     </main>
-
     <!-- COLONNA DESTRA: sidebar post -->
     <aside class="post-sidebar">
-
         <!-- Box 1: tags argomento (stessa lista dei chip sopra, ma nella sidebar) -->
         
         <div class="sidebar-box tags-box">
             <span class="box-label">Argomenti</span>
             <div class="tag-cloud-sidebar">
                 
-                    <span class="sidebar-tag">ia</span>
+                    <span class="sidebar-tag">qcon</span>
+                
+                    <span class="sidebar-tag">ai</span>
+                
+                    <span class="sidebar-tag">latenza</span>
+                
+                    <span class="sidebar-tag">sicurezza</span>
+                
+                    <span class="sidebar-tag">ingegneria software</span>
                 
             </div>
         </div>
         
-
-        <!-- Box 2: libro consigliato -->
+        <!-- Box 2: fonte originale nella sidebar, visibile a colpo d'occhio
+             senza dover scorrere fino in fondo all'articolo. -->
+        
+        <div class="sidebar-box source-box">
+            <span class="box-label">Fonte Originale</span>
+            <a class="sidebar-source-anchor"
+               href=""
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="Leggi la fonte originale di: Il QCon AI Boston 2026: un approfondimento sui sistemi AI produttivi">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="14" height="14"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                    <polyline points="15 3 21 3 21 9"/>
+                    <line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
+                Leggi l'articolo originale
+            </a>
+        </div>
+        
+        <!-- Box 3: libro consigliato -->
         <div class="sidebar-box books-box">
             <span class="box-label">Letture Consigliate</span>
             <div class="book-card">
@@ -126,9 +189,7 @@
                 </a>
             </div>
         </div>
-
     </aside>
-
 </div>
 
     <footer class="main-footer">

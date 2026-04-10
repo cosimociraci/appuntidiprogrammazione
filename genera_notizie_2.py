@@ -1,3 +1,5 @@
+# pipenv run python genera_notizie_2.py
+
 import os
 import json
 import asyncio
@@ -13,7 +15,6 @@ import ollama
 from playwright.async_api import async_playwright
 
 # --- CONFIGURAZIONE ---
-DEBUG_DATE = "2026-04-09"
 TARGET_TOPICS = ["java", "js", "javascript", "postgresql", "postgis", "ai", "ia", "intelligenza artificiale"]
 BASE_URLS = [
     "https://techfromthenet.it/software/news-produttivita/",
@@ -67,19 +68,50 @@ def log(message):
 
 
 def parse_arguments():
-    """Configuro argparse per gestire la modalità di rigenerazione massiva da terminale."""
+    """Configuro argparse per gestire tutte le modalità operative da terminale.
+    Ho aggiunto --date come parametro opzionale: se non specificato il valore
+    viene calcolato a runtime come data odierna, così non devo più modificare
+    il sorgente ad ogni esecuzione."""
     parser = argparse.ArgumentParser(description="Sistema di generazione articoli e slide tecniche.")
+    parser.add_argument(
+        '--date',
+        type=str,
+        default=None,
+        help='Data di sessione nel formato YYYY-MM-DD (es: 2026-04-09). Se omessa usa la data odierna.'
+    )
     parser.add_argument(
         '--regenerate',
         action='store_true',
-        help='Se presente, itera su tutti i file .md in output/ e rigenera tutte le immagini. Non scarica nulla.'
+        help='Itera su tutti i file .md in output/ e rigenera tutte le immagini. Non scarica nulla.'
     )
     parser.add_argument(
         '--cta-only',
         action='store_true',
-        help='Se presente, rigenera solo la slide CTA finale (icarocomix) in ogni cartella di output. Non scarica nulla.'
+        help='Rigenera solo la slide CTA finale (icarocomix) in ogni cartella di output. Non scarica nulla.'
+    )
+    parser.add_argument(
+        '--fix-frontmatter',
+        action='store_true',
+        help='Rigenera il front matter YAML di tutti i file .md in output/. Non scarica nulla, non rigenera immagini.'
     )
     return parser.parse_args()
+
+
+def resolve_session_date(date_arg):
+    """Risolvo la data di sessione dal parametro CLI oppure dalla data odierna.
+    Valido il formato YYYY-MM-DD con uno strptime: se il formato è errato sollevo
+    un errore esplicito invece di procedere con una data malformata che
+    corromperebbe i nomi delle cartelle e i front matter dei file .md."""
+    if date_arg is not None:
+        try:
+            datetime.strptime(date_arg, "%Y-%m-%d")
+            return date_arg
+        except ValueError:
+            log(f"ERRORE: --date '{date_arg}' non è nel formato YYYY-MM-DD. Esempio corretto: 2026-04-09")
+            sys.exit(1)
+    # Nessun parametro fornito: uso la data odierna calcolata a runtime.
+    # Questo evita di dover modificare il sorgente ad ogni nuova esecuzione giornaliera.
+    return datetime.now().strftime("%Y-%m-%d")
 
 
 log("Inizializzazione Whisper (modello base)...")
@@ -185,8 +217,8 @@ def transcribe_video(url):
 def is_promotional(full_context):
     """Chiedo a Qwen di valutare se il contenuto è una notizia tecnica reale o materiale promozionale.
     Ho scelto un modello leggero come Qwen per questo filtro rapido, riservando Mistral solo
-    alla generazione dell'articolo completo. La risposta attesa è solo 'SI' o 'NO' per poterla
-    parsare in modo affidabile senza ambiguità."""
+    alla generazione dell'articolo completo. La risposta attesa è solo 'NOTIZIA' o 'PUBBLICITA'
+    per poterla parsare in modo affidabile senza ambiguità."""
     log("[Qwen] Analisi anti-promozionale in corso...")
     prompt = f"""
 Sei un editor di una rivista tecnica. Analizza il testo seguente e rispondi a questa domanda:
@@ -278,7 +310,6 @@ Esempio formato atteso:
 
     # Secondo tentativo: il modello ha restituito JSON malformato (ellissi, virgolette
     # non escapate, caratteri speciali). Provo a risanarlo prima di abbandonare.
-    # Estraggo ogni stringa delimitata da virgolette doppie, tollerando contenuto sporco.
     if match:
         cleaned = match.group()
         # Rimuovo caratteri di controllo non stampabili che rompono il parser JSON
@@ -293,8 +324,6 @@ Esempio formato atteso:
     # Terzo tentativo (fallback finale): estraggo le stringhe una ad una con regex
     # ignorando completamente la struttura JSON. Funziona anche se il modello ha
     # restituito un array parziale o con delimitatori corrotti.
-    # Uso un pattern lazy per catturare ogni stringa tra virgolette doppie,
-    # gestendo le virgolette escapate interne con (?:[^"\\]|\\.)*
     candidates = re.findall(r'"((?:[^"\\]|\\.)*)"', raw)
     # Filtro stringhe troppo corte che sono probabilmente artefatti del formato JSON
     slides_fallback = [s.strip() for s in candidates if len(s.strip()) > 20]
@@ -430,6 +459,117 @@ async def render_cta_slide(page, accent_color, output_path):
     await page.screenshot(path=output_path)
 
 
+# --- FRONT MATTER ---
+
+def generate_frontmatter(article, source_url, date_str):
+    """Chiedo a Qwen di estrarre i metadati dell'articolo in JSON strutturato,
+    poi assemblo il blocco YAML front matter da anteporre al file .md.
+
+    Ho scelto Qwen per questo compito per coerenza con gli altri task di estrazione
+    strutturata: è più veloce di Mistral e sufficiente per produrre campi brevi.
+    Separo la generazione del front matter da quella dell'articolo per due ragioni:
+    1. Mistral non produce YAML affidabile quando mescolato con testo libero lungo.
+    2. Posso ritentare solo questo step senza rieseguire tutta la pipeline."""
+
+    valid_tech_keys = list(TECH_PALETTE.keys())
+
+    prompt = f"""
+Analizza l'articolo tecnico seguente ed estrai i metadati richiesti.
+Rispondi ESCLUSIVAMENTE con un oggetto JSON valido, senza backtick, senza testo prima o dopo.
+
+ARTICOLO:
+{article[:8000]}
+
+CAMPI RICHIESTI:
+- "title": titolo descrittivo dell'articolo in italiano (max 12 parole)
+- "sintesi": riassunto dell'articolo in italiano, massimo 60 parole, max 3 righe,
+             senza virgolette interne, senza newline
+- "tech": una sola stringa tra queste esatte opzioni: {json.dumps(valid_tech_keys)}
+- "tags": array JSON di 2-5 stringhe lowercase che identificano i temi principali
+
+Esempio formato atteso:
+{{"title": "Titolo esempio", "sintesi": "Breve riassunto senza newline.", "tech": "java", "tags": ["java", "jvm", "performance"]}}
+"""
+    try:
+        response = ollama.chat(model='qwen2.5-coder', messages=[{'role': 'user', 'content': prompt}])
+        raw = response['message']['content'].strip()
+
+        # Estraggo il blocco JSON anche se il modello ha aggiunto testo
+        # prima o dopo: cerco le parentesi graffe più esterne.
+        match = re.search(r'\{.*\}', raw, re.DOTALL)
+        if not match:
+            raise ValueError("Nessun oggetto JSON trovato nella risposta del modello.")
+
+        data = json.loads(match.group())
+
+        # Normalizzo il campo tech: se il modello restituisce un valore non previsto
+        # dalla palette, faccio fallback su "default" per non rompere il rendering grafico.
+        tech = data.get("tech", "default").lower()
+        if tech not in TECH_PALETTE:
+            log(f"[FrontMatter] Tech '{tech}' non riconosciuto, uso 'default'.")
+            tech = "default"
+
+        # I tag li normalizzo tutti lowercase e rimuovo eventuali duplicati
+        # preservando l'ordine di estrazione.
+        raw_tags = data.get("tags", [tech])
+        seen = set()
+        tags = []
+        for t in raw_tags:
+            t_clean = str(t).lower().strip()
+            if t_clean and t_clean not in seen:
+                seen.add(t_clean)
+                tags.append(t_clean)
+
+        title    = str(data.get("title", "Articolo Tecnico")).replace('"', "'")
+        sintesi  = str(data.get("sintesi", "")).replace('"', "'").replace('\n', ' ').strip()
+        tags_yaml = json.dumps(tags, ensure_ascii=False)
+
+        # Assemblo il front matter: uso la data della sessione con orario fisso 12:00:00
+        # perché non ho un timestamp preciso di pubblicazione.
+        # Il campo layout è sempre "post" per compatibilità con Jekyll/GitHub Pages.
+        frontmatter = f"""---
+layout: post
+title: "{title}"
+sintesi: >
+  {sintesi}
+date: {date_str} 12:00:00
+tech: "{tech}"
+tags: {tags_yaml}
+link: "{source_url}"
+---
+"""
+        return frontmatter, tech
+
+    except Exception as e:
+        log(f"[FrontMatter] Errore generazione metadati, uso front matter minimale: {e}")
+        # Front matter di emergenza: non blocco la pipeline per un errore di metadati
+        fallback = f"""---
+layout: post
+title: "Articolo Tecnico"
+sintesi: >
+  Articolo generato automaticamente.
+date: {date_str} 12:00:00
+tech: "default"
+tags: ["tech"]
+link: "{source_url}"
+---
+"""
+        return fallback, "default"
+
+
+def strip_existing_frontmatter(content):
+    """Rimuovo il blocco frontmatter YAML iniziale se presente, restituendo il solo corpo .md.
+    Il frontmatter Jekyll è delimitato da '---' in apertura e '---' in chiusura,
+    entrambi su righe proprie. Uso una regex che consuma l'intera sezione inclusi i delimitatori,
+    così il corpo che restituisco inizia direttamente con il titolo H1 dell'articolo.
+    Se il file non ha frontmatter restituisco il contenuto invariato: la funzione è idempotente."""
+    # Cerco il pattern ^---\n...\n---\n solo a inizio file con re.DOTALL per il corpo multi-riga
+    match = re.match(r'^---\n.*?\n---\n', content, re.DOTALL)
+    if match:
+        return content[match.end():]
+    return content
+
+
 # --- MODALITÀ RIGENERAZIONE MASSIVA ---
 
 async def regenerate_all(output_root):
@@ -442,7 +582,6 @@ async def regenerate_all(output_root):
         folder_path = os.path.join(output_root, folder_name)
         if not os.path.isdir(folder_path):
             continue
-        # Cerco il file .md nella cartella corrente
         md_files = [f for f in os.listdir(folder_path) if f.endswith(".md")]
         if not md_files:
             log(f"Nessun .md trovato in {folder_name}, salto.")
@@ -515,24 +654,109 @@ async def regenerate_cta_all(output_root):
     log("--- CTA-ONLY COMPLETATA ---")
 
 
+def fix_frontmatter_all(output_root):
+    """Itero su tutte le cartelle di output e rigenero il frontmatter di ogni .md trovato.
+    Per ogni file: strip del frontmatter esistente, chiamata a generate_frontmatter sul corpo
+    pulito, riscrittura del file con il nuovo frontmatter anteposto.
+
+    Ho scelto di non riscrivere il corpo dell'articolo: Mistral non viene reinvocato,
+    solo Qwen estrae di nuovo titolo/sintesi/tech/tags dal testo già presente su disco.
+    Questa modalità è veloce e non distruttiva sul contenuto."""
+    log("--- MODALITÀ FIX-FRONTMATTER: rigenero le intestazioni di tutti i file .md ---")
+
+    fixed_count = 0
+    error_count = 0
+
+    for folder_name in sorted(os.listdir(output_root)):
+        folder_path = os.path.join(output_root, folder_name)
+        if not os.path.isdir(folder_path):
+            continue
+
+        md_files = [f for f in os.listdir(folder_path) if f.endswith(".md")]
+        if not md_files:
+            log(f"Nessun .md in {folder_name}, salto.")
+            continue
+
+        md_path = os.path.join(folder_path, md_files[0])
+        log(f"Fix frontmatter: {md_path}")
+
+        try:
+            with open(md_path, "r", encoding="utf-8") as f:
+                raw_content = f.read()
+
+            # Separo il corpo dal vecchio frontmatter (se presente).
+            # strip_existing_frontmatter è idempotente: se il file non ha frontmatter
+            # restituisce il contenuto invariato, quindi questa modalità è rieseguibile
+            # più volte sullo stesso file senza duplicare l'intestazione.
+            body = strip_existing_frontmatter(raw_content)
+
+            # Estraggo il link sorgente dal corpo dell'articolo: Mistral lo scrive
+            # sempre nell'ultima riga come "Fonte originale: <url>".
+            # Se non lo trovo uso stringa vuota: preferisco campo link vuoto a un crash
+            # che interrompe il batch su decine di file.
+            source_url = ""
+            url_match = re.search(r'Fonte originale:\s*(https?://\S+)', body)
+            if url_match:
+                source_url = url_match.group(1).rstrip('/')
+            else:
+                log(f"  Link sorgente non trovato in {md_files[0]}, campo link sarà vuoto.")
+
+            # La data la ricavo dal nome della cartella che ha sempre il formato
+            # YYYY-MM-DD-slug: prendo i primi 10 caratteri.
+            # Se il nome non rispetta il pattern uso la data odierna come fallback.
+            if re.match(r'^\d{4}-\d{2}-\d{2}', folder_name):
+                date_str = folder_name[:10]
+            else:
+                date_str = datetime.now().strftime("%Y-%m-%d")
+                log(f"  Pattern data non trovato in '{folder_name}', uso data odierna: {date_str}")
+
+            frontmatter, _ = generate_frontmatter(body, source_url, date_str)
+            final_md = frontmatter + body
+
+            with open(md_path, "w", encoding="utf-8") as f:
+                f.write(final_md)
+
+            log(f"  Completato: {md_files[0]}")
+            fixed_count += 1
+
+        except Exception as e:
+            log(f"  Errore su {folder_name}: {e}")
+            error_count += 1
+
+    log(f"--- FIX-FRONTMATTER COMPLETATO: {fixed_count} file aggiornati, {error_count} errori ---")
+
+
 # --- MAIN ENGINE ---
 
 async def main():
     args = parse_arguments()
-    log(f"--- START SESSION: {DEBUG_DATE} (Regenerate: {args.regenerate}, CTA-only: {args.cta_only}) ---")
+
+    # Risolvo la data di sessione: da parametro CLI oppure data odierna.
+    # Tutta la pipeline usa session_date invece della costante DEBUG_DATE
+    # che ho rimosso per evitare di dover modificare il sorgente ogni giorno.
+    session_date = resolve_session_date(args.date)
+
+    log(f"--- START SESSION: {session_date} (Regenerate: {args.regenerate}, CTA-only: {args.cta_only}, Fix-frontmatter: {args.fix_frontmatter}) ---")
 
     output_root = "output"
     if not os.path.exists(output_root):
         os.makedirs(output_root)
 
-    # Le due modalità di manutenzione sono mutualmente esclusive con il flusso normale.
-    # --cta-only ha precedenza su --regenerate: se entrambi sono passati, vince il più specifico.
+    # Le modalità di manutenzione sono mutualmente esclusive con il flusso normale.
+    # --cta-only ha precedenza su --regenerate che ha precedenza su --fix-frontmatter:
+    # l'ordine riflette la distruttività decrescente sulle risorse (PNG vs .md).
     if args.cta_only:
         await regenerate_cta_all(output_root)
         return
 
     if args.regenerate:
         await regenerate_all(output_root)
+        return
+
+    if args.fix_frontmatter:
+        # fix_frontmatter_all è sincrona: non usa Playwright né operazioni async.
+        # La chiamo direttamente senza await.
+        fix_frontmatter_all(output_root)
         return
 
     # Carico la cache degli URL già processati all'inizio della sessione.
@@ -561,8 +785,8 @@ async def main():
             break
 
         slug = slugify(title[:50])
-        folder_path = os.path.join(output_root, f"{DEBUG_DATE}-{slug}")
-        md_filename = f"{DEBUG_DATE}-{slug}.md"
+        folder_path = os.path.join(output_root, f"{session_date}-{slug}")
+        md_filename = f"{session_date}-{slug}.md"
         md_path = os.path.join(folder_path, md_filename)
 
         # VERIFICA CACHE: se l'URL è già in cache, non scarico né analizzo nulla.
@@ -605,8 +829,18 @@ async def main():
 
         # Generazione Articolo
         article_md = generate_article(full_context, link)
+
+        # Genero il front matter separatamente: Qwen estrae titolo, sintesi,
+        # tech e tag dall'articolo già scritto da Mistral, così ha il testo
+        # completo su cui lavorare invece del solo contesto grezzo.
+        frontmatter, topic_key = generate_frontmatter(article_md, link, session_date)
+
+        # Scrivo final_md e non article_md: article_md contiene solo il corpo,
+        # final_md è il risultato dell'assemblaggio frontmatter + corpo.
+        # Scrivere article_md era il bug originale che causava l'assenza dell'intestazione.
+        final_md = frontmatter + article_md
         with open(md_path, "w", encoding="utf-8") as f:
-            f.write(article_md)
+            f.write(final_md)
 
         # Salvo subito in cache prima di generare le immagini: in questo modo,
         # anche se il rendering grafico fallisce, l'URL risulta già processato
@@ -614,9 +848,9 @@ async def main():
         cache[link] = md_path
         save_cache(cache)
 
-        # Generazione Slide
+        # Uso il topic_key estratto dal front matter invece di fare una seconda
+        # ricerca full-text sull'articolo: è già normalizzato e validato.
         slides = extract_slides(article_md)
-        topic_key = next((k for k in TECH_PALETTE if k in article_md.lower()), "default")
         await create_images(topic_key, slides, folder_path)
 
         processed_count += 1

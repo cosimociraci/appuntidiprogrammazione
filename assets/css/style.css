@@ -198,6 +198,79 @@ img { max-width: 100%; display: block; }
 .pdf-link { display: inline-flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; padding: 8px 16px; background: var(--accent-dim); color: var(--accent-color); border: 1px solid var(--accent-color); border-radius: 6px; text-transform: uppercase; }
 
 /* ------------------------------------------------
+   7b. FONTE ORIGINALE — inline (fondo articolo) + sidebar
+   ------------------------------------------------ */
+
+/* Riga "Fonte originale: <url>" in fondo al corpo dell'articolo.
+   Uso baseline per allineare label e link anche se il link va a capo. */
+.post-source-link {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 2rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--border-color);
+  font-size: 0.85rem;
+}
+
+.source-link-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: var(--text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+}
+
+.source-link-label::after { content: ":"; }
+
+.source-link-anchor {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  word-break: break-all;
+  font-size: 0.85rem;
+  transition: color 0.2s ease;
+}
+
+.source-link-anchor:hover { color: var(--accent-hover); text-decoration: underline; }
+
+.source-link-anchor svg,
+.sidebar-source-anchor svg { flex-shrink: 0; position: relative; top: 1px; }
+
+/* Box fonte nella sidebar: sfondo accent-dim per distinguerlo dal box tag
+   senza introdurre colori fuori palette. */
+.sidebar-box.source-box {
+  background: var(--accent-dim);
+  border-left: 3px solid var(--accent-color);
+}
+
+.sidebar-source-anchor {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--accent-color);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.5rem 0.25rem;
+  border-radius: 4px;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.sidebar-source-anchor:hover {
+  color: var(--accent-hover);
+  background: transparent;
+  text-decoration: none;
+}
+
+/* ------------------------------------------------
    8. CORPO ARTICOLO (Markdown)
    ------------------------------------------------ */
 .post-article-body { font-size: 1rem; line-height: 1.8; color: var(--text-primary); }

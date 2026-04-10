@@ -36,7 +36,7 @@
 
     <!--
     Layout post: struttura a due colonne.
-    - Sinistra (post-content): breadcrumb → tags → link PDF → articolo MD
+    - Sinistra (post-content): breadcrumb → tags → link PDF → link fonte → articolo MD
     - Destra (post-sidebar): tags argomento + libro consigliato
     
     Ordine DOM: post-content prima, post-sidebar dopo.
@@ -44,17 +44,14 @@
     "content sidebar" su desktop, stacked su mobile.
 -->
 <div class="post-container">
-
     <!-- COLONNA SINISTRA: contenuto principale -->
     <main class="post-content">
-
         <!-- Breadcrumb: navigazione verso la home -->
         <nav class="post-breadcrumb" aria-label="Breadcrumb">
             <a href="/appuntidiprogrammazione/">Appunti di Programmazione</a>
             <span class="separator" aria-hidden="true">/</span>
             <span>Lock Monitoring & Diagnosis</span>
         </nav>
-
         <!-- Tags legati all'articolo -->
         
         <div class="post-tags-header" aria-label="Argomenti">
@@ -65,7 +62,6 @@
             
         </div>
         
-
         <!-- Link al/ai PDF allegati all'articolo -->
         
         <div class="pdf-link-wrapper">
@@ -78,7 +74,6 @@
             </a>
         </div>
         
-
         <!-- Corpo dell'articolo renderizzato da Kramdown -->
         <article class="post-article-body">
             <h2 id="esigenza-reale">Esigenza Reale</h2>
@@ -126,12 +121,13 @@
 </pre></td></tr></tbody></table></code></pre></div></div>
 
         </article>
-
+        <!-- Link alla fonte originale: lo posiziono dopo il corpo perché è un
+             approfondimento opzionale, non un'azione primaria. L'icona SVG inline
+             evita dipendenze da font icon esterni. -->
+        
     </main>
-
     <!-- COLONNA DESTRA: sidebar post -->
     <aside class="post-sidebar">
-
         <!-- Box 1: tags argomento (stessa lista dei chip sopra, ma nella sidebar) -->
         
         <div class="sidebar-box tags-box">
@@ -145,8 +141,10 @@
             </div>
         </div>
         
-
-        <!-- Box 2: libro consigliato -->
+        <!-- Box 2: fonte originale nella sidebar, visibile a colpo d'occhio
+             senza dover scorrere fino in fondo all'articolo. -->
+        
+        <!-- Box 3: libro consigliato -->
         <div class="sidebar-box books-box">
             <span class="box-label">Letture Consigliate</span>
             <div class="book-card">
@@ -161,9 +159,7 @@
                 </a>
             </div>
         </div>
-
     </aside>
-
 </div>
 
     <footer class="main-footer">
