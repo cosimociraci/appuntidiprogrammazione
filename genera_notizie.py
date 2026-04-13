@@ -1,4 +1,4 @@
-# pipenv run python genera_notizie_2.py
+# pipenv run python genera_notizie.py
 
 import os
 import json
@@ -23,38 +23,32 @@ BASE_URLS = [
     "https://www.zeusnews.it/"
 ]
 
-# Ho spostato il path della cache qui in configurazione per averlo in un posto solo
-CACHE_FILE = "news/processed_urls.json"
+CACHE_FILE = "output/processed_urls.json"
 
 TECH_PALETTE = {
     "java": {
         "accent": "#f89820",
         "bg": "#FFF9F2",
-        "label": "JAVA",
         "highlights": ["Java", "JVM", "Spring", "Maven", "Gradle"]
     },
     "js": {
         "accent": "#F7DF1E",
         "bg": "#FFFFF0",
-        "label": "JAVASCRIPT",
         "highlights": ["JavaScript", "Node", "npm", "ES6", "async"]
     },
     "postgresql": {
         "accent": "#336791",
         "bg": "#F0F5F9",
-        "label": "POSTGRESQL",
         "highlights": ["PostgreSQL", "SQL", "query", "index", "PostGIS"]
     },
     "ia": {
         "accent": "#8E44AD",
         "bg": "#F8F4FB",
-        "label": "AI & INNOVATION",
         "highlights": ["AI", "LLM", "modello", "training", "inferenza"]
     },
     "default": {
         "accent": "#2ECC71",
         "bg": "#F2FBF6",
-        "label": "TECH NEWS",
         "highlights": []
     }
 }
@@ -68,10 +62,7 @@ def log(message):
 
 
 def parse_arguments():
-    """Configuro argparse per gestire tutte le modalità operative da terminale.
-    Ho aggiunto --date come parametro opzionale: se non specificato il valore
-    viene calcolato a runtime come data odierna, così non devo più modificare
-    il sorgente ad ogni esecuzione."""
+    """Configuro argparse per gestire tutte le modalità operative da terminale."""
     parser = argparse.ArgumentParser(description="Sistema di generazione articoli e slide tecniche.")
     parser.add_argument(
         '--date',
@@ -82,17 +73,17 @@ def parse_arguments():
     parser.add_argument(
         '--regenerate',
         action='store_true',
-        help='Itera su tutti i file .md in news/ e rigenera tutte le immagini. Non scarica nulla.'
+        help='Itera su tutti i file .md in output/ e rigenera tutte le immagini. Non scarica nulla.'
     )
     parser.add_argument(
         '--cta-only',
         action='store_true',
-        help='Rigenera solo la slide CTA finale (icarocomix) in ogni cartella di news. Non scarica nulla.'
+        help='Rigenera solo la slide CTA finale (icarocomix) in ogni cartella di output. Non scarica nulla.'
     )
     parser.add_argument(
         '--fix-frontmatter',
         action='store_true',
-        help='Rigenera il front matter YAML di tutti i file .md in news/. Non scarica nulla, non rigenera immagini.'
+        help='Rigenera il front matter YAML di tutti i file .md in output/. Non scarica nulla, non rigenera immagini.'
     )
     return parser.parse_args()
 
@@ -109,8 +100,6 @@ def resolve_session_date(date_arg):
         except ValueError:
             log(f"ERRORE: --date '{date_arg}' non è nel formato YYYY-MM-DD. Esempio corretto: 2026-04-09")
             sys.exit(1)
-    # Nessun parametro fornito: uso la data odierna calcolata a runtime.
-    # Questo evita di dover modificare il sorgente ad ogni nuova esecuzione giornaliera.
     return datetime.now().strftime("%Y-%m-%d")
 
 
@@ -121,9 +110,7 @@ whisper_model = whisper.load_model("base")
 # --- CACHE ---
 
 def load_cache():
-    """Carico il file di cache che mappa ogni URL processato al path del suo file .md.
-    Se il file non esiste lo inizializzo come dizionario vuoto: questo accade solo
-    alla prima esecuzione, dopodiché la cache persiste tra una sessione e l'altra."""
+    """Carico il file di cache che mappa ogni URL processato al path del suo file .md."""
     if os.path.exists(CACHE_FILE):
         try:
             with open(CACHE_FILE, "r", encoding="utf-8") as f:
@@ -134,9 +121,7 @@ def load_cache():
 
 
 def save_cache(cache):
-    """Persisto la cache su disco dopo ogni nuovo URL processato.
-    Scrivo subito invece di farlo solo a fine sessione per non perdere
-    dati in caso di crash durante elaborazioni successive."""
+    """Persisto la cache su disco dopo ogni nuovo URL processato."""
     os.makedirs(os.path.dirname(CACHE_FILE), exist_ok=True)
     with open(CACHE_FILE, "w", encoding="utf-8") as f:
         json.dump(cache, f, indent=2, ensure_ascii=False)
@@ -171,11 +156,9 @@ def extract_article_data(url):
 
         video_links = find_youtube_links(soup)
 
-        # Pulisco il DOM dagli elementi di disturbo
         for tag in soup(['nav', 'footer', 'header', 'aside', 'script', 'style']):
             tag.decompose()
 
-        # Cerco il contenitore principale del testo
         article_body = (soup.find('article') or
                         soup.find('main') or
                         soup.find('div', id=re.compile('entry|content|post')))
@@ -215,10 +198,7 @@ def transcribe_video(url):
 # --- FILTRO CONTENUTO PROMOZIONALE ---
 
 def is_promotional(full_context):
-    """Chiedo a Qwen di valutare se il contenuto è una notizia tecnica reale o materiale promozionale.
-    Ho scelto un modello leggero come Qwen per questo filtro rapido, riservando Mistral solo
-    alla generazione dell'articolo completo. La risposta attesa è solo 'NOTIZIA' o 'PUBBLICITA'
-    per poterla parsare in modo affidabile senza ambiguità."""
+    """Chiedo a Qwen di valutare se il contenuto è una notizia tecnica reale o materiale promozionale."""
     log("[Qwen] Analisi anti-promozionale in corso...")
     prompt = f"""
 Sei un editor di una rivista tecnica. Analizza il testo seguente e rispondi a questa domanda:
@@ -240,7 +220,6 @@ Non aggiungere nulla altro. Solo una parola.
     try:
         response = ollama.chat(model='qwen2.5-coder', messages=[{'role': 'user', 'content': prompt}])
         answer = response['message']['content'].strip().upper()
-        # Cerco la parola chiave nella risposta per tollerare piccole variazioni del modello
         return "PUBBLICITA" in answer
     except Exception as e:
         log(f"Errore nel filtro promozionale, assumo notizia valida: {e}")
@@ -248,6 +227,7 @@ Non aggiungere nulla altro. Solo una parola.
 
 
 # --- INTELLIGENZA ARTIFICIALE ---
+
 def generate_article(full_context, source_url):
     """Mistral crea l'articolo tecnico in italiano partendo dal contesto raccolto."""
     log("[Mistral] Avvio stesura nuovo articolo tecnico...")
@@ -272,8 +252,6 @@ REGOLE OBBLIGATORIE:
 6. Chiusura: Termina l'articolo con una riga '---' seguita da 'Fonte originale: {source_url}'.
 """
     response = ollama.chat(model='mistral', messages=[{'role': 'user', 'content': prompt}])
-    # Sanificare sempre l'output: Mistral ignora le istruzioni di formato
-    # in modo non deterministico, quindi non mi fido del solo prompt.
     return sanitize_article_headings(response['message']['content'])
 
 
@@ -286,37 +264,29 @@ def sanitize_article_headings(article):
     Tutta la gerarchia parte da '##' per le sezioni principali.
 
     Logica applicata riga per riga:
-    - Righe "Titolo: ..." o "# Titolo: ..." → rimosse completamente perché
-      il titolo è già nel front matter, duplicarlo nel corpo è un errore.
-    - Righe "# testo" (H1 nel corpo) → degradate a "## testo".
-    - Righe "### testo" o livelli più profondi → degradate a "## testo"
-      per mantenere la gerarchia piatta attesa dal CSS.
-    - Righe "#testo" senza spazio → corrette in "## testo".
-    - Tutte le altre righe → invariate."""
-
+    - Righe "Titolo: ..." → rimosse: il titolo vive nel front matter.
+    - Righe "# testo" (H1) → degradate a "## testo".
+    - Righe "### testo" o più profondi → degradate a "## testo".
+    - Righe "#testo" senza spazio → corrette in "## testo"."""
     lines = article.split('\n')
     result = []
 
     for line in lines:
         stripped = line.strip()
 
-        # Caso 1: riga "Titolo: ..." con eventuale prefisso di cancelletti.
-        # La rimuovo del tutto: il titolo vive nel front matter, non nel corpo.
+        # Rimuovo righe "Titolo: ..." con eventuale prefisso di cancelletti
         if re.match(r'^#{0,3}\s*[Tt]itolo:\s*.+', stripped):
             continue
 
-        # Caso 2: riga che inizia con "#" ma senza spazio separatore
-        # es: "#Introduzione" → normalizzo prima di valutare il livello.
+        # Aggiungo spazio mancante dopo i cancelletti: "#Testo" → "# Testo"
         if re.match(r'^#{1,6}[^\s#]', stripped):
             stripped = re.sub(r'^(#{1,6})([^\s])', r'\1 \2', stripped)
 
-        # Caso 3: H1 nel corpo ("# testo") → degrado a H2.
-        # Il titolo H1 è responsabilità del layout, non del Markdown.
+        # H1 nel corpo → degrado a H2
         if re.match(r'^#\s', stripped):
             stripped = re.sub(r'^#\s', '## ', stripped)
 
-        # Caso 4: H3 o più profondi ("### testo", "#### testo" ...) → degrado a H2
-        # per mantenere la struttura piatta a un solo livello di sezione.
+        # H3 o più profondi → degrado a H2 per gerarchia piatta
         if re.match(r'^#{3,}\s', stripped):
             stripped = re.sub(r'^#{3,}\s', '## ', stripped)
 
@@ -324,67 +294,104 @@ def sanitize_article_headings(article):
 
     return '\n'.join(result)
 
+
 def extract_slides(article):
-    """Qwen estrae i punti chiave per il carosello grafico in formato JSON.
-    Ho reso le istruzioni più esigenti sul livello di dettaglio: ogni pillola deve
-    contenere abbastanza contesto da essere comprensibile anche senza leggere l'articolo,
-    che è il caso reale d'uso sui social dove lo slide è l'unico touchpoint."""
+    """Qwen estrae i punti chiave per il carosello grafico come array di oggetti JSON.
+
+    Ho cambiato la struttura dell'output da array di stringhe ad array di oggetti
+    {"title": "...", "text": "..."}: ogni slide porta ora il proprio titolo
+    contestuale invece di ereditare l'etichetta generica del topic (es. "JAVA").
+    Questo risolve il problema delle slide disomogenee che condividevano un unico
+    titolo non rappresentativo per tutte le pillole."""
     log("[Qwen] Estrazione pillole carosello...")
     prompt = f"""
 Sei un content designer tecnico specializzato in divulgazione per sviluppatori.
-Analizza l'articolo seguente ed estrai esattamente 9 pillole informative in ITALIANO.
+Analizza l'articolo seguente ed estrai esattamente 10 pillole informative in ITALIANO.
 
 ARTICOLO:
 {article}
 
 REGOLE OBBLIGATORIE:
-1. Contesto esplicito: ogni pillola deve menzionare esplicitamente il tema dell'articolo
-   (es: non scrivere "il nuovo sistema riduce la latenza del 40%" ma 
-   "PostgreSQL 17 introduce il connection pooling nativo, riducendo la latenza del 40%").
-2. Autonomia: ogni pillola deve essere comprensibile senza aver letto l'articolo o le altre pillole.
-3. Massimo 5 righe per pillola. Frasi brevi, dirette, dense di informazione tecnica.
-4. Privilegia: numeri concreti, confronti tra versioni, impatti pratici, breaking change, casi d'uso reali.
-5. NON usare markdown (no asterischi, no simboli #, no trattini iniziali). Solo testo piano.
-6. Restituisci ESCLUSIVAMENTE un array JSON di 9 stringhe, senza alcun testo prima o dopo, senza backtick.
+1. Contesto esplicito: ogni pillola deve menzionare esplicitamente il tema trattato.
+2. Autonomia: ogni pillola deve essere comprensibile senza aver letto le altre.
+3. Il campo "title" deve essere un titolo breve e specifico per quella pillola (max 5 parole),
+   NON il nome generico della tecnologia. Deve rispecchiare esattamente il contenuto del campo "text".
+   ESEMPI CORRETTI:   "JEP 500: Final diventa Final" | "Hibernate 8.2: cascade fix" | "HTTP/3 nel client Java"
+   ESEMPI SBAGLIATI:  "JAVA" | "POSTGRESQL" | "Novità Java" | "Aggiornamento"
+4. Il campo "text" ha massimo 5 righe. Frasi brevi, dirette, dense di informazione tecnica.
+5. Privilegia: numeri concreti, confronti tra versioni, impatti pratici, breaking change, casi d'uso reali.
+6. NON usare markdown nel campo "text" (no asterischi, no #, no trattini iniziali). Solo testo piano.
+7. Restituisci ESCLUSIVAMENTE un array JSON di 10 oggetti, senza alcun testo prima o dopo, senza backtick.
 
-Esempio formato atteso:
-["Pillola uno con contesto esplicito.", "Pillola due con contesto esplicito.", ...]
+Formato atteso:
+[
+  {{"title": "Titolo specifico slide 1", "text": "Testo della pillola 1."}},
+  {{"title": "Titolo specifico slide 2", "text": "Testo della pillola 2."}}
+]
 """
     response = ollama.chat(model='qwen2.5-coder', messages=[{'role': 'user', 'content': prompt}])
     raw = response['message']['content']
 
-    # Primo tentativo: cerco il blocco JSON grezzo e lo parso direttamente.
+    # Primo tentativo: parso il JSON grezzo cercando l'array di oggetti.
     match = re.search(r'\[.*\]', raw, re.DOTALL)
     if match:
         try:
-            return json.loads(match.group())
+            data = json.loads(match.group())
+            # Valido che ogni elemento abbia i campi attesi prima di restituire.
+            # Se un oggetto manca di "title" o "text" lo normalizzo con un fallback
+            # invece di scartare l'intera lista: meglio una slide con titolo generico
+            # che perdere il contenuto estratto correttamente.
+            slides = []
+            for i, item in enumerate(data):
+                if isinstance(item, dict):
+                    slides.append({
+                        "title": str(item.get("title", f"Slide {i + 1}")).strip(),
+                        "text":  str(item.get("text",  "")).strip()
+                    })
+                elif isinstance(item, str):
+                    # Compatibilità con eventuale output misto: stringa senza titolo
+                    slides.append({"title": f"Slide {i + 1}", "text": item.strip()})
+            return slides[:10]
         except json.JSONDecodeError as e:
             log(f"JSON grezzo non valido ({e}), avvio pulizia e secondo tentativo...")
 
-    # Secondo tentativo: il modello ha restituito JSON malformato (ellissi, virgolette
-    # non escapate, caratteri speciali). Provo a risanarlo prima di abbandonare.
+    # Secondo tentativo: pulizia caratteri problematici e ri-parse.
     if match:
         cleaned = match.group()
-        # Rimuovo caratteri di controllo non stampabili che rompono il parser JSON
         cleaned = re.sub(r'[\x00-\x1f\x7f]', ' ', cleaned)
-        # Normalizzo le ellissi tipografiche in punti semplici
         cleaned = cleaned.replace('…', '...').replace('\u2026', '...')
         try:
-            return json.loads(cleaned)
+            data = json.loads(cleaned)
+            slides = []
+            for i, item in enumerate(data):
+                if isinstance(item, dict):
+                    slides.append({
+                        "title": str(item.get("title", f"Slide {i + 1}")).strip(),
+                        "text":  str(item.get("text",  "")).strip()
+                    })
+            return slides[:10]
         except json.JSONDecodeError as e:
-            log(f"Pulizia insufficiente ({e}), avvio estrazione manuale delle stringhe...")
+            log(f"Pulizia insufficiente ({e}), avvio estrazione manuale...")
 
-    # Terzo tentativo (fallback finale): estraggo le stringhe una ad una con regex
-    # ignorando completamente la struttura JSON. Funziona anche se il modello ha
-    # restituito un array parziale o con delimitatori corrotti.
+    # Terzo tentativo (fallback finale): il modello ha ignorato il formato oggetto
+    # e ha restituito stringhe semplici. Estraggo le coppie "title"/"text" con regex
+    # cercando pattern chiave-valore nel testo grezzo.
+    # Se nemmeno questo funziona, costruisco slide senza titolo dalle stringhe trovate.
+    title_text_pairs = re.findall(
+        r'"title"\s*:\s*"((?:[^"\\]|\\.)*)".*?"text"\s*:\s*"((?:[^"\\]|\\.)*)"',
+        raw, re.DOTALL
+    )
+    if title_text_pairs:
+        log(f"Estrazione coppie title/text riuscita: {len(title_text_pairs)} slide recuperate.")
+        return [{"title": t.strip(), "text": x.strip()} for t, x in title_text_pairs[:10]]
+
+    # Fallback estremo: estraggo solo le stringhe e le uso come testo senza titolo.
     candidates = re.findall(r'"((?:[^"\\]|\\.)*)"', raw)
-    # Filtro stringhe troppo corte che sono probabilmente artefatti del formato JSON
     slides_fallback = [s.strip() for s in candidates if len(s.strip()) > 20]
     if slides_fallback:
-        log(f"Estrazione manuale riuscita: recuperate {len(slides_fallback)} stringhe su 9 attese.")
-        return slides_fallback[:9]
+        log(f"Fallback estremo: recuperate {len(slides_fallback)} stringhe senza titolo.")
+        return [{"title": f"Slide {i + 1}", "text": s} for i, s in enumerate(slides_fallback[:10])]
 
-    # Nessun recupero possibile: restituisco lista vuota per non bloccare il flusso
     log("Impossibile estrarre slide dal modello, la generazione grafica verrà saltata.")
     return []
 
@@ -392,9 +399,7 @@ Esempio formato atteso:
 # --- ENGINE GRAFICO ---
 
 def highlight_keywords(text, keywords, accent_color):
-    """Sostituisco ogni parola chiave del topic con la sua versione in grassetto colorato.
-    Uso word boundary \b per evitare sostituzioni parziali e re.escape per gestire
-    eventuali caratteri speciali nei termini della palette."""
+    """Sostituisco ogni parola chiave del topic con la sua versione in grassetto colorato."""
     for keyword in keywords:
         pattern = re.compile(r'\b' + re.escape(keyword) + r'\b')
         replacement = f"<b style='color:{accent_color}'>{keyword}</b>"
@@ -403,10 +408,14 @@ def highlight_keywords(text, keywords, accent_color):
 
 
 async def create_images(topic, slides, folder_path):
-    """Rendering delle slide 1080x1080 con numerazione progressiva."""
+    """Rendering delle slide 1080x1080 con titolo per-slide e numerazione progressiva.
+
+    Ho rimosso il campo 'label' dalla palette perché non è più necessario: ogni slide
+    porta il proprio titolo estratto da Qwen, specifico per il contenuto di quella pillola.
+    Il colore accent e lo sfondo rimangono coerenti per tutta la serie del topic,
+    mentre il titolo varia slide per slide."""
     log(f"Rendering grafico per topic: {topic} in {folder_path}...")
 
-    # Rimuovo eventuali slide precedenti prima di rigenerare
     for f in os.listdir(folder_path):
         if f.endswith(".png"):
             os.remove(os.path.join(folder_path, f))
@@ -417,18 +426,20 @@ async def create_images(topic, slides, folder_path):
         browser = await p.chromium.launch()
         page = await browser.new_page(viewport={'width': 1080, 'height': 1080})
 
-        for i, text in enumerate(slides[:9]):
-            formatted_text = highlight_keywords(text, config['highlights'], config['accent'])
+        for i, slide in enumerate(slides[:10]):
+            # Uso il titolo specifico della slide invece dell'etichetta generica del topic.
+            # Ogni slide è ora autonoma e descrittiva anche fuori contesto.
+            slide_title = slide.get("title", f"Slide {i + 1}")
+            slide_text  = slide.get("text", "")
 
-            # Ho aggiunto l'import di Google Fonts Poppins nel <head> perché Playwright
-            # opera in un browser headless che non eredita i font di sistema.
-            # wait_until="networkidle" garantisce che il font sia scaricato prima dello screenshot.
+            formatted_text = highlight_keywords(slide_text, config['highlights'], config['accent'])
+
             html_content = f"""
             <html>
             <head>
                 <link rel="preconnect" href="https://fonts.googleapis.com">
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-                <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;900&display=swap" rel="stylesheet">
+                <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700;900&display=swap" rel="stylesheet">
             </head>
             <style>
                 body {{
@@ -448,13 +459,14 @@ async def create_images(topic, slides, folder_path):
                     border-left: 20px solid {config['accent']};
                     padding-left: 60px;
                 }}
-                .label {{
+                .slide-title {{
                     font-weight: 900;
                     color: {config['accent']};
                     text-transform: uppercase;
-                    font-size: 26px;
-                    margin-bottom: 25px;
-                    letter-spacing: 2px;
+                    font-size: 22px;
+                    margin-bottom: 28px;
+                    letter-spacing: 1.5px;
+                    line-height: 1.3;
                 }}
                 .text {{
                     font-size: 42px;
@@ -474,28 +486,23 @@ async def create_images(topic, slides, folder_path):
             </style>
             <body>
                 <div class="container">
-                    <div class="label">{config['label']}</div>
+                    <div class="slide-title">{slide_title}</div>
                     <div class="text">{formatted_text}</div>
                 </div>
-                <div class="page-num">{i + 1}/9</div>
+                <div class="page-num">{i + 1}/10</div>
             </body>
             </html>"""
 
             await page.set_content(html_content, wait_until="networkidle")
             await page.screenshot(path=os.path.join(folder_path, f"slide_{i + 1}.png"))
 
-        # Uso la funzione dedicata passando la page già aperta: evito di aprire
-        # un secondo contesto Playwright all'interno dello stesso blocco async.
         cta_output_path = os.path.join(folder_path, "slide_11.png")
         await render_cta_slide(page, config['accent'], cta_output_path)
         await browser.close()
 
 
 async def render_cta_slide(page, accent_color, output_path):
-    """Genero la slide CTA icarocomix e la salvo nel path indicato.
-    Ho separato questa logica da create_images per poterla richiamare anche in modalità
-    --cta-only senza dover rieseguire l'intera pipeline di rendering delle slide contenuto.
-    Il font-size è 45px come da specifica."""
+    """Genero la slide CTA icarocomix e la salvo nel path indicato."""
     cta_html = f"""
     <html>
     <head>
@@ -516,14 +523,7 @@ async def render_cta_slide(page, accent_color, output_path):
 
 def generate_frontmatter(article, source_url, date_str):
     """Chiedo a Qwen di estrarre i metadati dell'articolo in JSON strutturato,
-    poi assemblo il blocco YAML front matter da anteporre al file .md.
-
-    Ho scelto Qwen per questo compito per coerenza con gli altri task di estrazione
-    strutturata: è più veloce di Mistral e sufficiente per produrre campi brevi.
-    Separo la generazione del front matter da quella dell'articolo per due ragioni:
-    1. Mistral non produce YAML affidabile quando mescolato con testo libero lungo.
-    2. Posso ritentare solo questo step senza rieseguire tutta la pipeline."""
-
+    poi assemblo il blocco YAML front matter da anteporre al file .md."""
     valid_tech_keys = list(TECH_PALETTE.keys())
 
     prompt = f"""
@@ -547,23 +547,17 @@ Esempio formato atteso:
         response = ollama.chat(model='qwen2.5-coder', messages=[{'role': 'user', 'content': prompt}])
         raw = response['message']['content'].strip()
 
-        # Estraggo il blocco JSON anche se il modello ha aggiunto testo
-        # prima o dopo: cerco le parentesi graffe più esterne.
         match = re.search(r'\{.*\}', raw, re.DOTALL)
         if not match:
             raise ValueError("Nessun oggetto JSON trovato nella risposta del modello.")
 
         data = json.loads(match.group())
 
-        # Normalizzo il campo tech: se il modello restituisce un valore non previsto
-        # dalla palette, faccio fallback su "default" per non rompere il rendering grafico.
         tech = data.get("tech", "default").lower()
         if tech not in TECH_PALETTE:
             log(f"[FrontMatter] Tech '{tech}' non riconosciuto, uso 'default'.")
             tech = "default"
 
-        # I tag li normalizzo tutti lowercase e rimuovo eventuali duplicati
-        # preservando l'ordine di estrazione.
         raw_tags = data.get("tags", [tech])
         seen = set()
         tags = []
@@ -577,9 +571,6 @@ Esempio formato atteso:
         sintesi  = str(data.get("sintesi", "")).replace('"', "'").replace('\n', ' ').strip()
         tags_yaml = json.dumps(tags, ensure_ascii=False)
 
-        # Assemblo il front matter: uso la data della sessione con orario fisso 12:00:00
-        # perché non ho un timestamp preciso di pubblicazione.
-        # Il campo layout è sempre "post" per compatibilità con Jekyll/GitHub Pages.
         frontmatter = f"""---
 layout: post
 title: "{title}"
@@ -595,7 +586,6 @@ link: "{source_url}"
 
     except Exception as e:
         log(f"[FrontMatter] Errore generazione metadati, uso front matter minimale: {e}")
-        # Front matter di emergenza: non blocco la pipeline per un errore di metadati
         fallback = f"""---
 layout: post
 title: "Articolo Tecnico"
@@ -612,11 +602,7 @@ link: "{source_url}"
 
 def strip_existing_frontmatter(content):
     """Rimuovo il blocco frontmatter YAML iniziale se presente, restituendo il solo corpo .md.
-    Il frontmatter Jekyll è delimitato da '---' in apertura e '---' in chiusura,
-    entrambi su righe proprie. Uso una regex che consuma l'intera sezione inclusi i delimitatori,
-    così il corpo che restituisco inizia direttamente con il titolo H1 dell'articolo.
-    Se il file non ha frontmatter restituisco il contenuto invariato: la funzione è idempotente."""
-    # Cerco il pattern ^---\n...\n---\n solo a inizio file con re.DOTALL per il corpo multi-riga
+    La funzione è idempotente: se il file non ha frontmatter restituisce il contenuto invariato."""
     match = re.match(r'^---\n.*?\n---\n', content, re.DOTALL)
     if match:
         return content[match.end():]
@@ -626,10 +612,7 @@ def strip_existing_frontmatter(content):
 # --- MODALITÀ RIGENERAZIONE MASSIVA ---
 
 async def regenerate_all(output_root):
-    """Itero su tutte le cartelle di output e rigenero le immagini per ogni file .md trovato.
-    Questa modalità non scarica nulla: legge solo file locali già presenti su disco.
-    Ho separato questa logica dal main per tenere il flusso normale ben distinto
-    dalla modalità di manutenzione."""
+    """Itero su tutte le cartelle di output e rigenero le immagini per ogni file .md trovato."""
     log("--- MODALITÀ RIGENERAZIONE MASSIVA: nessun download verrà eseguito ---")
     for folder_name in sorted(os.listdir(output_root)):
         folder_path = os.path.join(output_root, folder_name)
@@ -654,12 +637,7 @@ async def regenerate_all(output_root):
 
 
 async def regenerate_cta_all(output_root):
-    """Itero su tutte le cartelle di output e rigenero solo l'ultima slide (CTA icarocomix).
-    Per trovare l'ultima slide non mi fido del numero fisso 11: conto i PNG presenti nella
-    cartella e prendo quello con l'indice più alto, perché in sessioni precedenti Qwen potrebbe
-    aver restituito meno di 9 pillole, spostando la CTA a un numero inferiore.
-    Apro un unico browser Playwright per tutta la sessione e lo chiudo solo alla fine,
-    evitando il costo di avvio/shutdown per ogni cartella."""
+    """Itero su tutte le cartelle di output e rigenero solo l'ultima slide (CTA icarocomix)."""
     log("--- MODALITÀ CTA-ONLY: rigenero solo la slide finale in ogni cartella ---")
     async with async_playwright() as p:
         browser = await p.chromium.launch()
@@ -670,8 +648,6 @@ async def regenerate_cta_all(output_root):
             if not os.path.isdir(folder_path):
                 continue
 
-            # Raccolgo tutti i PNG con nome slide_N.png e li ordino per N numerico
-            # per trovare l'ultimo indipendentemente da quanti ce ne siano.
             png_files = [
                 f for f in os.listdir(folder_path)
                 if re.match(r'^slide_\d+\.png$', f)
@@ -683,9 +659,6 @@ async def regenerate_cta_all(output_root):
             last_slide = max(png_files, key=lambda f: int(re.search(r'\d+', f).group()))
             last_slide_path = os.path.join(folder_path, last_slide)
 
-            # Determino il colore accent leggendo il file .md per applicare la palette corretta.
-            # Se non trovo il .md uso il default verde: preferisco un colore sbagliato
-            # a un crash che interrompe il batch su decine di cartelle.
             md_files = [f for f in os.listdir(folder_path) if f.endswith(".md")]
             accent_color = TECH_PALETTE["default"]["accent"]
             if md_files:
@@ -708,13 +681,7 @@ async def regenerate_cta_all(output_root):
 
 
 def fix_frontmatter_all(output_root):
-    """Itero su tutte le cartelle di output e rigenero il frontmatter di ogni .md trovato.
-    Per ogni file: strip del frontmatter esistente, chiamata a generate_frontmatter sul corpo
-    pulito, riscrittura del file con il nuovo frontmatter anteposto.
-
-    Ho scelto di non riscrivere il corpo dell'articolo: Mistral non viene reinvocato,
-    solo Qwen estrae di nuovo titolo/sintesi/tech/tags dal testo già presente su disco.
-    Questa modalità è veloce e non distruttiva sul contenuto."""
+    """Itero su tutte le cartelle di output e rigenero il frontmatter di ogni .md trovato."""
     log("--- MODALITÀ FIX-FRONTMATTER: rigenero le intestazioni di tutti i file .md ---")
 
     fixed_count = 0
@@ -737,17 +704,11 @@ def fix_frontmatter_all(output_root):
             with open(md_path, "r", encoding="utf-8") as f:
                 raw_content = f.read()
 
-            # Separo il corpo dal vecchio frontmatter (se presente).
-            # strip_existing_frontmatter è idempotente: se il file non ha frontmatter
-            # restituisce il contenuto invariato, quindi questa modalità è rieseguibile
-            # più volte sullo stesso file senza duplicare l'intestazione.
             body = strip_existing_frontmatter(raw_content)
+            # Sanificiamo anche i titoli del corpo mentre siamo qui:
+            # i file vecchi potrebbero avere H1 nel corpo generati prima del fix.
             body = sanitize_article_headings(body)
 
-            # Estraggo il link sorgente dal corpo dell'articolo: Mistral lo scrive
-            # sempre nell'ultima riga come "Fonte originale: <url>".
-            # Se non lo trovo uso stringa vuota: preferisco campo link vuoto a un crash
-            # che interrompe il batch su decine di file.
             source_url = ""
             url_match = re.search(r'Fonte originale:\s*(https?://\S+)', body)
             if url_match:
@@ -755,9 +716,6 @@ def fix_frontmatter_all(output_root):
             else:
                 log(f"  Link sorgente non trovato in {md_files[0]}, campo link sarà vuoto.")
 
-            # La data la ricavo dal nome della cartella che ha sempre il formato
-            # YYYY-MM-DD-slug: prendo i primi 10 caratteri.
-            # Se il nome non rispetta il pattern uso la data odierna come fallback.
             if re.match(r'^\d{4}-\d{2}-\d{2}', folder_name):
                 date_str = folder_name[:10]
             else:
@@ -784,21 +742,14 @@ def fix_frontmatter_all(output_root):
 
 async def main():
     args = parse_arguments()
-
-    # Risolvo la data di sessione: da parametro CLI oppure data odierna.
-    # Tutta la pipeline usa session_date invece della costante DEBUG_DATE
-    # che ho rimosso per evitare di dover modificare il sorgente ogni giorno.
     session_date = resolve_session_date(args.date)
 
     log(f"--- START SESSION: {session_date} (Regenerate: {args.regenerate}, CTA-only: {args.cta_only}, Fix-frontmatter: {args.fix_frontmatter}) ---")
 
-    output_root = "news"
+    output_root = "output"
     if not os.path.exists(output_root):
         os.makedirs(output_root)
 
-    # Le modalità di manutenzione sono mutualmente esclusive con il flusso normale.
-    # --cta-only ha precedenza su --regenerate che ha precedenza su --fix-frontmatter:
-    # l'ordine riflette la distruttività decrescente sulle risorse (PNG vs .md).
     if args.cta_only:
         await regenerate_cta_all(output_root)
         return
@@ -808,17 +759,11 @@ async def main():
         return
 
     if args.fix_frontmatter:
-        # fix_frontmatter_all è sincrona: non usa Playwright né operazioni async.
-        # La chiamo direttamente senza await.
         fix_frontmatter_all(output_root)
         return
 
-    # Carico la cache degli URL già processati all'inizio della sessione.
-    # La cache è un dizionario { url: md_path } che mi permette di saltare
-    # scraping e AI per articoli già elaborati, anche se chiamati con slug diversi.
     cache = load_cache()
 
-    # Raccolta link dai feed configurati
     news_links = set()
     for url in BASE_URLS:
         try:
@@ -843,8 +788,6 @@ async def main():
         md_filename = f"{session_date}-{slug}.md"
         md_path = os.path.join(folder_path, md_filename)
 
-        # VERIFICA CACHE: se l'URL è già in cache, non scarico né analizzo nulla.
-        # Rigenero solo le immagini leggendo il file .md già su disco, poi passo avanti.
         if link in cache:
             existing_md_path = cache[link]
             log(f"URL già in cache: {link} -> {existing_md_path}")
@@ -858,7 +801,6 @@ async def main():
                 log(f"File .md in cache non trovato su disco ({existing_md_path}), salto.")
             continue
 
-        # L'URL non è in cache: procedo con scraping e analisi
         page_text, video_urls = extract_article_data(link)
 
         video_text = ""
@@ -871,9 +813,6 @@ async def main():
             log(f"Contenuto troppo povero per '{title}'. Salto.")
             continue
 
-        # FILTRO PROMOZIONALE: scarto l'articolo prima di sprecare risorse su Mistral.
-        # Il controllo avviene qui, dopo aver verificato la cache, perché non ha senso
-        # filtrare URL che non avremmo comunque riscaricato.
         if is_promotional(full_context):
             log(f"Contenuto promozionale rilevato, scarto: {title}")
             continue
@@ -881,29 +820,17 @@ async def main():
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
 
-        # Generazione Articolo
         article_md = generate_article(full_context, link)
 
-        # Genero il front matter separatamente: Qwen estrae titolo, sintesi,
-        # tech e tag dall'articolo già scritto da Mistral, così ha il testo
-        # completo su cui lavorare invece del solo contesto grezzo.
         frontmatter, topic_key = generate_frontmatter(article_md, link, session_date)
 
-        # Scrivo final_md e non article_md: article_md contiene solo il corpo,
-        # final_md è il risultato dell'assemblaggio frontmatter + corpo.
-        # Scrivere article_md era il bug originale che causava l'assenza dell'intestazione.
         final_md = frontmatter + article_md
         with open(md_path, "w", encoding="utf-8") as f:
             f.write(final_md)
 
-        # Salvo subito in cache prima di generare le immagini: in questo modo,
-        # anche se il rendering grafico fallisce, l'URL risulta già processato
-        # e alla prossima esecuzione salto il costoso scraping/AI.
         cache[link] = md_path
         save_cache(cache)
 
-        # Uso il topic_key estratto dal front matter invece di fare una seconda
-        # ricerca full-text sull'articolo: è già normalizzato e validato.
         slides = extract_slides(article_md)
         await create_images(topic_key, slides, folder_path)
 
