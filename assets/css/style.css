@@ -174,6 +174,7 @@ img { max-width: 100%; display: block; }
 .post-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--accent-color); text-transform: uppercase; margin-bottom: 10px; }
 .post-title { font-size: 1.3rem; font-weight: 600; margin-bottom: 10px; }
 .post-title a { color: var(--text-primary); }
+.autore span { font-size: 15px; }
 .post-sintesi { font-size: 0.9rem; color: var(--text-secondary); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 
 /* ------------------------------------------------
