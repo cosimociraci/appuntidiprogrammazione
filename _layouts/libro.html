@@ -1,0 +1,47 @@
+---
+layout: default
+---
+<div class="post-container">
+    <main class="post-content">
+        <nav class="post-breadcrumb" aria-label="Breadcrumb">
+            <a href="{{ '/' | relative_url }}">Appunti di Programmazione</a>
+            <span class="separator" aria-hidden="true">/</span>
+            <span>{{ page.title }}</span>
+        </nav>
+
+        {% if page.tags and page.tags.size > 0 %}
+        <div class="post-tags-header">
+            {% for tag in page.tags %}
+                <span class="post-tag-chip">{{ tag }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <article class="post-article-body">
+            <h1>{{ page.title }}</h1>
+            <p><strong>Sintesi:</strong> {{ page.sintesi }}</p>
+            <hr>
+            {{ content }}
+        </article>
+    </main>
+
+    <aside class="post-sidebar">
+        {% if page.link_img %}
+        <div class="sidebar-box book-cover-box">
+            <span class="box-label">Acquista su Amazon</span>
+            <a href="{{ page.link }}" target="_blank" rel="noopener noreferrer" class="book-cover-link">
+                <img src="{{ page.link_img }}" alt="Copertina di {{ page.title }}" style="width: 100%; height: auto; border-radius: 4px;">
+            </a>
+        </div>
+        {% endif %}
+        
+        <div class="sidebar-box tags-box">
+            <span class="box-label">Argomenti</span>
+            <div class="tag-cloud-sidebar">
+                {% for tag in page.tags %}
+                    <span class="sidebar-tag">{{ tag }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    </aside>
+</div>

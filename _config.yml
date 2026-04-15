@@ -47,6 +47,9 @@ collections:
   articoli:
     output: true
     permalink: /articoli/:title/
+libri:
+    output: true
+    permalink: /libri/:title/
 
 defaults:
   - scope:

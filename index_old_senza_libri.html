@@ -37,37 +37,46 @@ title: Home
             >
         </section>
 
-        {% assign oggi_str = site.time | date: '%Y-%m-%d' %}
-
-        {% assign tutti_i_contenuti = site.articoli | concat: site.libri | sort: 'date' | reverse %}
-
         <div class="post-grid" id="post-grid">
-            {% for item in tutti_i_contenuti %}
-                {% assign data_item_str = item.date | date: '%Y-%m-%d' %}
-                
-                {% if data_item_str <= oggi_str %}
+
+            <!--
+                FILTRO LIQUID CORRETTO:
+                Normalizzo entrambe le date al formato YYYY-MM-DD
+                e confronto come stringhe. Il confronto lessicografico
+                su ISO date funziona perché il formato è a lunghezza
+                fissa e ordinato anno > mese > giorno.
+
+                - post.date | date: '%Y-%m-%d'  → "2026-04-05"
+                - site.time | date: '%Y-%m-%d'  → "2026-04-05"
+
+                Così un articolo del 05/04 con ora 15:05 è visibile
+                in qualsiasi momento del 05/04, anche se il build
+                è girato alle 00:05 UTC.
+            -->
+            {% assign oggi_str = site.time | date: '%Y-%m-%d' %}
+            {% assign articoli_per_data = site.articoli | sort: 'date' | reverse %}
+            {% for post in articoli_per_data %}
+                {% assign data_post_str = post.date | date: '%Y-%m-%d' %}
+                {% if data_post_str <= oggi_str %}
                 <article
                     class="post-item"
-                    data-tags="{{ item.tags | join: ',' | slugify }}"
-                    data-title="{{ item.title | downcase }}"
-                    data-date="{{ data_item_str }}"
+                    data-tags="{{ post.tags | join: ',' | slugify }}"
+                    data-title="{{ post.title | downcase }}"
+                    data-date="{{ data_post_str }}"
                 >
                     <div class="post-meta">
-                        {% if item.layout == 'libro' %}
-                            LIBRO &nbsp;·&nbsp; {{ item.date | date: "%d/%m/%Y" }}
-                        {% else %}
-                            {{ item.tech | upcase }} &nbsp;·&nbsp; {{ item.date | date: "%d/%m/%Y" }}
-                        {% endif %}
+                        {{ post.tech | upcase }} &nbsp;·&nbsp; {{ post.date | date: "%d/%m/%Y" }}
                     </div>
 
                     <h2 class="post-title">
-                        <a href="{{ item.url | relative_url }}">{{ item.title }}</a>
+                        <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
                     </h2>
 
-                    <p class="post-sintesi">{{ item.sintesi | truncate: 160 }}</p>
+                    <p class="post-sintesi">{{ post.sintesi }}</p>
                 </article>
                 {% endif %}
             {% endfor %}
+
         </div>
 
     </main>

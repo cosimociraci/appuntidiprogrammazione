@@ -76,11 +76,6 @@ def parse_arguments():
         help='Itera su tutti i file .md in output/ e rigenera tutte le immagini. Non scarica nulla.'
     )
     parser.add_argument(
-        '--cta-only',
-        action='store_true',
-        help='Rigenera solo la slide CTA finale (icarocomix) in ogni cartella di output. Non scarica nulla.'
-    )
-    parser.add_argument(
         '--fix-frontmatter',
         action='store_true',
         help='Rigenera il front matter YAML di tutti i file .md in output/. Non scarica nulla, non rigenera immagini.'
@@ -407,13 +402,19 @@ def highlight_keywords(text, keywords, accent_color):
     return text
 
 
-async def create_images(topic, slides, folder_path):
-    """Rendering delle slide 1080x1080 con titolo per-slide e numerazione progressiva.
+# URL del blog: lo includo come costante per evitare ripetizioni e facilitare
+# un eventuale cambio futuro senza dover toccare l'HTML delle slide.
+BLOG_URL = "icarocomix.github.io/appuntidiprogrammazione"
 
-    Ho rimosso il campo 'label' dalla palette perché non è più necessario: ogni slide
-    porta il proprio titolo estratto da Qwen, specifico per il contenuto di quella pillola.
-    Il colore accent e lo sfondo rimangono coerenti per tutta la serie del topic,
-    mentre il titolo varia slide per slide."""
+
+async def create_images(topic, slides, folder_path):
+    """Rendering delle slide 1080x1080 con titolo per-slide, numerazione progressiva
+    e watermark URL del blog in basso a sinistra.
+
+    Ho rimosso la generazione della slide CTA finale (slide_11.png): l'URL del blog
+    è ora presente come watermark discreto in ogni slide, posizionato in basso a sinistra
+    con font-size ridotto e opacità al 40% per non interferire con la lettura del contenuto.
+    Il numero di slide prodotte scende da 11 a 10."""
     log(f"Rendering grafico per topic: {topic} in {folder_path}...")
 
     for f in os.listdir(folder_path):
@@ -483,6 +484,19 @@ async def create_images(topic, slides, folder_path):
                     color: {config['accent']};
                     opacity: 0.6;
                 }}
+                /* Watermark URL: lo posiziono in basso a sinistra, piccolo e semi-trasparente
+                   perché deve essere leggibile per chi cerca la fonte ma invisibile
+                   durante la lettura rapida del contenuto principale. */
+                .blog-url {{
+                    position: absolute;
+                    bottom: 50px;
+                    left: 80px;
+                    font-size: 18px;
+                    font-weight: 500;
+                    color: #333;
+                    opacity: 0.4;
+                    letter-spacing: 0.3px;
+                }}
             </style>
             <body>
                 <div class="container">
@@ -490,33 +504,14 @@ async def create_images(topic, slides, folder_path):
                     <div class="text">{formatted_text}</div>
                 </div>
                 <div class="page-num">{i + 1}/10</div>
+                <div class="blog-url">{BLOG_URL}</div>
             </body>
             </html>"""
 
             await page.set_content(html_content, wait_until="networkidle")
             await page.screenshot(path=os.path.join(folder_path, f"slide_{i + 1}.png"))
 
-        cta_output_path = os.path.join(folder_path, "slide_11.png")
-        await render_cta_slide(page, config['accent'], cta_output_path)
         await browser.close()
-
-
-async def render_cta_slide(page, accent_color, output_path):
-    """Genero la slide CTA icarocomix e la salvo nel path indicato."""
-    cta_html = f"""
-    <html>
-    <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@900&display=swap" rel="stylesheet">
-    </head>
-    <body style="background:{accent_color}; display:flex; align-items:center; justify-content:center;
-                 height:100vh; color:white; font-family:'Poppins',sans-serif; text-align:center;
-                 padding:50px; margin:0; box-sizing:border-box;">
-        <h1 style="font-size:45px; font-weight:900;">icarocomix.github.io/<br>appuntidiprogrammazione</h1>
-    </body>
-    </html>"""
-    await page.set_content(cta_html, wait_until="networkidle")
-    await page.screenshot(path=output_path)
 
 
 # --- FRONT MATTER ---
@@ -636,50 +631,6 @@ async def regenerate_all(output_root):
     log("--- RIGENERAZIONE MASSIVA COMPLETATA ---")
 
 
-async def regenerate_cta_all(output_root):
-    """Itero su tutte le cartelle di output e rigenero solo l'ultima slide (CTA icarocomix)."""
-    log("--- MODALITÀ CTA-ONLY: rigenero solo la slide finale in ogni cartella ---")
-    async with async_playwright() as p:
-        browser = await p.chromium.launch()
-        page = await browser.new_page(viewport={'width': 1080, 'height': 1080})
-
-        for folder_name in sorted(os.listdir(output_root)):
-            folder_path = os.path.join(output_root, folder_name)
-            if not os.path.isdir(folder_path):
-                continue
-
-            png_files = [
-                f for f in os.listdir(folder_path)
-                if re.match(r'^slide_\d+\.png$', f)
-            ]
-            if not png_files:
-                log(f"Nessuna slide trovata in {folder_name}, salto.")
-                continue
-
-            last_slide = max(png_files, key=lambda f: int(re.search(r'\d+', f).group()))
-            last_slide_path = os.path.join(folder_path, last_slide)
-
-            md_files = [f for f in os.listdir(folder_path) if f.endswith(".md")]
-            accent_color = TECH_PALETTE["default"]["accent"]
-            if md_files:
-                try:
-                    with open(os.path.join(folder_path, md_files[0]), "r", encoding="utf-8") as f:
-                        md_content = f.read()
-                    topic_key = next((k for k in TECH_PALETTE if k in md_content.lower()), "default")
-                    accent_color = TECH_PALETTE[topic_key]["accent"]
-                except Exception as e:
-                    log(f"Impossibile leggere il topic da {folder_name}, uso default: {e}")
-
-            try:
-                await render_cta_slide(page, accent_color, last_slide_path)
-                log(f"CTA rigenerata: {last_slide_path}")
-            except Exception as e:
-                log(f"Errore CTA su {folder_name}: {e}")
-
-        await browser.close()
-    log("--- CTA-ONLY COMPLETATA ---")
-
-
 def fix_frontmatter_all(output_root):
     """Itero su tutte le cartelle di output e rigenero il frontmatter di ogni .md trovato."""
     log("--- MODALITÀ FIX-FRONTMATTER: rigenero le intestazioni di tutti i file .md ---")
@@ -744,15 +695,11 @@ async def main():
     args = parse_arguments()
     session_date = resolve_session_date(args.date)
 
-    log(f"--- START SESSION: {session_date} (Regenerate: {args.regenerate}, CTA-only: {args.cta_only}, Fix-frontmatter: {args.fix_frontmatter}) ---")
+    log(f"--- START SESSION: {session_date} (Regenerate: {args.regenerate}, Fix-frontmatter: {args.fix_frontmatter}) ---")
 
     output_root = "output"
     if not os.path.exists(output_root):
         os.makedirs(output_root)
-
-    if args.cta_only:
-        await regenerate_cta_all(output_root)
-        return
 
     if args.regenerate:
         await regenerate_all(output_root)
