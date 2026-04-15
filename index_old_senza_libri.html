@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home — DevLog</title>
+    <meta name="description" content="Hub tecnico per appunti di programmazione, analisi di problemi reali  e soluzioni implementative in ambito Spring Boot, Java e Web Dev.">
+    <link rel="stylesheet" href="/appuntidiprogrammazione/assets/css/style.css">
+
+    <script>
+        /*
+         * Applico il tema PRIMA del rendering per evitare il flash di contenuto
+         * (FOUC). Lo script è inline e bloccante di proposito: deve girare
+         * prima che il browser disegni qualsiasi elemento.
+         */
+        (function() {
+            var saved = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', saved);
+        })();
+    </script>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="logo" onclick="window.location.href='/appuntidiprogrammazione/'">
+            APPUNTI DI <span>PROGRAMMAZIONE</span>
+        </div>
+
+        <!-- 
+            Il pulsante aggiorna l'attributo data-theme sull'<html> e
+            persiste la scelta nel localStorage per le sessioni future.
+        -->
+        <button onclick="toggleTheme()" class="theme-toggle" aria-label="Cambia tema">🌓</button>
+    </header>
+
+    <!--
+    LOGICA DI PUBBLICAZIONE A DATA — versione corretta.
+
+    Il problema del confronto post.date <= site.time:
+    Jekyll tratta le date del frontmatter come UTC. Un articolo
+    datato "2026-04-05 15:05:50" con future: false viene escluso
+    dal build se site.time è "2026-04-05 00:05:00 UTC" (build
+    notturno), perché 15:05 > 00:05.
+
+    SOLUZIONE: normalizzo entrambe le date al giorno (YYYY-MM-DD)
+    e confronto solo stringhe. In questo modo un articolo del 05/04
+    è visibile in qualunque momento del 05/04, indipendentemente
+    dall'ora scritta nel frontmatter.
+
+    Struttura a due livelli:
+    1. Liquid: include nel build solo articoli con data-giorno <= oggi
+    2. JS (safety net): nasconde lato client eventuali articoli futuri
+       in caso di cache stale — usa lo stesso confronto su data-date.
+-->
+<div class="main-layout-container">
+
+    <main class="content-area">
+
+        <section class="search-section">
+            <input
+                type="search"
+                id="search-bar"
+                placeholder="Cerca negli appunti…"
+                aria-label="Cerca articoli"
+                autocomplete="off"
+                oninput="applyFilters()"
+            >
+        </section>
+
+        <div class="post-grid" id="post-grid">
+
+            <!--
+                FILTRO LIQUID CORRETTO:
+                Normalizzo entrambe le date al formato YYYY-MM-DD
+                e confronto come stringhe. Il confronto lessicografico
+                su ISO date funziona perché il formato è a lunghezza
+                fissa e ordinato anno > mese > giorno.
+
+                - post.date | date: '%Y-%m-%d'  → "2026-04-05"
+                - site.time | date: '%Y-%m-%d'  → "2026-04-05"
+
+                Così un articolo del 05/04 con ora 15:05 è visibile
+                in qualsiasi momento del 05/04, anche se il build
+                è girato alle 00:05 UTC.
+            -->
+            
+            
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+            
+                
+                
+                <article
+                    class="post-item"
+                    data-tags="thymeleaf-security-spel-expressions"
+                    data-title="security dialect: sec:authorize"
+                    data-date="2026-04-15"
+                >
+                    <div class="post-meta">
+                        JAVA &nbsp;·&nbsp; 15/04/2026
+                    </div>
+
+                    <h2 class="post-title">
+                        <a href="/appuntidiprogrammazione/articoli/security-dialect-secauthorize/">Security Dialect: sec:authorize</a>
+                    </h2>
+
+                    <p class="post-sintesi">Nascondere elementi via CSS (display:none) non è sicurezza: l'HTML è visibile nel sorgente. L'attributo sec:authorize="hasRole(...)" impedisce fisicamente al server di generare e inviare il markup al browser se l'utente non ha i permessi. Questo ridu
+</p>
+                </article>
+                
+            
+                
+                
+                <article
+                    class="post-item"
+                    data-tags="thymeleaf-security-spel-expressions"
+                    data-title="csrf token injection in ajax"
+                    data-date="2026-04-13"
+                >
+                    <div class="post-meta">
+                        JAVA &nbsp;·&nbsp; 13/04/2026
+                    </div>
+
+                    <h2 class="post-title">
+                        <a href="/appuntidiprogrammazione/articoli/csrf-token-injection-in-ajax/">CSRF Token Injection in AJAX</a>
+                    </h2>
+
+                    <p class="post-sintesi">I form standard di Thymeleaf gestiscono i token CSRF automaticamente, ma le chiamate AJAX/VanillaJS no. Le espressioni ${_csrf.parameterName} e ${_csrf.token} permettono di iniettare i valori nei tag meta. Questo permette agli script lato client di l
+</p>
+                </article>
+                
+            
+                
+                
+                <article
+                    class="post-item"
+                    data-tags="java-jdk-openjdk-glassfish-micronaut"
+                    data-title="java news roundup: marzo 2026 - la mia esperienza con gli ultimi aggiornamenti della comunità java"
+                    data-date="2026-04-10"
+                >
+                    <div class="post-meta">
+                        JAVA &nbsp;·&nbsp; 10/04/2026
+                    </div>
+
+                    <h2 class="post-title">
+                        <a href="/appuntidiprogrammazione/articoli/java-news-roundup-jdk-26-libericajdk-payara-pla/">Java News Roundup: Marzo 2026 - La mia esperienza con gli ultimi aggiornamenti della comunità Java</a>
+                    </h2>
+
+                    <p class="post-sintesi">L'articolo riporta sui recenti aggiornamenti di Java, inclusi JDK 26, LibericaJDK, GlassFish 9.0, Micronaut e ClawRunr.
+</p>
+                </article>
+                
+            
+                
+                
+                <article
+                    class="post-item"
+                    data-tags="sicurezza-backup-intelligenza-artificiale-zerotrust-riscaldamento-globale"
+                    data-title="come affrontare gli attacchi basati sull'intelligenza artificiale: i miei pensieri da senior developer"
+                    data-date="2026-04-10"
+                >
+                    <div class="post-meta">
+                        IA &nbsp;·&nbsp; 10/04/2026
+                    </div>
+
+                    <h2 class="post-title">
+                        <a href="/appuntidiprogrammazione/articoli/come-i-responsabili-it-e-sicurezza-affrontano-gli/">Come affrontare gli attacchi basati sull'intelligenza artificiale: i miei pensieri da senior developer</a>
+                    </h2>
+
+                    <p class="post-sintesi">Il seniore developer esplora le preoccupazioni e le misure di difesa contro gli attacchi informatici basati sull'IA, evidenziando la necessità di un backup immutabile e l'adozione del Zero Trust.
+</p>
+                </article>
+                
+            
+                
+                
+                <article
+                    class="post-item"
+                    data-tags="dispositivi-connessi-sicurezza-applicazioni-mobile-programmazione"
+                    data-title="stato e futuro dei dispositivi connessi"
+                    data-date="2026-04-10"
+                >
+                    <div class="post-meta">
+                        DEFAULT &nbsp;·&nbsp; 10/04/2026
+                    </div>
+
+                    <h2 class="post-title">
+                        <a href="/appuntidiprogrammazione/articoli/altra-ferraglia-stand-alone/">Stato e futuro dei dispositivi connessi</a>
+                    </h2>
+
+                    <p class="post-sintesi">L'articolo analizza le tendenze del mondo dei dispositivi connessi, enfatizzando la crescente preoccupazione per la sicurezza, l'innovazione nelle applicazioni mobili e l'estensiva programmazione a 360 gradi.
+</p>
+                </article>
+                
+            
+                
+                
+                <article
+                    class="post-item"
+                    data-tags="ai-ml-data-engineering-postgresql-security"
+                    data-title="scoperte ed esperienze in ai, ml & data engineering nel 2026"
+                    data-date="2026-04-10"
+                >
+                    <div class="post-meta">
+                        POSTGRESQL &nbsp;·&nbsp; 10/04/2026
+                    </div>
+
+                    <h2 class="post-title">
+                        <a href="/appuntidiprogrammazione/articoli/all-in-ai-ml-data-eng/">Scoperte ed esperienze in AI, ML & Data Engineering nel 2026</a>
+                    </h2>
+
+                    <p class="post-sintesi">Il report descrive alcune delle scoperte e esperienze dell'autore nel campo dell'AI, ML e Data Engineering, includendo aggiornamenti su PostgreSQL, tecnologie di sicurezza per bot, ambienti di sviluppo per agenti multi-agenti, utilizzo di codici open source e confronto dei linguaggi dinamici.
+</p>
+                </article>
+                
+            
+                
+                
+                <article
+                    class="post-item"
+                    data-tags="api-scalabilità-performance-chatbot-websocket"
+                    data-title="transport layer matters per agenti intelligenti: il perché e come"
+                    data-date="2026-04-09"
+                >
+                    <div class="post-meta">
+                        IA &nbsp;·&nbsp; 09/04/2026
+                    </div>
+
+                    <h2 class="post-title">
+                        <a href="/appuntidiprogrammazione/articoli/stateful-continuation-for-ai-agents-why-transport/">Transport Layer Matters per Agenti Intelligenti: Il Perché e Come</a>
+                    </h2>
+
+                    <p class="post-sintesi">L'articolo esplora l'importanza del livello di trasporto per gli agenti intelligenti, spiegando come i concetti come WebSocket di OpenAI migliorino la performance e la scalabilità. Viene presentato un esempio pratico del problema di reinvio della storia della conversazione ed evidenziati i vantaggi e disvantaggi dell'approccio.
+</p>
+                </article>
+                
+            
+                
+                
+                <article
+                    class="post-item"
+                    data-tags="qcon-san-francisco-intelligenza-artificiale-software-development-future-of-tech"
+                    data-title="il futuro del software e dell'intelligenza artificiale: insight dal qcon san francisco 2026"
+                    data-date="2026-04-09"
+                >
+                    <div class="post-meta">
+                        IA &nbsp;·&nbsp; 09/04/2026
+                    </div>
+
+                    <h2 class="post-title">
+                        <a href="/appuntidiprogrammazione/articoli/qcon-san-francisco-learn-whats-next-in-ai-and-sof/">Il Futuro del Software e dell'Intelligenza Artificiale: Insight dal QCon San Francisco 2026</a>
+                    </h2>
+
+                    <p class="post-sintesi">Il QCon San Francisco 2026 affronta la rapida evoluzione della tecnologia, specialmente nell'IA e nel software. L'evento si terrà a San Francisco nel novembre prossimo e coprirà argomenti chiave come l'architettura dei software e le tecniche di gestione dell'affidabilità.
+</p>
+                </article>
+                
+            
+                
+                
+                <article
+                    class="post-item"
+                    data-tags="qcon-ai-latenza-sicurezza-ingegneria-software"
+                    data-title="il qcon ai boston 2026: un approfondimento sui sistemi ai produttivi"
+                    data-date="2026-04-09"
+                >
+                    <div class="post-meta">
+                        IA &nbsp;·&nbsp; 09/04/2026
+                    </div>
+
+                    <h2 class="post-title">
+                        <a href="/appuntidiprogrammazione/articoli/qcon-ai-boston-learn-how-leading-engineering-teams/">Il QCon AI Boston 2026: un approfondimento sui sistemi AI produttivi</a>
+                    </h2>
+
+                    <p class="post-sintesi">La conferenza QCon AI Boston si terrà a Boston nel giugno prossimo e si concentrerà sulla costruzione di sistemi AI robusti, affrontando temi come la latenza di inferimento e la sicurezza.
+</p>
+                </article>
+                
+            
+                
+                
+                <article
+                    class="post-item"
+                    data-tags="intelligenza-artificiale-normative-ai-act-cybersecurity-governance"
+                    data-title="governo dell'intelligenza artificiale nelle imprese: le normative italiane e europee"
+                    data-date="2026-04-09"
+                >
+                    <div class="post-meta">
+                        IA &nbsp;·&nbsp; 09/04/2026
+                    </div>
+
+                    <h2 class="post-title">
+                        <a href="/appuntidiprogrammazione/articoli/normative-italiane-ed-europee-2026-per-gli-agenti/">Governo dell'Intelligenza Artificiale nelle Imprese: Le Normative Italiane e Europee</a>
+                    </h2>
+
+                    <p class="post-sintesi">L'adozione di AI e agenti AI in Italia è aumentata in modo significativo, con l'aiuto di normative nazionali ed europee come il Regolamento (UE) 2024/1689 e la Legge 23 settembre 2025.
+</p>
+                </article>
+                
+            
+                
+                
+                <article
+                    class="post-item"
+                    data-tags="tornadovm-google-adk-java-framework"
+                    data-title="sfida di un senior developer: la settimana tecnica in java (aprile 2026)"
+                    data-date="2026-04-09"
+                >
+                    <div class="post-meta">
+                        JAVA &nbsp;·&nbsp; 09/04/2026
+                    </div>
+
+                    <h2 class="post-title">
+                        <a href="/appuntidiprogrammazione/articoli/java-news-roundup-tornadovm-40-google-adk-for-j/">Sfida di un Senior Developer: La settimana tecnica in Java (aprile 2026)</a>
+                    </h2>
+
+                    <p class="post-sintesi">L'articolo descrive gli aggiornamenti più significativi del mondo Java della settimana, includendo la versione 4.0 di TornadoVM e Google ADK for Java 1.0.
+</p>
+                </article>
+                
+            
+                
+                
+                <article
+                    class="post-item"
+                    data-tags="jdk-payara-hibernate-quarkus-apache-camel-jakarta-ee"
+                    data-title="java news roundup: febbraio 2026"
+                    data-date="2026-04-09"
+                >
+                    <div class="post-meta">
+                        JAVA &nbsp;·&nbsp; 09/04/2026
+                    </div>
+
+                    <h2 class="post-title">
+                        <a href="/appuntidiprogrammazione/articoli/java-news-roundup-jdk26-rc2-payara-platform-hib/">Java News Roundup: Febbraio 2026</a>
+                    </h2>
+
+                    <p class="post-sintesi">Riassunto delle principali notizie riguardanti JDK 26, Payara Platform, Hibernate, Quarkus, Apache Camel e Jakarta EE 12.
+</p>
+                </article>
+                
+            
+                
+                
+                <article
+                    class="post-item"
+                    data-tags="helidon-openjdk-java-verified-portfolio"
+                    data-title="helidon 4.4.0: allineamento con openjdk cadence e supporto attraverso java verified portfolio"
+                    data-date="2026-04-09"
+                >
+                    <div class="post-meta">
+                        JAVA &nbsp;·&nbsp; 09/04/2026
+                    </div>
+
+                    <h2 class="post-title">
+                        <a href="/appuntidiprogrammazione/articoli/helidon-440-introduces-alignment-with-openjdk-ca/">Helidon 4.4.0: Allineamento con OpenJDK Cadence e Supporto attraverso Java Verified Portfolio</a>
+                    </h2>
+
+                    <p class="post-sintesi">Oracle ha rilasciato Helidon 4.4.0 che adotta la cadenza di rilascio di OpenJDK, viene incluso nel Java Verified Portfolio e presenta nuove funzionalità come Helidon Declarative e JSON.
+</p>
+                </article>
+                
+            
+                
+                
+                <article
+                    class="post-item"
+                    data-tags="productività-sviluppatore-ai-assistente"
+                    data-title="massimizzando la productività del sviluppatore con l'ai"
+                    data-date="2026-04-09"
+                >
+                    <div class="post-meta">
+                        IA &nbsp;·&nbsp; 09/04/2026
+                    </div>
+
+                    <h2 class="post-title">
+                        <a href="/appuntidiprogrammazione/articoli/choosing-your-ai-copilot-maximizing-developer-pro/">Massimizzando la Productività del Sviluppatore con l'AI</a>
+                    </h2>
+
+                    <p class="post-sintesi">Esplora le ultime tendenze nell'aiuto all'AI al codice, aprendo il cammino a strumenti di lavoro intelligenti e autonomi.
+</p>
+                </article>
+                
+            
+                
+                
+                <article
+                    class="post-item"
+                    data-tags="ai-ml-intelligenza-artificiale-machine-learning"
+                    data-title="nuovi sviluppi in ai, ml e ingegneria delle informazioni"
+                    data-date="2026-04-09"
+                >
+                    <div class="post-meta">
+                        IA &nbsp;·&nbsp; 09/04/2026
+                    </div>
+
+                    <h2 class="post-title">
+                        <a href="/appuntidiprogrammazione/articoli/ai-infrastructure/">Nuovi sviluppi in AI, ML e Ingegneria delle Informazioni</a>
+                    </h2>
+
+                    <p class="post-sintesi">Il campo di AI, ML e IA continua a evolversi con nuove scoperte e sviluppi. Viene presentato il Summit della AAIF, Google Colab, Scion, Claude Code, TigerFS e altre innovative tecnologie.
+</p>
+                </article>
+                
+            
+                
+                
+                <article
+                    class="post-item"
+                    data-tags="arxivardocument-workflowplatform-chatbots-documentmanagement-genai"
+                    data-title="arxivar document & workflow platform 2.13: innovazioni tecnologiche per la gestione dei processi aziendali"
+                    data-date="2026-04-09"
+                >
+                    <div class="post-meta">
+                        IA &nbsp;·&nbsp; 09/04/2026
+                    </div>
+
+                    <h2 class="post-title">
+                        <a href="/appuntidiprogrammazione/articoli/able-tech-integra-la-generative-ai-nella-suite-arx/">ARXivar Document & Workflow Platform 2.13: Innovazioni Tecnologiche per la Gestione dei Processi Aziendali</a>
+                    </h2>
+
+                    <p class="post-sintesi">Able Tech ha rilasciato ARXivar Document & Workflow Platform 2.13, una versione avanzata con nuovi moduli basati su Gen AI come il Chatbot Semantico e il Chatbot Documentale, migliorando la gestione dei documenti e dei processi aziendali.
+</p>
+                </article>
+                
+            
+                
+                
+                <article
+                    class="post-item"
+                    data-tags="thymeleaf-security-spel-expressions"
+                    data-title="escaping avanzato: th:text vs th:utext"
+                    data-date="2026-04-08"
+                >
+                    <div class="post-meta">
+                        JAVA &nbsp;·&nbsp; 08/04/2026
+                    </div>
+
+                    <h2 class="post-title">
+                        <a href="/appuntidiprogrammazione/articoli/escaping-avanzato-thtext-vs-thutext/">Escaping Avanzato: th:text vs th:utext</a>
+                    </h2>
+
+                    <p class="post-sintesi">L'uso di th:utext (unescaped) per renderizzare contenuti HTML salvati nel DB è la causa principale di XSS. Prima di passare una stringa HTML alla view, questa deve essere processata nel Service layer con un parser come OWASP Java HTML Sanitizer per r
+</p>
+                </article>
+                
+            
+                
+                
+                <article
+                    class="post-item"
+                    data-tags="thymeleaf-security-spel-expressions"
+                    data-title="ssti (server-side template injection) prevention"
+                    data-date="2026-04-06"
+                >
+                    <div class="post-meta">
+                        JAVA &nbsp;·&nbsp; 06/04/2026
+                    </div>
+
+                    <h2 class="post-title">
+                        <a href="/appuntidiprogrammazione/articoli/ssti-server-side-template-injection-prevention/">SSTI (Server-Side Template Injection) Prevention</a>
+                    </h2>
+
+                    <p class="post-sintesi">Una vulnerabilità storica di Thymeleaf permette l'esecuzione di codice se il nome della vista è costruito con input utente. Concatenare parametri della request nel percorso della view (return "user/" + lang + "/index") è pericoloso. È necessario usar
+</p>
+                </article>
+                
+            
+                
+                
+                <article
+                    class="post-item"
+                    data-tags="thymeleaf-security-spel-expressions"
+                    data-title="restrizione type reference in spel"
+                    data-date="2026-04-01"
+                >
+                    <div class="post-meta">
+                        JAVA &nbsp;·&nbsp; 01/04/2026
+                    </div>
+
+                    <h2 class="post-title">
+                        <a href="/appuntidiprogrammazione/articoli/restrizione-type-reference-in-spel/">Restrizione Type Reference in SpEL</a>
+                    </h2>
+
+                    <p class="post-sintesi">SpEL permette di accedere a classi Java statiche via T(java.lang.Runtime). In ambienti CMS dove gli utenti possono modificare parzialmente i template, è fondamentale configurare lo StandardEvaluationContext per limitare i pacchetti accessibili, disab
+</p>
+                </article>
+                
+            
+
+        </div>
+
+    </main>
+
+    <aside class="main-sidebar">
+
+        <div class="sidebar-box">
+            <span class="box-label">Ultimi Argomenti</span>
+            <nav class="tag-nav-vertical" id="dynamic-tags" aria-label="Filtra per argomento">
+                <button
+                    class="tag-btn active"
+                    onclick="filterByTag('tutti', this)"
+                    aria-pressed="true"
+                >
+                    TUTTI
+                </button>
+            </nav>
+        </div>
+
+        <div class="sidebar-box">
+            <span class="box-label">Letture Fondamentali</span>
+            <div class="featured-books">
+                <a class="mini-book-card"
+                   href="https://www.amazon.it/Appunti-Programmazione-Pensieri-soluzioni-Applicazioni-ebook/dp/B0FMFRHKTF/"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   aria-label="Acquista Appunti di Programmazione su Amazon">
+                    <img src="https://m.media-amazon.com/images/I/61Ck5eMzGYL._SY466_.jpg"
+                         alt="Copertina: Appunti di Programmazione"
+                         width="52"
+                         height="78">
+                    <div>
+                        <strong>Appunti di Programmazione</strong>
+                        <p>Pensieri e soluzioni per Applicazioni WEB</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+    </aside>
+
+</div>
+
+<script>
+    /*
+     * SAFETY NET client-side: stesso confronto YYYY-MM-DD del Liquid.
+     * Protegge da cache stale che potrebbero servire un build vecchio.
+     */
+    function getTodayISO() {
+        const now = new Date();
+        const y   = now.getFullYear();
+        const m   = String(now.getMonth() + 1).padStart(2, '0');
+        const d   = String(now.getDate()).padStart(2, '0');
+        return y + '-' + m + '-' + d;
+    }
+
+    (function hideArticoliFuturi() {
+        const oggi     = getTodayISO();
+        const articoli = document.querySelectorAll('.post-item[data-date]');
+        articoli.forEach(function(article) {
+            if (article.getAttribute('data-date') > oggi) {
+                article.hidden = true;
+            }
+        });
+    })();
+
+    let activeTag = 'tutti';
+
+    document.addEventListener('DOMContentLoaded', function() {
+        /* Popolo i tag solo dagli articoli visibili (non futuri) */
+        const articoli  = document.querySelectorAll('.post-item:not([hidden])');
+        const container = document.getElementById('dynamic-tags');
+        const allTags   = new Set();
+
+        articoli.forEach(function(article) {
+            const raw = article.getAttribute('data-tags') || '';
+            raw.split(',').forEach(function(t) {
+                const trimmed = t.trim();
+                if (trimmed) allTags.add(trimmed);
+            });
+        });
+
+        Array.from(allTags).sort().forEach(function(tag) {
+            const btn = document.createElement('button');
+            btn.className   = 'tag-btn';
+            btn.textContent = tag.replace(/-/g, ' ').toUpperCase();
+            btn.setAttribute('aria-pressed', 'false');
+            btn.addEventListener('click', function() { filterByTag(tag, this); });
+            container.appendChild(btn);
+        });
+    });
+
+    function filterByTag(tag, btn) {
+        activeTag = tag.toLowerCase();
+        document.querySelectorAll('.tag-btn').forEach(function(b) {
+            b.classList.remove('active');
+            b.setAttribute('aria-pressed', 'false');
+        });
+        btn.classList.add('active');
+        btn.setAttribute('aria-pressed', 'true');
+        applyFilters();
+    }
+
+    function applyFilters() {
+        const query    = document.getElementById('search-bar').value.toLowerCase().trim();
+        const articoli = document.querySelectorAll('.post-item:not([hidden])');
+        articoli.forEach(function(article) {
+            const title      = article.getAttribute('data-title') || '';
+            const tags       = article.getAttribute('data-tags')  || '';
+            const matchesTag = (activeTag === 'tutti' || tags.split(',').includes(activeTag));
+            const matchesTxt = !query || title.includes(query);
+            article.style.display = (matchesTag && matchesTxt) ? '' : 'none';
+        });
+    }
+</script>
+
+    <footer class="main-footer">
+        DevLog — Appunti di Programmazione &nbsp;·&nbsp; cosimociraci@gmail.com
+    </footer>
+
+    <script>
+        /*
+         * toggleTheme: legge il tema corrente dall'attributo HTML,
+         * calcola l'opposto e lo salva. Il CSS reagisce via [data-theme].
+         * Non uso classi sul body per mantenere tutto centralizzato
+         * sull'elemento radice.
+         */
+        function toggleTheme() {
+            var html = document.documentElement;
+            var current = html.getAttribute('data-theme');
+            var next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+        }
+    </script>
+
+</body>
+</html>
