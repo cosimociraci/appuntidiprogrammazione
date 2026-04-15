@@ -39,17 +39,9 @@ title: Home
 
         {% assign oggi_str = site.time | date: '%Y-%m-%d' %}
 
-        {% comment %}
-            Inizializziamo le liste partendo direttamente dalle collection.
-            Il filtro 'sort' garantisce che l'oggetto sia trattato come array.
-        {% endcomment %}
         {% assign articoli = site.articoli | sort: 'date' %}
         {% assign libri = site.libri | sort: 'date' %}
 
-        {% comment %}
-            Se la collection 'libri' non esiste, site.libri è nil. 
-            Dobbiamo assicurarci di concatenare solo se libri non è vuoto.
-        {% endcomment %}
         {% if site.libri %}
             {% assign tutti_i_contenuti = articoli | concat: libri | sort: 'date' | reverse %}
         {% else %}
@@ -58,6 +50,10 @@ title: Home
 
         <div class="post-grid" id="post-grid">
             {% for item in tutti_i_contenuti %}
+                {% comment %} 
+                   Forziamo la formattazione della data dell'item per il confronto stringa.
+                   Se item.date non è presente, Jekyll userà la data del file.
+                {% endcomment %}
                 {% assign data_item_str = item.date | date: '%Y-%m-%d' %}
                 
                 {% if data_item_str <= oggi_str %}
@@ -69,7 +65,7 @@ title: Home
                 >
                     <div class="post-meta">
                         {% if item.layout == 'libro' %}
-                            📚 LIBRO &nbsp;·&nbsp; {{ item.date | date: "%d/%m/%Y" }}
+                            📚 LETTURA CONSIGLIATA: &nbsp;·&nbsp; {{ item.date | date: "%d/%m/%Y" }}
                         {% else %}
                             {{ item.tech | upcase }} &nbsp;·&nbsp; {{ item.date | date: "%d/%m/%Y" }}
                         {% endif %}
