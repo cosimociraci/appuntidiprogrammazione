@@ -53,18 +53,6 @@ TECH_PALETTE = {
     }
 }
 
-# Palette dedicata alle slide "consigli di lettura": toni caldi carta/inchiostro
-# per evocare il mondo dei libri senza usare i colori tech della palette principale.
-BOOK_PALETTE = {
-    "accent":     "#B5541B",   # terracotta bruciata: visibile ma non aggressivo
-    "bg":         "#FDF6EC",   # carta invecchiata
-    "text_dark":  "#1A1208",   # quasi-nero caldo
-    "text_muted": "#6B4F35",   # marrone medio per le voci secondarie
-}
-
-# URL del blog: costante condivisa tra le slide tech e le slide libro.
-BLOG_URL = "icarocomix.github.io/appuntidiprogrammazione"
-
 
 def log(message):
     """Stampo un log con timestamp dettagliato per monitorare i tempi di esecuzione."""
@@ -91,11 +79,6 @@ def parse_arguments():
         '--fix-frontmatter',
         action='store_true',
         help='Rigenera il front matter YAML di tutti i file .md in output/. Non scarica nulla, non rigenera immagini.'
-    )
-    parser.add_argument(
-        '--libri',
-        action='store_true',
-        help='Genera le slide "consigli di lettura" per ogni file .md in _libri/. Non scarica nulla.'
     )
     return parser.parse_args()
 
@@ -408,7 +391,7 @@ Formato atteso:
     return []
 
 
-# --- ENGINE GRAFICO (SLIDE TECH) ---
+# --- ENGINE GRAFICO ---
 
 def highlight_keywords(text, keywords, accent_color):
     """Sostituisco ogni parola chiave del topic con la sua versione in grassetto colorato."""
@@ -419,9 +402,19 @@ def highlight_keywords(text, keywords, accent_color):
     return text
 
 
+# URL del blog: lo includo come costante per evitare ripetizioni e facilitare
+# un eventuale cambio futuro senza dover toccare l'HTML delle slide.
+BLOG_URL = "icarocomix.github.io/appuntidiprogrammazione"
+
+
 async def create_images(topic, slides, folder_path):
     """Rendering delle slide 1080x1080 con titolo per-slide, numerazione progressiva
-    e watermark URL del blog in basso a sinistra."""
+    e watermark URL del blog in basso a sinistra.
+
+    Ho rimosso la generazione della slide CTA finale (slide_11.png): l'URL del blog
+    è ora presente come watermark discreto in ogni slide, posizionato in basso a sinistra
+    con font-size ridotto e opacità al 40% per non interferire con la lettura del contenuto.
+    Il numero di slide prodotte scende da 11 a 10."""
     log(f"Rendering grafico per topic: {topic} in {folder_path}...")
 
     for f in os.listdir(folder_path):
@@ -435,8 +428,11 @@ async def create_images(topic, slides, folder_path):
         page = await browser.new_page(viewport={'width': 1080, 'height': 1080})
 
         for i, slide in enumerate(slides[:10]):
+            # Uso il titolo specifico della slide invece dell'etichetta generica del topic.
+            # Ogni slide è ora autonoma e descrittiva anche fuori contesto.
             slide_title = slide.get("title", f"Slide {i + 1}")
             slide_text  = slide.get("text", "")
+
             formatted_text = highlight_keywords(slide_text, config['highlights'], config['accent'])
 
             html_content = f"""
@@ -488,6 +484,9 @@ async def create_images(topic, slides, folder_path):
                     color: {config['accent']};
                     opacity: 0.6;
                 }}
+                /* Watermark URL: lo posiziono in basso a sinistra, piccolo e semi-trasparente
+                   perché deve essere leggibile per chi cerca la fonte ma invisibile
+                   durante la lettura rapida del contenuto principale. */
                 .blog-url {{
                     position: absolute;
                     bottom: 50px;
@@ -513,376 +512,6 @@ async def create_images(topic, slides, folder_path):
             await page.screenshot(path=os.path.join(folder_path, f"slide_{i + 1}.png"))
 
         await browser.close()
-
-
-# --- ENGINE GRAFICO (SLIDE LIBRI) ---
-
-def extract_book_title(content):
-    """Estraggo il campo 'title:' dal front matter YAML del file .md del libro.
-
-    Cerco la riga 'title: ...' dentro il blocco delimitato da '---'.
-    Se il campo non è presente restituisco una stringa vuota: il chiamante
-    gestirà il fallback con il nome del file."""
-    fm_match = re.match(r'^---\n(.*?)\n---', content, re.DOTALL)
-    if not fm_match:
-        return ""
-    for line in fm_match.group(1).splitlines():
-        m = re.match(r'^title:\s*["\']?(.*?)["\']?\s*$', line.strip())
-        if m:
-            return m.group(1).strip()
-    return ""
-
-def extract_book_autore(content):
-    """Estraggo il campo 'autore:' dal front matter YAML del file .md del libro.
-
-    Cerco la riga 'autore: ...' dentro il blocco delimitato da '---'.
-    Se il campo non è presente restituisco una stringa vuota: il chiamante
-    gestirà il fallback con il nome del file."""
-    fm_match = re.match(r'^---\n(.*?)\n---', content, re.DOTALL)
-    if not fm_match:
-        return ""
-    for line in fm_match.group(1).splitlines():
-        m = re.match(r'^autore:\s*["\']?(.*?)["\']?\s*$', line.strip())
-        if m:
-            return m.group(1).strip()
-    return ""
-
-
-def extract_chapter_titles(content):
-    """Estraggo tutti i titoli preceduti da '#### ' (4 cancelletti) dal corpo del file .md.
-
-    Salto il blocco front matter iniziale per evitare di catturare eventuale
-    formattazione YAML, poi raccolgo ogni riga che inizia esattamente con '#### '.
-    Restituisco una lista di stringhe già pulite dal prefisso Markdown."""
-    # Rimuovo il front matter prima di cercare i titoli nel corpo
-    body = re.sub(r'^---\n.*?\n---\n', '', content, count=1, flags=re.DOTALL)
-    titles = []
-    for line in body.splitlines():
-        # Cerco esattamente 4 cancelletti seguiti da almeno uno spazio.
-        # Uso la regex per essere robusto rispetto a spazi multipli dopo i cancelletti.
-        m = re.match(r'^#{4}\s+(.+)$', line.strip())
-        if m:
-            titles.append(m.group(1).strip())
-    return titles
-
-
-def chunk_titles(titles, max_slides=9):
-    """Distribuisco N titoli in al massimo max_slides gruppi omogenei.
-
-    Ho scelto max_slides=9 perché la slide 1 è riservata alla copertina,
-    e il totale non deve superare 10. Con divmod distribuisco i titoli in eccesso
-    sui primi gruppi invece di creare un ultimo gruppo sproporzionato."""
-    n = len(titles)
-    if n == 0:
-        return []
-    num_slides = min(max_slides, n)
-    base_size, remainder = divmod(n, num_slides)
-    chunks = []
-    start = 0
-    for i in range(num_slides):
-        # I primi 'remainder' gruppi ricevono un titolo in più
-        end = start + base_size + (1 if i < remainder else 0)
-        chunks.append(titles[start:end])
-        start = end
-    return chunks
-
-
-async def render_book_cover(page, book_title, book_autore, output_path):
-    """Renderizzo la slide di copertina con la scritta 'Consigli di lettura' e il titolo del libro.
-
-    Ho scelto un layout centrato con cornice decorativa e font serif (Playfair Display)
-    per evocare la copertina di un libro piuttosto che una slide informativa tech."""
-    p = BOOK_PALETTE
-    html = f"""
-    <html>
-    <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
-    </head>
-    <style>
-        * {{ box-sizing: border-box; margin: 0; padding: 0; }}
-        body {{
-            background: {p['bg']};
-            width: 1080px;
-            height: 1080px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            padding: 100px;
-        }}
-        /* Cornice decorativa interna: richiama la grafica dei libri d'epoca */
-        .frame {{
-            position: absolute;
-            inset: 40px;
-            border: 3px solid {p['accent']};
-            opacity: 0.25;
-        }}
-        .eyebrow {{
-            font-family: 'Poppins', sans-serif;
-            font-size: 20px;
-            font-weight: 500;
-            letter-spacing: 5px;
-            text-transform: uppercase;
-            color: {p['accent']};
-            margin-bottom: 36px;
-        }}
-        /* Linea ornamentale tra eyebrow e titolo: richiamo tipografico classico */
-        .divider {{
-            width: 80px;
-            height: 3px;
-            background: {p['accent']};
-            margin: 0 auto 48px;
-        }}
-        .book-title {{
-            font-family: 'Playfair Display', serif;
-            font-size: 64px;
-            font-weight: 900;
-            color: {p['text_dark']};
-            text-align: center;
-            line-height: 1.2;
-            max-width: 800px;
-        }}
-        .book-autore {{
-            font-family: 'Playfair Display', serif;
-            font-size: 30px;
-            font-weight: 900;
-            color: {p['text_dark']};
-            text-align: center;
-            line-height: 1.2;
-            max-width: 800px;
-        }}
-        .blog-url {{
-            position: absolute;
-            bottom: 50px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-family: 'Poppins', sans-serif;
-            font-size: 18px;
-            font-weight: 400;
-            color: {p['text_muted']};
-            opacity: 0.5;
-            letter-spacing: 0.3px;
-            white-space: nowrap;
-        }}
-    </style>
-    <body>
-        <div class="frame"></div>
-        <div class="eyebrow">Consigli di lettura</div>
-        <div class="divider"></div>
-        <div class="book-title">{book_title}</div>
-        <div class="book-autore">{book_autore}</div>
-        <div class="blog-url">{BLOG_URL}</div>
-    </body>
-    </html>"""
-    await page.set_content(html, wait_until="networkidle")
-    await page.screenshot(path=output_path)
-
-
-async def render_book_content_slide(page, slide_num, total_slides, titles_chunk, output_path):
-    """Renderizzo una slide di contenuto con la lista dei titoli del chunk corrente.
-
-    Il font size si adatta dinamicamente al numero di voci nel chunk: più titoli
-    ci sono, più il testo si restringe per mantenere tutto leggibile nel riquadro.
-    Il range 34-54px copre da 1 a 5 titoli per slide."""
-    p = BOOK_PALETTE
-
-    # Costruisco gli item HTML per ogni titolo nel chunk.
-    # Uso un quadratino (&#9632;) come bullet per coerenza grafica cross-browser:
-    # i list-style CSS non sono sempre affidabili nel rendering Playwright headless.
-    items_html = ""
-    for title in titles_chunk:
-        items_html += f"""
-        <div class="item">
-            <span class="bullet">&#9632;</span>
-            <span class="item-text">{title}</span>
-        </div>"""
-
-    item_count = len(titles_chunk)
-    font_size  = max(34, 54 - (item_count * 4))
-
-    html = f"""
-    <html>
-    <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
-    </head>
-    <style>
-        * {{ box-sizing: border-box; margin: 0; padding: 0; }}
-        body {{
-            background: {p['bg']};
-            font-family: 'Poppins', sans-serif;
-            width: 1080px;
-            height: 1080px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            position: relative;
-            padding: 100px 110px;
-        }}
-        /* Barra verticale sinistra: coerente con il layout tech ma con colore libro */
-        .sidebar {{
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 18px;
-            background: {p['accent']};
-        }}
-        .items-container {{
-            display: flex;
-            flex-direction: column;
-            gap: 32px;
-        }}
-        .item {{
-            display: flex;
-            align-items: flex-start;
-            gap: 24px;
-        }}
-        .bullet {{
-            color: {p['accent']};
-            font-size: {int(font_size * 0.45)}px;
-            line-height: {int(font_size * 1.3)}px;
-            flex-shrink: 0;
-            margin-top: 4px;
-        }}
-        .item-text {{
-            font-family: 'Playfair Display', serif;
-            font-size: {font_size}px;
-            font-weight: 700;
-            color: {p['text_dark']};
-            line-height: 1.25;
-        }}
-        .page-num {{
-            position: absolute;
-            bottom: 50px;
-            right: 80px;
-            font-size: 28px;
-            font-weight: 500;
-            color: {p['accent']};
-            opacity: 0.55;
-            font-family: 'Poppins', sans-serif;
-        }}
-        .blog-url {{
-            position: absolute;
-            bottom: 50px;
-            left: 110px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 18px;
-            font-weight: 400;
-            color: {p['text_muted']};
-            opacity: 0.4;
-            letter-spacing: 0.3px;
-        }}
-    </style>
-    <body>
-        <div class="sidebar"></div>
-        <div class="items-container">
-            {items_html}
-        </div>
-        <div class="page-num">{slide_num}/{total_slides}</div>
-        <div class="blog-url">{BLOG_URL}</div>
-    </body>
-    </html>"""
-    await page.set_content(html, wait_until="networkidle")
-    await page.screenshot(path=output_path)
-
-
-async def generate_book_slides_for_file(md_path, output_dir):
-    """Pipeline completa per un singolo file .md: estraggo metadati, distribuisco
-    i titoli #### in chunk e renderizzo tutte le slide nella cartella di output.
-
-    Ho separato cover e contenuto in due funzioni di rendering distinte perché
-    i due layout hanno strutture HTML abbastanza diverse: un template unificato
-    con troppa logica condizionale sarebbe più difficile da manutenere."""
-    log(f"Elaborazione libro: {md_path}")
-
-    with open(md_path, "r", encoding="utf-8") as f:
-        content = f.read()
-
-    book_title = extract_book_title(content)
-    if not book_title:
-        # Fallback: uso il nome del file senza estensione, con spazi al posto dei trattini
-        book_title = os.path.splitext(os.path.basename(md_path))[0].replace("-", " ").title()
-        log(f"  Titolo non trovato nel front matter, uso nome file: '{book_title}'")
-
-    book_autore = extract_book_autore(content)
-
-    chapter_titles = extract_chapter_titles(content)
-    if not chapter_titles:
-        log(f"  Nessun titolo '####' trovato in {md_path}, salto.")
-        return
-
-    log(f"  Trovati {len(chapter_titles)} titoli ####. Libro: '{book_title}'")
-
-    os.makedirs(output_dir, exist_ok=True)
-
-    # Pulisco eventuali slide precedenti per evitare residui da esecuzioni passate
-    for fname in os.listdir(output_dir):
-        if fname.endswith(".png"):
-            os.remove(os.path.join(output_dir, fname))
-
-    chunks = chunk_titles(chapter_titles, max_slides=9)
-    total_content_slides = len(chunks)
-
-    async with async_playwright() as p:
-        browser = await p.chromium.launch()
-        page = await browser.new_page(viewport={'width': 1080, 'height': 1080})
-
-        # Slide 1: copertina con titolo del libro
-        cover_path = os.path.join(output_dir, "slide_1.png")
-        await render_book_cover(page, book_title, book_autore, cover_path)
-        log(f"  Copertina generata: {cover_path}")
-
-        # Slide 2..N: chunk di titoli con numerazione visibile 1/M .. M/M
-        for i, chunk in enumerate(chunks):
-            slide_num  = i + 1       # numerazione visibile: parte da 1
-            slide_file = i + 2       # nome file: parte da slide_2.png
-            out_path   = os.path.join(output_dir, f"slide_{slide_file}.png")
-            await render_book_content_slide(page, slide_num, total_content_slides, chunk, out_path)
-            log(f"  Slide {slide_file} generata ({len(chunk)} titoli)")
-
-        await browser.close()
-
-    log(f"  Completato: {total_content_slides + 1} slide totali in {output_dir}")
-
-
-async def process_libri_folder(libri_root):
-    """Itero su tutti i file .md nella cartella _libri/ e genero le slide per ognuno.
-
-    La sottocartella di output ha lo stesso nome del file .md senza estensione,
-    come da specifica: '_libri/<nome-file>/slide_N.png'."""
-    log(f"--- MODALITÀ LIBRI: elaborazione cartella {libri_root} ---")
-
-    if not os.path.isdir(libri_root):
-        log(f"ERRORE: la cartella '{libri_root}' non esiste. Crearla e popolarla con file .md.")
-        return
-
-    # Considero solo i file .md diretti nella root di _libri, non quelli nelle sottocartelle
-    md_files = sorted([
-        f for f in os.listdir(libri_root)
-        if f.endswith(".md") and os.path.isfile(os.path.join(libri_root, f))
-    ])
-
-    if not md_files:
-        log(f"Nessun file .md trovato in {libri_root}.")
-        return
-
-    log(f"Trovati {len(md_files)} file .md da elaborare.")
-
-    for md_filename in md_files:
-        md_path  = os.path.join(libri_root, md_filename)
-        subfolder = os.path.splitext(md_filename)[0]
-        out_dir   = os.path.join(libri_root, subfolder)
-        try:
-            await generate_book_slides_for_file(md_path, out_dir)
-        except Exception as e:
-            log(f"Errore su {md_filename}: {e}")
-
-    log("--- MODALITÀ LIBRI COMPLETATA ---")
 
 
 # --- FRONT MATTER ---
@@ -1027,6 +656,8 @@ def fix_frontmatter_all(output_root):
                 raw_content = f.read()
 
             body = strip_existing_frontmatter(raw_content)
+            # Sanificiamo anche i titoli del corpo mentre siamo qui:
+            # i file vecchi potrebbero avere H1 nel corpo generati prima del fix.
             body = sanitize_article_headings(body)
 
             source_url = ""
@@ -1064,15 +695,11 @@ async def main():
     args = parse_arguments()
     session_date = resolve_session_date(args.date)
 
-    log(f"--- START SESSION: {session_date} (Regenerate: {args.regenerate}, Fix-frontmatter: {args.fix_frontmatter}, Libri: {args.libri}) ---")
+    log(f"--- START SESSION: {session_date} (Regenerate: {args.regenerate}, Fix-frontmatter: {args.fix_frontmatter}) ---")
 
     output_root = "output"
     if not os.path.exists(output_root):
         os.makedirs(output_root)
-
-    if args.libri:
-        await process_libri_folder("_libri")
-        return
 
     if args.regenerate:
         await regenerate_all(output_root)
