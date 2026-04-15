@@ -4,7 +4,7 @@ title: "Manuale di sopravvivenza per UX designer"
 sintesi: >
   Un approccio pragmatico e diretto per barcamenarsi nel mondo del design dell'esperienza utente, unendo il buon senso alla strategia di business.
   Matteo Di Pascale demistifica la disciplina con illustrazioni ironiche e consigli pronti all'uso per non soccombere alla complessità della teoria.
-date: 2026-04-14 16:51:55
+date: 2026-06-15 16:51:55
 tech: "Informatica"
 tags: [UX Design, User Experience, Matteo Di Pascale, Web Design, Business Aware Design, User-Centered Design, Product Management, Design Thinking]
 link: "https://amzn.eu/d/05Id7U9k"

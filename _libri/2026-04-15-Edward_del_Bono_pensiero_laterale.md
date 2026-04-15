@@ -4,7 +4,7 @@ title: "Creatività e pensiero laterale"
 sintesi: >
   Un manuale operativo che demistifica il genio creativo, trasformandolo in una competenza tecnica apprendibile e allenabile. 
   Edward de Bono insegna a rompere la rigidità dei modelli mentali per scavare "nuovi buchi" logici invece di limitarsi ad approfondire quelli già esistenti.
-date: 2026-04-14 17:25:10
+date: 2026-04-15 17:25:10
 tech: "Saggistica"
 tags: [Edward de Bono, Creatività, Pensiero Laterale, Problem Solving, Psicologia Cognitiva, Innovazione, Formazione, Design]
 link: "https://amzn.eu/d/0aPCJfTK"
