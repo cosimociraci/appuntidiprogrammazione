@@ -40,14 +40,14 @@ title: Home
         {% assign oggi_str = site.time | date: '%Y-%m-%d' %}
 
         {% comment %}
-            Inizializzo array vuoti per evitare errori se le collection non esistono
+            Recupero le collection. Se non esistono, 'where' restituirà un array vuoto
+            invece di un valore 'nil', rendendo il concat sicuro.
         {% endcomment %}
-        {% assign articoli = site.articoli | default: Array.new %}
-        {% assign libri = site.libri | default: Array.new %}
+        {% assign articoli = site.articoli | where: "output", true %}
+        {% assign libri = site.libri | where: "output", true %}
 
         {% comment %}
-            Unisco le liste. Usando 'default: Array.new' (o semplicemente assicurandoci 
-            che siano array) il concat non fallirà più.
+            Ora il concat è sicuro perché operiamo su due array certi.
         {% endcomment %}
         {% assign tutti_i_contenuti = articoli | concat: libri | sort: 'date' | reverse %}
 
@@ -75,11 +75,7 @@ title: Home
                     </h2>
 
                     <p class="post-sintesi">
-                        {% if item.sintesi %}
-                            {{ item.sintesi | strip_html | truncate: 160 }}
-                        {% else %}
-                            {{ item.content | strip_html | truncate: 160 }}
-                        {% endif %}
+                        {{ item.sintesi | strip_html | truncate: 160 }}
                     </p>
                 </article>
                 {% endif %}
