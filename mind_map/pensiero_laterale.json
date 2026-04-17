@@ -1,0 +1,67 @@
+{
+    "title": "Creatività e\npensiero laterale",
+    "left": [
+        {
+            "name": "Concetti Cardine",
+            "color": "#3498db",
+            "items": [
+                ["Verticale vs Laterale", "Pensiero selettivo e sequenziale contro pensiero produttivo e a salti"],
+                ["Efficacia vs Verità", "L'obiettivo è il movimento verso nuove idee, non la correttezza di ogni passo"],
+                ["La mente come sistema", "Ambiente che auto-organizza le informazioni in modelli rigidi"],
+                ["Sequenza d'arrivo", "L'ordine in cui riceviamo i dati condiziona e limita i modelli mentali"]
+            ]
+        },
+        {
+            "name": "Meccanismi del Pensiero",
+            "color": "#9b59b6",
+            "items": [
+                ["Ristrutturazione intuitiva", "Aggiornamento dei modelli per fare un miglior uso dell'informazione"],
+                ["Pausa creativa", "Sforzo intenzionale di cercare alternative anche quando tutto sembra funzionare"],
+                ["Evitamento dei cliché", "Liberazione dalle prigioni concettuali delle vecchie idee"],
+                ["Blocco da adeguatezza", "Quando un'idea soddisfacente impedisce di trovarne una migliore"]
+            ]
+        },
+        {
+            "name": "Atteggiamento Mentale",
+            "color": "#1abc9c",
+            "items": [
+                ["Sospensione del giudizio", "Differire il rifiuto per permettere alle idee fragili di sopravvivere"],
+                ["Movimento", "Usare un'idea per il suo effetto propulsivo, non per valutarla"],
+                ["Anti-arroganza", "Riconoscere che ogni punto di vista è solo una tra molte possibilità"],
+                ["Mappatura vs Discussione", "Esplorare il terreno invece di difendere una posizione precostituita"]
+            ]
+        }
+    ],
+    "right": [
+        {
+            "name": "Tecniche Base",
+            "color": "#e67e22",
+            "items": [
+                ["Ricerca di alternative", "Fissare quote minime di approcci diversi per ogni problema"],
+                ["Messa in discussione", "Sfida ai presupposti e ai confini auto-imposti (tecnica del 'perché')"],
+                ["Frazionamento", "Scomporre un problema in parti artificiali per ricomporle in modi nuovi"],
+                ["Metodo dell'inversione", "Ribaltare i rapporti fissi tra gli elementi per allontanarsi dall'ovvio"]
+            ]
+        },
+        {
+            "name": "Strumenti Operativi",
+            "color": "#2ecc71",
+            "items": [
+                ["Lo strumento PO", "Provocative Operation: segnale linguistico per l'anti-giudizio"],
+                ["Stimolo casuale", "Associare elementi estranei al problema per perturbare i modelli"],
+                ["Analogie", "Usare storie familiari come canali per trasportare processi e funzioni"],
+                ["Punti d'accesso", "Cambiare la parte del problema da cui si inizia l'esame"]
+            ]
+        },
+        {
+            "name": "Contesti Pratici",
+            "color": "#e74c3c",
+            "items": [
+                ["Brainstorming", "Scenario convenzionale per la stimolazione incrociata senza critica"],
+                ["Progettazione", "Esercizio visivo per superare le unità stereotipate e i cliché"],
+                ["Idee dominanti", "Individuare il tema che organizza la situazione per potervi sfuggire"],
+                ["Fattori cruciali", "Isolare i punti di costrizione che immobilizzano un'idea"]
+            ]
+        }
+    ]
+}

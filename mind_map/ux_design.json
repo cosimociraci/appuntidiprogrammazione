@@ -1,0 +1,83 @@
+{
+    "title": "UX Design",
+    "left": [
+        {
+            "name": "Fondamenti",
+            "color": "#3498db",
+            "items": [
+                ["Definizione di UX", "Progettazione basata sui bisogni reali degli utenti"],
+                ["UX vs UI", "Lo scheletro (struttura) contro il vestito (grafica)"],
+                ["Buon Senso", "La UX come evoluzione della buona progettazione olistica"],
+                ["Problem Solving", "Lo UX designer non è un artista ma un risolutore di problemi"]
+            ]
+        },
+        {
+            "name": "Processi di Design",
+            "color": "#e67e22",
+            "items": [
+                ["Processo Completo", "14 step ideali dalla ricerca al test finale"],
+                ["Sopravvivenza", "6 step minimi: Bullshit check, Benchmark, Story, Pattern, UI, Presentazione"],
+                ["Lean UX", "Approccio iterativo basato sul ciclo Build-Measure-Learn"]
+            ]
+        },
+        {
+            "name": "Analisi Strategica",
+            "color": "#9b59b6",
+            "items": [
+                ["Bullshit Check", "Analisi critica del brief per scovare richieste inutili o incoerenti"],
+                ["SMART Goals", "Obiettivi Specifici, Misurabili, Eseguibili, Realistici e Temporizzati"],
+                ["SWOT Analysis", "Punti di forza, debolezza, opportunità e minacce dei competitor"]
+            ]
+        },
+        {
+            "name": "Conoscere l'Utente",
+            "color": "#1abc9c",
+            "items": [
+                ["User Research", "Sondaggi e interviste per validare le ipotesi di progetto"],
+                ["User Personas", "Identikit fittizi ma realistici degli utenti target"],
+                ["Customer Journey", "Mappatura del viaggio dell'utente tra azioni, pensieri ed emozioni"]
+            ]
+        }
+    ],
+    "right": [
+        {
+            "name": "Architettura & Flussi",
+            "color": "#2ecc71",
+            "items": [
+                ["Information Architecture", "Organizzazione e categorizzazione gerarchica dei contenuti"],
+                ["Sitemap", "Mappa visiva della struttura di pagine ed elementi"],
+                ["User Story", "Descrizione delle funzionalità dal punto di vista dell'utente"],
+                ["User Flow", "Rappresentazione dei percorsi e delle azioni possibili nel sistema"]
+            ]
+        },
+        {
+            "name": "Design Operativo",
+            "color": "#f1c40f",
+            "items": [
+                ["Pattern", "Soluzioni standard già validate da aziende leader per problemi comuni"],
+                ["Wireframing", "Creazione dello scheletro delle schermate in bassa o media fedeltà"],
+                ["Mockup & UI", "Applicazione della veste grafica e dei trend visivi (User Interface)"],
+                ["Prototyping", "Simulazioni interattive del prodotto finale (Lo-fi o Hi-fi)"]
+            ]
+        },
+        {
+            "name": "Verifica & Euristiche",
+            "color": "#e74c3c",
+            "items": [
+                ["Usability Testing", "Test con 5 utenti per individuare l'85% dei problemi d'uso"],
+                ["10 Euristiche di Nielsen", "Principi universali di interaction design per evitare errori"],
+                ["Guerrilla Testing", "Test rapidi e informali condotti per strada o in ufficio"]
+            ]
+        },
+        {
+            "name": "Business Aware Design",
+            "color": "#34495e",
+            "items": [
+                ["AARRR (Pirate Metrics)", "Acquisizione, Attivazione, Ritenzione, Referenza, Ricavo"],
+                ["Strategie di Competizione", "Cost leadership, Differenziazione e Strategia Oceano Blu"],
+                ["UVP", "Unique Value Proposition: il valore unico comunicato all'utente"],
+                ["Dark Patterns", "Trucchi psicologici per manipolare le azioni dell'utente a fini di business"]
+            ]
+        }
+    ]
+}

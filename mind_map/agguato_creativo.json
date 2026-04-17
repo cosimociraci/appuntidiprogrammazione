@@ -1,0 +1,67 @@
+{
+  "title": "Agguato\nCreativo",
+  "left": [
+    {
+      "name": "Demolizione e Risveglio",
+      "color": "#e74c3c",
+      "items": [
+        ["Responsabilità Creativa", "Essere creativi richiede il coraggio di alzare la mano e difendere le proprie idee."],
+        ["Oltre i Framework", "Gli strumenti (Design Thinking, Mappe) aiutano a incanalare la spinta, ma non creano la storia."],
+        ["Ubi Maior", "Smantellare il timore reverenziale per le autorità e le istituzioni per seguire il proprio gusto."],
+        ["L'Erba Voglio", "Recuperare il desiderio autentico superando i condizionamenti e i mantra dell'infanzia."]
+      ]
+    },
+    {
+      "name": "Natura della Creatività",
+      "color": "#9b59b6",
+      "items": [
+        ["Principio Femminile (Strega)", "La capacità di accogliere, intuire e sognare senza giustificazioni logiche."],
+        ["Principio Maschile (Generale)", "La forza dell'azione, della disciplina e del dovere che porta l'idea nella realtà."],
+        ["Critici Interni", "Imparare a far convivere la voce del dovere con quella del sentire profondo."],
+        ["Lavorare sul Corpo", "Usare la respirazione e il movimento per sbloccare le intuizioni intrappolate nella mente."]
+      ]
+    },
+    {
+      "name": "Fede e Incertezza",
+      "color": "#34495e",
+      "items": [
+        ["Gestione del Disagio", "Accettare di perdersi nella foresta dell'incertezza senza cercare il controllo assoluto."],
+        ["Integrazione dell'Ombra", "Affrontare le paure di essere mediocri o nullità per liberare l'energia creativa."],
+        ["La Gioia del Miracolo", "Il momento di allineamento perfetto tra dentro e fuori in cui l'opera si manifesta."],
+        ["L'Impossibile", "Sfidare l'idea che sia 'troppo tardi' o 'impossibile' cambiare strada professionale."]
+      ]
+    }
+  ],
+  "right": [
+    {
+      "name": "Il Processo Operativo",
+      "color": "#e67e22",
+      "items": [
+        ["Intuizione e Azione", "Accumulare palline luminose e scegliere quale tirare a terra per renderla reale."],
+        ["Valutazione del Rischio", "Distinguere tra progetti utili (monetizzabili) e progetti artistici (rischiosi)."],
+        ["Ricerca e Ciccia", "Studiare i competitor e i maestri per mettere materia prima nel tritacarne creativo."],
+        ["Sintesi e Sviluppo", "Prendere una posizione arbitraria e dedicare tempo quotidiano all'esecuzione."]
+      ]
+    },
+    {
+      "name": "Espansione nel Mondo",
+      "color": "#2ecc71",
+      "items": [
+        ["Allineamento dell'Identità", "Sincronizzare chi siamo, cosa vogliamo e cosa stiamo facendo nel pratico."],
+        ["Vera Natura", "Imparare a vedere i segnali di ciò che ci rende vivi (la 'ghianda' creativa)."],
+        ["Riconoscimento Interno", "Darsi il permesso di esistere e vedersi prima di cercare conferme esterne."],
+        ["Fierezza vs Mediocrità", "Produrre solo ciò che si è pronti a difendere con le unghie e con i denti."]
+      ]
+    },
+    {
+      "name": "Etica e Valori",
+      "color": "#f1c40f",
+      "items": [
+        ["Denaro come Energia", "Vedere il profitto come una restituzione necessaria per continuare a creare."],
+        ["Furto e Ispirazione", "Copiare i maestri con umiltà per farsi l'occhio e trovare la propria voce."],
+        ["Creare un Canale", "Costruire una struttura (come Sefirot) che accolga e diffonda costantemente le idee."],
+        ["Co-creazione della Realtà", "Decidere attivamente cosa far entrare nel proprio cerchio e cosa lasciare fuori."]
+      ]
+    }
+  ]
+}

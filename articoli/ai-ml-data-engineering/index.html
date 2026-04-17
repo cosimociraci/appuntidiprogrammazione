@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google annuncia Gemma 4 per l'inferenza AI locale — DevLog</title>
+    <meta name="description" content="Google rilascia la versione 4 di Gemma, una libreria open source per l'AI e il machine learning che introduce funzionalità multimodali e agenti locali per migliorare le inferenze.
+">
+    <link rel="stylesheet" href="/appuntidiprogrammazione/assets/css/style.css">
+
+    <script>
+        /*
+         * Applico il tema PRIMA del rendering per evitare il flash di contenuto
+         * (FOUC). Lo script è inline e bloccante di proposito: deve girare
+         * prima che il browser disegni qualsiasi elemento.
+         */
+        (function() {
+            var saved = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', saved);
+        })();
+    </script>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="logo" onclick="window.location.href='/appuntidiprogrammazione/'">
+            APPUNTI DI <span>PROGRAMMAZIONE</span>
+        </div>
+
+        <!-- 
+            Il pulsante aggiorna l'attributo data-theme sull'<html> e
+            persiste la scelta nel localStorage per le sessioni future.
+        -->
+        <button onclick="toggleTheme()" class="theme-toggle" aria-label="Cambia tema">🌓</button>
+    </header>
+
+    <!--
+    Layout post: struttura a due colonne.
+    - Sinistra (post-content): breadcrumb → tags → link PDF → link fonte → articolo MD
+    - Destra (post-sidebar): tags argomento + libro consigliato
+    
+    Ordine DOM: post-content prima, post-sidebar dopo.
+    Grid-template-areas in CSS li posiziona visivamente:
+    "content sidebar" su desktop, stacked su mobile.
+-->
+<div class="post-container">
+    <!-- COLONNA SINISTRA: contenuto principale -->
+    <main class="post-content">
+        <!-- Breadcrumb: navigazione verso la home -->
+        <nav class="post-breadcrumb" aria-label="Breadcrumb">
+            <a href="/appuntidiprogrammazione/">Appunti di Programmazione</a>
+            <span class="separator" aria-hidden="true">/</span>
+            <span>Google annuncia Gemma 4 per l'inferenza AI locale</span>
+        </nav>
+        <!-- Tags legati all'articolo -->
+        
+        <div class="post-tags-header" aria-label="Argomenti">
+            
+                <span class="post-tag-chip">gemma</span>
+            
+                <span class="post-tag-chip">google</span>
+            
+                <span class="post-tag-chip">machine-learning</span>
+            
+                <span class="post-tag-chip">ai</span>
+            
+        </div>
+        
+        <!-- Link al/ai PDF allegati all'articolo -->
+        
+        <!-- Corpo dell'articolo renderizzato da Kramdown -->
+        <article class="post-article-body">
+            <h2 id="come-google-cambia-il-panorama-dellinferenza-ai-con-la-versione-4-di-gemma">Come Google cambia il panorama dell’inferenza AI con la versione 4 di Gemma</h2>
+
+<p>Ho trascorso le ultime settimane immerso nell’ecosistema delle tecnologie Artificial Intelligence (AI), Machine Learning (ML) e Ingegneria della Data, seguendo attentamente i nuovi sviluppi del settore attraverso la RSS Feed di InfoQ. Una novità di particolare interesse mi è attratta: la pubblicazione da parte di Google di Gemma 4 sotto la licenza Apache 2.0, che presenta capacità multimodali e agenti in grado di eseguire inferenze AI locali.</p>
+
+<p>Gemma è una libreria open source sviluppata dall’azienda per accelerare la creazione e il training dei modelli AI. La versione 4, con i suoi nuovi feature, potenzia gli strumenti di cui i developer hanno bisogno per creare applicazioni AI che eseguano inferenze in modo più rapido e efficiente, anche su hardware meno potente.</p>
+
+<h2 id="multimodalità-e-agenti">Multimodalità e agenti</h2>
+
+<p>L’aggiunta dei nuovi componenti multimodali a Gemma permette ai modelli di apprendimento automatico di gestire meglio i diversi tipi di input e output, come immagini, testo e audio. Questa funzionalità potenzia notevolmente le capacità dei modelli, rendendoli in grado di effettuare inferenze più accurate anche su dati di vario tipo.</p>
+
+<p>Inoltre, la versione 4 di Gemma presenta agenti in grado di eseguire inferenze AI localmente sulla macchina cliente, al fine di ridurre il carico della rete e velocizzare i tempi di risposta. Questi agenti possono essere utilizzati per svolgere una vasta gamma di compiti, dai riconoscimenti vocali alla traduzione del testo e alla personalizzazione dei contenuti.</p>
+
+<h2 id="implicazioni-pratiche">Implicazioni pratiche</h2>
+
+<p>Le nuove capacità multimodali e agenti offerte da Gemma 4 potenziano notevolmente le applicazioni AI. In particolare, i developer potranno utilizzare la libreria per creare applicazioni che eseguono inferenze in modo più rapido e efficiente, anche su hardware meno potente.</p>
+
+<p>In pratica, questo significa che le applicazioni AI saranno in grado di offrire un’esperienza utente migliore, con tempi di risposta più rapidi e una gestione più efficace dei dati. Inoltre, la possibilità di eseguire inferenze localmente potenzia notevolmente l’infrastruttura delle applicazioni AI, riducendo i costi di conservazione e trasferimento dei dati.</p>
+
+<h2 id="conclusioni">Conclusioni</h2>
+
+<p>La pubblicazione di Gemma 4 sotto la licenza Apache 2.0 è un passo importante per Google nello sviluppo dell’ecosistema open source delle tecnologie AI. Questa versione della libreria offre capacità multimodali e agenti in grado di eseguire inferenze AI locali, che potenziano notevolmente le applicazioni AI. I developer dovranno tenere d’occhio questa evoluzione delle tecnologie AI, per sfruttare al meglio le nuove capacità offerte da Gemma 4 nella loro prossima creazione di applicazioni AI.</p>
+
+<p>Fonte originale: https://www.infoq.com/ai-ml-data-eng/</p>
+
+        </article>
+        <!-- Link alla fonte originale: lo posiziono dopo il corpo perché è un
+             approfondimento opzionale, non un'azione primaria. L'icona SVG inline
+             evita dipendenze da font icon esterni. -->
+        
+        <div class="post-source-link">
+            <span class="source-link-label">Fonte originale</span>
+            <a class="source-link-anchor"
+               href="https://www.infoq.com/ai-ml-data-eng/"
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="Leggi la fonte originale di: Google annuncia Gemma 4 per l'inferenza AI locale">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="14" height="14"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                    <polyline points="15 3 21 3 21 9"/>
+                    <line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
+                https://www.infoq.com/ai-ml-data-eng/
+            </a>
+        </div>
+        
+    </main>
+    <!-- COLONNA DESTRA: sidebar post -->
+    <aside class="post-sidebar">
+        <!-- Box 1: tags argomento (stessa lista dei chip sopra, ma nella sidebar) -->
+        
+        <div class="sidebar-box tags-box">
+            <span class="box-label">Argomenti</span>
+            <div class="tag-cloud-sidebar">
+                
+                    <span class="sidebar-tag">gemma</span>
+                
+                    <span class="sidebar-tag">google</span>
+                
+                    <span class="sidebar-tag">machine-learning</span>
+                
+                    <span class="sidebar-tag">ai</span>
+                
+            </div>
+        </div>
+        
+        <!-- Box 2: fonte originale nella sidebar, visibile a colpo d'occhio
+             senza dover scorrere fino in fondo all'articolo. -->
+        
+        <div class="sidebar-box source-box">
+            <span class="box-label">Fonte Originale</span>
+            <a class="sidebar-source-anchor"
+               href="https://www.infoq.com/ai-ml-data-eng/"
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="Leggi la fonte originale di: Google annuncia Gemma 4 per l'inferenza AI locale">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="14" height="14"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                    <polyline points="15 3 21 3 21 9"/>
+                    <line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
+                Leggi l'articolo originale
+            </a>
+        </div>
+        
+        <!-- Box 3: libro consigliato -->
+        <div class="sidebar-box books-box">
+            <span class="box-label">Letture Consigliate</span>
+            <div class="book-card">
+                <a href="https://www.amazon.it/Appunti-Programmazione-Pensieri-soluzioni-Applicazioni-ebook/dp/B0FMFRHKTF/"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   aria-label="Acquista Appunti di Programmazione su Amazon">
+                    <img src="https://m.media-amazon.com/images/I/61Ck5eMzGYL._SY466_.jpg"
+                         alt="Copertina: Appunti di Programmazione"
+                         width="80">
+                    <p>Appunti di Programmazione: Pensieri e soluzioni per Applicazioni WEB</p>
+                </a>
+            </div>
+        </div>
+    </aside>
+</div>
+
+    <footer class="main-footer">
+        DevLog — Appunti di Programmazione &nbsp;·&nbsp; cosimociraci@gmail.com
+    </footer>
+
+    <script>
+        /*
+         * toggleTheme: legge il tema corrente dall'attributo HTML,
+         * calcola l'opposto e lo salva. Il CSS reagisce via [data-theme].
+         * Non uso classi sul body per mantenere tutto centralizzato
+         * sull'elemento radice.
+         */
+        function toggleTheme() {
+            var html = document.documentElement;
+            var current = html.getAttribute('data-theme');
+            var next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,65 @@
+{
+    "title": "UX Writing",
+    "left": [
+        {
+            "name": "Fondamenti",
+            "color": "#3498db",
+            "items": [
+                ["Definizione", "Creazione di micro testi che guidano l'utente nella navigazione di siti e app"],
+                ["UX vs Copywriting", "Focus sulla progettazione di interazioni e conversazioni invece che solo sulla vendita"],
+                ["Logica Content-First", "Progettazione basata su testi veri per evitare errori di layout e localizzazione"],
+                ["Impatto Economico", "Piccole modifiche ai testi (engagement +17%) influenzano direttamente i profitti"]
+            ]
+        },
+        {
+            "name": "UX Manifesto",
+            "color": "#2ecc71",
+            "items": [
+                ["Chiarezza", "Testi comprensibili senza sforzo, usando parole semplici e forma attiva"],
+                ["Concinnità", "Eliminare il superfluo per massimizzare l'impatto in spazi ridotti, specialmente mobile"],
+                ["Coerenza", "Utilizzo costante degli stessi termini per non disorientare il navigatore"],
+                ["Accessibilità", "Linguaggio inclusivo adatto anche a utenti con limitazioni sensoriali o cognitive"]
+            ]
+        },
+        {
+            "name": "Strategia e Analisi",
+            "color": "#9b59b6",
+            "items": [
+                ["User Personas", "Identikit fittizi per dare un volto ai dati e stimolare l'empatia nel team"],
+                ["Customer Journey", "Mappatura di tappe ed emozioni dell'utente per individuare i bisogni testuali"],
+                ["Empatia", "Capacità di immedesimarsi negli stati d'animo degli utenti per alleviarne le frustrazioni"]
+            ]
+        }
+    ],
+    "right": [
+        {
+            "name": "Metodo Operativo",
+            "color": "#e67e22",
+            "items": [
+                ["Design Thinking", "Processo basato sull'osservazione dei problemi e la validazione delle soluzioni"],
+                ["A/B Testing", "Confronto tra varianti di testo per stabilire quale performa meglio sui dati reali"],
+                ["Validazione Ipotesi", "Impostazione di test misurabili (es. conversioni, CTR) per imparare dai feedback"]
+            ]
+        },
+        {
+            "name": "Applicazioni Pratiche",
+            "color": "#f1c40f",
+            "items": [
+                ["Pulsanti e CTA", "Inviti all'azione chiari che descrivono il valore ottenuto dopo il click"],
+                ["Messaggi di Errore", "Sostituzione di codici tecnici con spiegazioni umane e soluzioni costruttive"],
+                ["Empty States", "Utilizzo di spazi vuoti per rassicurare l'utente e suggerire i prossimi passi"],
+                ["Onboarding", "Processo di iscrizione semplificato per non spaventare il nuovo utente"]
+            ]
+        },
+        {
+            "name": "Leve Psicologiche",
+            "color": "#e74c3c",
+            "items": [
+                ["Reciprocità", "Offrire valore (sconti, guide) prima di richiedere impegni all'utente"],
+                ["Riprova Sociale", "Utilizzare recensioni e testimonianze per rassicurare chi deve decidere"],
+                ["Scarsità e Urgenza", "Sottolineare la disponibilità limitata per stimolare una risposta immediata"],
+                ["Rassicurazione", "Utilizzare parole di conforto in fase di acquisto per eliminare l'ansia"]
+            ]
+        }
+    ]
+}

@@ -1,0 +1,67 @@
+{
+    "title": "Design\nYourself",
+    "left": [
+        {
+            "name": "Fondamenti Strategici",
+            "color": "#3498db",
+            "items": [
+                ["Identità Onlife", "Abitare l'infosfera dove la barriera tra vita reale e digitale è scomparsa"],
+                ["Design Intenzionale", "Trattare la propria immagine come un progetto da risolvere strategicamente"],
+                ["Coerenza Identitaria", "Allineare chi siamo con come veniamo percepiti per generare fiducia"],
+                ["Capitale Semantico", "Dare senso e significato alla propria presenza per renderla utile agli altri"]
+            ]
+        },
+        {
+            "name": "Analisi Interiore",
+            "color": "#9b59b6",
+            "items": [
+                ["La Ghianda", "Riscoprire la propria vocazione profonda come seme del brand"],
+                ["Verità vs Maschera", "Costruire un'identità autentica basata sui propri valori reali"],
+                ["Definizione dei Filtri", "Capire cosa ci piace e perché per differenziarsi nel mercato"],
+                ["Inner Work", "Lavoro di auto-conoscenza per evitare obiettivi imposti dall'esterno"]
+            ]
+        },
+        {
+            "name": "Identità Verbale",
+            "color": "#1abc9c",
+            "items": [
+                ["UX Writing Personale", "Usare micro-testi chiari per guidare l'utente nel proprio mondo"],
+                ["Tono di Voce", "Adottare un linguaggio umano ed empatico per creare connessione"],
+                ["Sintesi e Chiarezza", "Rimuovere il superfluo per massimizzare l'impatto del messaggio"],
+                ["Storytelling Autobiografico", "Raccontare il proprio percorso attraverso i problemi risolti"]
+            ]
+        }
+    ],
+    "right": [
+        {
+            "name": "Identità Visiva",
+            "color": "#e67e22",
+            "items": [
+                ["Psicologia del Colore", "Scegliere la palette cromatica in base alle emozioni da evocare"],
+                ["Tipografia e Carattere", "Usare i font per definire la 'voce' visiva della propria marca"],
+                ["Gerarchia Visiva", "Disporre gli elementi grafici per facilitare la scansione delle info"],
+                ["Design Intelligente", "Fare in modo che l'interfaccia parli la lingua del proprio target"]
+            ]
+        },
+        {
+            "name": "Ecosistema di Brand",
+            "color": "#2ecc71",
+            "items": [
+                ["Portfolio come Tessuto", "Mostrare il processo e il criterio oltre al risultato finale"],
+                ["User Personas", "Identificare i destinatari ideali della nostra comunicazione"],
+                ["Mappatura Touchpoint", "Garantire coerenza tra sito web, social e materiali fisici"],
+                ["Customer Journey", "Analizzare ogni tappa dell'interazione tra noi e il cliente"]
+            ]
+        },
+        {
+            "name": "Mindset e Crescita",
+            "color": "#f1c40f",
+            "items": [
+                ["Feedback e Iterazione", "Chiedere opinioni esterne per migliorare costantemente il brand"],
+                ["Azione e Disciplina", "Portare le intuizioni nella realtà attraverso il rigore quotidiano"],
+                ["Gestione dell'Errore", "Trasformare i limiti e le vulnerabilità in punti di forza autentici"],
+                ["Business Aware Design", "Capire come il proprio valore risolve i problemi del committente"]
+            ]
+        }
+    ]
+}

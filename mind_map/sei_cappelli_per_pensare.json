@@ -1,0 +1,67 @@
+{
+    "title": "Sei cappelli\nper pensare",
+    "left": [
+        {
+            "name": "Filosofia del Metodo",
+            "color": "#3498db",
+            "items": [
+                ["Semplificazione", "Fare una cosa alla volta per gestire la complessità ed evitare la confusione"],
+                ["Mappatura", "Sostituire la discussione dialettica con la costruzione di una mappa comune"],
+                ["Recitare la parte", "L'uso dei cappelli come ruoli teatrali che proteggono l'Ego del pensatore"],
+                ["Igiene Mentale", "Separare le emozioni dalla logica e la creatività dall'informazione"]
+            ]
+        },
+        {
+            "name": "I Cappelli della Logica",
+            "color": "#7f8c8d",
+            "items": [
+                ["Cappello Bianco", "Pura informazione, dati e cifre oggettive simili all'output di un computer"],
+                ["Sistema a due livelli", "Distinzione tra fatti controllati (certi) e fatti creduti (verosimili)"],
+                ["Cappello Nero", "Cautela logica, analisi dei rischi e dei motivi per cui un'idea non può funzionare"],
+                ["Domande negative", "Mettere alla prova la validità dei dati e la coerenza del percorso"]
+            ]
+        },
+        {
+            "name": "Regia e Controllo",
+            "color": "#2980b9",
+            "items": [
+                ["Cappello Blu", "Controllo del processo: il direttore d'orchestra che organizza il pensiero"],
+                ["Messa a fuoco", "Definizione rigorosa dell'obiettivo e del problema da affrontare"],
+                ["Programma", "Creazione di un 'software' coreografico di sequenze per la riflessione"],
+                ["Sommari", "Sintesi periodica dei risultati raggiunti per trarre conclusioni finali"]
+            ]
+        }
+    ],
+    "right": [
+        {
+            "name": "Visione e Sviluppo",
+            "color": "#f1c40f",
+            "items": [
+                ["Cappello Giallo", "Ottimismo logico, ricerca deliberata di vantaggi, valori e opportunità"],
+                ["Pensiero Costruttivo", "Generazione di proposte concrete per far accadere le cose"],
+                ["Cappello Verde", "Creatività e pensiero laterale per superare gli schemi rigidi"],
+                ["Movimento", "Usare un'idea come ponte propulsivo invece di limitarsi a giudicarla"]
+            ]
+        },
+        {
+            "name": "Sentimento e Intuito",
+            "color": "#e74c3c",
+            "items": [
+                ["Cappello Rosso", "Legittimazione di emozioni, passioni e sentimenti senza giustificazioni"],
+                ["Intuizione", "Riconoscimento dei presentimenti e del 'fiuto' come dati utili alla mappa"],
+                ["Sfondo emotivo", "Esplicitare le paure o i sospetti occulti che influenzano la percezione"],
+                ["Calibrazione", "Usare le emozioni per definire la scelta finale del percorso sulla mappa"]
+            ]
+        },
+        {
+            "name": "Risultati Operativi",
+            "color": "#27ae60",
+            "items": [
+                ["Efficienza", "Riduzione drastica dei tempi di riunione e dei conflitti interpersonali"],
+                ["Operacy", "Sviluppo della capacità operativa e d'azione pratica (pensiero operativo)"],
+                ["Linguaggio Comune", "Creazione di un codice condiviso per la comunicazione aziendale"],
+                ["Pausa Creativa", "Sforzo intenzionale di cercare alternative anche dove non sembra necessario"]
+            ]
+        }
+    ]
+}

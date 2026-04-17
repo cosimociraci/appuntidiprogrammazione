@@ -20,7 +20,8 @@ BASE_URLS = [
     "https://techfromthenet.it/software/news-produttivita/",
     "https://www.infoq.com/java/news/",
     "https://inside.java/",
-    "https://www.zeusnews.it/"
+    "https://www.zeusnews.it/",
+    "https://ainews.it/ultime-notizie/"
 ]
 
 CACHE_FILE = "output/processed_urls.json"
@@ -1066,7 +1067,7 @@ async def main():
 
     log(f"--- START SESSION: {session_date} (Regenerate: {args.regenerate}, Fix-frontmatter: {args.fix_frontmatter}, Libri: {args.libri}) ---")
 
-    output_root = "output"
+    output_root = "output_news"
     if not os.path.exists(output_root):
         os.makedirs(output_root)
 

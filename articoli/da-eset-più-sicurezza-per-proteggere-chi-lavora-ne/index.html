@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proteggendo la mia organizzazione dagli strumenti di intelligenza artificiale: il mio viaggio con ESET PROTECT — DevLog</title>
+    <meta name="description" content="ESET affronta la sicurezza dei dati con una tecnologia di browser sicuro che intercetta le interazioni dell’AI e analizza in tempo reale, proteggeto le organizzazioni dalle minacce legate all'uso di strumenti di AI. La piattaforma ESET PROTECT consente la monitorazione e blocco delle attività in conformità con le policy aziendali.
+">
+    <link rel="stylesheet" href="/appuntidiprogrammazione/assets/css/style.css">
+
+    <script>
+        /*
+         * Applico il tema PRIMA del rendering per evitare il flash di contenuto
+         * (FOUC). Lo script è inline e bloccante di proposito: deve girare
+         * prima che il browser disegni qualsiasi elemento.
+         */
+        (function() {
+            var saved = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', saved);
+        })();
+    </script>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="logo" onclick="window.location.href='/appuntidiprogrammazione/'">
+            APPUNTI DI <span>PROGRAMMAZIONE</span>
+        </div>
+
+        <!-- 
+            Il pulsante aggiorna l'attributo data-theme sull'<html> e
+            persiste la scelta nel localStorage per le sessioni future.
+        -->
+        <button onclick="toggleTheme()" class="theme-toggle" aria-label="Cambia tema">🌓</button>
+    </header>
+
+    <!--
+    Layout post: struttura a due colonne.
+    - Sinistra (post-content): breadcrumb → tags → link PDF → link fonte → articolo MD
+    - Destra (post-sidebar): tags argomento + libro consigliato
+    
+    Ordine DOM: post-content prima, post-sidebar dopo.
+    Grid-template-areas in CSS li posiziona visivamente:
+    "content sidebar" su desktop, stacked su mobile.
+-->
+<div class="post-container">
+    <!-- COLONNA SINISTRA: contenuto principale -->
+    <main class="post-content">
+        <!-- Breadcrumb: navigazione verso la home -->
+        <nav class="post-breadcrumb" aria-label="Breadcrumb">
+            <a href="/appuntidiprogrammazione/">Appunti di Programmazione</a>
+            <span class="separator" aria-hidden="true">/</span>
+            <span>Proteggendo la mia organizzazione dagli strumenti di intelligenza artificiale: il mio viaggio con ESET PROTECT</span>
+        </nav>
+        <!-- Tags legati all'articolo -->
+        
+        <div class="post-tags-header" aria-label="Argomenti">
+            
+                <span class="post-tag-chip">intelligenza artificiale</span>
+            
+                <span class="post-tag-chip">sicurezza</span>
+            
+                <span class="post-tag-chip">cybersecurity</span>
+            
+                <span class="post-tag-chip">eset</span>
+            
+                <span class="post-tag-chip">ai</span>
+            
+        </div>
+        
+        <!-- Link al/ai PDF allegati all'articolo -->
+        
+        <!-- Corpo dell'articolo renderizzato da Kramdown -->
+        <article class="post-article-body">
+            <h2 id="proteggendo-la-mia-organizzazione-dagli-strumenti-di-intelligenza-artificiale-il-mio-viaggio-con-eset-protect">Proteggendo la mia organizzazione dagli strumenti di intelligenza artificiale: il mio viaggio con ESET PROTECT</h2>
+
+<p>Ho assistito personalmente alla presentazione di ESET durante RSAC 2026 e ho visto come l’azienda sta apportando grandi miglioramenti nella sicurezza per proteggere le interazioni dei dipendenti con gli strumenti di intelligenza artificiale. Questa è una mia esperienza diretta su come ESET affronta il problema della sicurezza dei dati e di cosa si può aspettare dalla piattaforma ESET PROTECT.</p>
+
+<h2 id="come-eset-affronta-il-problema-della-sicurezza-dei-dati">Come ESET affronta il problema della sicurezza dei dati</h2>
+
+<p>Con l’integrazione degli strumenti di AI nei workflow quotidiani, molti dipendenti utilizzano chatbot cloud open senza la supervisione dell’IT. Ciò crea rischi legati alla ‘shadow AI’ ed esponendo dati sensibili quali documenti riservati, codici API, informazioni confidenziali e credenziali. ESET affronta il problema attraverso varie tecnologie che si avvicinano il più possibile al punto di origine. Una delle quali è una tecnologia di browser sicuro che intercetta le interazioni dell’AI e analizza sia i prompt che le risposte in real-time. Questo contribuisce a prevenire l’esposizione dei dati e a rilevare contenuti dannosi o inattendibili prima che abbiano un impatto sugli utenti.</p>
+
+<h2 id="come-sta-cambiando-lapproccio">Come sta cambiando l’approccio</h2>
+
+<p>Durante le demo alla RSAC 2026, la nuova funzionalità di protezione basata sull’AI ha segnalato URL dannosi inviati tramite prompt dei chatbot, registrando l’attività sull’endpoint e riportandola nella piattaforma ESET PROTECT per ulteriori indagini. Lo stesso approccio si applica ai tentativi di injection di prompt, agli script e all’inserimento di dati sensibili. Ciò consente alle organizzazioni di bloccare o monitorare l’attività in conformità con le proprie policy. I team di sicurezza acquisiranno visibilità su come gli strumenti di AI vengono utilizzati all’interno della propria azienda attraverso la piattaforma ESET PROTECT. Aiutandoli in questo modo a indagare sui rischi e ad applicare le policy in modo più efficace.</p>
+
+<h2 id="in-crescita-gli-attacchi-alla-supply-chain-che-sfruttano-library-compromesse">In crescita gli attacchi alla supply chain che sfruttano library compromesse</h2>
+
+<p>Man mano che le organizzazioni ampliano l’uso di strumenti di AI agentica, la superficie di attacco si estende oltre le interazioni dei chatbot fino a includere i rischi emergenti legati alla supply chain dell’AI. Tra questi figurano framework e strumenti di AI compromessi, come i componenti trojanizzati presenti in librerie di uso comune quali LiteLLM. Nonché agenti autonomi come OpenClaw in grado di eseguire azioni su un sistema con un controllo limitato. ESET protegge già i clienti dagli attacchi alla supply chain che sfruttano library compromesse distribuite tramite repository standard. Tuttavia sta registrando un aumento di questo tipo di attacchi e rimane impegnata in ulteriori attività di R&amp;D relative agli strumenti di AI.</p>
+
+<h2 id="lo-scanner-che-analizza-le-competenze-di-ai">Lo scanner che analizza le competenze di AI</h2>
+
+<p>Nell’ambito della più ampia innovazione in materia di sicurezza AI, ESET ha presentato un ESET AI Skills Checker gratuito alla RSAC 2026. Una soluzione disponibile anche per i clienti che non utilizzano ESET e basata sulla stessa tecnologia dei prodotti di sicurezza di ESET Endpoint e di ESET LiveGuard. Si tratta di uno scanner che analizza le competenze di AI alla ricerca di istruzioni nascoste, codice dannoso e comportamenti rischiosi utilizzando un’ispezione a più livelli e un sandboxing basato su cloud. Attualmente è disponibile come funzionalità integrata per gli utenti attuali di ESET Endpoint.</p>
+
+<h2 id="soluzioni-di-sicurezza-che-si-adattano-a-uno-scenario-in-trasformazione">Soluzioni di sicurezza che si adattano a uno scenario in trasformazione</h2>
+
+<p>Da oltre 30 anni, ESET è all’avanguardia nella sicurezza degli endpoint grazie a soluzioni ottimizzate e ad alte prestazioni basate su apprendimento automatico e AI. Queste nuove funzionalità ampliano tale base aiutando le organizzazioni a difendersi dall’odierno scenario di minacce in rapida evoluzione. Uno scenario in cui i criminali sfruttano sempre più la tecnologia AI per intensificare gli attacchi, colpire i dipendenti e automatizzare sofisticate tecniche di social engineering.</p>
+
+<p>Come unica azienda specializzata in sicurezza IT iscritta all’Agentic AI Foundation (AAIF), ESET sta inoltre lavorando per proteggere i protocolli di comunicazione degli agenti di AI emergenti con la collaborazione di OpenAI, Amazon, Microsoft e Anthropic. Insieme, il gruppo sta collaborando per stabilire standard affidabili, protocolli sicuri e best practice per l’interoperabilità degli agenti di AI.</p>
+
+<hr />
+<p>Fonte originale: https://techfromthenet.it/2026/04/16/da-eset-piu-sicurezza-per-proteggere-chi-lavora-nellai/</p>
+
+        </article>
+        <!-- Link alla fonte originale: lo posiziono dopo il corpo perché è un
+             approfondimento opzionale, non un'azione primaria. L'icona SVG inline
+             evita dipendenze da font icon esterni. -->
+        
+        <div class="post-source-link">
+            <span class="source-link-label">Fonte originale</span>
+            <a class="source-link-anchor"
+               href="https://techfromthenet.it/2026/04/16/da-eset-piu-sicurezza-per-proteggere-chi-lavora-nellai/"
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="Leggi la fonte originale di: Proteggendo la mia organizzazione dagli strumenti di intelligenza artificiale: il mio viaggio con ESET PROTECT">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="14" height="14"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                    <polyline points="15 3 21 3 21 9"/>
+                    <line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
+                https://techfromthenet.it/2026/04/16/da-eset-piu-sicurezza-per-proteggere-chi-lavora-nellai/
+            </a>
+        </div>
+        
+    </main>
+    <!-- COLONNA DESTRA: sidebar post -->
+    <aside class="post-sidebar">
+        <!-- Box 1: tags argomento (stessa lista dei chip sopra, ma nella sidebar) -->
+        
+        <div class="sidebar-box tags-box">
+            <span class="box-label">Argomenti</span>
+            <div class="tag-cloud-sidebar">
+                
+                    <span class="sidebar-tag">intelligenza artificiale</span>
+                
+                    <span class="sidebar-tag">sicurezza</span>
+                
+                    <span class="sidebar-tag">cybersecurity</span>
+                
+                    <span class="sidebar-tag">eset</span>
+                
+                    <span class="sidebar-tag">ai</span>
+                
+            </div>
+        </div>
+        
+        <!-- Box 2: fonte originale nella sidebar, visibile a colpo d'occhio
+             senza dover scorrere fino in fondo all'articolo. -->
+        
+        <div class="sidebar-box source-box">
+            <span class="box-label">Fonte Originale</span>
+            <a class="sidebar-source-anchor"
+               href="https://techfromthenet.it/2026/04/16/da-eset-piu-sicurezza-per-proteggere-chi-lavora-nellai/"
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="Leggi la fonte originale di: Proteggendo la mia organizzazione dagli strumenti di intelligenza artificiale: il mio viaggio con ESET PROTECT">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="14" height="14"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                    <polyline points="15 3 21 3 21 9"/>
+                    <line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
+                Leggi l'articolo originale
+            </a>
+        </div>
+        
+        <!-- Box 3: libro consigliato -->
+        <div class="sidebar-box books-box">
+            <span class="box-label">Letture Consigliate</span>
+            <div class="book-card">
+                <a href="https://www.amazon.it/Appunti-Programmazione-Pensieri-soluzioni-Applicazioni-ebook/dp/B0FMFRHKTF/"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   aria-label="Acquista Appunti di Programmazione su Amazon">
+                    <img src="https://m.media-amazon.com/images/I/61Ck5eMzGYL._SY466_.jpg"
+                         alt="Copertina: Appunti di Programmazione"
+                         width="80">
+                    <p>Appunti di Programmazione: Pensieri e soluzioni per Applicazioni WEB</p>
+                </a>
+            </div>
+        </div>
+    </aside>
+</div>
+
+    <footer class="main-footer">
+        DevLog — Appunti di Programmazione &nbsp;·&nbsp; cosimociraci@gmail.com
+    </footer>
+
+    <script>
+        /*
+         * toggleTheme: legge il tema corrente dall'attributo HTML,
+         * calcola l'opposto e lo salva. Il CSS reagisce via [data-theme].
+         * Non uso classi sul body per mantenere tutto centralizzato
+         * sull'elemento radice.
+         */
+        function toggleTheme() {
+            var html = document.documentElement;
+            var current = html.getAttribute('data-theme');
+            var next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+        }
+    </script>
+
+</body>
+</html>
