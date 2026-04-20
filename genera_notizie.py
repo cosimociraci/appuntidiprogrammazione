@@ -505,10 +505,11 @@ async def create_images(topic, slides, folder_path):
                     <div class="slide-title">{slide_title}</div>
                     <div class="text">{formatted_text}</div>
                 </div>
-                <div class="page-num">{i + 1}/10</div>
                 <div class="blog-url">{BLOG_URL}</div>
             </body>
             </html>"""
+
+#                <div class="page-num">{i + 1}/10</div>
 
             await page.set_content(html_content, wait_until="networkidle")
             await page.screenshot(path=os.path.join(folder_path, f"slide_{i + 1}.png"))
