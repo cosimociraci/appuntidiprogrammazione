@@ -1,482 +1,175 @@
 <!DOCTYPE html>
+<html lang="it" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design System Document: The Lucid Console — DevLog</title>
+    <meta name="description" content="Hub tecnico per appunti di programmazione, analisi di problemi reali  e soluzioni implementative in ambito Spring Boot, Java e Web Dev.">
+    <link rel="stylesheet" href="/appuntidiprogrammazione/assets/css/style.css">
 
-<html class="dark" lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Design System Document: The Lucid Console — DevLog</title>
-<meta content="Hub tecnico per appunti di programmazione, analisi di problemi reali  e soluzioni implementative in ambito Spring Boot, Java e Web Dev." name="description"/>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&amp;family=Inter:wght@300..700&amp;family=JetBrains+Mono:wght@400..700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    "colors": {
-                        "tertiary-fixed": "#ffdad7",
-                        "error-container": "#93000a",
-                        "on-tertiary-fixed-variant": "#842225",
-                        "secondary-fixed-dim": "#c8c6c5",
-                        "outline-variant": "#3c4a42",
-                        "on-error": "#690005",
-                        "inverse-on-surface": "#313030",
-                        "on-primary-container": "#00422b",
-                        "background": "#131313",
-                        "on-primary-fixed-variant": "#005236",
-                        "tertiary-fixed-dim": "#ffb3af",
-                        "surface-container-high": "#2a2a2a",
-                        "on-tertiary-container": "#711419",
-                        "on-primary-fixed": "#002113",
-                        "on-error-container": "#ffdad6",
-                        "surface-dim": "#131313",
-                        "surface-container-low": "#1c1b1b",
-                        "on-surface-variant": "#bbcabf",
-                        "on-secondary-fixed": "#1b1c1c",
-                        "surface-container-lowest": "#0e0e0e",
-                        "secondary-container": "#474746",
-                        "on-secondary-container": "#b7b5b4",
-                        "secondary-fixed": "#e4e2e1",
-                        "surface-container-highest": "#353534",
-                        "surface-variant": "#353534",
-                        "outline": "#86948a",
-                        "on-surface": "#e5e2e1",
-                        "surface": "#131313",
-                        "primary-fixed-dim": "#4edea3",
-                        "on-tertiary-fixed": "#410005",
-                        "on-primary": "#003824",
-                        "on-tertiary": "#650911",
-                        "inverse-primary": "#006c49",
-                        "primary-container": "#10b981",
-                        "surface-tint": "#4edea3",
-                        "surface-bright": "#3a3939",
-                        "on-secondary-fixed-variant": "#474746",
-                        "tertiary": "#ffb3af",
-                        "primary-fixed": "#6ffbbe",
-                        "inverse-surface": "#e5e2e1",
-                        "primary": "#4edea3",
-                        "on-secondary": "#303030",
-                        "on-background": "#e5e2e1",
-                        "error": "#ffb4ab",
-                        "tertiary-container": "#fc7c78",
-                        "surface-container": "#201f1f",
-                        "secondary": "#c8c6c5"
-                    },
-                    "borderRadius": {
-                        "DEFAULT": "0.125rem",
-                        "lg": "0.25rem",
-                        "xl": "0.5rem",
-                        "full": "0.75rem"
-                    },
-                    "spacing": {},
-                    "fontFamily": {
-                        "headline": ["Space Grotesk", "sans-serif"],
-                        "body": ["Inter", "sans-serif"],
-                        "label": ["JetBrains Mono", "monospace"]
-                    }
-                }
-            }
+    <script>
+        /*
+         * Applico il tema PRIMA del rendering per evitare il flash di contenuto
+         * (FOUC). Lo script è inline e bloccante di proposito: deve girare
+         * prima che il browser disegni qualsiasi elemento.
+         */
+        (function() {
+            var saved = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', saved);
+        })();
+    </script>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="logo" onclick="window.location.href='/appuntidiprogrammazione/'">
+            APPUNTI DI <span>PROGRAMMAZIONE</span>
+        </div>
+
+        <!-- 
+            Il pulsante aggiorna l'attributo data-theme sull'<html> e
+            persiste la scelta nel localStorage per le sessioni future.
+        -->
+        <button onclick="toggleTheme()" class="theme-toggle" aria-label="Cambia tema">🌓</button>
+    </header>
+
+    <h1 id="design-system-document-the-lucid-console">Design System Document: The Lucid Console</h1>
+
+<h2 id="1-overview--creative-north-star">1. Overview &amp; Creative North Star</h2>
+<p>The Creative North Star for this design system is <strong>“The Lucid Console.”</strong></p>
+
+<p>This system rejects the cluttered, chaotic aesthetic of traditional command-line interfaces in favor of a high-end, editorial developer experience. It bridges the gap between technical precision and sophisticated digital craft. We are moving away from “generic terminal” tropes—like neon-on-black or harsh grids—to embrace a layered, atmospheric environment.</p>
+
+<p>The design breaks the standard Jekyll template look through <strong>intentional asymmetry</strong>, <strong>glassmorphism</strong>, and <strong>tonal depth</strong>. By utilizing extreme typographic scales and “ghost” boundaries, we create an interface that feels like a professional-grade IDE curated by a premium design house.</p>
+
+<hr />
+
+<h2 id="2-colors--surface-philosophy">2. Colors &amp; Surface Philosophy</h2>
+
+<p>The palette is rooted in deep technical neutrals punctuated by a vibrant Emerald/Forest accent.</p>
+
+<h3 id="surface-hierarchy--nesting">Surface Hierarchy &amp; Nesting</h3>
+<p>To move beyond the “flat” look, we utilize a hierarchy of nested surfaces rather than structural lines.</p>
+<ul>
+  <li><strong>Surface (Base):</strong> <code class="language-plaintext highlighter-rouge">#131313</code> (Dark) / <code class="language-plaintext highlighter-rouge">#FFFFFF</code> (Light). This is your canvas.</li>
+  <li><strong>Surface-Container-Low:</strong> Use for large structural blocks (e.g., sidebars).</li>
+  <li><strong>Surface-Container-High:</strong> Use for interactive elements and cards.</li>
+  <li><strong>Surface-Container-Highest:</strong> Reserved for floating elements or “active” states.</li>
+</ul>
+
+<h3 id="the-no-line-rule">The “No-Line” Rule</h3>
+<p><strong>Explicit Instruction:</strong> Do not use <code class="language-plaintext highlighter-rouge">1px solid</code> borders to define sections. Layout boundaries must be established through background color shifts. For example, a code block (<code class="language-plaintext highlighter-rouge">surface-container-lowest</code>) should sit directly on the <code class="language-plaintext highlighter-rouge">surface</code> background, defined only by its tonal shift.</p>
+
+<h3 id="the-glass--gradient-rule">The “Glass &amp; Gradient” Rule</h3>
+<p>To elevate the “Modern Terminal” aesthetic, CTAs and hero elements should utilize a subtle gradient transitioning from <code class="language-plaintext highlighter-rouge">primary</code> (#4edea3) to <code class="language-plaintext highlighter-rouge">primary_container</code> (#10b981). Floating cards must use <strong>Glassmorphism</strong>: a semi-transparent <code class="language-plaintext highlighter-rouge">surface_container</code> with a <code class="language-plaintext highlighter-rouge">backdrop-blur</code> of 12px–20px.</p>
+
+<hr />
+
+<h2 id="3-typography">3. Typography</h2>
+<p>We utilize a high-contrast pairing to balance technical utility with editorial elegance.</p>
+
+<ul>
+  <li><strong>Display &amp; Headlines (Space Grotesk):</strong> This font provides a “Tech-Grotesque” feel. Use <code class="language-plaintext highlighter-rouge">display-lg</code> (3.5rem) for main landing titles to create an authoritative, editorial impact.</li>
+  <li><strong>Body &amp; Titles (Inter):</strong> For the primary reading experience, Inter provides maximum legibility.
+    <ul>
+      <li><em>Note:</em> While the user requested JetBrains Mono for titles, we have optimized the hierarchy: Use <strong>JetBrains Mono</strong> specifically for <code class="language-plaintext highlighter-rouge">label-md</code> and <code class="language-plaintext highlighter-rouge">label-sm</code> (the “Command” tags) and inline code to maintain the developer soul without sacrificing the readability of large headlines.</li>
+    </ul>
+  </li>
+  <li><strong>The Hierarchy Goal:</strong> Headlines should feel architectural; body text should feel transparent; labels should feel like code.</li>
+</ul>
+
+<hr />
+
+<h2 id="4-elevation--depth">4. Elevation &amp; Depth</h2>
+
+<h3 id="the-layering-principle">The Layering Principle</h3>
+<p>Depth is achieved by “stacking” surface tiers. To create a lift effect, place a <code class="language-plaintext highlighter-rouge">surface-container-lowest</code> card on a <code class="language-plaintext highlighter-rouge">surface-container-low</code> section. This creates a soft, natural transition that mimics physical depth without the clutter of shadows.</p>
+
+<h3 id="ambient-glow-the-signature-micro-interaction">Ambient Glow (The Signature Micro-interaction)</h3>
+<p>Instead of traditional drop shadows, interactive elements (cards, buttons) utilize an <strong>Ambient Glow</strong> on hover:</p>
+<ul>
+  <li><strong>Effect:</strong> A 15px-30px blurred outer glow using the <code class="language-plaintext highlighter-rouge">primary</code> color at 15% opacity.</li>
+  <li><strong>Logic:</strong> This mimics the light emission of a high-end CRT or OLED terminal screen.</li>
+</ul>
+
+<h3 id="the-ghost-border-fallback">The “Ghost Border” Fallback</h3>
+<p>If a boundary is required for accessibility, use a <strong>Ghost Border</strong>.</p>
+<ul>
+  <li><strong>Token:</strong> <code class="language-plaintext highlighter-rouge">outline_variant</code> at 15% opacity.</li>
+  <li><strong>Constraint:</strong> Never use 100% opaque, high-contrast borders for containment.</li>
+</ul>
+
+<hr />
+
+<h2 id="5-components">5. Components</h2>
+
+<h3 id="buttons--tags-command-inputs">Buttons &amp; Tags (Command Inputs)</h3>
+<ul>
+  <li><strong>Primary Button:</strong> Background <code class="language-plaintext highlighter-rouge">primary</code>, text <code class="language-plaintext highlighter-rouge">on_primary</code>. Corner radius: <code class="language-plaintext highlighter-rouge">md</code> (0.375rem). No border.</li>
+  <li><strong>Command Tags:</strong> These should look like terminal flags (e.g., <code class="language-plaintext highlighter-rouge">--version</code>). Use <code class="language-plaintext highlighter-rouge">surface-container-highest</code>, <code class="language-plaintext highlighter-rouge">label-md</code> typography (Monospaced), and a <code class="language-plaintext highlighter-rouge">sm</code> (0.125rem) radius.</li>
+  <li><strong>Interaction:</strong> On hover, the text should slightly shift +2px to the right to simulate a terminal cursor movement.</li>
+</ul>
+
+<h3 id="cards-the-glass-module">Cards (The Glass Module)</h3>
+<ul>
+  <li><strong>Styling:</strong> Background: <code class="language-plaintext highlighter-rouge">surface_variant</code> at 60% opacity.</li>
+  <li><strong>Effect:</strong> <code class="language-plaintext highlighter-rouge">backdrop-filter: blur(10px)</code>.</li>
+  <li><strong>Border:</strong> A “Ghost Border” on the top and left edges only to simulate a light source.</li>
+  <li><strong>Spacing:</strong> Use <code class="language-plaintext highlighter-rouge">xl</code> (0.75rem) internal padding to provide “editorial” breathing room.</li>
+</ul>
+
+<h3 id="sidebar--navigation">Sidebar &amp; Navigation</h3>
+<ul>
+  <li><strong>Structure:</strong> No vertical divider line. Use a <code class="language-plaintext highlighter-rouge">surface-container-low</code> background color for the entire sidebar column.</li>
+  <li><strong>List Items:</strong> Clean, monospaced text. Leading elements should be simple functional icons (e.g., <code class="language-plaintext highlighter-rouge">&gt; </code>, <code class="language-plaintext highlighter-rouge">~ </code>).</li>
+  <li><strong>Active State:</strong> A subtle <code class="language-plaintext highlighter-rouge">primary</code> glow behind the text, rather than a bold background color change.</li>
+</ul>
+
+<h3 id="input-fields">Input Fields</h3>
+<ul>
+  <li><strong>Styling:</strong> <code class="language-plaintext highlighter-rouge">surface-container-lowest</code> background.</li>
+  <li><strong>Focus State:</strong> The border transitions from “Ghost” to a solid <code class="language-plaintext highlighter-rouge">primary</code> glow. The cursor should be a solid block (blinking) to maintain the terminal aesthetic.</li>
+</ul>
+
+<hr />
+
+<h2 id="6-dos-and-donts">6. Do’s and Don’ts</h2>
+
+<h3 id="do">Do:</h3>
+<ul>
+  <li><strong>Use Asymmetry:</strong> Place content off-center or use wide margins to create a custom, high-end feel.</li>
+  <li><strong>Leverage Monospace for Metadata:</strong> Use monospaced fonts for dates, tags, and “technical” data points.</li>
+  <li><strong>Embrace Negative Space:</strong> Let the <code class="language-plaintext highlighter-rouge">surface</code> color breathe. High-end design is defined by what you leave out.</li>
+</ul>
+
+<h3 id="dont">Don’t:</h3>
+<ul>
+  <li><strong>Don’t use Divider Lines:</strong> If you feel the need for a line, use a 16px white-space gap instead.</li>
+  <li><strong>Don’t use Standard Shadows:</strong> Avoid “drop shadows” that look like they belong in a 2014 office suite. Use tonal shifts or ambient glows.</li>
+  <li><strong>Don’t Over-round:</strong> Keep the <code class="language-plaintext highlighter-rouge">roundedness</code> to <code class="language-plaintext highlighter-rouge">DEFAULT</code> (0.25rem) or <code class="language-plaintext highlighter-rouge">md</code> (0.375rem). Anything more feels too “bubbly” and loses the technical edge.</li>
+  <li><strong>Don’t use pure black/white for text:</strong> Use <code class="language-plaintext highlighter-rouge">on_surface_variant</code> for secondary text to maintain a soft, professional contrast.</li>
+</ul>
+
+
+    <footer class="main-footer">
+        Appunti di Programmazione &nbsp;·&nbsp; cosimociraci@gmail.com
+    </footer>
+
+    <script>
+        /*
+         * toggleTheme: legge il tema corrente dall'attributo HTML,
+         * calcola l'opposto e lo salva. Il CSS reagisce via [data-theme].
+         * Non uso classi sul body per mantenere tutto centralizzato
+         * sull'elemento radice.
+         */
+        function toggleTheme() {
+            var html = document.documentElement;
+            var current = html.getAttribute('data-theme');
+            var next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
         }
     </script>
-<style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #131313;
-            color: #e5e2e1;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-        h1, h2, h3, h4, h5, h6, .font-headline {
-            font-family: 'Space Grotesk', sans-serif;
-        }
-        .font-mono, .label {
-            font-family: 'JetBrains Mono', monospace;
-        }
-        
-        .glow-hover:hover {
-            box-shadow: 0 0 20px 0 rgba(78, 222, 163, 0.15);
-        }
-        
-        .glass-panel {
-            background-color: rgba(53, 53, 52, 0.6);
-            backdrop-filter: blur(12px);
-            border-top: 1px solid rgba(60, 74, 66, 0.15);
-            border-left: 1px solid rgba(60, 74, 66, 0.15);
-        }
-        
-        .ambient-glow {
-            position: relative;
-        }
-        .ambient-glow::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            box-shadow: 0 0 30px 5px rgba(78, 222, 163, 0.1);
-            border-radius: inherit;
-            z-index: -1;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .ambient-glow:hover::after {
-            opacity: 1;
-        }
-    </style>
-</head>
-<body class="bg-background text-on-background antialiased flex flex-col min-h-screen">
-<!-- TopNavBar -->
-<nav class="flex justify-between items-center px-8 h-16 w-full bg-[#131313]/90 dark:bg-[#131313]/90 backdrop-blur-xl docked full-width top-0 z-50 border-b border-white/5 sticky top-0">
-<a class="font-mono font-bold text-[#10B981] before:content-['&gt;_'] hover:text-[#4edea3] transition-colors duration-200" href="/appuntidiprogrammazione/">LUCID_CONSOLE</a>
-<div class="hidden md:flex items-center space-x-6 font-['Space_Grotesk'] uppercase tracking-widest text-sm">
-<a class="text-[#10B981] border-b-2 border-[#10B981] pb-1 hover:text-[#4edea3] transition-colors duration-200" href="#">Articles</a>
-<a class="text-zinc-400 font-mono hover:text-[#4edea3] transition-colors duration-200" href="#">Reviews</a>
-<a class="text-zinc-400 font-mono hover:text-[#4edea3] transition-colors duration-200" href="#">Library</a>
-<a class="text-zinc-400 font-mono hover:text-[#4edea3] transition-colors duration-200" href="#">Archive</a>
-</div>
-<div class="flex items-center space-x-4">
-<button aria-label="Toggle Dark Mode" class="text-zinc-400 hover:text-[#4edea3] transition-colors duration-200">
-<span class="material-symbols-outlined" data-icon="dark_mode">dark_mode</span>
-</button>
-<button aria-label="Terminal" class="text-zinc-400 hover:text-[#4edea3] transition-colors duration-200">
-<span class="material-symbols-outlined" data-icon="terminal">terminal</span>
-</button>
-</div>
-</nav>
-<!-- Main Content Area -->
-<main class="flex-grow flex w-full max-w-7xl mx-auto mt-8 mb-16 px-4 sm:px-8">
-<!-- SideNavBar (Hidden on Mobile) -->
-<aside class="hidden lg:flex flex-col border-r border-white/5 w-64 flex-shrink-0 mr-12 bg-surface-container-low h-[calc(100vh-8rem)] sticky top-24 rounded-lg overflow-hidden">
-<div class="p-6 border-b border-white/5">
-<p class="font-mono text-xs uppercase tracking-tighter text-on-surface-variant mb-1">System Operator</p>
-<h2 class="font-mono text-lg font-black text-primary mb-1 truncate">CONSOLE_ROOT</h2>
-<p class="font-mono text-[10px] text-zinc-500">v4.2.0-stable</p>
-<div class="mt-6 relative">
-<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-sm">search</span>
-<input class="w-full bg-surface-container-lowest border border-outline-variant/30 rounded focus:border-primary focus:ring-1 focus:ring-primary text-xs font-mono py-2 pl-9 pr-3 text-on-surface placeholder:text-zinc-600 outline-none transition-all" placeholder="Search Documentation..." type="text"/>
-</div>
-</div>
-<nav class="flex-1 py-4 overflow-y-auto">
-<ul class="space-y-1 font-mono text-xs uppercase tracking-tighter">
-<li>
-<a class="text-[#10B981] bg-emerald-500/5 flex items-center gap-3 px-4 py-3 border-r-2 border-[#10B981] hover:bg-zinc-800/50 transition-all" href="#">
-<span class="material-symbols-outlined text-sm" data-icon="terminal">terminal</span>
-<span>Latest Logs</span>
-</a>
-</li>
-<li>
-<a class="text-zinc-500 flex items-center gap-3 px-4 py-3 hover:bg-zinc-800/50 hover:translate-x-1 transition-all hover:text-[#4edea3]" href="#">
-<span class="material-symbols-outlined text-sm" data-icon="menu_book">menu_book</span>
-<span>Book Reviews</span>
-</a>
-</li>
-<li>
-<a class="text-zinc-500 flex items-center gap-3 px-4 py-3 hover:bg-zinc-800/50 hover:translate-x-1 transition-all hover:text-[#4edea3]" href="#">
-<span class="material-symbols-outlined text-sm" data-icon="star">star</span>
-<span>Core Readings</span>
-</a>
-</li>
-<li>
-<a class="text-zinc-500 flex items-center gap-3 px-4 py-3 hover:bg-zinc-800/50 hover:translate-x-1 transition-all hover:text-[#4edea3]" href="#">
-<span class="material-symbols-outlined text-sm" data-icon="info">info</span>
-<span>System Info</span>
-</a>
-</li>
-</ul>
-</nav>
-<div class="p-4 border-t border-white/5 bg-surface-container-lowest/50">
-<ul class="flex justify-between">
-<li>
-<a class="text-zinc-500 hover:text-primary transition-colors" href="#" title="Source">
-<span class="material-symbols-outlined" data-icon="code">code</span>
-</a>
-</li>
-<li>
-<a class="text-zinc-500 hover:text-primary transition-colors" href="#" title="RSS">
-<span class="material-symbols-outlined" data-icon="rss_feed">rss_feed</span>
-</a>
-</li>
-</ul>
-</div>
-</aside>
-<!-- Canvas -->
-<article class="flex-1 w-full max-w-4xl min-w-0">
-<!-- Dynamic Content Area -->
-<div class="prose prose-invert max-w-none font-body text-on-surface-variant prose-headings:font-headline prose-headings:text-on-surface prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-code:font-label prose-code:text-primary prose-code:bg-surface-container-lowest prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-sm">
-                <h1 id="design-system-document-the-lucid-console">Design System Document: The Lucid Console</h1>
 
-<h2 id="1-overview--creative-north-star">1. Overview &amp; Creative North Star</h2>
-<p>The Creative North Star for this design system is <strong>“The Lucid Console.”</strong></p>
-
-<p>This system rejects the cluttered, chaotic aesthetic of traditional command-line interfaces in favor of a high-end, editorial developer experience. It bridges the gap between technical precision and sophisticated digital craft. We are moving away from “generic terminal” tropes—like neon-on-black or harsh grids—to embrace a layered, atmospheric environment.</p>
-
-<p>The design breaks the standard Jekyll template look through <strong>intentional asymmetry</strong>, <strong>glassmorphism</strong>, and <strong>tonal depth</strong>. By utilizing extreme typographic scales and “ghost” boundaries, we create an interface that feels like a professional-grade IDE curated by a premium design house.</p>
-
-<hr />
-
-<h2 id="2-colors--surface-philosophy">2. Colors &amp; Surface Philosophy</h2>
-
-<p>The palette is rooted in deep technical neutrals punctuated by a vibrant Emerald/Forest accent.</p>
-
-<h3 id="surface-hierarchy--nesting">Surface Hierarchy &amp; Nesting</h3>
-<p>To move beyond the “flat” look, we utilize a hierarchy of nested surfaces rather than structural lines.</p>
-<ul>
-  <li><strong>Surface (Base):</strong> <code class="language-plaintext highlighter-rouge">#131313</code> (Dark) / <code class="language-plaintext highlighter-rouge">#FFFFFF</code> (Light). This is your canvas.</li>
-  <li><strong>Surface-Container-Low:</strong> Use for large structural blocks (e.g., sidebars).</li>
-  <li><strong>Surface-Container-High:</strong> Use for interactive elements and cards.</li>
-  <li><strong>Surface-Container-Highest:</strong> Reserved for floating elements or “active” states.</li>
-</ul>
-
-<h3 id="the-no-line-rule">The “No-Line” Rule</h3>
-<p><strong>Explicit Instruction:</strong> Do not use <code class="language-plaintext highlighter-rouge">1px solid</code> borders to define sections. Layout boundaries must be established through background color shifts. For example, a code block (<code class="language-plaintext highlighter-rouge">surface-container-lowest</code>) should sit directly on the <code class="language-plaintext highlighter-rouge">surface</code> background, defined only by its tonal shift.</p>
-
-<h3 id="the-glass--gradient-rule">The “Glass &amp; Gradient” Rule</h3>
-<p>To elevate the “Modern Terminal” aesthetic, CTAs and hero elements should utilize a subtle gradient transitioning from <code class="language-plaintext highlighter-rouge">primary</code> (#4edea3) to <code class="language-plaintext highlighter-rouge">primary_container</code> (#10b981). Floating cards must use <strong>Glassmorphism</strong>: a semi-transparent <code class="language-plaintext highlighter-rouge">surface_container</code> with a <code class="language-plaintext highlighter-rouge">backdrop-blur</code> of 12px–20px.</p>
-
-<hr />
-
-<h2 id="3-typography">3. Typography</h2>
-<p>We utilize a high-contrast pairing to balance technical utility with editorial elegance.</p>
-
-<ul>
-  <li><strong>Display &amp; Headlines (Space Grotesk):</strong> This font provides a “Tech-Grotesque” feel. Use <code class="language-plaintext highlighter-rouge">display-lg</code> (3.5rem) for main landing titles to create an authoritative, editorial impact.</li>
-  <li><strong>Body &amp; Titles (Inter):</strong> For the primary reading experience, Inter provides maximum legibility.
-    <ul>
-      <li><em>Note:</em> While the user requested JetBrains Mono for titles, we have optimized the hierarchy: Use <strong>JetBrains Mono</strong> specifically for <code class="language-plaintext highlighter-rouge">label-md</code> and <code class="language-plaintext highlighter-rouge">label-sm</code> (the “Command” tags) and inline code to maintain the developer soul without sacrificing the readability of large headlines.</li>
-    </ul>
-  </li>
-  <li><strong>The Hierarchy Goal:</strong> Headlines should feel architectural; body text should feel transparent; labels should feel like code.</li>
-</ul>
-
-<hr />
-
-<h2 id="4-elevation--depth">4. Elevation &amp; Depth</h2>
-
-<h3 id="the-layering-principle">The Layering Principle</h3>
-<p>Depth is achieved by “stacking” surface tiers. To create a lift effect, place a <code class="language-plaintext highlighter-rouge">surface-container-lowest</code> card on a <code class="language-plaintext highlighter-rouge">surface-container-low</code> section. This creates a soft, natural transition that mimics physical depth without the clutter of shadows.</p>
-
-<h3 id="ambient-glow-the-signature-micro-interaction">Ambient Glow (The Signature Micro-interaction)</h3>
-<p>Instead of traditional drop shadows, interactive elements (cards, buttons) utilize an <strong>Ambient Glow</strong> on hover:</p>
-<ul>
-  <li><strong>Effect:</strong> A 15px-30px blurred outer glow using the <code class="language-plaintext highlighter-rouge">primary</code> color at 15% opacity.</li>
-  <li><strong>Logic:</strong> This mimics the light emission of a high-end CRT or OLED terminal screen.</li>
-</ul>
-
-<h3 id="the-ghost-border-fallback">The “Ghost Border” Fallback</h3>
-<p>If a boundary is required for accessibility, use a <strong>Ghost Border</strong>.</p>
-<ul>
-  <li><strong>Token:</strong> <code class="language-plaintext highlighter-rouge">outline_variant</code> at 15% opacity.</li>
-  <li><strong>Constraint:</strong> Never use 100% opaque, high-contrast borders for containment.</li>
-</ul>
-
-<hr />
-
-<h2 id="5-components">5. Components</h2>
-
-<h3 id="buttons--tags-command-inputs">Buttons &amp; Tags (Command Inputs)</h3>
-<ul>
-  <li><strong>Primary Button:</strong> Background <code class="language-plaintext highlighter-rouge">primary</code>, text <code class="language-plaintext highlighter-rouge">on_primary</code>. Corner radius: <code class="language-plaintext highlighter-rouge">md</code> (0.375rem). No border.</li>
-  <li><strong>Command Tags:</strong> These should look like terminal flags (e.g., <code class="language-plaintext highlighter-rouge">--version</code>). Use <code class="language-plaintext highlighter-rouge">surface-container-highest</code>, <code class="language-plaintext highlighter-rouge">label-md</code> typography (Monospaced), and a <code class="language-plaintext highlighter-rouge">sm</code> (0.125rem) radius.</li>
-  <li><strong>Interaction:</strong> On hover, the text should slightly shift +2px to the right to simulate a terminal cursor movement.</li>
-</ul>
-
-<h3 id="cards-the-glass-module">Cards (The Glass Module)</h3>
-<ul>
-  <li><strong>Styling:</strong> Background: <code class="language-plaintext highlighter-rouge">surface_variant</code> at 60% opacity.</li>
-  <li><strong>Effect:</strong> <code class="language-plaintext highlighter-rouge">backdrop-filter: blur(10px)</code>.</li>
-  <li><strong>Border:</strong> A “Ghost Border” on the top and left edges only to simulate a light source.</li>
-  <li><strong>Spacing:</strong> Use <code class="language-plaintext highlighter-rouge">xl</code> (0.75rem) internal padding to provide “editorial” breathing room.</li>
-</ul>
-
-<h3 id="sidebar--navigation">Sidebar &amp; Navigation</h3>
-<ul>
-  <li><strong>Structure:</strong> No vertical divider line. Use a <code class="language-plaintext highlighter-rouge">surface-container-low</code> background color for the entire sidebar column.</li>
-  <li><strong>List Items:</strong> Clean, monospaced text. Leading elements should be simple functional icons (e.g., <code class="language-plaintext highlighter-rouge">&gt; </code>, <code class="language-plaintext highlighter-rouge">~ </code>).</li>
-  <li><strong>Active State:</strong> A subtle <code class="language-plaintext highlighter-rouge">primary</code> glow behind the text, rather than a bold background color change.</li>
-</ul>
-
-<h3 id="input-fields">Input Fields</h3>
-<ul>
-  <li><strong>Styling:</strong> <code class="language-plaintext highlighter-rouge">surface-container-lowest</code> background.</li>
-  <li><strong>Focus State:</strong> The border transitions from “Ghost” to a solid <code class="language-plaintext highlighter-rouge">primary</code> glow. The cursor should be a solid block (blinking) to maintain the terminal aesthetic.</li>
-</ul>
-
-<hr />
-
-<h2 id="6-dos-and-donts">6. Do’s and Don’ts</h2>
-
-<h3 id="do">Do:</h3>
-<ul>
-  <li><strong>Use Asymmetry:</strong> Place content off-center or use wide margins to create a custom, high-end feel.</li>
-  <li><strong>Leverage Monospace for Metadata:</strong> Use monospaced fonts for dates, tags, and “technical” data points.</li>
-  <li><strong>Embrace Negative Space:</strong> Let the <code class="language-plaintext highlighter-rouge">surface</code> color breathe. High-end design is defined by what you leave out.</li>
-</ul>
-
-<h3 id="dont">Don’t:</h3>
-<ul>
-  <li><strong>Don’t use Divider Lines:</strong> If you feel the need for a line, use a 16px white-space gap instead.</li>
-  <li><strong>Don’t use Standard Shadows:</strong> Avoid “drop shadows” that look like they belong in a 2014 office suite. Use tonal shifts or ambient glows.</li>
-  <li><strong>Don’t Over-round:</strong> Keep the <code class="language-plaintext highlighter-rouge">roundedness</code> to <code class="language-plaintext highlighter-rouge">DEFAULT</code> (0.25rem) or <code class="language-plaintext highlighter-rouge">md</code> (0.375rem). Anything more feels too “bubbly” and loses the technical edge.</li>
-  <li><strong>Don’t use pure black/white for text:</strong> Use <code class="language-plaintext highlighter-rouge">on_surface_variant</code> for secondary text to maintain a soft, professional contrast.</li>
-</ul>
-
-                
-                <!-- Sample Content Structure representing typical Liquid output injected into <h1 id="design-system-document-the-lucid-console">Design System Document: The Lucid Console</h1>
-
-<h2 id="1-overview--creative-north-star">1. Overview &amp; Creative North Star</h2>
-<p>The Creative North Star for this design system is <strong>“The Lucid Console.”</strong></p>
-
-<p>This system rejects the cluttered, chaotic aesthetic of traditional command-line interfaces in favor of a high-end, editorial developer experience. It bridges the gap between technical precision and sophisticated digital craft. We are moving away from “generic terminal” tropes—like neon-on-black or harsh grids—to embrace a layered, atmospheric environment.</p>
-
-<p>The design breaks the standard Jekyll template look through <strong>intentional asymmetry</strong>, <strong>glassmorphism</strong>, and <strong>tonal depth</strong>. By utilizing extreme typographic scales and “ghost” boundaries, we create an interface that feels like a professional-grade IDE curated by a premium design house.</p>
-
-<hr />
-
-<h2 id="2-colors--surface-philosophy">2. Colors &amp; Surface Philosophy</h2>
-
-<p>The palette is rooted in deep technical neutrals punctuated by a vibrant Emerald/Forest accent.</p>
-
-<h3 id="surface-hierarchy--nesting">Surface Hierarchy &amp; Nesting</h3>
-<p>To move beyond the “flat” look, we utilize a hierarchy of nested surfaces rather than structural lines.</p>
-<ul>
-  <li><strong>Surface (Base):</strong> <code class="language-plaintext highlighter-rouge">#131313</code> (Dark) / <code class="language-plaintext highlighter-rouge">#FFFFFF</code> (Light). This is your canvas.</li>
-  <li><strong>Surface-Container-Low:</strong> Use for large structural blocks (e.g., sidebars).</li>
-  <li><strong>Surface-Container-High:</strong> Use for interactive elements and cards.</li>
-  <li><strong>Surface-Container-Highest:</strong> Reserved for floating elements or “active” states.</li>
-</ul>
-
-<h3 id="the-no-line-rule">The “No-Line” Rule</h3>
-<p><strong>Explicit Instruction:</strong> Do not use <code class="language-plaintext highlighter-rouge">1px solid</code> borders to define sections. Layout boundaries must be established through background color shifts. For example, a code block (<code class="language-plaintext highlighter-rouge">surface-container-lowest</code>) should sit directly on the <code class="language-plaintext highlighter-rouge">surface</code> background, defined only by its tonal shift.</p>
-
-<h3 id="the-glass--gradient-rule">The “Glass &amp; Gradient” Rule</h3>
-<p>To elevate the “Modern Terminal” aesthetic, CTAs and hero elements should utilize a subtle gradient transitioning from <code class="language-plaintext highlighter-rouge">primary</code> (#4edea3) to <code class="language-plaintext highlighter-rouge">primary_container</code> (#10b981). Floating cards must use <strong>Glassmorphism</strong>: a semi-transparent <code class="language-plaintext highlighter-rouge">surface_container</code> with a <code class="language-plaintext highlighter-rouge">backdrop-blur</code> of 12px–20px.</p>
-
-<hr />
-
-<h2 id="3-typography">3. Typography</h2>
-<p>We utilize a high-contrast pairing to balance technical utility with editorial elegance.</p>
-
-<ul>
-  <li><strong>Display &amp; Headlines (Space Grotesk):</strong> This font provides a “Tech-Grotesque” feel. Use <code class="language-plaintext highlighter-rouge">display-lg</code> (3.5rem) for main landing titles to create an authoritative, editorial impact.</li>
-  <li><strong>Body &amp; Titles (Inter):</strong> For the primary reading experience, Inter provides maximum legibility.
-    <ul>
-      <li><em>Note:</em> While the user requested JetBrains Mono for titles, we have optimized the hierarchy: Use <strong>JetBrains Mono</strong> specifically for <code class="language-plaintext highlighter-rouge">label-md</code> and <code class="language-plaintext highlighter-rouge">label-sm</code> (the “Command” tags) and inline code to maintain the developer soul without sacrificing the readability of large headlines.</li>
-    </ul>
-  </li>
-  <li><strong>The Hierarchy Goal:</strong> Headlines should feel architectural; body text should feel transparent; labels should feel like code.</li>
-</ul>
-
-<hr />
-
-<h2 id="4-elevation--depth">4. Elevation &amp; Depth</h2>
-
-<h3 id="the-layering-principle">The Layering Principle</h3>
-<p>Depth is achieved by “stacking” surface tiers. To create a lift effect, place a <code class="language-plaintext highlighter-rouge">surface-container-lowest</code> card on a <code class="language-plaintext highlighter-rouge">surface-container-low</code> section. This creates a soft, natural transition that mimics physical depth without the clutter of shadows.</p>
-
-<h3 id="ambient-glow-the-signature-micro-interaction">Ambient Glow (The Signature Micro-interaction)</h3>
-<p>Instead of traditional drop shadows, interactive elements (cards, buttons) utilize an <strong>Ambient Glow</strong> on hover:</p>
-<ul>
-  <li><strong>Effect:</strong> A 15px-30px blurred outer glow using the <code class="language-plaintext highlighter-rouge">primary</code> color at 15% opacity.</li>
-  <li><strong>Logic:</strong> This mimics the light emission of a high-end CRT or OLED terminal screen.</li>
-</ul>
-
-<h3 id="the-ghost-border-fallback">The “Ghost Border” Fallback</h3>
-<p>If a boundary is required for accessibility, use a <strong>Ghost Border</strong>.</p>
-<ul>
-  <li><strong>Token:</strong> <code class="language-plaintext highlighter-rouge">outline_variant</code> at 15% opacity.</li>
-  <li><strong>Constraint:</strong> Never use 100% opaque, high-contrast borders for containment.</li>
-</ul>
-
-<hr />
-
-<h2 id="5-components">5. Components</h2>
-
-<h3 id="buttons--tags-command-inputs">Buttons &amp; Tags (Command Inputs)</h3>
-<ul>
-  <li><strong>Primary Button:</strong> Background <code class="language-plaintext highlighter-rouge">primary</code>, text <code class="language-plaintext highlighter-rouge">on_primary</code>. Corner radius: <code class="language-plaintext highlighter-rouge">md</code> (0.375rem). No border.</li>
-  <li><strong>Command Tags:</strong> These should look like terminal flags (e.g., <code class="language-plaintext highlighter-rouge">--version</code>). Use <code class="language-plaintext highlighter-rouge">surface-container-highest</code>, <code class="language-plaintext highlighter-rouge">label-md</code> typography (Monospaced), and a <code class="language-plaintext highlighter-rouge">sm</code> (0.125rem) radius.</li>
-  <li><strong>Interaction:</strong> On hover, the text should slightly shift +2px to the right to simulate a terminal cursor movement.</li>
-</ul>
-
-<h3 id="cards-the-glass-module">Cards (The Glass Module)</h3>
-<ul>
-  <li><strong>Styling:</strong> Background: <code class="language-plaintext highlighter-rouge">surface_variant</code> at 60% opacity.</li>
-  <li><strong>Effect:</strong> <code class="language-plaintext highlighter-rouge">backdrop-filter: blur(10px)</code>.</li>
-  <li><strong>Border:</strong> A “Ghost Border” on the top and left edges only to simulate a light source.</li>
-  <li><strong>Spacing:</strong> Use <code class="language-plaintext highlighter-rouge">xl</code> (0.75rem) internal padding to provide “editorial” breathing room.</li>
-</ul>
-
-<h3 id="sidebar--navigation">Sidebar &amp; Navigation</h3>
-<ul>
-  <li><strong>Structure:</strong> No vertical divider line. Use a <code class="language-plaintext highlighter-rouge">surface-container-low</code> background color for the entire sidebar column.</li>
-  <li><strong>List Items:</strong> Clean, monospaced text. Leading elements should be simple functional icons (e.g., <code class="language-plaintext highlighter-rouge">&gt; </code>, <code class="language-plaintext highlighter-rouge">~ </code>).</li>
-  <li><strong>Active State:</strong> A subtle <code class="language-plaintext highlighter-rouge">primary</code> glow behind the text, rather than a bold background color change.</li>
-</ul>
-
-<h3 id="input-fields">Input Fields</h3>
-<ul>
-  <li><strong>Styling:</strong> <code class="language-plaintext highlighter-rouge">surface-container-lowest</code> background.</li>
-  <li><strong>Focus State:</strong> The border transitions from “Ghost” to a solid <code class="language-plaintext highlighter-rouge">primary</code> glow. The cursor should be a solid block (blinking) to maintain the terminal aesthetic.</li>
-</ul>
-
-<hr />
-
-<h2 id="6-dos-and-donts">6. Do’s and Don’ts</h2>
-
-<h3 id="do">Do:</h3>
-<ul>
-  <li><strong>Use Asymmetry:</strong> Place content off-center or use wide margins to create a custom, high-end feel.</li>
-  <li><strong>Leverage Monospace for Metadata:</strong> Use monospaced fonts for dates, tags, and “technical” data points.</li>
-  <li><strong>Embrace Negative Space:</strong> Let the <code class="language-plaintext highlighter-rouge">surface</code> color breathe. High-end design is defined by what you leave out.</li>
-</ul>
-
-<h3 id="dont">Don’t:</h3>
-<ul>
-  <li><strong>Don’t use Divider Lines:</strong> If you feel the need for a line, use a 16px white-space gap instead.</li>
-  <li><strong>Don’t use Standard Shadows:</strong> Avoid “drop shadows” that look like they belong in a 2014 office suite. Use tonal shifts or ambient glows.</li>
-  <li><strong>Don’t Over-round:</strong> Keep the <code class="language-plaintext highlighter-rouge">roundedness</code> to <code class="language-plaintext highlighter-rouge">DEFAULT</code> (0.25rem) or <code class="language-plaintext highlighter-rouge">md</code> (0.375rem). Anything more feels too “bubbly” and loses the technical edge.</li>
-  <li><strong>Don’t use pure black/white for text:</strong> Use <code class="language-plaintext highlighter-rouge">on_surface_variant</code> for secondary text to maintain a soft, professional contrast.</li>
-</ul>
- -->
-<header class="mb-12 mt-4 relative">
-<div class="absolute -left-6 top-2 h-16 w-1 bg-primary rounded-r"></div>
-<div class="flex items-center space-x-3 mb-4">
-<span class="bg-surface-container-highest text-primary font-mono text-[10px] uppercase px-2 py-1 rounded-sm border border-outline-variant/30 tracking-widest">Article</span>
-<time class="font-mono text-zinc-500 text-xs">2024-10-24</time>
-</div>
-<h1 class="text-5xl md:text-6xl font-headline font-bold text-on-surface tracking-tight leading-tight mb-4">Design System Document: The Lucid Console</h1>
-<p class="text-lg md:text-xl text-on-surface-variant font-light leading-relaxed max-w-2xl">Hub tecnico per appunti di programmazione, analisi di problemi reali  e soluzioni implementative in ambito Spring Boot, Java e Web Dev.</p>
-</header>
-<div class="glass-panel rounded-lg p-8 mb-12 ambient-glow">
-<h2 class="text-2xl font-headline mb-4 text-on-surface flex items-center">
-<span class="material-symbols-outlined mr-2 text-primary">data_object</span>
-                        Initialization Sequence
-                    </h2>
-<p class="mb-6">The system architecture relies on a highly decoupled module pattern, ensuring maximum efficiency across all rendering nodes.</p>
-<div class="bg-surface-container-lowest rounded-md p-4 font-mono text-sm overflow-x-auto border border-outline-variant/20 shadow-inner">
-<pre class="text-on-surface-variant"><code><span class="text-primary">function</span> <span class="text-tertiary">initializeSystem</span>(config) {
-  <span class="text-primary">const</span> kernel = <span class="text-primary">new</span> Kernel(config.core);
-  
-  <span class="text-zinc-500">// Boot sequence</span>
-  kernel.boot()
-    .then(() =&gt; console.log(<span class="text-secondary-fixed-dim">'System Online'</span>))
-    .catch(err =&gt; console.error(<span class="text-error-container">'Boot Failure:'</span>, err));
-}</code></pre>
-</div>
-</div>
-</div>
-</article>
-</main>
-<!-- Footer -->
-<footer class="flex flex-col md:flex-row justify-between items-center px-12 gap-4 w-full py-8 mt-auto bg-[#131313] dark:bg-[#131313] border-t border-white/5">
-<p class="font-mono text-[10px] uppercase opacity-50 text-[#10B981]">[ROOT@LUCID-CONSOLE ~]# ALL RIGHTS RESERVED 2024</p>
-<div class="flex space-x-6 font-mono text-[10px] uppercase opacity-50">
-<a class="text-zinc-500 hover:text-[#10B981] underline underline-offset-4 transition-colors" href="#">Github</a>
-<a class="text-zinc-500 hover:text-[#10B981] underline underline-offset-4 transition-colors" href="#">LinkedIn</a>
-<a class="text-zinc-500 hover:text-[#10B981] underline underline-offset-4 transition-colors" href="#">Status</a>
-            
-            <a class="text-zinc-500 hover:text-[#10B981] underline underline-offset-4 transition-colors" href="mailto:cosimociraci@gmail.com">Contact</a>
-            
-        </div>
-</footer>
-</body></html>
+</body>
+</html>

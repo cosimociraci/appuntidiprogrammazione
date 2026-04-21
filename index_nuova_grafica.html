@@ -33,34 +33,15 @@
         <button onclick="toggleTheme()" class="theme-toggle" aria-label="Cambia tema">🌓</button>
     </header>
 
-    <!--
-    LOGICA DI PUBBLICAZIONE A DATA — versione corretta.
-
-    Il problema del confronto post.date <= site.time:
-    Jekyll tratta le date del frontmatter come UTC. Un articolo
-    datato "2026-04-05 15:05:50" con future: false viene escluso
-    dal build se site.time è "2026-04-05 00:05:00 UTC" (build
-    notturno), perché 15:05 > 00:05.
-
-    SOLUZIONE: normalizzo entrambe le date al giorno (YYYY-MM-DD)
-    e confronto solo stringhe. In questo modo un articolo del 05/04
-    è visibile in qualunque momento del 05/04, indipendentemente
-    dall'ora scritta nel frontmatter.
-
-    Struttura a due livelli:
-    1. Liquid: include nel build solo articoli con data-giorno <= oggi
-    2. JS (safety net): nasconde lato client eventuali articoli futuri
-       in caso di cache stale — usa lo stesso confronto su data-date.
--->
-<div class="main-layout-container">
-
+    <div class="main-container">
     <main class="content-area">
-
-        <section class="search-section">
+        <!-- Sezione di Ricerca -->
+        <section class="search-section" style="margin-bottom: 2rem;">
             <input
                 type="search"
                 id="search-bar"
-                placeholder="Cerca negli appunti…"
+                class="search-input"
+                placeholder="[SEARCH_SYSTEM] Digitazione comando per ricerca..."
                 aria-label="Cerca articoli"
                 autocomplete="off"
                 oninput="applyFilters()"
@@ -68,20 +49,18 @@
         </section>
 
         
-
+        
+        
         
         
 
-        
-
-        <div class="post-grid" id="post-grid">
+        <!-- Griglia Contenuti -->
+        <div class="post-grid" id="post-grid" style="display: grid; gap: 1.5rem;">
             
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -89,9 +68,7 @@
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -99,9 +76,7 @@
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -109,14 +84,11 @@
                 
                 
                 
-                
             
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -124,9 +96,7 @@
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -134,14 +104,11 @@
                 
                 
                 
-                
             
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -149,9 +116,7 @@
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -159,14 +124,11 @@
                 
                 
                 
-                
             
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -174,9 +136,7 @@
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -184,14 +144,11 @@
                 
                 
                 
-                
             
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -199,9 +156,7 @@
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -209,14 +164,11 @@
                 
                 
                 
-                
             
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -224,9 +176,7 @@
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -234,14 +184,11 @@
                 
                 
                 
-                
             
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -249,9 +196,7 @@
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -259,14 +204,11 @@
                 
                 
                 
-                
             
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -274,9 +216,7 @@
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -284,9 +224,7 @@
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -294,9 +232,7 @@
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -304,14 +240,11 @@
                 
                 
                 
-                
             
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -319,9 +252,7 @@
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -329,14 +260,11 @@
                 
                 
                 
-                
             
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -344,9 +272,7 @@
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -354,14 +280,11 @@
                 
                 
                 
-                
             
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -369,9 +292,7 @@
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -379,14 +300,11 @@
                 
                 
                 
-                
             
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -394,9 +312,7 @@
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -404,14 +320,11 @@
                 
                 
                 
-                
             
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -419,9 +332,7 @@
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -429,14 +340,11 @@
                 
                 
                 
-                
             
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -444,9 +352,7 @@
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -454,14 +360,11 @@
                 
                 
                 
-                
             
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -469,9 +372,7 @@
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -479,9 +380,7 @@
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -489,9 +388,7 @@
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -499,14 +396,11 @@
                 
                 
                 
-                
             
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -514,9 +408,7 @@
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -524,14 +416,11 @@
                 
                 
                 
-                
             
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -539,9 +428,7 @@
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -549,14 +436,11 @@
                 
                 
                 
-                
             
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -564,9 +448,7 @@
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -574,14 +456,11 @@
                 
                 
                 
-                
             
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -589,9 +468,7 @@
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -599,14 +476,11 @@
                 
                 
                 
-                
             
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -614,9 +488,7 @@
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -624,14 +496,11 @@
                 
                 
                 
-                
             
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -639,9 +508,7 @@
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -649,14 +516,11 @@
                 
                 
                 
-                
             
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -664,9 +528,7 @@
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -674,14 +536,11 @@
                 
                 
                 
-                
             
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -689,9 +548,7 @@
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -699,14 +556,11 @@
                 
                 
                 
-                
             
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -714,9 +568,7 @@
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -724,14 +576,11 @@
                 
                 
                 
-                
             
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -739,9 +588,7 @@
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -749,14 +596,11 @@
                 
                 
                 
-                
             
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -764,9 +608,7 @@
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -774,14 +616,11 @@
                 
                 
                 
-                
             
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -789,9 +628,7 @@
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -799,14 +636,11 @@
                 
                 
                 
-                
             
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -814,9 +648,7 @@
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -824,14 +656,11 @@
                 
                 
                 
-                
             
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -839,9 +668,7 @@
                 
                 
                 
-                
             
-                
                 
                 
                 
@@ -849,35 +676,39 @@
                 
                 
                 
-                
             
                 
                 
                 
-                
             
-                
                 
                 
                 
                 <article
-                    class="post-item"
+                    class="item-card post-item"
                     data-tags="thymeleaf-performance-tuning-caching"
                     data-title="fragment caching (jcache/redis)"
                     data-date="2026-04-20"
                 >
-                    <div class="post-meta">
-                        
-                            JAVA &nbsp;·&nbsp; 20/04/2026
-                        
+                    <div class="post-meta" style="margin-bottom: 0.5rem;">
+                        <span class="tag-chip">
+                            
+                                java
+                            
+                        </span>
+                        <span class="terminal-text" style="font-size: 0.75rem; opacity: 0.6; margin-left: 0.5rem;">
+                            20.04.2026
+                        </span>
                     </div>
 
-                    <h2 class="post-title">
-                        <a href="/appuntidiprogrammazione/articoli/fragment-caching-jcacheredis/">Fragment Caching (JCache/Redis)</a>
+                    <h2 class="post-title" style="margin: 0.5rem 0;">
+                        <a href="/appuntidiprogrammazione/articoli/fragment-caching-jcacheredis/" style="color: var(--accent-primary);">
+                            Fragment Caching (JCache/Redis)
+                        </a>
                         
                     </h2>
 
-                    <p class="post-sintesi">
+                    <p class="post-sintesi" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0;">
                         Elaborare lo stesso menu o footer per ogni utente è uno spreco di risorse. Wrappando i TemplateResolver con sistemi di caching (Redis o Ehcache) per i framme...
                     </p>
                 </article>
@@ -886,25 +717,31 @@
                 
                 
                 
-                
                 <article
-                    class="post-item"
+                    class="item-card post-item"
                     data-tags="statistica-classificazione-naive-bayes-sentiment-analysis"
                     data-title="naive bayes"
                     data-date="2026-04-18"
                 >
-                    <div class="post-meta">
-                        
-                            STATISTICA &nbsp;·&nbsp; 18/04/2026
-                        
+                    <div class="post-meta" style="margin-bottom: 0.5rem;">
+                        <span class="tag-chip">
+                            
+                                statistica
+                            
+                        </span>
+                        <span class="terminal-text" style="font-size: 0.75rem; opacity: 0.6; margin-left: 0.5rem;">
+                            18.04.2026
+                        </span>
                     </div>
 
-                    <h2 class="post-title">
-                        <a href="/appuntidiprogrammazione/articoli/Naive-Bayes/">Naive Bayes</a>
+                    <h2 class="post-title" style="margin: 0.5rem 0;">
+                        <a href="/appuntidiprogrammazione/articoli/Naive-Bayes/" style="color: var(--accent-primary);">
+                            Naive Bayes
+                        </a>
                         
                     </h2>
 
-                    <p class="post-sintesi">
+                    <p class="post-sintesi" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0;">
                         In ambito tecnico, il Naive Bayes è un classificatore probabilistico basato sul Teorema di Bayes. Viene definito "Naive" (ingenuo) perché assume che la prese...
                     </p>
                 </article>
@@ -913,25 +750,31 @@
                 
                 
                 
-                
                 <article
-                    class="post-item"
+                    class="item-card post-item"
                     data-tags="intelligenza-artificiale-sicurezza-cybersecurity-eset-ai"
                     data-title="proteggo la mia organizzazione dagli strumenti di intelligenza artificiale: il mio viaggio con eset protect"
                     data-date="2026-04-17"
                 >
-                    <div class="post-meta">
-                        
-                            IA &nbsp;·&nbsp; 17/04/2026
-                        
+                    <div class="post-meta" style="margin-bottom: 0.5rem;">
+                        <span class="tag-chip">
+                            
+                                ia
+                            
+                        </span>
+                        <span class="terminal-text" style="font-size: 0.75rem; opacity: 0.6; margin-left: 0.5rem;">
+                            17.04.2026
+                        </span>
                     </div>
 
-                    <h2 class="post-title">
-                        <a href="/appuntidiprogrammazione/articoli/da-eset-pi%C3%B9-sicurezza-per-proteggere-chi-lavora-ne/">Proteggo la mia organizzazione dagli strumenti di intelligenza artificiale: il mio viaggio con ESET PROTECT</a>
+                    <h2 class="post-title" style="margin: 0.5rem 0;">
+                        <a href="/appuntidiprogrammazione/articoli/da-eset-pi%C3%B9-sicurezza-per-proteggere-chi-lavora-ne/" style="color: var(--accent-primary);">
+                            Proteggo la mia organizzazione dagli strumenti di intelligenza artificiale: il mio viaggio con ESET PROTECT
+                        </a>
                         
                     </h2>
 
-                    <p class="post-sintesi">
+                    <p class="post-sintesi" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0;">
                         ESET affronta la sicurezza dei dati con una tecnologia di browser sicuro che intercetta le interazioni dell’AI e analizza in tempo reale, proteggeto le organ...
                     </p>
                 </article>
@@ -940,25 +783,31 @@
                 
                 
                 
-                
                 <article
-                    class="post-item"
+                    class="item-card post-item"
                     data-tags="banca-intelligenza-artificiale-fiducia-supervisione"
                     data-title="banche e ia: equilibrio tra troppa o scarsa fiducia"
                     data-date="2026-04-17"
                 >
-                    <div class="post-meta">
-                        
-                            IA &nbsp;·&nbsp; 17/04/2026
-                        
+                    <div class="post-meta" style="margin-bottom: 0.5rem;">
+                        <span class="tag-chip">
+                            
+                                ia
+                            
+                        </span>
+                        <span class="terminal-text" style="font-size: 0.75rem; opacity: 0.6; margin-left: 0.5rem;">
+                            17.04.2026
+                        </span>
                     </div>
 
-                    <h2 class="post-title">
-                        <a href="/appuntidiprogrammazione/articoli/banche-e-ia-in-equilibrio-tra-troppa-o-scarsa-fidu/">Banche e IA: equilibrio tra troppa o scarsa fiducia</a>
+                    <h2 class="post-title" style="margin: 0.5rem 0;">
+                        <a href="/appuntidiprogrammazione/articoli/banche-e-ia-in-equilibrio-tra-troppa-o-scarsa-fidu/" style="color: var(--accent-primary);">
+                            Banche e IA: equilibrio tra troppa o scarsa fiducia
+                        </a>
                         
                     </h2>
 
-                    <p class="post-sintesi">
+                    <p class="post-sintesi" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0;">
                         Il report di SAS sugli implicazioni del Data and AI nell'industria bancaria evidenzia la mancanza di fiducia nei sistemi IA implementati. Solo il 11% delle b...
                     </p>
                 </article>
@@ -967,25 +816,31 @@
                 
                 
                 
-                
                 <article
-                    class="post-item"
+                    class="item-card post-item"
                     data-tags="gemma-google-machine-learning-ai"
                     data-title="google annuncia gemma 4 per l'inferenza ai locale"
                     data-date="2026-04-17"
                 >
-                    <div class="post-meta">
-                        
-                            IA &nbsp;·&nbsp; 17/04/2026
-                        
+                    <div class="post-meta" style="margin-bottom: 0.5rem;">
+                        <span class="tag-chip">
+                            
+                                ia
+                            
+                        </span>
+                        <span class="terminal-text" style="font-size: 0.75rem; opacity: 0.6; margin-left: 0.5rem;">
+                            17.04.2026
+                        </span>
                     </div>
 
-                    <h2 class="post-title">
-                        <a href="/appuntidiprogrammazione/articoli/ai-ml-data-engineering/">Google annuncia Gemma 4 per l'inferenza AI locale</a>
+                    <h2 class="post-title" style="margin: 0.5rem 0;">
+                        <a href="/appuntidiprogrammazione/articoli/ai-ml-data-engineering/" style="color: var(--accent-primary);">
+                            Google annuncia Gemma 4 per l'inferenza AI locale
+                        </a>
                         
                     </h2>
 
-                    <p class="post-sintesi">
+                    <p class="post-sintesi" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0;">
                         Google rilascia la versione 4 di Gemma, una libreria open source per l'AI e il machine learning che introduce funzionalità multimodali e agenti locali per mi...
                     </p>
                 </article>
@@ -994,27 +849,35 @@
                 
                 
                 
-                
                 <article
-                    class="post-item"
+                    class="item-card post-item"
                     data-tags="edward-de-bono-creatività-pensiero-laterale-problem-solving-psicologia-cognitiva-innovazione-formazione-design"
                     data-title="creatività e pensiero laterale"
                     data-date="2026-04-15"
                 >
-                    <div class="post-meta">
-                        
-                            📚 LETTURA CONSIGLIATA: &nbsp;·&nbsp; 15/04/2026
-                        
+                    <div class="post-meta" style="margin-bottom: 0.5rem;">
+                        <span class="tag-chip">
+                            
+                                libro
+                            
+                        </span>
+                        <span class="terminal-text" style="font-size: 0.75rem; opacity: 0.6; margin-left: 0.5rem;">
+                            15.04.2026
+                        </span>
                     </div>
 
-                    <h2 class="post-title">
-                        <a href="/appuntidiprogrammazione/libri/Edward_del_Bono_pensiero_laterale/">Creatività e pensiero laterale</a>
+                    <h2 class="post-title" style="margin: 0.5rem 0;">
+                        <a href="/appuntidiprogrammazione/libri/Edward_del_Bono_pensiero_laterale/" style="color: var(--accent-primary);">
+                            Creatività e pensiero laterale
+                        </a>
                         
-                        <span class="autore">&nbsp; (di Edward de Bono)</span>
+                        <span class="terminal-text" style="font-size: 0.9rem; opacity: 0.5; font-weight: normal;">
+                            (by Edward de Bono)
+                        </span>
                         
                     </h2>
 
-                    <p class="post-sintesi">
+                    <p class="post-sintesi" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0;">
                         Un manuale operativo che demistifica il genio creativo, trasformandolo in una competenza tecnica apprendibile e allenabile.  Edward de Bono insegna a rompere...
                     </p>
                 </article>
@@ -1023,25 +886,31 @@
                 
                 
                 
-                
                 <article
-                    class="post-item"
+                    class="item-card post-item"
                     data-tags="thymeleaf-security-spel-expressions"
                     data-title="security dialect: sec:authorize"
                     data-date="2026-04-15"
                 >
-                    <div class="post-meta">
-                        
-                            JAVA &nbsp;·&nbsp; 15/04/2026
-                        
+                    <div class="post-meta" style="margin-bottom: 0.5rem;">
+                        <span class="tag-chip">
+                            
+                                java
+                            
+                        </span>
+                        <span class="terminal-text" style="font-size: 0.75rem; opacity: 0.6; margin-left: 0.5rem;">
+                            15.04.2026
+                        </span>
                     </div>
 
-                    <h2 class="post-title">
-                        <a href="/appuntidiprogrammazione/articoli/security-dialect-secauthorize/">Security Dialect: sec:authorize</a>
+                    <h2 class="post-title" style="margin: 0.5rem 0;">
+                        <a href="/appuntidiprogrammazione/articoli/security-dialect-secauthorize/" style="color: var(--accent-primary);">
+                            Security Dialect: sec:authorize
+                        </a>
                         
                     </h2>
 
-                    <p class="post-sintesi">
+                    <p class="post-sintesi" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0;">
                         Nascondere elementi via CSS (display:none) non è sicurezza: l'HTML è visibile nel sorgente. L'attributo sec:authorize="hasRole(...)" impedisce fisicamente al...
                     </p>
                 </article>
@@ -1050,25 +919,31 @@
                 
                 
                 
-                
                 <article
-                    class="post-item"
+                    class="item-card post-item"
                     data-tags="thymeleaf-security-spel-expressions"
                     data-title="csrf token injection in ajax"
                     data-date="2026-04-13"
                 >
-                    <div class="post-meta">
-                        
-                            JAVA &nbsp;·&nbsp; 13/04/2026
-                        
+                    <div class="post-meta" style="margin-bottom: 0.5rem;">
+                        <span class="tag-chip">
+                            
+                                java
+                            
+                        </span>
+                        <span class="terminal-text" style="font-size: 0.75rem; opacity: 0.6; margin-left: 0.5rem;">
+                            13.04.2026
+                        </span>
                     </div>
 
-                    <h2 class="post-title">
-                        <a href="/appuntidiprogrammazione/articoli/csrf-token-injection-in-ajax/">CSRF Token Injection in AJAX</a>
+                    <h2 class="post-title" style="margin: 0.5rem 0;">
+                        <a href="/appuntidiprogrammazione/articoli/csrf-token-injection-in-ajax/" style="color: var(--accent-primary);">
+                            CSRF Token Injection in AJAX
+                        </a>
                         
                     </h2>
 
-                    <p class="post-sintesi">
+                    <p class="post-sintesi" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0;">
                         I form standard di Thymeleaf gestiscono i token CSRF automaticamente, ma le chiamate AJAX/VanillaJS no. Le espressioni ${_csrf.parameterName} e ${_csrf.token...
                     </p>
                 </article>
@@ -1077,25 +952,31 @@
                 
                 
                 
-                
                 <article
-                    class="post-item"
+                    class="item-card post-item"
                     data-tags="java-jdk-openjdk-glassfish-micronaut"
                     data-title="java news roundup: marzo 2026 - la mia esperienza con gli ultimi aggiornamenti della comunità java"
                     data-date="2026-04-10"
                 >
-                    <div class="post-meta">
-                        
-                            JAVA &nbsp;·&nbsp; 10/04/2026
-                        
+                    <div class="post-meta" style="margin-bottom: 0.5rem;">
+                        <span class="tag-chip">
+                            
+                                java
+                            
+                        </span>
+                        <span class="terminal-text" style="font-size: 0.75rem; opacity: 0.6; margin-left: 0.5rem;">
+                            10.04.2026
+                        </span>
                     </div>
 
-                    <h2 class="post-title">
-                        <a href="/appuntidiprogrammazione/articoli/java-news-roundup-jdk-26-libericajdk-payara-pla/">Java News Roundup: Marzo 2026 - La mia esperienza con gli ultimi aggiornamenti della comunità Java</a>
+                    <h2 class="post-title" style="margin: 0.5rem 0;">
+                        <a href="/appuntidiprogrammazione/articoli/java-news-roundup-jdk-26-libericajdk-payara-pla/" style="color: var(--accent-primary);">
+                            Java News Roundup: Marzo 2026 - La mia esperienza con gli ultimi aggiornamenti della comunità Java
+                        </a>
                         
                     </h2>
 
-                    <p class="post-sintesi">
+                    <p class="post-sintesi" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0;">
                         L'articolo riporta sui recenti aggiornamenti di Java, inclusi JDK 26, LibericaJDK, GlassFish 9.0, Micronaut e ClawRunr.
 
                     </p>
@@ -1105,25 +986,31 @@
                 
                 
                 
-                
                 <article
-                    class="post-item"
+                    class="item-card post-item"
                     data-tags="sicurezza-backup-intelligenza-artificiale-zerotrust-riscaldamento-globale"
                     data-title="come affrontare gli attacchi basati sull'intelligenza artificiale: i miei pensieri da senior developer"
                     data-date="2026-04-10"
                 >
-                    <div class="post-meta">
-                        
-                            IA &nbsp;·&nbsp; 10/04/2026
-                        
+                    <div class="post-meta" style="margin-bottom: 0.5rem;">
+                        <span class="tag-chip">
+                            
+                                ia
+                            
+                        </span>
+                        <span class="terminal-text" style="font-size: 0.75rem; opacity: 0.6; margin-left: 0.5rem;">
+                            10.04.2026
+                        </span>
                     </div>
 
-                    <h2 class="post-title">
-                        <a href="/appuntidiprogrammazione/articoli/come-i-responsabili-it-e-sicurezza-affrontano-gli/">Come affrontare gli attacchi basati sull'intelligenza artificiale: i miei pensieri da senior developer</a>
+                    <h2 class="post-title" style="margin: 0.5rem 0;">
+                        <a href="/appuntidiprogrammazione/articoli/come-i-responsabili-it-e-sicurezza-affrontano-gli/" style="color: var(--accent-primary);">
+                            Come affrontare gli attacchi basati sull'intelligenza artificiale: i miei pensieri da senior developer
+                        </a>
                         
                     </h2>
 
-                    <p class="post-sintesi">
+                    <p class="post-sintesi" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0;">
                         Il seniore developer esplora le preoccupazioni e le misure di difesa contro gli attacchi informatici basati sull'IA, evidenziando la necessità di un backup i...
                     </p>
                 </article>
@@ -1132,25 +1019,31 @@
                 
                 
                 
-                
                 <article
-                    class="post-item"
+                    class="item-card post-item"
                     data-tags="dispositivi-connessi-sicurezza-applicazioni-mobile-programmazione"
                     data-title="stato e futuro dei dispositivi connessi"
                     data-date="2026-04-10"
                 >
-                    <div class="post-meta">
-                        
-                            DEFAULT &nbsp;·&nbsp; 10/04/2026
-                        
+                    <div class="post-meta" style="margin-bottom: 0.5rem;">
+                        <span class="tag-chip">
+                            
+                                default
+                            
+                        </span>
+                        <span class="terminal-text" style="font-size: 0.75rem; opacity: 0.6; margin-left: 0.5rem;">
+                            10.04.2026
+                        </span>
                     </div>
 
-                    <h2 class="post-title">
-                        <a href="/appuntidiprogrammazione/articoli/altra-ferraglia-stand-alone/">Stato e futuro dei dispositivi connessi</a>
+                    <h2 class="post-title" style="margin: 0.5rem 0;">
+                        <a href="/appuntidiprogrammazione/articoli/altra-ferraglia-stand-alone/" style="color: var(--accent-primary);">
+                            Stato e futuro dei dispositivi connessi
+                        </a>
                         
                     </h2>
 
-                    <p class="post-sintesi">
+                    <p class="post-sintesi" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0;">
                         L'articolo analizza le tendenze del mondo dei dispositivi connessi, enfatizzando la crescente preoccupazione per la sicurezza, l'innovazione nelle applicazio...
                     </p>
                 </article>
@@ -1159,25 +1052,31 @@
                 
                 
                 
-                
                 <article
-                    class="post-item"
+                    class="item-card post-item"
                     data-tags="ai-ml-data-engineering-postgresql-security"
                     data-title="scoperte ed esperienze in ai, ml & data engineering nel 2026"
                     data-date="2026-04-10"
                 >
-                    <div class="post-meta">
-                        
-                            POSTGRESQL &nbsp;·&nbsp; 10/04/2026
-                        
+                    <div class="post-meta" style="margin-bottom: 0.5rem;">
+                        <span class="tag-chip">
+                            
+                                postgresql
+                            
+                        </span>
+                        <span class="terminal-text" style="font-size: 0.75rem; opacity: 0.6; margin-left: 0.5rem;">
+                            10.04.2026
+                        </span>
                     </div>
 
-                    <h2 class="post-title">
-                        <a href="/appuntidiprogrammazione/articoli/all-in-ai-ml-data-eng/">Scoperte ed esperienze in AI, ML & Data Engineering nel 2026</a>
+                    <h2 class="post-title" style="margin: 0.5rem 0;">
+                        <a href="/appuntidiprogrammazione/articoli/all-in-ai-ml-data-eng/" style="color: var(--accent-primary);">
+                            Scoperte ed esperienze in AI, ML & Data Engineering nel 2026
+                        </a>
                         
                     </h2>
 
-                    <p class="post-sintesi">
+                    <p class="post-sintesi" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0;">
                         Il report descrive alcune delle scoperte e esperienze dell'autore nel campo dell'AI, ML e Data Engineering, includendo aggiornamenti su PostgreSQL, tecnologi...
                     </p>
                 </article>
@@ -1186,25 +1085,31 @@
                 
                 
                 
-                
                 <article
-                    class="post-item"
+                    class="item-card post-item"
                     data-tags="api-scalabilità-performance-chatbot-websocket"
                     data-title="transport layer matters per agenti intelligenti: il perché e come"
                     data-date="2026-04-09"
                 >
-                    <div class="post-meta">
-                        
-                            IA &nbsp;·&nbsp; 09/04/2026
-                        
+                    <div class="post-meta" style="margin-bottom: 0.5rem;">
+                        <span class="tag-chip">
+                            
+                                ia
+                            
+                        </span>
+                        <span class="terminal-text" style="font-size: 0.75rem; opacity: 0.6; margin-left: 0.5rem;">
+                            09.04.2026
+                        </span>
                     </div>
 
-                    <h2 class="post-title">
-                        <a href="/appuntidiprogrammazione/articoli/stateful-continuation-for-ai-agents-why-transport/">Transport Layer Matters per Agenti Intelligenti: Il Perché e Come</a>
+                    <h2 class="post-title" style="margin: 0.5rem 0;">
+                        <a href="/appuntidiprogrammazione/articoli/stateful-continuation-for-ai-agents-why-transport/" style="color: var(--accent-primary);">
+                            Transport Layer Matters per Agenti Intelligenti: Il Perché e Come
+                        </a>
                         
                     </h2>
 
-                    <p class="post-sintesi">
+                    <p class="post-sintesi" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0;">
                         L'articolo esplora l'importanza del livello di trasporto per gli agenti intelligenti, spiegando come i concetti come WebSocket di OpenAI migliorino la perfor...
                     </p>
                 </article>
@@ -1213,25 +1118,31 @@
                 
                 
                 
-                
                 <article
-                    class="post-item"
+                    class="item-card post-item"
                     data-tags="qcon-san-francisco-intelligenza-artificiale-software-development-future-of-tech"
                     data-title="il futuro del software e dell'intelligenza artificiale: insight dal qcon san francisco 2026"
                     data-date="2026-04-09"
                 >
-                    <div class="post-meta">
-                        
-                            IA &nbsp;·&nbsp; 09/04/2026
-                        
+                    <div class="post-meta" style="margin-bottom: 0.5rem;">
+                        <span class="tag-chip">
+                            
+                                ia
+                            
+                        </span>
+                        <span class="terminal-text" style="font-size: 0.75rem; opacity: 0.6; margin-left: 0.5rem;">
+                            09.04.2026
+                        </span>
                     </div>
 
-                    <h2 class="post-title">
-                        <a href="/appuntidiprogrammazione/articoli/qcon-san-francisco-learn-whats-next-in-ai-and-sof/">Il Futuro del Software e dell'Intelligenza Artificiale: Insight dal QCon San Francisco 2026</a>
+                    <h2 class="post-title" style="margin: 0.5rem 0;">
+                        <a href="/appuntidiprogrammazione/articoli/qcon-san-francisco-learn-whats-next-in-ai-and-sof/" style="color: var(--accent-primary);">
+                            Il Futuro del Software e dell'Intelligenza Artificiale: Insight dal QCon San Francisco 2026
+                        </a>
                         
                     </h2>
 
-                    <p class="post-sintesi">
+                    <p class="post-sintesi" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0;">
                         Il QCon San Francisco 2026 affronta la rapida evoluzione della tecnologia, specialmente nell'IA e nel software. L'evento si terrà a San Francisco nel novembr...
                     </p>
                 </article>
@@ -1240,25 +1151,31 @@
                 
                 
                 
-                
                 <article
-                    class="post-item"
+                    class="item-card post-item"
                     data-tags="qcon-ai-latenza-sicurezza-ingegneria-software"
                     data-title="il qcon ai boston 2026: un approfondimento sui sistemi ai produttivi"
                     data-date="2026-04-09"
                 >
-                    <div class="post-meta">
-                        
-                            IA &nbsp;·&nbsp; 09/04/2026
-                        
+                    <div class="post-meta" style="margin-bottom: 0.5rem;">
+                        <span class="tag-chip">
+                            
+                                ia
+                            
+                        </span>
+                        <span class="terminal-text" style="font-size: 0.75rem; opacity: 0.6; margin-left: 0.5rem;">
+                            09.04.2026
+                        </span>
                     </div>
 
-                    <h2 class="post-title">
-                        <a href="/appuntidiprogrammazione/articoli/qcon-ai-boston-learn-how-leading-engineering-teams/">Il QCon AI Boston 2026: un approfondimento sui sistemi AI produttivi</a>
+                    <h2 class="post-title" style="margin: 0.5rem 0;">
+                        <a href="/appuntidiprogrammazione/articoli/qcon-ai-boston-learn-how-leading-engineering-teams/" style="color: var(--accent-primary);">
+                            Il QCon AI Boston 2026: un approfondimento sui sistemi AI produttivi
+                        </a>
                         
                     </h2>
 
-                    <p class="post-sintesi">
+                    <p class="post-sintesi" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0;">
                         La conferenza QCon AI Boston si terrà a Boston nel giugno prossimo e si concentrerà sulla costruzione di sistemi AI robusti, affrontando temi come la latenza...
                     </p>
                 </article>
@@ -1267,25 +1184,31 @@
                 
                 
                 
-                
                 <article
-                    class="post-item"
+                    class="item-card post-item"
                     data-tags="intelligenza-artificiale-normative-ai-act-cybersecurity-governance"
                     data-title="governo dell'intelligenza artificiale nelle imprese: le normative italiane e europee"
                     data-date="2026-04-09"
                 >
-                    <div class="post-meta">
-                        
-                            IA &nbsp;·&nbsp; 09/04/2026
-                        
+                    <div class="post-meta" style="margin-bottom: 0.5rem;">
+                        <span class="tag-chip">
+                            
+                                ia
+                            
+                        </span>
+                        <span class="terminal-text" style="font-size: 0.75rem; opacity: 0.6; margin-left: 0.5rem;">
+                            09.04.2026
+                        </span>
                     </div>
 
-                    <h2 class="post-title">
-                        <a href="/appuntidiprogrammazione/articoli/normative-italiane-ed-europee-2026-per-gli-agenti/">Governo dell'Intelligenza Artificiale nelle Imprese: Le Normative Italiane e Europee</a>
+                    <h2 class="post-title" style="margin: 0.5rem 0;">
+                        <a href="/appuntidiprogrammazione/articoli/normative-italiane-ed-europee-2026-per-gli-agenti/" style="color: var(--accent-primary);">
+                            Governo dell'Intelligenza Artificiale nelle Imprese: Le Normative Italiane e Europee
+                        </a>
                         
                     </h2>
 
-                    <p class="post-sintesi">
+                    <p class="post-sintesi" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0;">
                         L'adozione di AI e agenti AI in Italia è aumentata in modo significativo, con l'aiuto di normative nazionali ed europee come il Regolamento (UE) 2024/1689 e ...
                     </p>
                 </article>
@@ -1294,25 +1217,31 @@
                 
                 
                 
-                
                 <article
-                    class="post-item"
+                    class="item-card post-item"
                     data-tags="tornadovm-google-adk-java-framework"
                     data-title="sfida di un senior developer: la settimana tecnica in java (aprile 2026)"
                     data-date="2026-04-09"
                 >
-                    <div class="post-meta">
-                        
-                            JAVA &nbsp;·&nbsp; 09/04/2026
-                        
+                    <div class="post-meta" style="margin-bottom: 0.5rem;">
+                        <span class="tag-chip">
+                            
+                                java
+                            
+                        </span>
+                        <span class="terminal-text" style="font-size: 0.75rem; opacity: 0.6; margin-left: 0.5rem;">
+                            09.04.2026
+                        </span>
                     </div>
 
-                    <h2 class="post-title">
-                        <a href="/appuntidiprogrammazione/articoli/java-news-roundup-tornadovm-40-google-adk-for-j/">Sfida di un Senior Developer: La settimana tecnica in Java (aprile 2026)</a>
+                    <h2 class="post-title" style="margin: 0.5rem 0;">
+                        <a href="/appuntidiprogrammazione/articoli/java-news-roundup-tornadovm-40-google-adk-for-j/" style="color: var(--accent-primary);">
+                            Sfida di un Senior Developer: La settimana tecnica in Java (aprile 2026)
+                        </a>
                         
                     </h2>
 
-                    <p class="post-sintesi">
+                    <p class="post-sintesi" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0;">
                         L'articolo descrive gli aggiornamenti più significativi del mondo Java della settimana, includendo la versione 4.0 di TornadoVM e Google ADK for Java 1.0.
 
                     </p>
@@ -1322,25 +1251,31 @@
                 
                 
                 
-                
                 <article
-                    class="post-item"
+                    class="item-card post-item"
                     data-tags="jdk-payara-hibernate-quarkus-apache-camel-jakarta-ee"
                     data-title="java news roundup: febbraio 2026"
                     data-date="2026-04-09"
                 >
-                    <div class="post-meta">
-                        
-                            JAVA &nbsp;·&nbsp; 09/04/2026
-                        
+                    <div class="post-meta" style="margin-bottom: 0.5rem;">
+                        <span class="tag-chip">
+                            
+                                java
+                            
+                        </span>
+                        <span class="terminal-text" style="font-size: 0.75rem; opacity: 0.6; margin-left: 0.5rem;">
+                            09.04.2026
+                        </span>
                     </div>
 
-                    <h2 class="post-title">
-                        <a href="/appuntidiprogrammazione/articoli/java-news-roundup-jdk26-rc2-payara-platform-hib/">Java News Roundup: Febbraio 2026</a>
+                    <h2 class="post-title" style="margin: 0.5rem 0;">
+                        <a href="/appuntidiprogrammazione/articoli/java-news-roundup-jdk26-rc2-payara-platform-hib/" style="color: var(--accent-primary);">
+                            Java News Roundup: Febbraio 2026
+                        </a>
                         
                     </h2>
 
-                    <p class="post-sintesi">
+                    <p class="post-sintesi" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0;">
                         Riassunto delle principali notizie riguardanti JDK 26, Payara Platform, Hibernate, Quarkus, Apache Camel e Jakarta EE 12.
 
                     </p>
@@ -1350,25 +1285,31 @@
                 
                 
                 
-                
                 <article
-                    class="post-item"
+                    class="item-card post-item"
                     data-tags="helidon-openjdk-java-verified-portfolio"
                     data-title="helidon 4.4.0: allineamento con openjdk cadence e supporto attraverso java verified portfolio"
                     data-date="2026-04-09"
                 >
-                    <div class="post-meta">
-                        
-                            JAVA &nbsp;·&nbsp; 09/04/2026
-                        
+                    <div class="post-meta" style="margin-bottom: 0.5rem;">
+                        <span class="tag-chip">
+                            
+                                java
+                            
+                        </span>
+                        <span class="terminal-text" style="font-size: 0.75rem; opacity: 0.6; margin-left: 0.5rem;">
+                            09.04.2026
+                        </span>
                     </div>
 
-                    <h2 class="post-title">
-                        <a href="/appuntidiprogrammazione/articoli/helidon-440-introduces-alignment-with-openjdk-ca/">Helidon 4.4.0: Allineamento con OpenJDK Cadence e Supporto attraverso Java Verified Portfolio</a>
+                    <h2 class="post-title" style="margin: 0.5rem 0;">
+                        <a href="/appuntidiprogrammazione/articoli/helidon-440-introduces-alignment-with-openjdk-ca/" style="color: var(--accent-primary);">
+                            Helidon 4.4.0: Allineamento con OpenJDK Cadence e Supporto attraverso Java Verified Portfolio
+                        </a>
                         
                     </h2>
 
-                    <p class="post-sintesi">
+                    <p class="post-sintesi" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0;">
                         Oracle ha rilasciato Helidon 4.4.0 che adotta la cadenza di rilascio di OpenJDK, viene incluso nel Java Verified Portfolio e presenta nuove funzionalità come...
                     </p>
                 </article>
@@ -1377,25 +1318,31 @@
                 
                 
                 
-                
                 <article
-                    class="post-item"
+                    class="item-card post-item"
                     data-tags="productività-sviluppatore-ai-assistente"
                     data-title="massimizzando la productività del sviluppatore con l'ai"
                     data-date="2026-04-09"
                 >
-                    <div class="post-meta">
-                        
-                            IA &nbsp;·&nbsp; 09/04/2026
-                        
+                    <div class="post-meta" style="margin-bottom: 0.5rem;">
+                        <span class="tag-chip">
+                            
+                                ia
+                            
+                        </span>
+                        <span class="terminal-text" style="font-size: 0.75rem; opacity: 0.6; margin-left: 0.5rem;">
+                            09.04.2026
+                        </span>
                     </div>
 
-                    <h2 class="post-title">
-                        <a href="/appuntidiprogrammazione/articoli/choosing-your-ai-copilot-maximizing-developer-pro/">Massimizzando la Productività del Sviluppatore con l'AI</a>
+                    <h2 class="post-title" style="margin: 0.5rem 0;">
+                        <a href="/appuntidiprogrammazione/articoli/choosing-your-ai-copilot-maximizing-developer-pro/" style="color: var(--accent-primary);">
+                            Massimizzando la Productività del Sviluppatore con l'AI
+                        </a>
                         
                     </h2>
 
-                    <p class="post-sintesi">
+                    <p class="post-sintesi" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0;">
                         Esplora le ultime tendenze nell'aiuto all'AI al codice, aprendo il cammino a strumenti di lavoro intelligenti e autonomi.
 
                     </p>
@@ -1405,25 +1352,31 @@
                 
                 
                 
-                
                 <article
-                    class="post-item"
+                    class="item-card post-item"
                     data-tags="ai-ml-intelligenza-artificiale-machine-learning"
                     data-title="nuovi sviluppi in ai, ml e ingegneria delle informazioni"
                     data-date="2026-04-09"
                 >
-                    <div class="post-meta">
-                        
-                            IA &nbsp;·&nbsp; 09/04/2026
-                        
+                    <div class="post-meta" style="margin-bottom: 0.5rem;">
+                        <span class="tag-chip">
+                            
+                                ia
+                            
+                        </span>
+                        <span class="terminal-text" style="font-size: 0.75rem; opacity: 0.6; margin-left: 0.5rem;">
+                            09.04.2026
+                        </span>
                     </div>
 
-                    <h2 class="post-title">
-                        <a href="/appuntidiprogrammazione/articoli/ai-infrastructure/">Nuovi sviluppi in AI, ML e Ingegneria delle Informazioni</a>
+                    <h2 class="post-title" style="margin: 0.5rem 0;">
+                        <a href="/appuntidiprogrammazione/articoli/ai-infrastructure/" style="color: var(--accent-primary);">
+                            Nuovi sviluppi in AI, ML e Ingegneria delle Informazioni
+                        </a>
                         
                     </h2>
 
-                    <p class="post-sintesi">
+                    <p class="post-sintesi" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0;">
                         Il campo di AI, ML e IA continua a evolversi con nuove scoperte e sviluppi. Viene presentato il Summit della AAIF, Google Colab, Scion, Claude Code, TigerFS ...
                     </p>
                 </article>
@@ -1432,25 +1385,31 @@
                 
                 
                 
-                
                 <article
-                    class="post-item"
+                    class="item-card post-item"
                     data-tags="arxivardocument-workflowplatform-chatbots-documentmanagement-genai"
                     data-title="arxivar document & workflow platform 2.13: innovazioni tecnologiche per la gestione dei processi aziendali"
                     data-date="2026-04-09"
                 >
-                    <div class="post-meta">
-                        
-                            IA &nbsp;·&nbsp; 09/04/2026
-                        
+                    <div class="post-meta" style="margin-bottom: 0.5rem;">
+                        <span class="tag-chip">
+                            
+                                ia
+                            
+                        </span>
+                        <span class="terminal-text" style="font-size: 0.75rem; opacity: 0.6; margin-left: 0.5rem;">
+                            09.04.2026
+                        </span>
                     </div>
 
-                    <h2 class="post-title">
-                        <a href="/appuntidiprogrammazione/articoli/able-tech-integra-la-generative-ai-nella-suite-arx/">ARXivar Document & Workflow Platform 2.13: Innovazioni Tecnologiche per la Gestione dei Processi Aziendali</a>
+                    <h2 class="post-title" style="margin: 0.5rem 0;">
+                        <a href="/appuntidiprogrammazione/articoli/able-tech-integra-la-generative-ai-nella-suite-arx/" style="color: var(--accent-primary);">
+                            ARXivar Document & Workflow Platform 2.13: Innovazioni Tecnologiche per la Gestione dei Processi Aziendali
+                        </a>
                         
                     </h2>
 
-                    <p class="post-sintesi">
+                    <p class="post-sintesi" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0;">
                         Able Tech ha rilasciato ARXivar Document & Workflow Platform 2.13, una versione avanzata con nuovi moduli basati su Gen AI come il Chatbot Semantico e il Cha...
                     </p>
                 </article>
@@ -1459,25 +1418,31 @@
                 
                 
                 
-                
                 <article
-                    class="post-item"
+                    class="item-card post-item"
                     data-tags="thymeleaf-security-spel-expressions"
                     data-title="escaping avanzato: th:text vs th:utext"
                     data-date="2026-04-08"
                 >
-                    <div class="post-meta">
-                        
-                            JAVA &nbsp;·&nbsp; 08/04/2026
-                        
+                    <div class="post-meta" style="margin-bottom: 0.5rem;">
+                        <span class="tag-chip">
+                            
+                                java
+                            
+                        </span>
+                        <span class="terminal-text" style="font-size: 0.75rem; opacity: 0.6; margin-left: 0.5rem;">
+                            08.04.2026
+                        </span>
                     </div>
 
-                    <h2 class="post-title">
-                        <a href="/appuntidiprogrammazione/articoli/escaping-avanzato-thtext-vs-thutext/">Escaping Avanzato: th:text vs th:utext</a>
+                    <h2 class="post-title" style="margin: 0.5rem 0;">
+                        <a href="/appuntidiprogrammazione/articoli/escaping-avanzato-thtext-vs-thutext/" style="color: var(--accent-primary);">
+                            Escaping Avanzato: th:text vs th:utext
+                        </a>
                         
                     </h2>
 
-                    <p class="post-sintesi">
+                    <p class="post-sintesi" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0;">
                         L'uso di th:utext (unescaped) per renderizzare contenuti HTML salvati nel DB è la causa principale di XSS. Prima di passare una stringa HTML alla view, quest...
                     </p>
                 </article>
@@ -1486,25 +1451,31 @@
                 
                 
                 
-                
                 <article
-                    class="post-item"
+                    class="item-card post-item"
                     data-tags="thymeleaf-security-spel-expressions"
                     data-title="ssti (server-side template injection) prevention"
                     data-date="2026-04-06"
                 >
-                    <div class="post-meta">
-                        
-                            JAVA &nbsp;·&nbsp; 06/04/2026
-                        
+                    <div class="post-meta" style="margin-bottom: 0.5rem;">
+                        <span class="tag-chip">
+                            
+                                java
+                            
+                        </span>
+                        <span class="terminal-text" style="font-size: 0.75rem; opacity: 0.6; margin-left: 0.5rem;">
+                            06.04.2026
+                        </span>
                     </div>
 
-                    <h2 class="post-title">
-                        <a href="/appuntidiprogrammazione/articoli/ssti-server-side-template-injection-prevention/">SSTI (Server-Side Template Injection) Prevention</a>
+                    <h2 class="post-title" style="margin: 0.5rem 0;">
+                        <a href="/appuntidiprogrammazione/articoli/ssti-server-side-template-injection-prevention/" style="color: var(--accent-primary);">
+                            SSTI (Server-Side Template Injection) Prevention
+                        </a>
                         
                     </h2>
 
-                    <p class="post-sintesi">
+                    <p class="post-sintesi" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0;">
                         Una vulnerabilità storica di Thymeleaf permette l'esecuzione di codice se il nome della vista è costruito con input utente. Concatenare parametri della reque...
                     </p>
                 </article>
@@ -1513,115 +1484,112 @@
                 
                 
                 
-                
                 <article
-                    class="post-item"
+                    class="item-card post-item"
                     data-tags="thymeleaf-security-spel-expressions"
                     data-title="restrizione type reference in spel"
                     data-date="2026-04-01"
                 >
-                    <div class="post-meta">
-                        
-                            JAVA &nbsp;·&nbsp; 01/04/2026
-                        
+                    <div class="post-meta" style="margin-bottom: 0.5rem;">
+                        <span class="tag-chip">
+                            
+                                java
+                            
+                        </span>
+                        <span class="terminal-text" style="font-size: 0.75rem; opacity: 0.6; margin-left: 0.5rem;">
+                            01.04.2026
+                        </span>
                     </div>
 
-                    <h2 class="post-title">
-                        <a href="/appuntidiprogrammazione/articoli/restrizione-type-reference-in-spel/">Restrizione Type Reference in SpEL</a>
+                    <h2 class="post-title" style="margin: 0.5rem 0;">
+                        <a href="/appuntidiprogrammazione/articoli/restrizione-type-reference-in-spel/" style="color: var(--accent-primary);">
+                            Restrizione Type Reference in SpEL
+                        </a>
                         
                     </h2>
 
-                    <p class="post-sintesi">
+                    <p class="post-sintesi" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0;">
                         SpEL permette di accedere a classi Java statiche via T(java.lang.Runtime). In ambienti CMS dove gli utenti possono modificare parzialmente i template, è fond...
                     </p>
                 </article>
                 
             
         </div>
-
     </main>
 
+    <!-- Sidebar -->
     <aside class="main-sidebar">
-
-        <div class="sidebar-box">
-            <span class="box-label">Ultimi Argomenti</span>
-            <nav class="tag-nav-vertical" id="dynamic-tags" aria-label="Filtra per argomento">
+        <div class="sidebar-section">
+            <h3 class="sidebar-title">
+                <span class="material-icons" style="font-size: 1rem;">terminal</span>
+                Ultimi Argomenti
+            </h3>
+            <nav class="tag-nav-vertical" id="dynamic-tags" aria-label="Filtra per argomento" style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
                 <button
-                    class="tag-btn active"
+                    class="tag-chip active"
                     onclick="filterByTag('tutti', this)"
                     aria-pressed="true"
+                    style="cursor: pointer; background: var(--accent-primary); color: var(--bg-primary);"
                 >
                     TUTTI
                 </button>
             </nav>
         </div>
 
-        <div class="sidebar-box">
-            <span class="box-label">Letture Fondamentali</span>
+        <div class="sidebar-section">
+            <h3 class="sidebar-title">
+                <span class="material-icons" style="font-size: 1rem;">menu_book</span>
+                Letture Fondamentali
+            </h3>
             <div class="featured-books">
-                <a class="mini-book-card"
+                <a class="item-card mini-book-card"
                    href="https://www.amazon.it/Appunti-Programmazione-Pensieri-soluzioni-Applicazioni-ebook/dp/B0FMFRHKTF/"
                    target="_blank"
                    rel="noopener noreferrer"
-                   aria-label="Acquista Appunti di Programmazione su Amazon">
+                   style="display: flex; gap: 1rem; padding: 1rem; align-items: center; text-decoration: none;">
                     <img src="https://m.media-amazon.com/images/I/61Ck5eMzGYL._SY466_.jpg"
                          alt="Copertina: Appunti di Programmazione"
-                         width="52"
-                         height="78">
+                         style="width: 50px; border-radius: 2px;">
                     <div>
-                        <strong>Appunti di Programmazione</strong>
-                        <p>Pensieri e soluzioni per Applicazioni WEB</p>
+                        <strong style="display: block; font-size: 0.8rem; color: var(--accent-primary);">Appunti di Programmazione</strong>
+                        <p style="margin: 0; font-size: 0.7rem; opacity: 0.7;">Pensieri e soluzioni per Applicazioni WEB</p>
                     </div>
                 </a>
             </div>
         </div>
-
     </aside>
-
 </div>
 
 <script>
-    /*
-     * SAFETY NET client-side: stesso confronto YYYY-MM-DD del Liquid.
-     * Protegge da cache stale che potrebbero servire un build vecchio.
-     */
+    /* SAFETY NET: Logica di filtraggio lato client */
     function getTodayISO() {
         const now = new Date();
-        const y   = now.getFullYear();
-        const m   = String(now.getMonth() + 1).padStart(2, '0');
-        const d   = String(now.getDate()).padStart(2, '0');
-        return y + '-' + m + '-' + d;
+        return now.toISOString().split('T')[0];
     }
 
     (function hideArticoliFuturi() {
-        const oggi     = getTodayISO();
-        const articoli = document.querySelectorAll('.post-item[data-date]');
-        articoli.forEach(function(article) {
-            if (article.getAttribute('data-date') > oggi) {
-                article.hidden = true;
-            }
+        const oggi = getTodayISO();
+        document.querySelectorAll('.post-item[data-date]').forEach(article => {
+            if (article.getAttribute('data-date') > oggi) article.hidden = true;
         });
     })();
 
     let activeTag = 'tutti';
 
     document.addEventListener('DOMContentLoaded', function() {
-        /* Popolo i tag solo dagli articoli visibili (non futuri) */
-        const articoli  = document.querySelectorAll('.post-item:not([hidden])');
+        const articoli = document.querySelectorAll('.post-item:not([hidden])');
         const container = document.getElementById('dynamic-tags');
-        const allTags   = new Set();
-
-        articoli.forEach(function(article) {
+        const allTags = new Set();
+        
+        articoli.forEach(article => {
             const raw = article.getAttribute('data-tags') || '';
-            raw.split(',').forEach(function(t) {
-                const trimmed = t.trim();
-                if (trimmed) allTags.add(trimmed);
-            });
+            raw.split(',').forEach(t => { if (t.trim()) allTags.add(t.trim()); });
         });
 
-        Array.from(allTags).sort().forEach(function(tag) {
+        Array.from(allTags).sort().forEach(tag => {
             const btn = document.createElement('button');
-            btn.className   = 'tag-btn';
+            btn.className = 'tag-chip';
+            btn.style.cursor = 'pointer';
             btn.textContent = tag.replace(/-/g, ' ').toUpperCase();
             btn.setAttribute('aria-pressed', 'false');
             btn.addEventListener('click', function() { filterByTag(tag, this); });
@@ -1631,21 +1599,22 @@
 
     function filterByTag(tag, btn) {
         activeTag = tag.toLowerCase();
-        document.querySelectorAll('.tag-btn').forEach(function(b) {
+        document.querySelectorAll('.tag-chip').forEach(b => {
             b.classList.remove('active');
-            b.setAttribute('aria-pressed', 'false');
+            b.style.background = 'var(--bg-tertiary)';
+            b.style.color = 'var(--text-muted)';
         });
         btn.classList.add('active');
-        btn.setAttribute('aria-pressed', 'true');
+        btn.style.background = 'var(--accent-primary)';
+        btn.style.color = 'var(--bg-primary)';
         applyFilters();
     }
 
     function applyFilters() {
-        const query    = document.getElementById('search-bar').value.toLowerCase().trim();
-        const articoli = document.querySelectorAll('.post-item:not([hidden])');
-        articoli.forEach(function(article) {
-            const title      = article.getAttribute('data-title') || '';
-            const tags       = article.getAttribute('data-tags')  || '';
+        const query = document.getElementById('search-bar').value.toLowerCase().trim();
+        document.querySelectorAll('.post-item:not([hidden])').forEach(article => {
+            const title = article.getAttribute('data-title') || '';
+            const tags = article.getAttribute('data-tags') || '';
             const matchesTag = (activeTag === 'tutti' || tags.split(',').includes(activeTag));
             const matchesTxt = !query || title.includes(query);
             article.style.display = (matchesTag && matchesTxt) ? '' : 'none';

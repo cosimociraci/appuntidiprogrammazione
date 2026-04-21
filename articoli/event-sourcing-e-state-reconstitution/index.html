@@ -1,300 +1,428 @@
 <!DOCTYPE html>
+<html lang="it" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Sourcing e State Reconstitution — DevLog</title>
+    <meta name="description" content="Gestire lo stato attuale non permette di capire come ci si è arrivati (audit log). L'Event Sourcing non salva lo stato, ma una sequenza immutabile di eventi (append-only). Lo stato attuale viene ricostruito ("proiezione") riducendo (folding) l'array 
+">
+    <link rel="stylesheet" href="/appuntidiprogrammazione/assets/css/style.css">
 
-<html class="dark" lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Post - The Lucid Console</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    "colors": {
-                        "tertiary-fixed": "#ffdad7",
-                        "surface-container-low": "#1c1b1b",
-                        "on-secondary": "#303030",
-                        "on-primary-fixed": "#002113",
-                        "inverse-on-surface": "#313030",
-                        "surface": "#131313",
-                        "secondary": "#c8c6c5",
-                        "on-tertiary": "#650911",
-                        "tertiary-container": "#fc7c78",
-                        "secondary-fixed-dim": "#c8c6c5",
-                        "outline": "#86948a",
-                        "on-secondary-fixed": "#1b1c1c",
-                        "on-error-container": "#ffdad6",
-                        "inverse-primary": "#006c49",
-                        "on-surface": "#e5e2e1",
-                        "on-background": "#e5e2e1",
-                        "secondary-fixed": "#e4e2e1",
-                        "on-error": "#690005",
-                        "surface-bright": "#3a3939",
-                        "on-primary-fixed-variant": "#005236",
-                        "primary-fixed": "#6ffbbe",
-                        "on-tertiary-container": "#711419",
-                        "on-surface-variant": "#bbcabf",
-                        "secondary-container": "#474746",
-                        "inverse-surface": "#e5e2e1",
-                        "surface-container-lowest": "#0e0e0e",
-                        "on-secondary-fixed-variant": "#474746",
-                        "on-tertiary-fixed-variant": "#842225",
-                        "primary": "#4edea3",
-                        "tertiary-fixed-dim": "#ffb3af",
-                        "on-primary": "#003824",
-                        "primary-container": "#10b981",
-                        "outline-variant": "#3c4a42",
-                        "surface-container-highest": "#353534",
-                        "tertiary": "#ffb3af",
-                        "on-primary-container": "#00422b",
-                        "error-container": "#93000a",
-                        "surface-tint": "#4edea3",
-                        "on-tertiary-fixed": "#410005",
-                        "error": "#ffb4ab",
-                        "surface-container-high": "#2a2a2a",
-                        "primary-fixed-dim": "#4edea3",
-                        "surface-dim": "#131313",
-                        "surface-variant": "#353534",
-                        "surface-container": "#201f1f",
-                        "on-secondary-container": "#b7b5b4",
-                        "background": "#131313"
-                    },
-                    "borderRadius": {
-                        "DEFAULT": "0.125rem",
-                        "lg": "0.25rem",
-                        "xl": "0.5rem",
-                        "full": "0.75rem"
-                    },
-                    "fontFamily": {
-                        "headline": ["Space Grotesk", "sans-serif"],
-                        "body": ["Inter", "sans-serif"],
-                        "label": ["JetBrains Mono", "monospace"]
-                    }
-                }
-            }
+    <script>
+        /*
+         * Applico il tema PRIMA del rendering per evitare il flash di contenuto
+         * (FOUC). Lo script è inline e bloccante di proposito: deve girare
+         * prima che il browser disegni qualsiasi elemento.
+         */
+        (function() {
+            var saved = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', saved);
+        })();
+    </script>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="logo" onclick="window.location.href='/appuntidiprogrammazione/'">
+            APPUNTI DI <span>PROGRAMMAZIONE</span>
+        </div>
+
+        <!-- 
+            Il pulsante aggiorna l'attributo data-theme sull'<html> e
+            persiste la scelta nel localStorage per le sessioni future.
+        -->
+        <button onclick="toggleTheme()" class="theme-toggle" aria-label="Cambia tema">🌓</button>
+    </header>
+
+    <!--
+    Layout post: struttura a due colonne.
+    - Sinistra (post-content): breadcrumb → tags → link PDF → link fonte → articolo MD
+    - Destra (post-sidebar): tags argomento + libro consigliato
+    
+    Ordine DOM: post-content prima, post-sidebar dopo.
+    Grid-template-areas in CSS li posiziona visivamente:
+    "content sidebar" su desktop, stacked su mobile.
+-->
+<div class="post-container">
+    <!-- COLONNA SINISTRA: contenuto principale -->
+    <main class="post-content">
+        <!-- Breadcrumb: navigazione verso la home -->
+        <nav class="post-breadcrumb" aria-label="Breadcrumb">
+            <a href="/appuntidiprogrammazione/">Appunti di Programmazione</a>
+            <span class="separator" aria-hidden="true">/</span>
+            <span>Event Sourcing e State Reconstitution</span>
+        </nav>
+        <!-- Tags legati all'articolo -->
+        
+        <div class="post-tags-header" aria-label="Argomenti">
+            
+                <span class="post-tag-chip">js</span>
+            
+                <span class="post-tag-chip">design patterns & architecture</span>
+            
+        </div>
+        
+        <!-- Link al/ai PDF allegati all'articolo -->
+        
+        <div class="pdf-link-wrapper">
+            <a class="pdf-link"
+               href="/appuntidiprogrammazione/assets/pdf/event-sourcing-e-state-reconstitution.pdf"
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="Scarica il PDF: Event Sourcing e State Reconstitution">
+                Scarica PDF
+            </a>
+        </div>
+        
+        <!-- Corpo dell'articolo renderizzato da Kramdown -->
+        <article class="post-article-body">
+            <h2 id="esigenza-reale">Esigenza Reale</h2>
+<p>Implementare un sistema di carrello acquisti dove ogni aggiunta, rimozione o modifica deve essere tracciabile e reversibile.</p>
+
+<h2 id="analisi-tecnica">Analisi Tecnica</h2>
+<p><strong>Problema:</strong> Perdita di contesto storico sullo stato dell’applicazione e difficoltà nel gestire la persistenza offline complessa.</p>
+
+<p><strong>Perché:</strong> Implemento un registro di eventi. Ho scelto questo pattern per garantire l’integrità dei dati e permettere la sincronizzazione parziale tra client e server basata su delta di eventi.</p>
+
+<h2 id="esempio-implementativo">Esempio Implementativo</h2>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+</pre></td><td class="rouge-code"><pre><span class="cm">/* Definisco i tipi di evento del dominio. Gli eventi sono immutabili e
+    descrivono COSA è successo, non COME. */</span>
+<span class="kd">const</span> <span class="nx">EventTypes</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+    <span class="na">ITEM_ADDED</span><span class="p">:</span> <span class="dl">'</span><span class="s1">ITEM_ADDED</span><span class="dl">'</span><span class="p">,</span> <span class="na">ITEM_REMOVED</span><span class="p">:</span> <span class="dl">'</span><span class="s1">ITEM_REMOVED</span><span class="dl">'</span><span class="p">,</span> <span class="na">QUANTITY_CHANGED</span><span class="p">:</span>
+        <span class="dl">'</span><span class="s1">QUANTITY_CHANGED</span><span class="dl">'</span><span class="p">,</span> <span class="na">CART_CLEARED</span><span class="p">:</span> <span class="dl">'</span><span class="s1">CART_CLEARED</span><span class="dl">'</span><span class="p">,</span> <span class="na">COUPON_APPLIED</span><span class="p">:</span>
+        <span class="dl">'</span><span class="s1">COUPON_APPLIED</span><span class="dl">'</span>
+<span class="p">}</span>
+<span class="p">);</span>
+<span class="cm">/* Il reducer è una funzione pura che applica un evento allo stato corrente. */</span>
+<span class="kd">function</span> <span class="nx">cartReducer</span><span class="p">(</span><span class="nx">state</span><span class="p">,</span> <span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">type</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="nx">EventTypes</span><span class="p">.</span><span class="nx">ITEM_ADDED</span><span class="p">:</span> <span class="k">return</span> <span class="p">{</span>
+            <span class="p">...</span><span class="nx">state</span><span class="p">,</span> <span class="na">items</span><span class="p">:</span> <span class="p">[...</span><span class="nx">state</span><span class="p">.</span><span class="nx">items</span><span class="p">,</span> <span class="p">{</span>
+                <span class="na">id</span><span class="p">:</span> <span class="nx">event</span><span class="p">.</span><span class="nx">itemId</span><span class="p">,</span> <span class="na">quantity</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="na">price</span><span class="p">:</span> <span class="nx">event</span><span class="p">.</span><span class="nx">price</span><span class="p">,</span> <span class="na">name</span><span class="p">:</span>
+                    <span class="nx">event</span><span class="p">.</span><span class="nx">name</span>
+            <span class="p">}</span>
+            <span class="p">]</span>
+        <span class="p">}</span>
+        <span class="p">;</span>
+        <span class="k">case</span> <span class="nx">EventTypes</span><span class="p">.</span><span class="nx">ITEM_REMOVED</span><span class="p">:</span> <span class="k">return</span> <span class="p">{</span>
+            <span class="p">...</span><span class="nx">state</span><span class="p">,</span> <span class="na">items</span><span class="p">:</span> <span class="nx">state</span><span class="p">.</span><span class="nx">items</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">item</span> <span class="o">=&gt;</span> <span class="nx">item</span><span class="p">.</span><span class="nx">id</span> <span class="o">!==</span>
+                <span class="nx">event</span><span class="p">.</span><span class="nx">itemId</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="p">;</span>
+        <span class="k">case</span> <span class="nx">EventTypes</span><span class="p">.</span><span class="nx">QUANTITY_CHANGED</span><span class="p">:</span> <span class="k">return</span> <span class="p">{</span>
+            <span class="p">...</span><span class="nx">state</span><span class="p">,</span> <span class="na">items</span><span class="p">:</span> <span class="nx">state</span><span class="p">.</span><span class="nx">items</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">item</span> <span class="o">=&gt;</span> <span class="nx">item</span><span class="p">.</span><span class="nx">id</span> <span class="o">===</span> <span class="nx">event</span><span class="p">.</span><span class="nx">itemId</span> <span class="p">?</span>
+                <span class="p">{</span>
+                <span class="p">...</span><span class="nx">item</span><span class="p">,</span> <span class="na">quantity</span><span class="p">:</span> <span class="nx">event</span><span class="p">.</span><span class="nx">quantity</span>
+            <span class="p">}</span>
+            <span class="p">:</span> <span class="nx">item</span> <span class="p">)</span>
+        <span class="p">}</span>
+        <span class="p">;</span>
+        <span class="k">case</span> <span class="nx">EventTypes</span><span class="p">.</span><span class="nx">CART_CLEARED</span><span class="p">:</span> <span class="k">return</span> <span class="p">{</span>
+            <span class="p">...</span><span class="nx">state</span><span class="p">,</span> <span class="na">items</span><span class="p">:</span> <span class="p">[],</span> <span class="na">coupon</span><span class="p">:</span> <span class="kc">null</span>
+        <span class="p">}</span>
+        <span class="p">;</span>
+        <span class="k">case</span> <span class="nx">EventTypes</span><span class="p">.</span><span class="nx">COUPON_APPLIED</span><span class="p">:</span> <span class="k">return</span> <span class="p">{</span>
+            <span class="p">...</span><span class="nx">state</span><span class="p">,</span> <span class="na">coupon</span><span class="p">:</span> <span class="p">{</span>
+                <span class="na">code</span><span class="p">:</span> <span class="nx">event</span><span class="p">.</span><span class="nx">code</span><span class="p">,</span> <span class="na">discount</span><span class="p">:</span> <span class="nx">event</span><span class="p">.</span><span class="nx">discount</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="p">;</span>
+        <span class="nl">default</span><span class="p">:</span> <span class="k">return</span> <span class="nx">state</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="cm">/* Ricostruisco lo stato attuale riducendo l'intera sequenza di eventi: "fold" o
+    "replay". */</span>
+<span class="kd">function</span> <span class="nx">reconstitute</span><span class="p">(</span><span class="nx">events</span><span class="p">,</span> <span class="nx">initialState</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">items</span><span class="p">:</span> <span class="p">[],</span> <span class="na">coupon</span><span class="p">:</span> <span class="kc">null</span>
+<span class="p">}</span>
+<span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">events</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span><span class="nx">cartReducer</span><span class="p">,</span> <span class="nx">initialState</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="cm">/* Implemento il carrello come Event Store con replay e time travel. */</span>
+<span class="kd">class</span> <span class="nx">ShoppingCart</span> <span class="p">{</span>
+    <span class="kd">constructor</span><span class="p">(</span><span class="nx">cartId</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">cartId</span> <span class="o">=</span> <span class="nx">cartId</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">events</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="c1">// Log immutabile degli eventi this._state =</span>
+        <span class="p">{</span>
+            <span class="na">items</span><span class="p">:</span> <span class="p">[],</span> <span class="na">coupon</span><span class="p">:</span> <span class="kc">null</span>
+        <span class="p">}</span>
+        <span class="p">;</span>
+        <span class="c1">// Stato proiettato</span>
+    <span class="p">}</span>
+    <span class="c1">// Ogni "comando" genera un evento e aggiorna lo stato addItem(itemId, name,</span>
+        <span class="nx">price</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">event</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="na">type</span><span class="p">:</span> <span class="nx">EventTypes</span><span class="p">.</span><span class="nx">ITEM_ADDED</span><span class="p">,</span> <span class="nx">itemId</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">price</span><span class="p">,</span> <span class="na">timestamp</span><span class="p">:</span>
+                <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">(),</span> <span class="na">version</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">length</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="p">}</span>
+        <span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">event</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_state</span> <span class="o">=</span> <span class="nx">cartReducer</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_state</span><span class="p">,</span> <span class="nx">event</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nx">removeItem</span><span class="p">(</span><span class="nx">itemId</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">event</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="na">type</span><span class="p">:</span> <span class="nx">EventTypes</span><span class="p">.</span><span class="nx">ITEM_REMOVED</span><span class="p">,</span> <span class="nx">itemId</span><span class="p">,</span> <span class="na">timestamp</span><span class="p">:</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">(),</span>
+                <span class="na">version</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">length</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="p">}</span>
+        <span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">event</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_state</span> <span class="o">=</span> <span class="nx">cartReducer</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_state</span><span class="p">,</span> <span class="nx">event</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="c1">// Time Travel: ricostruisco lo stato a un istante preciso nel passato</span>
+        <span class="nx">getStateAt</span><span class="p">(</span><span class="nx">timestamp</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">eventsUpTo</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">e</span> <span class="o">=&gt;</span> <span class="nx">e</span><span class="p">.</span><span class="nx">timestamp</span> <span class="o">&lt;=</span> <span class="nx">timestamp</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nx">reconstitute</span><span class="p">(</span><span class="nx">eventsUpTo</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="c1">// Snapshot: ottimizzazione per non rifare il replay dall'inizio ogni volta</span>
+        <span class="nx">createSnapshot</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="na">state</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">_state</span><span class="p">,</span> <span class="na">version</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span> <span class="na">timestamp</span><span class="p">:</span>
+                <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span>
+        <span class="p">}</span>
+        <span class="p">;</span>
+    <span class="p">}</span>
+    <span class="c1">// Restore da snapshot + eventi successivi restoreFromSnapshot(snapshot,</span>
+        <span class="nx">laterEvents</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">baseState</span> <span class="o">=</span> <span class="nx">snapshot</span><span class="p">.</span><span class="nx">state</span><span class="p">;</span>
+        <span class="kd">const</span> <span class="nx">newEvents</span> <span class="o">=</span> <span class="nx">laterEvents</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">e</span> <span class="o">=&gt;</span> <span class="nx">e</span><span class="p">.</span><span class="nx">version</span> <span class="o">&gt;</span> <span class="nx">snapshot</span><span class="p">.</span><span class="nx">version</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_state</span> <span class="o">=</span> <span class="nx">reconstitute</span><span class="p">(</span><span class="nx">newEvents</span><span class="p">,</span> <span class="nx">baseState</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">events</span> <span class="o">=</span> <span class="nx">laterEvents</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kd">get</span> <span class="nx">state</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_state</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kd">get</span> <span class="nx">total</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">subtotal</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_state</span><span class="p">.</span><span class="nx">items</span><span class="p">.</span><span class="nx">reduce</span><span class="p">((</span><span class="nx">sum</span><span class="p">,</span> <span class="nx">item</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">sum</span> <span class="o">+</span>
+            <span class="nx">item</span><span class="p">.</span><span class="nx">price</span> <span class="o">*</span> <span class="nx">item</span><span class="p">.</span><span class="nx">quantity</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+        <span class="kd">const</span> <span class="nx">discount</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_state</span><span class="p">.</span><span class="nx">coupon</span> <span class="p">?</span> <span class="nx">subtotal</span> <span class="o">*</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_state</span><span class="p">.</span><span class="nx">coupon</span><span class="p">.</span><span class="nx">discount</span> <span class="p">:</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nx">subtotal</span> <span class="o">-</span> <span class="nx">discount</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="cm">/* Sincronizzazione offline: invio solo i delta di eventi al server, non lo
+    stato completo. */</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">syncCartWithServer</span><span class="p">(</span><span class="nx">cart</span><span class="p">,</span> <span class="nx">lastSyncedVersion</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">newEvents</span> <span class="o">=</span> <span class="nx">cart</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">e</span> <span class="o">=&gt;</span> <span class="nx">e</span><span class="p">.</span><span class="nx">version</span> <span class="o">&gt;</span> <span class="nx">lastSyncedVersion</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">newEvents</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+    <span class="k">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/cart/events</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+        <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">POST</span><span class="dl">'</span><span class="p">,</span> <span class="na">headers</span><span class="p">:</span> <span class="p">{</span>
+            <span class="dl">'</span><span class="s1">Content-Type</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span>
+        <span class="p">}</span>
+        <span class="p">,</span> <span class="na">body</span><span class="p">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+            <span class="na">cartId</span><span class="p">:</span> <span class="nx">cart</span><span class="p">.</span><span class="nx">cartId</span><span class="p">,</span> <span class="na">events</span><span class="p">:</span> <span class="nx">newEvents</span>
+        <span class="p">}</span>
+        <span class="p">)</span>
+    <span class="p">}</span>
+    <span class="p">);</span>
+<span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+        </article>
+        <!-- Link alla fonte originale: lo posiziono dopo il corpo perché è un
+             approfondimento opzionale, non un'azione primaria. L'icona SVG inline
+             evita dipendenze da font icon esterni. -->
+        
+    </main>
+    <!-- COLONNA DESTRA: sidebar post -->
+    <aside class="post-sidebar">
+        <!-- Box 1: tags argomento (stessa lista dei chip sopra, ma nella sidebar) -->
+        
+        <div class="sidebar-box tags-box">
+            <span class="box-label">Argomenti</span>
+            <div class="tag-cloud-sidebar">
+                
+                    <span class="sidebar-tag">js</span>
+                
+                    <span class="sidebar-tag">design patterns & architecture</span>
+                
+            </div>
+        </div>
+        
+        <!-- Box 2: fonte originale nella sidebar, visibile a colpo d'occhio
+             senza dover scorrere fino in fondo all'articolo. -->
+        
+        <!-- Box 3: libro consigliato -->
+        <div class="sidebar-box books-box">
+            <span class="box-label">Letture Consigliate</span>
+            <div class="book-card">
+                <a href="https://www.amazon.it/Appunti-Programmazione-Pensieri-soluzioni-Applicazioni-ebook/dp/B0FMFRHKTF/"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   aria-label="Acquista Appunti di Programmazione su Amazon">
+                    <img src="https://m.media-amazon.com/images/I/61Ck5eMzGYL._SY466_.jpg"
+                         alt="Copertina: Appunti di Programmazione"
+                         width="80">
+                    <p>Appunti di Programmazione: Pensieri e soluzioni per Applicazioni WEB</p>
+                </a>
+            </div>
+        </div>
+    </aside>
+</div>
+
+    <footer class="main-footer">
+        Appunti di Programmazione &nbsp;·&nbsp; cosimociraci@gmail.com
+    </footer>
+
+    <script>
+        /*
+         * toggleTheme: legge il tema corrente dall'attributo HTML,
+         * calcola l'opposto e lo salva. Il CSS reagisce via [data-theme].
+         * Non uso classi sul body per mantenere tutto centralizzato
+         * sull'elemento radice.
+         */
+        function toggleTheme() {
+            var html = document.documentElement;
+            var current = html.getAttribute('data-theme');
+            var next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
         }
     </script>
-<style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .glow-hover:hover {
-            box-shadow: 0 0 20px rgba(16, 185, 129, 0.15);
-        }
-        .glass-card {
-            background-color: rgba(53, 53, 52, 0.6);
-            backdrop-filter: blur(12px);
-            border-top: 1px solid rgba(60, 74, 66, 0.15);
-            border-left: 1px solid rgba(60, 74, 66, 0.15);
-        }
-    </style>
-</head>
-<body class="bg-surface text-on-surface font-body antialiased min-h-screen flex flex-col">
-<!-- TopNavBar -->
-<nav class="bg-[#131313]/90 dark:bg-[#131313]/90 backdrop-blur-xl docked full-width top-0 z-50 border-b border-white/5 flex justify-between items-center px-8 h-16 w-full">
-<div class="font-mono font-bold text-[#10B981] before:content-['&gt;_']">LUCID_CONSOLE</div>
-<div class="hidden md:flex gap-6 font-['Space_Grotesk'] uppercase tracking-widest text-sm">
-<a class="text-[#10B981] border-b-2 border-[#10B981] pb-1 hover:text-[#4edea3] transition-colors duration-200" href="#">Articles</a>
-<a class="text-zinc-400 font-mono hover:text-[#4edea3] transition-colors duration-200" href="#">Reviews</a>
-<a class="text-zinc-400 font-mono hover:text-[#4edea3] transition-colors duration-200" href="#">Library</a>
-<a class="text-zinc-400 font-mono hover:text-[#4edea3] transition-colors duration-200" href="#">Archive</a>
-</div>
-<div class="flex gap-4">
-<span class="material-symbols-outlined text-zinc-400 hover:text-[#10B981] cursor-pointer transition-colors duration-200" data-icon="dark_mode">dark_mode</span>
-<span class="material-symbols-outlined text-zinc-400 hover:text-[#10B981] cursor-pointer transition-colors duration-200" data-icon="terminal">terminal</span>
-</div>
-</nav>
-<div class="flex flex-1 pt-16">
-<!-- SideNavBar -->
-<aside class="bg-[#131313] dark:bg-[#131313] h-screen w-64 fixed left-0 top-16 hidden lg:flex flex-col border-r border-white/5 bg-zinc-900/50">
-<div class="p-6 border-b border-white/5">
-<div class="text-[#10B981] font-black text-lg mb-1">CONSOLE_ROOT</div>
-<div class="text-zinc-500 font-mono text-xs uppercase tracking-tighter">v4.2.0-stable</div>
-</div>
-<div class="p-4">
-<div class="relative group">
-<div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-<span class="material-symbols-outlined text-zinc-500 text-sm">search</span>
-</div>
-<input class="bg-surface-container-lowest text-on-surface text-sm rounded block w-full pl-10 p-2.5 border border-outline-variant/15 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none font-mono transition-all" placeholder="Search Documentation..." type="text"/>
-</div>
-</div>
-<nav class="flex-1 overflow-y-auto py-2 font-mono text-xs uppercase tracking-tighter">
-<a class="text-[#10B981] bg-emerald-500/5 flex items-center gap-3 px-4 py-3 border-r-2 border-[#10B981] hover:bg-zinc-800/50 hover:translate-x-1 transition-all" href="#">
-<span class="material-symbols-outlined text-sm" data-icon="terminal">terminal</span>
-                    Latest Logs
-                </a>
-<a class="text-zinc-500 flex items-center gap-3 px-4 py-3 hover:bg-zinc-800/50 hover:translate-x-1 transition-all hover:text-[#10B981]" href="#">
-<span class="material-symbols-outlined text-sm" data-icon="menu_book">menu_book</span>
-                    Book Reviews
-                </a>
-<a class="text-zinc-500 flex items-center gap-3 px-4 py-3 hover:bg-zinc-800/50 hover:translate-x-1 transition-all hover:text-[#10B981]" href="#">
-<span class="material-symbols-outlined text-sm" data-icon="star">star</span>
-                    Core Readings
-                </a>
-<a class="text-zinc-500 flex items-center gap-3 px-4 py-3 hover:bg-zinc-800/50 hover:translate-x-1 transition-all hover:text-[#10B981]" href="#">
-<span class="material-symbols-outlined text-sm" data-icon="info">info</span>
-                    System Info
-                </a>
-</nav>
-<div class="p-4 border-t border-white/5 font-mono text-xs uppercase tracking-tighter">
-<a class="text-zinc-500 flex items-center gap-3 px-4 py-2 hover:bg-zinc-800/50 hover:translate-x-1 transition-all hover:text-[#10B981]" href="#">
-<span class="material-symbols-outlined text-sm" data-icon="code">code</span>
-                    Source
-                </a>
-<a class="text-zinc-500 flex items-center gap-3 px-4 py-2 hover:bg-zinc-800/50 hover:translate-x-1 transition-all hover:text-[#10B981]" href="#">
-<span class="material-symbols-outlined text-sm" data-icon="rss_feed">rss_feed</span>
-                    RSS
-                </a>
-</div>
-</aside>
-<!-- Main Content Canvas -->
-<main class="flex-1 lg:ml-64 p-8 lg:p-16 max-w-7xl mx-auto w-full grid grid-cols-1 xl:grid-cols-12 gap-12">
-<!-- Left Column: Article Body -->
-<article class="xl:col-span-8 space-y-12">
-<!-- Header Section -->
-<header class="space-y-6">
-<!-- Breadcrumb Terminal Style -->
-<div class="font-label text-sm text-primary flex items-center gap-2">
-<span class="material-symbols-outlined text-sm">folder</span>
-<span>~/articles/system-architecture-2024</span>
-</div>
-<h1 class="font-headline text-5xl font-bold leading-tight text-on-surface tracking-tight">Architecting for Resilience in Distributed Systems</h1>
-<!-- Metadata / Tags -->
-<div class="flex flex-wrap gap-3">
-<span class="bg-surface-container-highest text-on-surface-variant font-label text-xs px-2 py-1 rounded-sm border border-outline-variant/20 hover:translate-x-[2px] transition-transform cursor-default">--architecture</span>
-<span class="bg-surface-container-highest text-on-surface-variant font-label text-xs px-2 py-1 rounded-sm border border-outline-variant/20 hover:translate-x-[2px] transition-transform cursor-default">--distributed-systems</span>
-<span class="bg-surface-container-highest text-on-surface-variant font-label text-xs px-2 py-1 rounded-sm border border-outline-variant/20 hover:translate-x-[2px] transition-transform cursor-default">--2024</span>
-</div>
-<!-- Utility Actions -->
-<div class="flex gap-4 pt-4 border-t border-outline-variant/20">
-<button class="bg-primary/10 text-primary hover:bg-primary/20 font-label text-sm px-4 py-2 rounded-md flex items-center gap-2 transition-colors border border-primary/30 glow-hover">
-<span class="material-symbols-outlined text-sm">download</span>
-                            [download_pdf]
-                        </button>
-<button class="bg-surface-container-high text-on-surface hover:bg-surface-container-highest font-label text-sm px-4 py-2 rounded-md flex items-center gap-2 transition-colors border border-outline-variant/30">
-<span class="material-symbols-outlined text-sm">share</span>
-                            [share_link]
-                        </button>
-</div>
-</header>
-<!-- Featured Image -->
-<div class="w-full h-80 bg-surface-container-low rounded-lg border border-outline-variant/20 overflow-hidden relative">
-<img alt="Abstract rendering of a digital network with glowing green nodes and connections against a dark background" class="w-full h-full object-cover opacity-80 mix-blend-luminosity" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmRSqWvIIY-YMaAPR2at6gbwZm_CkKd987eDRiDnZZCuyvz_mgtGGRxOwNn7p6z4DB-PbpH8_1fpSiKYQN4N4TdqpMR8gC6rnSfir2OQKkb4gmP5Zb1lfaS4FTH1gVthJL7W9H0ev9LivG6m3qcK4XlDINgo-mZ-7onMdnzvFcIP2BzvS_R06X5vK1d1sfj62PjFg-UH7fgyKrm-uskbvoiU_dMYqr8WIrMVmyOowAw6Jiunq9MGDPLnwhcMPzX1YLaUGgyzxMwOU"/>
-<div class="absolute inset-0 bg-gradient-to-t from-surface to-transparent"></div>
-</div>
-<!-- Content Body -->
-<div class="prose prose-invert prose-emerald max-w-none font-body text-on-surface-variant space-y-6 leading-relaxed">
-<p class="text-lg">In modern software engineering, the assumption of failure is not pessimism; it's a structural necessity. Distributed systems introduce complexities that monolithic architectures largely avoided, primarily concerning network reliability, latency, and partial system failures.</p>
-<h2 class="font-headline text-2xl font-semibold text-on-surface mt-12 mb-4">The Fallacies of Distributed Computing</h2>
-<p>Peter Deutsch's assertions remain relevant today. When designing microservices, we must continuously account for the fact that the network is not reliable, latency is not zero, and bandwidth is not infinite. Ignoring these fallacies leads to fragile architectures.</p>
-<!-- Code Block -->
-<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-md my-8 overflow-hidden">
-<div class="bg-surface-container-high px-4 py-2 flex items-center justify-between border-b border-outline-variant/30">
-<span class="font-label text-xs text-on-surface-variant">rust_retry_logic.rs</span>
-<span class="material-symbols-outlined text-xs text-primary cursor-pointer hover:text-primary-container">content_copy</span>
-</div>
-<pre class="p-4 font-label text-sm text-secondary overflow-x-auto"><code><span class="text-primary">fn</span> execute_with_retry&lt;F, T, E&gt;(operation: F) -&gt; Result&lt;T, E&gt; 
-<span class="text-primary">where</span>
-    F: Fn() -&gt; Result&lt;T, E&gt;,
-{
-    <span class="text-primary">let</span> <span class="text-primary-container">mut</span> retries = <span class="text-tertiary-container">3</span>;
-    <span class="text-primary">loop</span> {
-        <span class="text-primary">match</span> operation() {
-            Ok(result) =&gt; <span class="text-primary">return</span> Ok(result),
-            Err(e) <span class="text-primary">if</span> retries &gt; <span class="text-tertiary-container">0</span> =&gt; {
-                retries -= <span class="text-tertiary-container">1</span>;
-                std::thread::sleep(std::time::Duration::from_secs(<span class="text-tertiary-container">1</span>));
-            }
-            Err(e) =&gt; <span class="text-primary">return</span> Err(e),
-        }
-    }
-}</code></pre>
-</div>
-<h3 class="font-headline text-xl font-medium text-on-surface mt-8 mb-4">Implementing Circuit Breakers</h3>
-<p>To prevent cascading failures, the circuit breaker pattern is essential. It acts as a proxy for operations that might fail. The proxy should monitor the number of recent failures, and use this information to decide whether to allow the operation to proceed, or simply return an exception immediately.</p>
-</div>
-<!-- Source Footer -->
-<div class="pt-8 border-t border-outline-variant/20 mt-12">
-<a class="inline-flex items-center gap-2 font-label text-sm text-primary hover:text-primary-container transition-colors" href="#">
-<span class="material-symbols-outlined text-base" data-icon="terminal">terminal</span>
-<span>[view_original_source]</span>
-</a>
-</div>
-</article>
-<!-- Right Column: Sidebar -->
-<aside class="xl:col-span-4 space-y-8">
-<!-- Argomenti (Topics) -->
-<div class="glass-card rounded-lg p-6">
-<h3 class="font-headline text-lg font-medium text-on-surface mb-4 flex items-center gap-2">
-<span class="material-symbols-outlined text-primary text-sm">sell</span>
-                        Argomenti
-                    </h3>
-<div class="flex flex-wrap gap-2">
-<span class="bg-surface-container-low text-on-surface font-label text-xs px-3 py-1.5 rounded border border-outline-variant/30 hover:border-primary/50 transition-colors cursor-pointer">system-design</span>
-<span class="bg-surface-container-low text-on-surface font-label text-xs px-3 py-1.5 rounded border border-outline-variant/30 hover:border-primary/50 transition-colors cursor-pointer">microservices</span>
-<span class="bg-surface-container-low text-on-surface font-label text-xs px-3 py-1.5 rounded border border-outline-variant/30 hover:border-primary/50 transition-colors cursor-pointer">resilience</span>
-<span class="bg-surface-container-low text-on-surface font-label text-xs px-3 py-1.5 rounded border border-outline-variant/30 hover:border-primary/50 transition-colors cursor-pointer">rust</span>
-</div>
-</div>
-<!-- Fonte Originale (Original Source) -->
-<div class="bg-surface-container-lowest border border-outline-variant/20 rounded-lg p-6">
-<h3 class="font-headline text-lg font-medium text-on-surface mb-4 flex items-center gap-2">
-<span class="material-symbols-outlined text-primary text-sm">link</span>
-                        Fonte Originale
-                    </h3>
-<div class="space-y-3">
-<div class="flex justify-between items-center text-sm">
-<span class="text-on-surface-variant font-label text-xs">Author:</span>
-<span class="text-on-surface font-body">Dr. Sarah Chen</span>
-</div>
-<div class="flex justify-between items-center text-sm">
-<span class="text-on-surface-variant font-label text-xs">Published:</span>
-<span class="text-on-surface font-mono text-xs">2024-10-15</span>
-</div>
-<div class="flex justify-between items-center text-sm">
-<span class="text-on-surface-variant font-label text-xs">Domain:</span>
-<span class="text-primary font-mono text-xs hover:underline cursor-pointer">tech.example.com</span>
-</div>
-</div>
-</div>
-<!-- Letture Consigliate (Recommended Reading) -->
-<div>
-<h3 class="font-headline text-lg font-medium text-on-surface mb-4 flex items-center gap-2">
-<span class="material-symbols-outlined text-primary text-sm">library_books</span>
-                        Letture Consigliate
-                    </h3>
-<a class="block group" href="#">
-<div class="glass-card rounded-lg p-5 border border-outline-variant/30 transition-all duration-300 group-hover:border-primary/50 group-hover:bg-surface-container-high glow-hover flex gap-4 items-start">
-<div class="w-16 h-24 bg-surface-container-lowest rounded border border-outline-variant/50 flex-shrink-0 overflow-hidden relative">
-<img alt="Abstract minimalist cover art featuring geometric shapes in muted dark tones" class="w-full h-full object-cover mix-blend-luminosity opacity-70 group-hover:opacity-100 transition-opacity" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCp7LkAXF9U1hVbwAaN6RbaY-Jcos9T-Oazxz9bN4FQBg_RtXsFBIiMuI2iaFSz9RXQnS3EagQoZ7vc5tPjJwX71B4e4hG3FAHoSPhg-xn4SYoFnqlIxmR63cPSx9gg-EyuhzvUNwjDtoGPGj7Mbxe03gyK-WG0eQwErFDzCMBUtu7aaFAvzRxZ9XDqdrZ5We9MWnjz-1KCn0H_xQ8mFvs9M00B11paEcg1VljcQ8hqhnUxX_AwStKQoeXuQ3RQUAl0xf3kGCkdwAQ"/>
-</div>
-<div>
-<h4 class="font-headline text-base font-medium text-on-surface group-hover:text-primary transition-colors">Designing Data-Intensive Applications</h4>
-<p class="font-body text-xs text-on-surface-variant mt-1 line-clamp-2">The definitive guide to the architecture behind modern data systems.</p>
-<div class="mt-3 font-label text-[10px] text-zinc-500 uppercase flex items-center gap-1">
-<span class="material-symbols-outlined text-[12px]">book</span>
-                                    Book Review
-                                </div>
-</div>
-</div>
-</a>
-</div>
-</aside>
-</main>
-</div>
-<!-- Footer -->
-<footer class="bg-[#131313] dark:bg-[#131313] w-full py-8 mt-auto border-t border-white/5 flex flex-col md:flex-row justify-between items-center px-12 gap-4">
-<div class="font-mono text-[10px] uppercase opacity-50 text-[#10B981]">
-            [ROOT@LUCID-CONSOLE ~]# ALL RIGHTS RESERVED 2024
-        </div>
-<div class="flex gap-6 font-mono text-[10px] uppercase opacity-50">
-<a class="text-zinc-500 hover:text-[#10B981] underline underline-offset-4 transition-colors" href="#">Github</a>
-<a class="text-zinc-500 hover:text-[#10B981] underline underline-offset-4 transition-colors" href="#">LinkedIn</a>
-<a class="text-zinc-500 hover:text-[#10B981] underline underline-offset-4 transition-colors" href="#">Status</a>
-</div>
-</footer>
-</body></html>
+
+</body>
+</html>
