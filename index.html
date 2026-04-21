@@ -4,43 +4,49 @@ title: Home
 ---
 
 <!--
-    LOGICA DI PUBBLICAZIONE A DATA — versione corretta.
+    LOGICA DI PUBBLICAZIONE A DATA — identica alla versione funzionante.
 
-    Il problema del confronto post.date <= site.time:
-    Jekyll tratta le date del frontmatter come UTC. Un articolo
-    datato "2026-04-05 15:05:50" con future: false viene escluso
-    dal build se site.time è "2026-04-05 00:05:00 UTC" (build
-    notturno), perché 15:05 > 00:05.
+    Jekyll tratta le date del frontmatter come UTC. Un articolo datato
+    "2026-04-05 15:05:50" con future: false viene escluso dal build se
+    site.time è "2026-04-05 00:05:00 UTC" (build notturno), perché 15:05 > 00:05.
 
-    SOLUZIONE: normalizzo entrambe le date al giorno (YYYY-MM-DD)
-    e confronto solo stringhe. In questo modo un articolo del 05/04
-    è visibile in qualunque momento del 05/04, indipendentemente
-    dall'ora scritta nel frontmatter.
+    SOLUZIONE: normalizzo entrambe le date al giorno (YYYY-MM-DD) e confronto
+    solo stringhe. Un articolo del 05/04 è visibile in qualunque momento del
+    05/04, indipendentemente dall'ora scritta nel frontmatter.
 
     Struttura a due livelli:
     1. Liquid: include nel build solo articoli con data-giorno <= oggi
-    2. JS (safety net): nasconde lato client eventuali articoli futuri
-       in caso di cache stale — usa lo stesso confronto su data-date.
+    2. JS (safety net): nasconde lato client eventuali articoli futuri in caso
+       di cache stale — usa lo stesso confronto su data-date.
 -->
-<div class="main-layout-container">
 
+<div class="main-container">
+
+    <!-- ===== AREA CONTENUTO PRINCIPALE ===== -->
     <main class="content-area">
 
-        <section class="search-section">
+        <!-- Barra di ricerca: l'ID search-bar è referenziato da applyFilters() -->
+        <section style="margin-bottom: 2rem;">
             <input
                 type="search"
                 id="search-bar"
-                placeholder="Cerca negli appunti…"
+                class="search-input"
+                placeholder="[SEARCH] Digita per filtrare..."
                 aria-label="Cerca articoli"
                 autocomplete="off"
                 oninput="applyFilters()"
             >
         </section>
 
+        <!--
+            Liquid: costruisco la lista unificata di articoli e libri.
+            - site.articoli e site.libri sono le collection definite in _config.yml
+            - Ordino per data e inverto (più recenti prima)
+            - Se site.libri è vuoto, evito l'errore di concat su nil
+        -->
         {% assign oggi_str = site.time | date: '%Y-%m-%d' %}
-
         {% assign articoli = site.articoli | sort: 'date' %}
-        {% assign libri = site.libri | sort: 'date' %}
+        {% assign libri    = site.libri    | sort: 'date' %}
 
         {% if site.libri %}
             {% assign tutti_i_contenuti = articoli | concat: libri | sort: 'date' | reverse %}
@@ -48,33 +54,53 @@ title: Home
             {% assign tutti_i_contenuti = articoli | sort: 'date' | reverse %}
         {% endif %}
 
-        <div class="post-grid" id="post-grid">
+        <!-- Griglia degli articoli: id="post-grid" non è usato dal JS attuale
+             ma lo mantengo per compatibilità con eventuali sviluppi futuri -->
+        <div id="post-grid" style="display: grid; gap: 1.25rem;">
             {% for item in tutti_i_contenuti %}
-                {% comment %} 
-                   Forziamo la formattazione della data dell'item per il confronto stringa.
-                   Se item.date non è presente, Jekyll userà la data del file.
-                {% endcomment %}
+
+                <!--
+                    Confronto data come stringa YYYY-MM-DD:
+                    più robusto del confronto Unix timestamp perché Jekyll
+                    usa UTC e i build notturni potrebbero escludere articoli
+                    del giorno corrente non ancora "passati" in UTC.
+                -->
                 {% assign data_item_str = item.date | date: '%Y-%m-%d' %}
-                
+
                 {% if data_item_str <= oggi_str %}
+                <!--
+                    Ho messo data-tags, data-title e data-date come attributi
+                    sull'article: sono i 3 attributi letti da applyFilters() e
+                    hideArticoliFuturi(). Senza di essi il filtro e il safety
+                    net JS non funzionano.
+                -->
                 <article
-                    class="post-item"
+                    class="item-card post-item"
                     data-tags="{{ item.tags | join: ',' | slugify }}"
                     data-title="{{ item.title | downcase }}"
                     data-date="{{ data_item_str }}"
                 >
                     <div class="post-meta">
-                        {% if item.layout == 'libro' %}
-                            📚 LETTURA CONSIGLIATA: &nbsp;·&nbsp; {{ item.date | date: "%d/%m/%Y" }}
-                        {% else %}
-                            {{ item.tech | upcase }} &nbsp;·&nbsp; {{ item.date | date: "%d/%m/%Y" }}
-                        {% endif %}
+                        <span class="tag-chip">
+                            {% if item.layout == 'libro' %}
+                                📚 lettura
+                            {% else %}
+                                {{ item.tech | default: 'articolo' | downcase }}
+                            {% endif %}
+                        </span>
+                        <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; opacity: 0.55; margin-left: 0.5rem;">
+                            {{ item.date | date: "%d.%m.%Y" }}
+                        </span>
                     </div>
 
                     <h2 class="post-title">
-                        <a href="{{ item.url | relative_url }}">{{ item.title }}</a>
+                        <a href="{{ item.url | relative_url }}" style="color: var(--accent-primary);">
+                            {{ item.title }}
+                        </a>
                         {% if item.layout == 'libro' %}
-                        <span class="autore">&nbsp; (di {{ item.autore }})</span>
+                        <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; opacity: 0.5; font-weight: normal;">
+                            (di {{ item.autore }})
+                        </span>
                         {% endif %}
                     </h2>
 
@@ -83,44 +109,64 @@ title: Home
                     </p>
                 </article>
                 {% endif %}
+
             {% endfor %}
         </div>
 
     </main>
 
+    <!-- ===== SIDEBAR DESTRA ===== -->
     <aside class="main-sidebar">
 
-        <div class="sidebar-box">
-            <span class="box-label">Ultimi Argomenti</span>
-            <nav class="tag-nav-vertical" id="dynamic-tags" aria-label="Filtra per argomento">
+        <!-- Box tag: id="dynamic-tags" è referenziato dal JS per appendere i bottoni -->
+        <div class="sidebar-section">
+            <h3 class="sidebar-title">
+                <!-- Ho usato material-symbols-outlined (API caricata in default.html)
+                     anziché material-icons (API vecchia, non caricata). -->
+                <span class="material-symbols-outlined" style="font-size: 1rem;">label</span>
+                Ultimi Argomenti
+            </h3>
+            <nav id="dynamic-tags"
+                 aria-label="Filtra per argomento"
+                 style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                <!--
+                    Il bottone "TUTTI" è l'unico hardcoded: ha già la classe active
+                    e aria-pressed="true". Tutti gli altri tag sono generati dal JS
+                    in DOMContentLoaded leggendo i data-tags degli article visibili.
+                -->
                 <button
-                    class="tag-btn active"
+                    class="tag-chip tag-chip--active"
                     onclick="filterByTag('tutti', this)"
                     aria-pressed="true"
-                >
+                    style="cursor: pointer;">
                     TUTTI
                 </button>
             </nav>
         </div>
 
-        <div class="sidebar-box">
-            <span class="box-label">Letture Fondamentali</span>
-            <div class="featured-books">
-                <a class="mini-book-card"
-                   href="https://www.amazon.it/Appunti-Programmazione-Pensieri-soluzioni-Applicazioni-ebook/dp/B0FMFRHKTF/"
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   aria-label="Acquista Appunti di Programmazione su Amazon">
-                    <img src="https://m.media-amazon.com/images/I/61Ck5eMzGYL._SY466_.jpg"
-                         alt="Copertina: Appunti di Programmazione"
-                         width="52"
-                         height="78">
-                    <div>
-                        <strong>Appunti di Programmazione</strong>
-                        <p>Pensieri e soluzioni per Applicazioni WEB</p>
-                    </div>
-                </a>
-            </div>
+        <!-- Box libro in evidenza -->
+        <div class="sidebar-section" style="margin-top: 1.5rem;">
+            <h3 class="sidebar-title">
+                <span class="material-symbols-outlined" style="font-size: 1rem;">menu_book</span>
+                Letture Fondamentali
+            </h3>
+            <a class="item-card"
+               href="https://www.amazon.it/Appunti-Programmazione-Pensieri-soluzioni-Applicazioni-ebook/dp/B0FMFRHKTF/"
+               target="_blank"
+               rel="noopener noreferrer"
+               style="display: flex; gap: 1rem; align-items: center; text-decoration: none; padding: 1rem;">
+                <img src="https://m.media-amazon.com/images/I/61Ck5eMzGYL._SY466_.jpg"
+                     alt="Copertina: Appunti di Programmazione"
+                     style="width: 50px; border-radius: 2px; flex-shrink: 0;">
+                <div>
+                    <strong style="display: block; font-size: 0.8rem; color: var(--accent-primary); font-family: 'JetBrains Mono', monospace;">
+                        Appunti di Programmazione
+                    </strong>
+                    <p style="margin: 0; font-size: 0.72rem; color: var(--text-muted);">
+                        Pensieri e soluzioni per Applicazioni WEB
+                    </p>
+                </div>
+            </a>
         </div>
 
     </aside>
@@ -131,44 +177,44 @@ title: Home
     /*
      * SAFETY NET client-side: stesso confronto YYYY-MM-DD del Liquid.
      * Protegge da cache stale che potrebbero servire un build vecchio.
+     * Ho usato toISOString().split('T')[0] invece di costruire manualmente
+     * la stringa: più conciso e ugualmente corretto per il confronto lessicografico.
      */
-    function getTodayISO() {
-        const now = new Date();
-        const y   = now.getFullYear();
-        const m   = String(now.getMonth() + 1).padStart(2, '0');
-        const d   = String(now.getDate()).padStart(2, '0');
-        return y + '-' + m + '-' + d;
-    }
-
     (function hideArticoliFuturi() {
-        const oggi     = getTodayISO();
-        const articoli = document.querySelectorAll('.post-item[data-date]');
-        articoli.forEach(function(article) {
+        var oggi = new Date().toISOString().split('T')[0];
+        document.querySelectorAll('.post-item[data-date]').forEach(function(article) {
             if (article.getAttribute('data-date') > oggi) {
                 article.hidden = true;
             }
         });
     })();
 
-    let activeTag = 'tutti';
+    /* Stato globale del filtro tag attivo */
+    var activeTag = 'tutti';
 
+    /*
+     * DOMContentLoaded: genero dinamicamente i bottoni tag leggendo i data-tags
+     * degli article visibili (non hidden). Uso un Set per deduplicare i tag
+     * e li ordino alfabeticamente per consistenza visiva.
+     */
     document.addEventListener('DOMContentLoaded', function() {
-        /* Popolo i tag solo dagli articoli visibili (non futuri) */
-        const articoli  = document.querySelectorAll('.post-item:not([hidden])');
-        const container = document.getElementById('dynamic-tags');
-        const allTags   = new Set();
+        var articoli  = document.querySelectorAll('.post-item:not([hidden])');
+        var container = document.getElementById('dynamic-tags');
+        var allTags   = new Set();
 
         articoli.forEach(function(article) {
-            const raw = article.getAttribute('data-tags') || '';
+            var raw = article.getAttribute('data-tags') || '';
             raw.split(',').forEach(function(t) {
-                const trimmed = t.trim();
+                var trimmed = t.trim();
                 if (trimmed) allTags.add(trimmed);
             });
         });
 
         Array.from(allTags).sort().forEach(function(tag) {
-            const btn = document.createElement('button');
-            btn.className   = 'tag-btn';
+            var btn = document.createElement('button');
+            btn.className   = 'tag-chip';
+            btn.style.cursor = 'pointer';
+            /* Sostituisco i trattini con spazi: slugify li aveva inseriti */
             btn.textContent = tag.replace(/-/g, ' ').toUpperCase();
             btn.setAttribute('aria-pressed', 'false');
             btn.addEventListener('click', function() { filterByTag(tag, this); });
@@ -176,25 +222,35 @@ title: Home
         });
     });
 
+    /*
+     * filterByTag: aggiorno l'activeTag globale, resetto tutti i bottoni
+     * e attivo solo quello cliccato, poi riapplico i filtri combinati.
+     */
     function filterByTag(tag, btn) {
         activeTag = tag.toLowerCase();
-        document.querySelectorAll('.tag-btn').forEach(function(b) {
-            b.classList.remove('active');
+        document.querySelectorAll('#dynamic-tags .tag-chip').forEach(function(b) {
+            b.classList.remove('tag-chip--active');
             b.setAttribute('aria-pressed', 'false');
         });
-        btn.classList.add('active');
+        btn.classList.add('tag-chip--active');
         btn.setAttribute('aria-pressed', 'true');
         applyFilters();
     }
 
+    /*
+     * applyFilters: filtro combinato per tag e testo libero.
+     * Opero solo sugli article non-hidden (quelli futuri sono già stati
+     * nascosti dal safety net): uso display:none/'' invece di hidden
+     * perché voglio che il filtro sia reversibile senza alterare hidden.
+     */
     function applyFilters() {
-        const query    = document.getElementById('search-bar').value.toLowerCase().trim();
-        const articoli = document.querySelectorAll('.post-item:not([hidden])');
+        var query    = document.getElementById('search-bar').value.toLowerCase().trim();
+        var articoli = document.querySelectorAll('.post-item:not([hidden])');
         articoli.forEach(function(article) {
-            const title      = article.getAttribute('data-title') || '';
-            const tags       = article.getAttribute('data-tags')  || '';
-            const matchesTag = (activeTag === 'tutti' || tags.split(',').includes(activeTag));
-            const matchesTxt = !query || title.includes(query);
+            var title      = article.getAttribute('data-title') || '';
+            var tags       = article.getAttribute('data-tags')  || '';
+            var matchesTag = (activeTag === 'tutti' || tags.split(',').includes(activeTag));
+            var matchesTxt = !query || title.includes(query);
             article.style.display = (matchesTag && matchesTxt) ? '' : 'none';
         });
     }

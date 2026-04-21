@@ -1,56 +1,155 @@
 <!DOCTYPE html>
-<html lang="it" data-theme="dark">
+<!--
+    Ho impostato data-theme="dark" come default sull'<html> invece di class="dark".
+    Il mio CSS custom usa il selettore [data-theme="dark/light"], mentre Tailwind
+    usa la classe 'dark'. Lo script anti-FOUC qui sotto sincronizza entrambi
+    leggendo localStorage, così nessuno dei due sistemi resta cieco all'altro.
+-->
+<html lang="it" data-theme="dark" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ page.title }} — DevLog</title>
     <meta name="description" content="{{ page.sintesi | default: site.description }}">
+
+    <!-- Font: Space Grotesk (headlines), Inter (body), JetBrains Mono (code) -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Inter:wght@300..700&family=JetBrains+Mono:wght@400..700&display=swap" rel="stylesheet">
+    <!-- Material Symbols per le icone nella sidebar e nella navbar -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+    <!--
+        Ho incluso il foglio di stile custom DOPO i font e PRIMA dello script anti-FOUC.
+        Il CSS definisce le variabili --bg-primary, --text-main, ecc. usate dai layout
+        di post e libro, e tutto il syntax highlighting Rouge. Senza questo link,
+        le pagine articolo erano prive di qualsiasi stile personalizzato.
+    -->
     <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/style.css">
 
+    <!--
+        Anti-FOUC (Flash Of Unstyled Content): applico il tema PRIMA che il browser
+        disegni qualsiasi elemento. Lo script è inline e bloccante di proposito.
+        Leggo la preferenza da localStorage; se assente, uso 'dark' come default.
+        Sincronizzo sia data-theme (selettore CSS custom) sia la classe 'dark'
+        (selettore darkMode Tailwind) per mantenere entrambi i sistemi allineati.
+    -->
     <script>
-        /*
-         * Applico il tema PRIMA del rendering per evitare il flash di contenuto
-         * (FOUC). Lo script è inline e bloccante di proposito: deve girare
-         * prima che il browser disegni qualsiasi elemento.
-         */
         (function() {
             var saved = localStorage.getItem('theme') || 'dark';
             document.documentElement.setAttribute('data-theme', saved);
+            if (saved === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
         })();
     </script>
 </head>
-<body>
+<body class="antialiased flex flex-col min-h-screen" style="background-color: var(--bg-primary); color: var(--text-main); font-family: 'Inter', sans-serif;">
 
-    <header class="main-header">
-        <div class="logo" onclick="window.location.href='{{ '/' | relative_url }}'">
-            APPUNTI DI <span>PROGRAMMAZIONE</span>
+    <!-- ===== TOP NAVBAR ===== -->
+    <nav class="main-header flex justify-between items-center px-8 h-16 w-full backdrop-blur-xl sticky top-0 z-50"
+         style="background-color: rgba(10,10,10,0.92); border-bottom: 1px solid var(--border-color);">
+
+        <!-- Logo: torna alla home via relative_url per compatibilità con baseurl -->
+        <a class="logo font-mono font-bold"
+           href="{{ '/' | relative_url }}"
+           style="color: var(--accent-primary); font-family: 'JetBrains Mono', monospace; letter-spacing: 0.05em;">
+            APPUNTI DI <span style="color: var(--text-main);">PROGRAMMAZIONE</span>
+        </a>
+
+        <div class="flex items-center space-x-4">
+            <!--
+                Ho aggiunto onclick="toggleTheme()" al pulsante: nel vecchio default
+                era presente, nel nuovo era stato rimosso e il pulsante era muto.
+                La funzione è definita in fondo al body, prima della chiusura </html>.
+            -->
+            <button onclick="toggleTheme()"
+                    class="theme-toggle"
+                    aria-label="Cambia tema"
+                    style="background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: 4px; padding: 6px 12px; cursor: pointer; color: var(--text-main); transition: var(--transition);">
+                🌓
+            </button>
+        </div>
+    </nav>
+
+    <!-- ===== LAYOUT PRINCIPALE: sidebar sinistra + canvas contenuto ===== -->
+    <div class="flex flex-grow w-full max-w-screen-xl mx-auto mt-8 mb-16 px-4 sm:px-8" style="gap: 3rem; align-items: flex-start;">
+
+        <!-- Sidebar sinistra: visibile solo su schermi >= lg (1024px) -->
+        <aside class="hidden lg:flex flex-col flex-shrink-0"
+               style="width: 220px; position: sticky; top: 5.5rem; border-right: 1px solid var(--border-color); padding-right: 1.5rem;">
+
+            <div style="margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color);">
+                <p class="font-mono" style="font-size: 0.65rem; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.25rem;">System Operator</p>
+                <h2 class="font-mono" style="font-size: 1rem; font-weight: 900; color: var(--accent-primary); letter-spacing: -0.02em;">CONSOLE_ROOT</h2>
+                <p class="font-mono" style="font-size: 0.65rem; color: var(--text-dim);">v4.2.0-stable</p>
+            </div>
+
+            <nav style="flex: 1;">
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 2px; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                    <li>
+                        <a href="{{ '/' | relative_url }}"
+                           style="display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 0.75rem; color: var(--accent-primary); border-radius: 4px; transition: var(--transition);"
+                           onmouseover="this.style.background='var(--bg-tertiary)'"
+                           onmouseout="this.style.background='transparent'">
+                            <span class="material-symbols-outlined" style="font-size: 1rem;">terminal</span>
+                            Latest Logs
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#"
+                           style="display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 0.75rem; color: var(--text-dim); border-radius: 4px; transition: var(--transition);"
+                           onmouseover="this.style.color='var(--accent-primary)'; this.style.background='var(--bg-tertiary)'"
+                           onmouseout="this.style.color='var(--text-dim)'; this.style.background='transparent'">
+                            <span class="material-symbols-outlined" style="font-size: 1rem;">menu_book</span>
+                            Book Reviews
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#"
+                           style="display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 0.75rem; color: var(--text-dim); border-radius: 4px; transition: var(--transition);"
+                           onmouseover="this.style.color='var(--accent-primary)'; this.style.background='var(--bg-tertiary)'"
+                           onmouseout="this.style.color='var(--text-dim)'; this.style.background='transparent'">
+                            <span class="material-symbols-outlined" style="font-size: 1rem;">star</span>
+                            Core Readings
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Canvas: qui Jekyll inietta il contenuto della pagina corrente.
+             Non c'è nessun contenuto hardcoded dopo {{ content }}:
+             era questo il bug principale che rendeva ogni pagina identica. -->
+        <div class="flex-1" style="min-width: 0;">
+            {{ content }}
         </div>
 
-        <!-- 
-            Il pulsante aggiorna l'attributo data-theme sull'<html> e
-            persiste la scelta nel localStorage per le sessioni future.
-        -->
-        <button onclick="toggleTheme()" class="theme-toggle" aria-label="Cambia tema">🌓</button>
-    </header>
+    </div>
 
-    {{ content }}
-
-    <footer class="main-footer">
-        Appunti di Programmazione &nbsp;·&nbsp; {{ site.email }}
+    <!-- ===== FOOTER ===== -->
+    <footer class="main-footer"
+            style="border-top: 1px solid var(--border-color); padding: 1.5rem 2rem; font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; text-transform: uppercase; color: var(--text-dim); text-align: center; letter-spacing: 0.05em;">
+        [ROOT@DEVLOG ~]# Appunti di Programmazione &nbsp;·&nbsp;
+        {% if site.email %}
+            <a href="mailto:{{ site.email }}" style="color: var(--text-dim);">{{ site.email }}</a>
+        {% endif %}
     </footer>
 
     <script>
         /*
-         * toggleTheme: legge il tema corrente dall'attributo HTML,
-         * calcola l'opposto e lo salva. Il CSS reagisce via [data-theme].
-         * Non uso classi sul body per mantenere tutto centralizzato
-         * sull'elemento radice.
+         * toggleTheme: aggiorno il tema sia via data-theme (CSS custom con variabili)
+         * sia via classe 'dark' sull'<html> (Tailwind darkMode: "class").
+         * Persisto la scelta in localStorage per le sessioni future.
+         * classList.toggle(class, forza) aggiunge/rimuove in un'unica chiamata
+         * senza rischio di duplicati.
          */
         function toggleTheme() {
-            var html = document.documentElement;
+            var html    = document.documentElement;
             var current = html.getAttribute('data-theme');
-            var next = current === 'dark' ? 'light' : 'dark';
+            var next    = current === 'dark' ? 'light' : 'dark';
             html.setAttribute('data-theme', next);
+            html.classList.toggle('dark', next === 'dark');
             localStorage.setItem('theme', next);
         }
     </script>

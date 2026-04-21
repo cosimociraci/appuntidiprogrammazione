@@ -3,25 +3,23 @@ layout: default
 ---
 <!--
     Layout post: struttura a due colonne.
-    - Sinistra (post-content): breadcrumb → tags → PDF → fonte → corpo MD
-    - Destra  (post-sidebar):  tags + fonte + libro consigliato
+    - Sinistra (post-content): breadcrumb → tags → link PDF → link fonte → articolo MD
+    - Destra (post-sidebar): tags argomento + libro consigliato
     
-    grid-template-areas: "content sidebar" definita in style.css su .post-container.
-    Sotto 992px le colonne si collassano in una sola.
+    Ordine DOM: post-content prima, post-sidebar dopo.
+    Grid-template-areas in CSS li posiziona visivamente:
+    "content sidebar" su desktop, stacked su mobile.
 -->
 <div class="post-container">
-
     <!-- COLONNA SINISTRA: contenuto principale -->
     <main class="post-content">
-
-        <!-- Breadcrumb: uso relative_url per compatibilità con baseurl -->
+        <!-- Breadcrumb: navigazione verso la home -->
         <nav class="post-breadcrumb" aria-label="Breadcrumb">
             <a href="{{ '/' | relative_url }}">Appunti di Programmazione</a>
             <span class="separator" aria-hidden="true">/</span>
             <span>{{ page.title }}</span>
         </nav>
-
-        <!-- Tag chip in testa all'articolo -->
+        <!-- Tags legati all'articolo -->
         {% if page.tags and page.tags.size > 0 %}
         <div class="post-tags-header" aria-label="Argomenti">
             {% for tag in page.tags %}
@@ -29,8 +27,7 @@ layout: default
             {% endfor %}
         </div>
         {% endif %}
-
-        <!-- Link al PDF allegato: visibile solo se pdf_file è nel frontmatter -->
+        <!-- Link al/ai PDF allegati all'articolo -->
         {% if page.pdf_file %}
         <div class="pdf-link-wrapper">
             <a class="pdf-link"
@@ -38,21 +35,17 @@ layout: default
                target="_blank"
                rel="noopener noreferrer"
                aria-label="Scarica il PDF: {{ page.title }}">
-                ↓ Scarica PDF
+                Scarica PDF
             </a>
         </div>
         {% endif %}
-
-        <!-- Corpo dell'articolo: Kramdown inietta l'HTML del markdown qui -->
+        <!-- Corpo dell'articolo renderizzato da Kramdown -->
         <article class="post-article-body">
             {{ content }}
         </article>
-
-        <!--
-            Fonte originale in fondo al corpo: la posiziono qui (dopo il testo)
-            perché è un approfondimento opzionale, non un'azione primaria.
-            L'icona SVG è inline per evitare dipendenze da font icon esterni.
-        -->
+        <!-- Link alla fonte originale: lo posiziono dopo il corpo perché è un
+             approfondimento opzionale, non un'azione primaria. L'icona SVG inline
+             evita dipendenze da font icon esterni. -->
         {% if page.link %}
         <div class="post-source-link">
             <span class="source-link-label">Fonte originale</span>
@@ -62,11 +55,13 @@ layout: default
                rel="noopener noreferrer"
                aria-label="Leggi la fonte originale di: {{ page.title }}">
                 <svg xmlns="http://www.w3.org/2000/svg"
-                     width="13" height="13"
+                     width="14" height="14"
                      viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor"
+                     fill="none"
+                     stroke="currentColor"
                      stroke-width="2"
-                     stroke-linecap="round" stroke-linejoin="round"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
                      aria-hidden="true">
                     <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
                     <polyline points="15 3 21 3 21 9"/>
@@ -76,13 +71,10 @@ layout: default
             </a>
         </div>
         {% endif %}
-
     </main>
-
-    <!-- COLONNA DESTRA: sidebar -->
+    <!-- COLONNA DESTRA: sidebar post -->
     <aside class="post-sidebar">
-
-        <!-- Box 1: tag argomento -->
+        <!-- Box 1: tags argomento (stessa lista dei chip sopra, ma nella sidebar) -->
         {% if page.tags and page.tags.size > 0 %}
         <div class="sidebar-box tags-box">
             <span class="box-label">Argomenti</span>
@@ -93,8 +85,8 @@ layout: default
             </div>
         </div>
         {% endif %}
-
-        <!-- Box 2: fonte originale nella sidebar (a colpo d'occhio senza scorrere) -->
+        <!-- Box 2: fonte originale nella sidebar, visibile a colpo d'occhio
+             senza dover scorrere fino in fondo all'articolo. -->
         {% if page.link %}
         <div class="sidebar-box source-box">
             <span class="box-label">Fonte Originale</span>
@@ -104,11 +96,13 @@ layout: default
                rel="noopener noreferrer"
                aria-label="Leggi la fonte originale di: {{ page.title }}">
                 <svg xmlns="http://www.w3.org/2000/svg"
-                     width="13" height="13"
+                     width="14" height="14"
                      viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor"
+                     fill="none"
+                     stroke="currentColor"
                      stroke-width="2"
-                     stroke-linecap="round" stroke-linejoin="round"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
                      aria-hidden="true">
                     <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
                     <polyline points="15 3 21 3 21 9"/>
@@ -118,7 +112,6 @@ layout: default
             </a>
         </div>
         {% endif %}
-
         <!-- Box 3: libro consigliato -->
         <div class="sidebar-box books-box">
             <span class="box-label">Letture Consigliate</span>
@@ -134,6 +127,5 @@ layout: default
                 </a>
             </div>
         </div>
-
     </aside>
 </div>
