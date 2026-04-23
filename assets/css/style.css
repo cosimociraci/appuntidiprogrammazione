@@ -88,6 +88,7 @@ body {
 a { color: var(--accent-color); text-decoration: none; transition: color 0.2s ease; }
 a:hover { color: var(--accent-hover); }
 img { max-width: 100%; display: block; }
+.icon-post {width: 24px}
 
 /* ------------------------------------------------
    3. HEADER / TOOLBAR
@@ -173,7 +174,7 @@ img { max-width: 100%; display: block; }
 .post-item { padding: 28px 0; border-bottom: 1px solid var(--border-color); transition: padding-left 0.2s ease; }
 .post-item:hover { padding-left: 8px; }
 
-.post-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--accent-color); text-transform: uppercase; margin-bottom: 10px; }
+.post-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--accent-color); text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;}
 .post-title { font-size: 1.3rem; font-weight: 600; margin-bottom: 10px; }
 .post-title a { color: var(--text-primary); }
 .autore span { font-size: 15px; }
