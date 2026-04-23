@@ -66,10 +66,10 @@ title: Home
                     <div class="post-meta">
                         {% if item.layout == 'libro' %}
                             <img src="{{ site.baseurl }}/assets/img/book.png" class="icon-post"> LETTURA CONSIGLIATA: &nbsp;·&nbsp; {{ item.date | date: "%d/%m/%Y" }}
-                        {% else if item.layout == 'post' %}
+                        {% elsif item.layout == 'post' %}
                             <img src="{{ site.baseurl }}/assets/img/article.png" class="icon-post"> 
                             {{ item.tech | upcase }} &nbsp;·&nbsp; {{ item.date | date: "%d/%m/%Y" }}
-                        {% else if item.layout == 'code' %}
+                        {% elsif item.layout == 'code' %}
                             <img src="{{ site.baseurl }}/assets/img/code.png" class="icon-post"> 
                             {{ item.tech | upcase }} &nbsp;·&nbsp; {{ item.date | date: "%d/%m/%Y" }}
                         {% else %}
