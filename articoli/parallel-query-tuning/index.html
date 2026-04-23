@@ -84,6 +84,59 @@
 
 <p><strong>Perché:</strong> Ho regolato i parametri di parallelismo. Ho scelto di forzare il parallelismo su questa tabella specifica perché la scansione sequenziale è inevitabile ma può essere divisa tra più worker.</p>
 
+<h2 id="esempio-pratico-accelerare-unaggregazione-su-large-table">Esempio Pratico: Accelerare un’aggregazione su Large Table</h2>
+
+<p>Supponiamo di avere una tabella <code class="language-plaintext highlighter-rouge">telemetry_data</code> con 200 milioni di record. Una query di reportistica che calcola la media dei valori giornalieri impiega troppo tempo perché il Planner sceglie un piano seriale, ritenendo che il costo di gestione dei worker superi il beneficio.</p>
+
+<h3 id="1-diagnosi-del-collo-di-bottiglia">1. Diagnosi del collo di bottiglia</h3>
+<p>Eseguendo un <code class="language-plaintext highlighter-rouge">EXPLAIN</code>, notiamo che viene utilizzato un singolo processo.</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre><span class="c1">-- La query è lenta e usa un solo core</span>
+<span class="k">EXPLAIN</span> <span class="k">SELECT</span> <span class="n">sensor_id</span><span class="p">,</span> <span class="k">AVG</span><span class="p">(</span><span class="n">reading</span><span class="p">)</span> 
+<span class="k">FROM</span> <span class="n">telemetry_data</span> 
+<span class="k">GROUP</span> <span class="k">BY</span> <span class="n">sensor_id</span><span class="p">;</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="2-tuning-dei-parametri-di-soglia">2. Tuning dei parametri di soglia</h3>
+<p>Se il Planner è troppo “pigro” nel lanciare worker paralleli, possiamo abbassare le barriere all’ingresso o forzare la scala sulla tabella specifica.</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="rouge-code"><pre><span class="c1">-- Rendo meno costoso l'avvio dei worker paralleli (tuning fine)</span>
+<span class="k">SET</span> <span class="n">parallel_tuple_cost</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">01</span><span class="p">;</span> <span class="c1">-- Default 0.1</span>
+<span class="k">SET</span> <span class="n">parallel_setup_cost</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span> <span class="c1">-- Default 1000</span>
+
+<span class="c1">-- Comunico al Planner che questa tabella specifica beneficia di più worker</span>
+<span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">telemetry_data</span> <span class="k">SET</span> <span class="p">(</span><span class="n">parallel_workers</span> <span class="o">=</span> <span class="mi">8</span><span class="p">);</span>
+
+<span class="c1">-- Verifico che il limite globale consenta l'operazione</span>
+<span class="c1">-- SHOW max_parallel_workers_per_gather; </span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="3-risultato-nel-piano-di-esecuzione">3. Risultato nel Piano di Esecuzione</h3>
+<p>Dopo la modifica, il piano di esecuzione cambierà drasticamente:</p>
+
+<ul>
+  <li><strong>Parallel Seq Scan:</strong> Invece di un solo processo che legge l’intero file, 8 worker leggono porzioni diverse della tabella contemporaneamente.</li>
+  <li><strong>Partial Aggregate:</strong> Ogni worker calcola una media parziale sui propri dati.</li>
+  <li><strong>Gather:</strong> Un nodo “collettore” riceve i risultati parziali dai worker.</li>
+  <li><strong>Finalize Aggregate:</strong> Il processo principale combina i risultati parziali per fornire il dato finale.</li>
+</ul>
+
+<p><strong>Risultato:</strong> Su un server con 32 core, questo approccio può ridurre il tempo di esecuzione di oltre il 70%, trasformando un’attesa di minuti in una di pochi secondi, saturando correttamente le risorse hardware disponibili senza influenzare negativamente le query più piccole.</p>
+
+<hr />
 
         </article>
         <!-- Link alla fonte originale: lo posiziono dopo il corpo perché è un

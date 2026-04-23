@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Statistics Target e Selettivit — DevLog</title>
+    <title>Statistics Target e Selettività — DevLog</title>
     <meta name="description" content="La qualità del piano dipende dalla precisione degli istogrammi salvati nelle statistiche. Per impostazione predefinita, Postgres campiona 100 valori comuni per ogni colonna. Per colonne con distribuzioni di dati molto irregolari (es. pochi clienti co
 ">
     <link rel="stylesheet" href="/appuntidiprogrammazione/assets/css/style.css">
@@ -50,7 +50,7 @@
         <nav class="post-breadcrumb" aria-label="Breadcrumb">
             <a href="/appuntidiprogrammazione/">Appunti di Programmazione</a>
             <span class="separator" aria-hidden="true">/</span>
-            <span>Statistics Target e Selettivit</span>
+            <span>Statistics Target e Selettività</span>
         </nav>
         <!-- Tags legati all'articolo -->
         
@@ -69,7 +69,7 @@
                href="/appuntidiprogrammazione/assets/pdf/statistics-target-e-selettivit.pdf"
                target="_blank"
                rel="noopener noreferrer"
-               aria-label="Scarica il PDF: Statistics Target e Selettivit">
+               aria-label="Scarica il PDF: Statistics Target e Selettività">
                 Scarica PDF
             </a>
         </div>
@@ -84,6 +84,48 @@
 
 <p><strong>Perché:</strong> Ho alzato il target delle statistiche solo per la colonna problematica. Ho scelto questa via per non appesantire il processo globale di ANALYZE, ma risolvere il problema alla radice per le query critiche.</p>
 
+<h2 id="esempio-pratico-ottimizzazione-di-una-colonna-stato-ordine">Esempio Pratico: Ottimizzazione di una colonna “Stato Ordine”</h2>
+
+<p>Immaginiamo di avere una tabella <code class="language-plaintext highlighter-rouge">orders</code> dove la colonna <code class="language-plaintext highlighter-rouge">status</code> ha una distribuzione estremamente sbilanciata: milioni di righe con stato ‘PROCESSED’ e solo poche centinaia con stato ‘PENDING’. Con il <code class="language-plaintext highlighter-rouge">statistics target</code> predefinito (100), Postgres potrebbe sottostimare drasticamente le righe ‘PENDING’, scegliendo un <strong>Sequential Scan</strong> invece di un <strong>Index Scan</strong>.</p>
+
+<h3 id="1-verifica-della-situazione-attuale">1. Verifica della situazione attuale</h3>
+<p>Per prima cosa, controllo quante righe il planner “pensa” di trovare rispetto alla realtà.</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre><span class="c1">-- Vedo quante righe stima il planner per gli ordini in attesa</span>
+<span class="k">EXPLAIN</span> <span class="k">ANALYZE</span> 
+<span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">orders</span> <span class="k">WHERE</span> <span class="n">status</span> <span class="o">=</span> <span class="s1">'PENDING'</span><span class="p">;</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="2-intervento-mirato">2. Intervento mirato</h3>
+<p>Se la stima è molto distante dal valore reale (es. stima 10 righe ma sono 500), aumento la risoluzione dell’istogramma solo per quella colonna specifica.</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="rouge-code"><pre><span class="c1">-- Incremento il dettaglio delle statistiche per la colonna status a 500 bucket</span>
+<span class="c1">-- Invece dei 100 di default di sistema</span>
+<span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">orders</span> <span class="k">ALTER</span> <span class="k">COLUMN</span> <span class="n">status</span> <span class="k">SET</span> <span class="k">STATISTICS</span> <span class="mi">500</span><span class="p">;</span>
+
+<span class="c1">-- Rieseguo il campionamento per aggiornare i cataloghi con il nuovo target</span>
+<span class="k">ANALYZE</span> <span class="n">orders</span><span class="p">;</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="3-risultato">3. Risultato</h3>
+<p>Dopo l’operazione, Postgres avrà una “mappa” molto più granulare della distribuzione dei valori.</p>
+
+<ul>
+  <li><strong>Cosa è cambiato:</strong> L’istogramma ora cattura meglio i valori meno frequenti (la “long tail”).</li>
+  <li><strong>Vantaggio:</strong> Il Planner ora riconosce che ‘PENDING’ è una condizione selettiva e utilizzerà correttamente l’indice non-clustered, riducendo i tempi di risposta della query da secondi a millisecondi.</li>
+  <li><strong>Efficienza:</strong> Avendo modificato solo <code class="language-plaintext highlighter-rouge">status</code>, le operazioni di <code class="language-plaintext highlighter-rouge">ANALYZE</code> quotidiane sul resto della tabella rimangono rapide.</li>
+</ul>
+
+<hr />
 
         </article>
         <!-- Link alla fonte originale: lo posiziono dopo il corpo perché è un
