@@ -198,22 +198,43 @@
 110
 111
 112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
 </pre></td><td class="rouge-code"><pre><span class="o">&lt;!--</span> <span class="no">PATTERN</span> <span class="no">DA</span> <span class="nl">EVITARE:</span> <span class="n">ogni</span> <span class="n">espressione</span> <span class="nc">SpEL</span> <span class="n">viene</span> <span class="n">rivalutata</span> <span class="n">per</span> <span class="n">ogni</span> <span class="n">colonna</span>
     <span class="n">della</span> <span class="n">riga</span><span class="o">.</span> <span class="nc">Con</span> <span class="mi">1000</span> <span class="n">righe</span><span class="o">,</span> <span class="n">hasRole</span><span class="o">()</span> <span class="n">viene</span> <span class="n">chiamato</span> <span class="mi">3000</span> <span class="n">volte</span> <span class="n">invece</span> <span class="n">di</span>
-    <span class="mi">1000</span><span class="o">.</span> <span class="o">--&gt;</span> <span class="o">&lt;</span><span class="n">tr</span> <span class="nl">th:</span><span class="n">each</span><span class="o">=</span><span class="s">"user : ${
+    <span class="mi">1000</span><span class="o">.</span> <span class="o">--&gt;</span> 
+    <span class="o">&lt;</span><span class="n">tr</span> <span class="nl">th:</span><span class="n">each</span><span class="o">=</span><span class="s">"user : ${
     users
 }
 "</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">td</span> <span class="nl">th:</span><span class="n">text</span><span class="o">=</span><span class="s">"${
     user.name
 }
-"</span><span class="o">&gt;</span><span class="nc">Nome</span><span class="o">&lt;/</span><span class="n">td</span><span class="o">&gt;</span> <span class="o">&lt;!--</span> <span class="n">hasRole</span><span class="o">()</span> <span class="n">rivalutato</span> <span class="n">per</span> <span class="n">ogni</span> <span class="n">td</span> <span class="o">--&gt;</span> <span class="o">&lt;</span><span class="n">td</span> <span class="nl">th:</span><span class="kd">class</span><span class="err">="${</span>
+"</span><span class="o">&gt;</span><span class="nc">Nome</span><span class="o">&lt;/</span><span class="n">td</span><span class="o">&gt;</span> 
+<span class="o">&lt;!--</span> <span class="n">hasRole</span><span class="o">()</span> <span class="n">rivalutato</span> <span class="n">per</span> <span class="n">ogni</span> <span class="n">td</span> <span class="o">--&gt;</span> 
+<span class="o">&lt;</span><span class="n">td</span> <span class="nl">th:</span><span class="kd">class</span><span class="err">="${</span>
     <span class="nc">user</span><span class="o">.</span><span class="na">hasRole</span><span class="o">(</span><span class="err">'</span><span class="no">ADMIN</span><span class="err">'</span><span class="o">)</span>
 <span class="o">}</span>
 <span class="o">?</span> <span class="err">'</span><span class="n">badge</span><span class="o">-</span><span class="n">danger</span><span class="err">'</span> <span class="o">:</span> <span class="err">'</span><span class="n">badge</span><span class="o">-</span><span class="n">secondary</span><span class="err">'</span><span class="s">" th:text="</span><span class="err">$</span><span class="o">{</span>
     <span class="n">user</span><span class="o">.</span><span class="na">hasRole</span><span class="o">(</span><span class="err">'</span><span class="no">ADMIN</span><span class="err">'</span><span class="o">)</span>
 <span class="o">}</span>
-<span class="o">?</span> <span class="err">'</span><span class="nc">Admin</span><span class="err">'</span> <span class="o">:</span> <span class="err">'</span><span class="nc">User</span><span class="err">'</span><span class="s">"&gt;Ruolo&lt;/td&gt; &lt;!-- formatCurrency rivalutato due volte per riga
-    --&gt; &lt;td th:text="</span><span class="err">$</span><span class="o">{</span>
+<span class="o">?</span> <span class="err">'</span><span class="nc">Admin</span><span class="err">'</span> <span class="o">:</span> <span class="err">'</span><span class="nc">User</span><span class="err">'</span><span class="s">"&gt;Ruolo&lt;/td&gt; 
+&lt;!-- formatCurrency rivalutato due volte per riga
+    --&gt; 
+    &lt;td th:text="</span><span class="err">$</span><span class="o">{</span>
     <span class="err">#</span><span class="n">finance</span><span class="o">.</span><span class="na">formatCurrency</span><span class="o">(</span><span class="n">user</span><span class="o">.</span><span class="na">totalSpent</span><span class="o">,</span> <span class="err">'</span><span class="no">EUR</span><span class="err">'</span><span class="o">)</span>
 <span class="o">}</span>
 <span class="s">"&gt;€ 0&lt;/td&gt; &lt;td th:class="</span><span class="err">$</span><span class="o">{</span>
@@ -222,9 +243,12 @@
 <span class="o">?</span> <span class="err">'</span><span class="n">text</span><span class="o">-</span><span class="n">gold</span><span class="err">'</span> <span class="o">:</span> <span class="err">''</span><span class="s">" th:text="</span><span class="err">$</span><span class="o">{</span>
     <span class="n">user</span><span class="o">.</span><span class="na">totalSpent</span><span class="o">.</span><span class="na">compareTo</span><span class="o">(</span><span class="no">T</span><span class="o">(</span><span class="n">java</span><span class="o">.</span><span class="na">math</span><span class="o">.</span><span class="na">BigDecimal</span><span class="o">).</span><span class="na">valueOf</span><span class="o">(</span><span class="mi">1000</span><span class="o">))</span> <span class="o">&gt;</span> <span class="mi">0</span>
 <span class="o">}</span>
-<span class="o">?</span> <span class="err">'</span><span class="no">VIP</span><span class="err">'</span> <span class="o">:</span> <span class="err">'</span><span class="nc">Standard</span><span class="err">'</span><span class="s">"&gt;Tier&lt;/td&gt; &lt;/tr&gt; &lt;!-- PATTERN CORRETTO: th:with calcola
+<span class="o">?</span> <span class="err">'</span><span class="no">VIP</span><span class="err">'</span> <span class="o">:</span> <span class="err">'</span><span class="nc">Standard</span><span class="err">'</span><span class="s">"&gt;Tier&lt;/td&gt; &lt;/tr&gt; 
+
+&lt;!-- PATTERN CORRETTO: th:with calcola
     ogni valore una sola volta per iterazione. Con 1000 righe: hasRole()
-    chiamato 1000 volte, formatCurrency 1000 volte. --&gt; &lt;tr th:each="</span><span class="n">user</span> <span class="o">:</span> <span class="err">$</span><span class="o">{</span>
+    chiamato 1000 volte, formatCurrency 1000 volte. --&gt; 
+&lt;tr th:each="</span><span class="n">user</span> <span class="o">:</span> <span class="err">$</span><span class="o">{</span>
     <span class="n">users</span>
 <span class="o">}</span>
 <span class="s">" th:with="</span> <span class="n">isAdmin</span><span class="o">=</span><span class="err">$</span><span class="o">{</span>
@@ -245,7 +269,9 @@
 <span class="s">"&gt; &lt;td th:text="</span><span class="err">$</span><span class="o">{</span>
     <span class="n">user</span><span class="o">.</span><span class="na">name</span>
 <span class="o">}</span>
-<span class="s">"&gt;Nome&lt;/td&gt; &lt;!-- Uso la variabile locale: zero reflection aggiuntiva --&gt; &lt;td
+<span class="s">"&gt;Nome&lt;/td&gt; 
+&lt;!-- Uso la variabile locale: zero reflection aggiuntiva --&gt; 
+&lt;td
     th:class="</span><span class="err">$</span><span class="o">{</span>
     <span class="n">isAdmin</span>
 <span class="o">}</span>
@@ -261,8 +287,11 @@
 <span class="o">?</span> <span class="err">'</span><span class="n">text</span><span class="o">-</span><span class="n">gold</span><span class="err">'</span> <span class="o">:</span> <span class="err">''</span><span class="s">" th:text="</span><span class="err">$</span><span class="o">{</span>
     <span class="n">isVip</span>
 <span class="o">}</span>
-<span class="o">?</span> <span class="err">'</span><span class="no">VIP</span><span class="err">'</span> <span class="o">:</span> <span class="err">'</span><span class="nc">Standard</span><span class="err">'</span><span class="s">"&gt;Tier&lt;/td&gt; &lt;/tr&gt; &lt;!-- th:with annidato per logiche più
-    complesse: calcolo il subtotale e il discount una sola volta. --&gt; &lt;tbody
+<span class="o">?</span> <span class="err">'</span><span class="no">VIP</span><span class="err">'</span> <span class="o">:</span> <span class="err">'</span><span class="nc">Standard</span><span class="err">'</span><span class="s">"&gt;Tier&lt;/td&gt; &lt;/tr&gt; 
+
+&lt;!-- th:with annidato per logiche più
+    complesse: calcolo il subtotale e il discount una sola volta. --&gt; 
+&lt;tbody
     th:each="</span><span class="n">order</span> <span class="o">:</span> <span class="err">$</span><span class="o">{</span>
     <span class="n">orders</span>
 <span class="o">}</span>
@@ -296,8 +325,11 @@
 <span class="s">"&gt;Sconto&lt;/td&gt; &lt;td th:text="</span><span class="err">$</span><span class="o">{</span>
     <span class="err">#</span><span class="n">finance</span><span class="o">.</span><span class="na">formatCurrency</span><span class="o">(</span><span class="n">finalTotal</span><span class="o">,</span> <span class="err">'</span><span class="no">EUR</span><span class="err">'</span><span class="o">)</span>
 <span class="o">}</span>
-<span class="s">"&gt;Totale&lt;/td&gt; &lt;/tr&gt; &lt;/tbody&gt; &lt;!-- th:with può essere usato anche fuori dai loop
-    per evitare chiamate ripetute a bean Spring: --&gt; &lt;div th:with="</span><span class="n">config</span><span class="o">=</span><span class="err">$</span><span class="o">{</span>
+<span class="s">"&gt;Totale&lt;/td&gt; &lt;/tr&gt; &lt;/tbody&gt; 
+
+&lt;!-- th:with può essere usato anche fuori dai loop
+    per evitare chiamate ripetute a bean Spring: --&gt; 
+&lt;div th:with="</span><span class="n">config</span><span class="o">=</span><span class="err">$</span><span class="o">{</span>
     <span class="nd">@appConfigBean</span><span class="o">.</span><span class="na">getDisplayConfig</span><span class="o">()</span>
 <span class="o">}</span>
 <span class="s">"&gt; &lt;span th:text="</span><span class="err">$</span><span class="o">{</span>
