@@ -88,7 +88,15 @@ body {
 a { color: var(--accent-color); text-decoration: none; transition: color 0.2s ease; }
 a:hover { color: var(--accent-hover); }
 img { max-width: 100%; display: block; }
-.icon-post {width: 24px}
+
+[data-theme="dark"] .icon-post {
+    filter: invert(1);
+    /* Se le immagini non sono perfettamente nere o vuoi che 
+       siano più brillanti, puoi aggiungere anche brightness:
+       filter: invert(1) brightness(2); 
+    */
+}
+.icon-post {width: 24px; height: auto; display: block; }
 
 /* ------------------------------------------------
    3. HEADER / TOOLBAR
