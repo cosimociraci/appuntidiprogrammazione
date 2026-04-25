@@ -5,7 +5,7 @@ date: 2027-01-18 12:00:00
 sintesi: >
   Un errore comune è indicizzare l'intera tabella quando le query filtrano sempre per una condizione specifica (es. solo i record "attivi"). I Partial Indexes includono solo le righe che soddisfano un predicato WHERE. Questo li rende minuscoli, velocis
 tech: "sql"
-tags: ["db", "indexing internals"]
+tags: ["sql", "db"]
 pdf_file: "partial-indexes-per-ridurre-loverhead.pdf"
 ---
 

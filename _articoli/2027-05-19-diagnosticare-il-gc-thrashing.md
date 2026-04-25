@@ -5,7 +5,7 @@ date: 2027-05-19 12:00:00
 sintesi: >
   Quando l'heap è quasi pieno, il GC gira continuamente cercando di liberare pochi KB (thrashing). Se il tempo di GC supera il 90% del tempo totale e libera meno del 2% della memoria, l'applicazione è in coma. I flag GCTimeLimit e GCHeapFreeLimit perme
 tech: "java"
-tags: ["java", "jvm tuning & garbage collection"]
+tags: ["java"]
 pdf_file: "diagnosticare-il-gc-thrashing.pdf"
 ---
 

@@ -5,7 +5,7 @@ date: 2026-05-09 07:30:17
 sintesi: >
     Le Reti di Markov, note tecnicamente come Campi Casuali di Markov (MRF), rappresentano l'evoluzione spaziale e relazionale delle catene sequenziali.
 tech: "Statistica"
-tags: [Statistica, Classificazione, Reti di Markov, denoising, MRF]
+tags: ["java"]
 ---
 Le **Reti di Markov**, note tecnicamente come **Campi Casuali di Markov (MRF)**, rappresentano l'evoluzione spaziale e relazionale delle catene sequenziali. Se una catena di Markov modella un processo che evolve nel tempo (come il meteo), una Rete di Markov modella un sistema di variabili che si influenzano a vicenda simultaneamente, senza un ordine cronologico.
 

@@ -5,7 +5,7 @@ date: 2026-04-29 12:00:00
 sintesi: >
   Inserire liste Java in script JS tramite inlining standard è lento per grandi array. Usare Jackson nel controller per generare una stringa JSON e iniettarla come variabile raw evita che Thymeleaf debba iterare sull'oggetto Java per costruire la strin
 tech: "java"
-tags: ["thymeleaf", "performance tuning & caching"]
+tags: ["java", "thymeleaf"]
 pdf_file: "ottimizzazione-inline-js-jackson-integration.pdf"
 ---
 

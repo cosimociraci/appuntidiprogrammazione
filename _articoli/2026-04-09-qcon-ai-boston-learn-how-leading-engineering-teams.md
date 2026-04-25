@@ -5,7 +5,7 @@ sintesi: >
   La conferenza QCon AI Boston si terrà a Boston nel giugno prossimo e si concentrerà sulla costruzione di sistemi AI robusti, affrontando temi come la latenza di inferimento e la sicurezza.
 date: 2026-04-09 12:00:00
 tech: "ia"
-tags: ["qcon", "ai", "latenza", "sicurezza", "ingegneria software"]
+tags: ["ia"]
 link: ""
 ---
  # QCon AI Boston 2026: Un Approfondimento Sui Sistemi AI Produttivi

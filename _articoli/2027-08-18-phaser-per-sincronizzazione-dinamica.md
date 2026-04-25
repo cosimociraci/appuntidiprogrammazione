@@ -5,7 +5,7 @@ date: 2027-08-18 12:00:00
 sintesi: >
   CountDownLatch e CyclicBarrier sono rigidi: il numero di thread deve essere noto in anticipo. Phaser permette a thread di registrarsi e deregistrarsi dinamicamente. È ideale per algoritmi a fasi dove il numero di partecipanti può cambiare nel tempo (
 tech: "java"
-tags: ["java", "concurrency & multithreading"]
+tags: ["java", "spring boot"]
 pdf_file: "phaser-per-sincronizzazione-dinamica.pdf"
 ---
 

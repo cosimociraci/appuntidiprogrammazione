@@ -5,7 +5,7 @@ date: 2026-10-28 12:00:00
 sintesi: >
   La Just-In-Time (JIT) compilation trasforma parte della query in codice macchina nativo. Sebbene sembri un vantaggio, ha un costo di "startup" non indifferente. Per query OLTP veloci (che durano millisecondi), il tempo speso per compilare il codice J
 tech: "sql"
-tags: ["db", "query opt. & planner"]
+tags: ["sql", "db", "spring boot"]
 pdf_file: "jit-compilation-tuning.pdf"
 ---
 

@@ -5,7 +5,7 @@ date: 2027-07-28 12:00:00
 sintesi: >
   Creare oggetti Java è veloce, ma creare risorse che toccano il sistema operativo (connessioni DB, contesti crittografici, buffer off-heap) è estremamente costoso. Il pooling non va abusato per i POJO (il GC è più efficiente), ma è obbligatorio per og
 tech: "java"
-tags: ["java", "memory & performance"]
+tags: ["java"]
 pdf_file: "object-pooling-per-risorse-native.pdf"
 ---
 

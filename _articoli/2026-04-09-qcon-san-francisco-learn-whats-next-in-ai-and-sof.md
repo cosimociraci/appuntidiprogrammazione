@@ -5,7 +5,7 @@ sintesi: >
   Il QCon San Francisco 2026 affronta la rapida evoluzione della tecnologia, specialmente nell'IA e nel software. L'evento si terrà a San Francisco nel novembre prossimo e coprirà argomenti chiave come l'architettura dei software e le tecniche di gestione dell'affidabilità.
 date: 2026-04-09 12:00:00
 tech: "ia"
-tags: ["qcon san francisco", "intelligenza artificiale", "software development", "future of tech"]
+tags: ["ia"]
 link: ""
 ---
  Titolo: Il Futuro del Software e dell'Intelligenza Artificiale: Insight dal QCon San Francisco 2026

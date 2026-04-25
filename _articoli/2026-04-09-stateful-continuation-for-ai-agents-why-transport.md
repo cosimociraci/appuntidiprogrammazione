@@ -5,7 +5,7 @@ sintesi: >
   L'articolo esplora l'importanza del livello di trasporto per gli agenti intelligenti, spiegando come i concetti come WebSocket di OpenAI migliorino la performance e la scalabilità. Viene presentato un esempio pratico del problema di reinvio della storia della conversazione ed evidenziati i vantaggi e disvantaggi dell'approccio.
 date: 2026-04-09 12:00:00
 tech: "ia"
-tags: ["api", "scalabilità", "performance", "chatbot", "websocket"]
+tags: ["performance"]
 link: ""
 ---
  Titolo: Transport Layer Matters per Agenti Intelligenti: Il Perché e Come

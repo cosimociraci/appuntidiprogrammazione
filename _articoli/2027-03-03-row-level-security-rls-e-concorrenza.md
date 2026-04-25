@@ -5,7 +5,7 @@ date: 2027-03-03 12:00:00
 sintesi: >
   La sicurezza a livello di riga (RLS) aggiunge un filtro invisibile a ogni query. Sebbene potente, può impattare sulla concorrenza se le policy includono subquery complesse che acquisiscono lock su altre tabelle. Ogni volta che un utente accede a una 
 tech: "sql"
-tags: ["db", "concorrenza e locking approfond"]
+tags: ["sql", "db", "analyze"]
 pdf_file: "row-level-security-rls-e-concorrenza.pdf"
 ---
 

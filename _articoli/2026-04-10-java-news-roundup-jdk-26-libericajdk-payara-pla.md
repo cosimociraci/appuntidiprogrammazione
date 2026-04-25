@@ -5,7 +5,7 @@ sintesi: >
   L'articolo riporta sui recenti aggiornamenti di Java, inclusi JDK 26, LibericaJDK, GlassFish 9.0, Micronaut e ClawRunr.
 date: 2026-04-10 12:00:00
 tech: "java"
-tags: ["java", "jdk", "openjdk", "glassfish", "micronaut"]
+tags: ["java", "spring boot"]
 link: "https://www.infoq.com/news/2026/03/java-news-roundup-mar16-2026/"
 ---
  # Java News Roundup: Marzo 2026 - La mia esperienza con gli ultimi aggiornamenti della comunità Java

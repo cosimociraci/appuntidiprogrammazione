@@ -5,7 +5,7 @@ date: 2027-02-10 12:00:00
 sintesi: >
   L'uso eccessivo di subtransazioni (spesso create da blocchi EXCEPTION nei loop PL/pgSQL o dai Savepoint) può degradare drasticamente le performance dei lock. PostgreSQL tiene traccia delle transazioni in memoria (nello Shared Buffer). Se una transazi
 tech: "sql"
-tags: ["db", "concorrenza e locking approfond"]
+tags: ["sql", "db", "pattern matching", "garbage collector"]
 pdf_file: "subtransactions-e-lock-overflow.pdf"
 ---
 

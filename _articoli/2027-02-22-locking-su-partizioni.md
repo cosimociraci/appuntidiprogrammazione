@@ -5,7 +5,7 @@ date: 2027-02-22 12:00:00
 sintesi: >
   Quando si usano tabelle partizionate, i lock possono propagarsi in modo gerarchico. Un lock sulla tabella "padre" (es. per una manutenzione dello schema) si propaga a tutte le partizioni "figlie". Tuttavia, nelle query DML standard (SELECT, UPDATE), 
 tech: "sql"
-tags: ["db", "concorrenza e locking approfond"]
+tags: ["sql", "db"]
 pdf_file: "locking-su-partizioni.pdf"
 ---
 

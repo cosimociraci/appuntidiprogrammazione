@@ -5,7 +5,7 @@ sintesi: >
   Il report descrive alcune delle scoperte e esperienze dell'autore nel campo dell'AI, ML e Data Engineering, includendo aggiornamenti su PostgreSQL, tecnologie di sicurezza per bot, ambienti di sviluppo per agenti multi-agenti, utilizzo di codici open source e confronto dei linguaggi dinamici.
 date: 2026-04-10 12:00:00
 tech: "postgresql"
-tags: ["ai", "ml", "data engineering", "postgresql", "security"]
+tags: ["postgresql"]
 link: "https://www.infoq.com/ai-ml-data-eng/"
 ---
 ## Titolo: Scoperte ed esperienze in AI, ML & Data Engineering nel 2026: un resoconto personale

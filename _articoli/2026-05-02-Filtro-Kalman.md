@@ -5,7 +5,7 @@ date: 2026-05-02 07:27:10
 sintesi: >
     Il Filtro di Kalman è un algoritmo matematico ricorsivo che permette di stimare lo stato di un sistema dinamico partendo da misure incerte e disturbate da "rumore". È il cervello dietro ai sistemi di navigazione dei droni, alla guida autonoma delle auto e al tracciamento dei razzi spaziali.
 tech: "Statistica"
-tags: [Statistica, Classificazione, Filtro di Kalman, Ranking, LLM]
+tags: ["statistica"]
 ---
 Il **Filtro di Kalman** è un algoritmo matematico ricorsivo che permette di stimare lo stato di un sistema dinamico partendo da misure incerte e disturbate da "rumore". È il cervello dietro ai sistemi di navigazione dei droni, alla guida autonoma delle auto e al tracciamento dei razzi spaziali.
 

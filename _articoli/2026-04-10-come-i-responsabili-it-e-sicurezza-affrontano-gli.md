@@ -5,7 +5,7 @@ sintesi: >
   Il seniore developer esplora le preoccupazioni e le misure di difesa contro gli attacchi informatici basati sull'IA, evidenziando la necessità di un backup immutabile e l'adozione del Zero Trust.
 date: 2026-04-10 12:00:00
 tech: "ia"
-tags: ["sicurezza", "backup", "intelligenza artificiale", "zerotrust", "riscaldamento globale"]
+tags: ["ia"]
 link: "https://techfromthenet.it/2026/04/08/come-i-responsabili-it-e-sicurezza-affrontano-gli-attacchi-basati-sullai/"
 ---
  # Come affrontare gli attacchi basati sull'intelligenza artificiale: i miei pensieri da senior developer

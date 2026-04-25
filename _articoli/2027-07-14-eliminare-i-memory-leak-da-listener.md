@@ -5,7 +5,7 @@ date: 2027-07-14 12:00:00
 sintesi: >
   I listener e i callback registrati in oggetti Singleton o statici sono una causa comune di memory leak. Se un oggetto "Short-Lived" si registra presso un oggetto "Long-Lived" e non si deregistra, non verrà mai rimosso dal GC. L'uso di WeakReference p
 tech: "java"
-tags: ["java", "memory & performance"]
+tags: ["java", "garbage collector", "pattern matching"]
 pdf_file: "eliminare-i-memory-leak-da-listener.pdf"
 ---
 

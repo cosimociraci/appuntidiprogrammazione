@@ -5,7 +5,7 @@ date: 2027-06-21 12:00:00
 sintesi: >
   Il caricamento delle classi (parsing dei byte, verifica, creazione metadati) è un costo fisso allo startup. AppCDS permette di scattare una "fotografia" (archivio .jsa) delle classi già caricate e mapparle direttamente in memoria ai successivi avvii.
 tech: "java"
-tags: ["java", "advanced reflection & metaprogr"]
+tags: ["java"]
 pdf_file: "class-data-sharing-cds.pdf"
 ---
 

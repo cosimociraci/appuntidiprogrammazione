@@ -5,7 +5,7 @@ date: 2026-10-05 12:00:00
 sintesi: >
   La replica logica permette di trasmettere solo le modifiche ai dati (INSERT/UPDATE/DELETE) invece di interi blocchi di disco. Il problema principale sorge quando il ricevente (subscriber) si disconnette: il mittente (publisher) deve conservare tutti 
 tech: "sql"
-tags: ["db", "advanced replication & ha"]
+tags: ["sql", "db", "postgresql", "spring boot"]
 pdf_file: "logical-decoding-replication-slots.pdf"
 ---
 

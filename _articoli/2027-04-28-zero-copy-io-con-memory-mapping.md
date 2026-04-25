@@ -5,7 +5,7 @@ date: 2027-04-28 12:00:00
 sintesi: >
   Leggere un file da 10GB in Java solitamente richiede di copiarlo dal kernel allo user-space. Il FileChannel.map unito a Panama permette il vero Zero-Copy: il file viene mappato direttamente in un MemorySegment e il sistema operativo caricherà le pagi
 tech: "java"
-tags: ["java", "jni & project panama"]
+tags: ["java"]
 pdf_file: "zero-copy-io-con-memory-mapping.pdf"
 ---
 

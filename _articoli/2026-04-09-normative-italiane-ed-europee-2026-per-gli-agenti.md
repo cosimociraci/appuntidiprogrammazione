@@ -5,7 +5,7 @@ sintesi: >
   L'adozione di AI e agenti AI in Italia è aumentata in modo significativo, con l'aiuto di normative nazionali ed europee come il Regolamento (UE) 2024/1689 e la Legge 23 settembre 2025.
 date: 2026-04-09 12:00:00
 tech: "ia"
-tags: ["intelligenza artificiale", "normative", "ai act", "cybersecurity", "governance"]
+tags: ["ia"]
 link: ""
 ---
  # Governo dell'Intelligenza Artificiale (AI) nelle Imprese: Le Normative Italiane e Europee

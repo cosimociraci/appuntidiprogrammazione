@@ -5,7 +5,7 @@ date: 2026-11-16 12:00:00
 sintesi: >
   Le funzioni in Postgres hanno tre livelli di volatilità: VOLATILE, STABLE e IMMUTABLE. Il Planner tratta diversamente le query che le contengono. Una funzione definita erroneamente come VOLATILE (il default) impedisce al Planner di ottimizzare la que
 tech: "sql"
-tags: ["db", "query opt. & planner"]
+tags: ["sql", "db"]
 pdf_file: "funzioni-volatili-e-optimization-fence.pdf"
 ---
 

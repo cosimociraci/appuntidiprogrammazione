@@ -5,7 +5,7 @@ date: 2027-06-23 12:00:00
 sintesi: >
   Da Java 9, l'incapsulamento è diventato reale: non si può più accedere ai campi privati di librerie esterne se il modulo non lo permette. Gestire gli errori di "Access Denied" usando i flag --add-opens è la soluzione immediata, ma la reflection "prof
 tech: "java"
-tags: ["java", "advanced reflection & metaprogr"]
+tags: ["java", "spring boot"]
 pdf_file: "deep-reflection-e-moduli-project-jigsaw.pdf"
 ---
 

@@ -5,7 +5,7 @@ date: 2026-04-20 12:00:00
 sintesi: >
   Elaborare lo stesso menu o footer per ogni utente è uno spreco di risorse. Wrappando i TemplateResolver con sistemi di caching (Redis o Ehcache) per i frammenti statici è possibile servire pezzi di HTML pre-renderizzati direttamente dalla RAM, bypass
 tech: "java"
-tags: ["thymeleaf", "performance tuning & caching"]
+tags: ["java", "thymeleaf"]
 pdf_file: "fragment-caching-jcacheredis.pdf"
 ---
 

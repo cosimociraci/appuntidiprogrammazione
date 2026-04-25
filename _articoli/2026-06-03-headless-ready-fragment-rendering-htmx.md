@@ -5,7 +5,7 @@ date: 2026-06-03 12:00:00
 sintesi: >
   Spesso serve ritornare solo un pezzo di HTML per aggiornamenti AJAX/HTMX, non l'intera pagina. Thymeleaf può processare solo una porzione del file .html (es. return "page :: my-fragment"). Questo abilita pattern "HTML over the wire", permettendo a Sp
 tech: "java"
-tags: ["thymeleaf", "advanced layout & templating"]
+tags: ["java", "thymeleaf", "spring boot"]
 pdf_file: "headless-ready-fragment-rendering-htmx.pdf"
 ---
 

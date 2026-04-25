@@ -5,7 +5,7 @@ date: 2026-07-27 12:00:00
 sintesi: >
   In JS standard, i numeri sono solitamente allocati nell'heap come "Boxed Doubles". Per il calcolo intensivo, gli array standard [] introducono overhead di puntatori. Float64Array o Int32Array allocano un blocco di memoria continua (C-style), permette
 tech: "javascript"
-tags: ["js", "v8 engine & runtime performance"]
+tags: ["javascript"]
 pdf_file: "typed-arrays-e-unboxed-numerics.pdf"
 ---
 

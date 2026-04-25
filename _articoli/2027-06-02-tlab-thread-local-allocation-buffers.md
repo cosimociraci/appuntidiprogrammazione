@@ -5,7 +5,7 @@ date: 2027-06-02 12:00:00
 sintesi: >
   L'Eden space è una risorsa condivisa: se ogni thread dovesse bloccare l'intero spazio per ogni new, il multithreading sarebbe lentissimo. I TLAB assegnano a ogni thread una piccola porzione privata dell'Eden dove allocare oggetti senza lock. Se i TLA
 tech: "java"
-tags: ["java", "jvm tuning & garbage collection"]
+tags: ["java", "spring boot"]
 pdf_file: "tlab-thread-local-allocation-buffers.pdf"
 ---
 

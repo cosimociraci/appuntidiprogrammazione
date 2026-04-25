@@ -5,7 +5,7 @@ date: 2026-04-25 07:25:10
 sintesi: >
     Le Catene di Markov sono modelli matematici utilizzati per descrivere una sequenza di eventi in cui la probabilità di passare a uno stato futuro dipende esclusivamente dallo stato attuale. Questo principio è noto come Proprietà di Markov (o "assenza di memoria").
 tech: "Statistica"
-tags: [Statistica, Classificazione, Catene di Markov, Ranking, LLM]
+tags: ["statistica"]
 ---
 ## Catene di Markov
 

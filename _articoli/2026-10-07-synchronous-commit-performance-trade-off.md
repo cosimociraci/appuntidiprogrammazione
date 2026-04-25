@@ -5,7 +5,7 @@ date: 2026-10-07 12:00:00
 sintesi: >
   La replica sincrona garantisce che una transazione sia confermata solo dopo essere stata scritta su almeno un nodo standby. Questo elimina il rischio di perdere dati in caso di failover, ma introduce una latenza pari al Round Trip Time (RTT) tra i se
 tech: "sql"
-tags: ["db", "advanced replication & ha"]
+tags: ["sql", "db", "spring boot"]
 pdf_file: "synchronous-commit-performance-trade-off.pdf"
 ---
 

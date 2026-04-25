@@ -5,7 +5,7 @@ sintesi: >
   Il report di SAS sugli implicazioni del Data and AI nell'industria bancaria evidenzia la mancanza di fiducia nei sistemi IA implementati. Solo il 11% delle banche ha raggiunto sia un'elevata fiducia interna nell'IA che sistemi dimostrabilmente affidabili.
 date: 2026-04-17 12:00:00
 tech: "ia"
-tags: ["banca", "intelligenza artificiale", "fiducia", "supervisione"]
+tags: ["ia"]
 link: "https://techfromthenet.it/2026/04/16/banche-e-ia-in-equilibrio-tra-troppa-o-scarsa-fiducia/"
 ---
 ## Banche e IA: equilibrio tra troppa o scarsa fiducia

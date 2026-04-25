@@ -5,7 +5,7 @@ date: 2026-10-19 12:00:00
 sintesi: >
   In architetture distribuite globalmente, avere 100 repliche collegate a un unico Master saturerebbe la sua banda di rete. La "Cascading Replication" permette a una replica di comportarsi a sua volta come un publisher per altre repliche "nipoti". Ques
 tech: "sql"
-tags: ["db", "advanced replication & ha"]
+tags: ["sql", "db"]
 pdf_file: "cascading-replication-per-scalabilit-geografica.pdf"
 ---
 

@@ -5,7 +5,7 @@ date: 2026-07-22 12:00:00
 sintesi: >
   V8 non usa dizionari per gli oggetti ma "Hidden Classes". Inizializzare proprietà in ordine diverso o aggiungerle dinamicamente rompe la "Shape", forzando il motore a creare nuove classi nascoste. Questo invalida l'Inline Cache (IC): se la Shape camb
 tech: "javascript"
-tags: ["js", "v8 engine & runtime performance"]
+tags: ["javascript"]
 pdf_file: "hidden-classes-shapes-e-inline-caching.pdf"
 ---
 

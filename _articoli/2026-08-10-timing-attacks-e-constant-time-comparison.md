@@ -5,7 +5,7 @@ date: 2026-08-10 12:00:00
 sintesi: >
   Un attaccante può indovinare una password o un token misurando quanto tempo impiega il server a rispondere. Il confronto if (a === b) termina non appena trova un carattere diverso (early exit). Il metodo crypto.timingSafeEqual confronta tutti i byte 
 tech: "javascript"
-tags: ["js", "security & cryptography"]
+tags: ["javascript"]
 pdf_file: "timing-attacks-e-constant-time-comparison.pdf"
 ---
 

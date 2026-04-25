@@ -5,7 +5,7 @@ date: 2027-02-08 12:00:00
 sintesi: >
   PostgreSQL gestisce i lock tramite una coda FIFO (First-In-First-Out). Se un processo chiede un Access Exclusive Lock (es. per un ALTER TABLE), si mette in coda. Tutti i processi che arrivano dopo, anche se chiedono solo una semplice SELECT, rimarran
 tech: "sql"
-tags: ["db", "concorrenza e locking approfond"]
+tags: ["sql", "db", "postgresql"]
 pdf_file: "wait-queues-e-lock-priority.pdf"
 ---
 

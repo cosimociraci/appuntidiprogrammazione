@@ -5,7 +5,7 @@ date: 2026-11-30 12:00:00
 sintesi: >
   Il Background Writer ha il compito di scrivere le pagine sporche dalla memoria al disco in modo graduale, evitando picchi durante i Checkpoint. Se il numero di buffers_backend è alto, significa che le query degli utenti sono costrette a scrivere i da
 tech: "sql"
-tags: ["db", "vacuum & storage"]
+tags: ["sql", "db"]
 pdf_file: "monitoring-io-con-pgstatbgwriter.pdf"
 ---
 

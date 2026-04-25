@@ -5,7 +5,7 @@ date: 2026-10-26 12:00:00
 sintesi: >
   Quando una query ha molti join, il Planner tenta di rimescolarli per trovare l'ordine più efficiente. Tuttavia, il numero di combinazioni cresce esponenzialmente. Se superiamo il join_collapse_limit, il Planner smette di cercare l'ordine perfetto e i
 tech: "sql"
-tags: ["db", "query opt. & planner"]
+tags: ["sql", "db", "spring boot"]
 pdf_file: "join-order-control-joincollapselimit.pdf"
 ---
 

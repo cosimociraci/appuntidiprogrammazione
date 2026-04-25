@@ -5,7 +5,7 @@ date: 2026-11-25 12:00:00
 sintesi: >
   Il Planner assume solitamente che le colonne siano indipendenti tra loro. Se interroghiamo una tabella filtrando per "Marca" e "Modello", Postgres moltiplica le selettività singole, spesso sottostimando il numero di righe risultanti. CREATE STATISTIC
 tech: "sql"
-tags: ["db", "query opt. & planner"]
+tags: ["sql", "db", "analyze"]
 pdf_file: "extended-statistics-create-statistics.pdf"
 ---
 

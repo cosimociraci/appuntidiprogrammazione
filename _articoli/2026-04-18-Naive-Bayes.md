@@ -5,7 +5,7 @@ date: 2026-04-18 07:25:10
 sintesi: >
     In ambito tecnico, il Naive Bayes è un classificatore probabilistico basato sul Teorema di Bayes. Viene definito "Naive" (ingenuo) perché assume che la presenza di una particolare caratteristica in una classe sia totalmente slegata dalla presenza di altre.
 tech: "Statistica"
-tags: [Statistica, Classificazione, Naive Bayes, Sentiment Analysis]
+tags: ["statistica"]
 ---
 
 ## Naive Bayes: Il Classificatore ad Alta Velocità

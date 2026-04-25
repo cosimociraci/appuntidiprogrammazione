@@ -5,7 +5,7 @@ date: 2026-09-14 12:00:00
 sintesi: >
   Manipolare stringhe a livello di tipo per validare pattern testuali. Combinando stringhe con la sintassi `${A}${B}` è possibile generare set di tipi dinamici. Questo permette di tipizzare con precisione millimetrica eventi, percorsi di routing o stil
 tech: "javascript"
-tags: ["js", "typescript & advanced types"]
+tags: ["javascript"]
 pdf_file: "template-literal-types-ts-40.pdf"
 ---
 

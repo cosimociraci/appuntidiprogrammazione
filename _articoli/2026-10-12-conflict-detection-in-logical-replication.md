@@ -5,7 +5,7 @@ date: 2026-10-12 12:00:00
 sintesi: >
   A differenza della replica fisica, quella logica può incontrare conflitti (es. un inserimento sulla replica di una riga con una chiave primaria già esistente). Quando ciò accade, la replica si blocca e smette di applicare le modifiche, creando un lag
 tech: "sql"
-tags: ["db", "advanced replication & ha"]
+tags: ["sql", "db", "postgresql", "spring boot"]
 pdf_file: "conflict-detection-in-logical-replication.pdf"
 ---
 

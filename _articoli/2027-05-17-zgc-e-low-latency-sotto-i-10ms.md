@@ -5,7 +5,7 @@ date: 2027-05-17 12:00:00
 sintesi: >
   Con heap molto grandi (>100GB), i classici GC come G1 possono avere pause "Stop-The-World" percepibili. ZGC esegue quasi tutto il lavoro in concorrenza con i thread dell'applicazione. Il vantaggio tecnico è che i tempi di pausa sono costanti e non di
 tech: "java"
-tags: ["java", "jvm tuning & garbage collection"]
+tags: ["java", "garbage collector", "concurrency", "spring boot"]
 pdf_file: "zgc-e-low-latency-sotto-i-10ms.pdf"
 ---
 

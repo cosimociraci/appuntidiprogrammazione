@@ -5,7 +5,7 @@ date: 2027-08-16 12:00:00
 sintesi: >
   Java converte automaticamente i tipi primitivi (int) nei loro wrapper (Integer). All'interno di un loop critico, questo causa l'allocazione di milioni di oggetti inutili, saturando l'Eden space e innescando il GC. La soluzione è usare collezioni prim
 tech: "java"
-tags: ["java", "memory & performance"]
+tags: ["java", "garbage collector", "spring boot"]
 pdf_file: "evitare-lautoboxing-nei-loop.pdf"
 ---
 

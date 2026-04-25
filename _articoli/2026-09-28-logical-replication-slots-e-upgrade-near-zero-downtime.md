@@ -5,7 +5,7 @@ date: 2026-09-28 12:00:00
 sintesi: >
   La replica logica è lo strumento principe per eseguire upgrade di versione (es. da PG 15 a 17) con downtime minimo. La procedura prevede: creare un nuovo cluster con la versione recente, attivare la replica logica dal vecchio al nuovo, aspettare che 
 tech: "sql"
-tags: ["db", "advanced replication & ha"]
+tags: ["sql", "db", "postgresql"]
 pdf_file: "logical-replication-slots-e-upgrade-near-zero-downtime.pdf"
 ---
 

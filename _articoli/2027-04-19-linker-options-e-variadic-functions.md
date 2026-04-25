@@ -5,7 +5,7 @@ date: 2027-04-19 12:00:00
 sintesi: >
   Alcune funzioni C (come printf o ioctl) accettano un numero variabile di argomenti. Configurare i FunctionDescriptor variadici in Panama richiede di definire gli "specializzatori" per ogni combinazione di argomenti usata. Questo livello di dettaglio 
 tech: "java"
-tags: ["java", "jni & project panama"]
+tags: ["java"]
 pdf_file: "linker-options-e-variadic-functions.pdf"
 ---
 

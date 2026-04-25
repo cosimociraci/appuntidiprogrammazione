@@ -5,7 +5,7 @@ date: 2026-05-20 12:00:00
 sintesi: >
   I frammenti standard (th:replace) non bastano per logiche UI molto complesse o componenti riutilizzabili tra progetti diversi. Implementando un IProcessorDialect è possibile introdurre nuovi attributi (es. app:chart) o tag che vengono elaborati dal s
 tech: "java"
-tags: ["thymeleaf", "custom dialects & processors"]
+tags: ["java", "thymeleaf"]
 pdf_file: "custom-dialects-e-iprocessor.pdf"
 ---
 

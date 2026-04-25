@@ -5,7 +5,7 @@ date: 2027-05-12 12:00:00
 sintesi: >
   Eseguire Java in un container senza parametri specifici è pericoloso: la JVM potrebbe vedere la memoria totale dell'host invece dei limiti del container, portando al crash (OOM Kill). L'uso di -XX:MaxRAMPercentage invece di -Xmx statico rende l'immag
 tech: "java"
-tags: ["java", "jvm tuning & garbage collection"]
+tags: ["java", "pattern matching", "spring boot"]
 pdf_file: "container-awareness-e-maxrampercentage.pdf"
 ---
 

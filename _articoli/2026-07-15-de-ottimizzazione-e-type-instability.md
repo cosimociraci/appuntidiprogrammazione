@@ -5,7 +5,7 @@ date: 2026-07-15 12:00:00
 sintesi: >
   La pipeline JIT (TurboFan) ottimizza il codice basandosi sui tipi visti finora. Passare tipi diversi (es. a volte un int, a volte una string) a una funzione "calda" causa una "Deopt": V8 deve scartare il codice macchina ottimizzato e tornare all'inte
 tech: "javascript"
-tags: ["js", "v8 engine & runtime performance"]
+tags: ["javascript"]
 pdf_file: "de-ottimizzazione-e-type-instability.pdf"
 ---
 

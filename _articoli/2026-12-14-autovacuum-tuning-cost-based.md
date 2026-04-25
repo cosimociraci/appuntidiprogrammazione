@@ -5,7 +5,7 @@ date: 2026-12-14 12:00:00
 sintesi: >
   L'Autovacuum è fondamentale per recuperare lo spazio delle tuple morte, ma se non configurato correttamente può essere troppo timido o troppo aggressivo. PostgreSQL usa un sistema a "punti" (costo) per limitare l'impatto dell'I/O: ogni operazione con
 tech: "sql"
-tags: ["db", "vacuum & storage"]
+tags: ["sql", "db"]
 pdf_file: "autovacuum-tuning-cost-based.pdf"
 ---
 

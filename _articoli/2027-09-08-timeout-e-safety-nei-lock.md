@@ -5,7 +5,7 @@ date: 2027-09-08 12:00:00
 sintesi: >
   L'uso di synchronized o lock() senza parametri può portare a deadlock infiniti se un thread non rilascia mai la risorsa. L'uso sistematico di tryLock(timeout, unit) permette al thread di "arrendersi" se non ottiene il lock entro un tempo ragionevole,
 tech: "java"
-tags: ["java", "concurrency & multithreading"]
+tags: ["java"]
 pdf_file: "timeout-e-safety-nei-lock.pdf"
 ---
 

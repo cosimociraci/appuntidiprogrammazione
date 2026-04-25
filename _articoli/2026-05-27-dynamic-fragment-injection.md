@@ -5,7 +5,7 @@ date: 2026-05-27 12:00:00
 sintesi: >
   A volte non si sa quale frammento caricare finché non si è a runtime (es. blocchi di un CMS). L'espressione ~{${path} :: ${name}} permette a Thymeleaf di risolvere prima le stringhe dentro ${} e poi cercare il frammento. Questo permette di implementa
 tech: "java"
-tags: ["thymeleaf", "advanced layout & templating"]
+tags: ["java", "thymeleaf"]
 pdf_file: "dynamic-fragment-injection.pdf"
 ---
 

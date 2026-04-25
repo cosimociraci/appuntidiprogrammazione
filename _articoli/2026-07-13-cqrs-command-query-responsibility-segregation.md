@@ -5,7 +5,7 @@ date: 2026-07-13 12:00:00
 sintesi: >
   Usare lo stesso modello per leggere e scrivere dati porta a compromessi sulle performance. La separazione tra Command (scrive/modifica) e Query (legge) permette di ottimizzare i Command per la consistenza e le Query per la velocità (es. usando viste 
 tech: "javascript"
-tags: ["js", "design patterns & architecture"]
+tags: ["javascript", "postgresql"]
 pdf_file: "cqrs-command-query-responsibility-segregation.pdf"
 ---
 

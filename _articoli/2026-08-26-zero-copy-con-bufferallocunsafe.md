@@ -5,7 +5,7 @@ date: 2026-08-26 12:00:00
 sintesi: >
   Buffer.alloc inizializza la memoria a zero, operazione costosa per buffer enormi. Buffer.allocUnsafe alloca un blocco di memoria "sporca" che potrebbe contenere dati sensibili di precedenti operazioni. È estremamente veloce perché bypassa l'inizializ
 tech: "javascript"
-tags: ["js", "node.js internals & libuv"]
+tags: ["javascript"]
 pdf_file: "zero-copy-con-bufferallocunsafe.pdf"
 ---
 

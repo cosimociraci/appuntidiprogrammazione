@@ -5,7 +5,7 @@ date: 2027-03-10 12:00:00
 sintesi: >
   La ricerca testuale (FTS) in Postgres usa indici GIN. Questi indici sono molto efficienti in lettura ma costosi da aggiornare. Durante un inserimento massivo, l'aggiornamento dell'indice GIN può diventare un punto di contesa per i lock, poiché deve i
 tech: "sql"
-tags: ["db", "concorrenza e locking approfond"]
+tags: ["sql", "db", "postgresql", "spring boot"]
 pdf_file: "locking-in-full-text-search.pdf"
 ---
 

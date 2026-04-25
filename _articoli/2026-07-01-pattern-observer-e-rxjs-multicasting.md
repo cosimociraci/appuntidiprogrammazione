@@ -5,7 +5,7 @@ date: 2026-07-01 12:00:00
 sintesi: >
   I semplici EventEmitter possono causare memory leak se i listener non vengono rimossi. Subject e ReplaySubject permettono di gestire flussi di dati multi-consumatore. L'operatore takeUntil deregistra automaticamente gli osservatori, evitando che "gho
 tech: "javascript"
-tags: ["js", "design patterns & architecture"]
+tags: ["javascript"]
 pdf_file: "pattern-observer-e-rxjs-multicasting.pdf"
 ---
 

@@ -5,7 +5,7 @@ date: 2026-12-23 12:00:00
 sintesi: >
   PostgreSQL permette di fare update "in riga" (Heap Only Tuple) se c'è spazio sufficiente nella stessa pagina disco e se non vengono cambiate colonne indicizzate. Gli HOT updates sono incredibilmente veloci perché non richiedono l'aggiornamento degli 
 tech: "sql"
-tags: ["db", "vacuum & storage"]
+tags: ["sql", "db"]
 pdf_file: "fillfactor-e-hot-updates.pdf"
 ---
 

@@ -5,7 +5,7 @@ date: 2026-12-30 12:00:00
 sintesi: >
   PostgreSQL eccelle nel gestire dati non strutturati grazie agli indici GIN applicati ad array o oggetti JSONB. Questi indici permettono di interrogare "l'interno" del dato: trovare tutti i documenti che contengono un certo tag o una specifica chiave/
 tech: "sql"
-tags: ["db", "indexing internals"]
+tags: ["sql", "db"]
 pdf_file: "indici-gin-su-array-e-jsonb.pdf"
 ---
 

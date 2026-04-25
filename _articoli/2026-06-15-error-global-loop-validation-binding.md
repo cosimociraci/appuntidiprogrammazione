@@ -5,7 +5,7 @@ date: 2026-06-15 12:00:00
 sintesi: >
   L'oggetto #fields di Thymeleaf permette di catturare errori che non appartengono a un campo specifico (es. "Credenziali non valide" o "Password non corrispondenti") tramite th:each="err : ${#fields.errors('global')}". L'attributo th:errorclass applic
 tech: "java"
-tags: ["thymeleaf", "spring integration & flow archi"]
+tags: ["java", "thymeleaf"]
 pdf_file: "error-global-loop-validation-binding.pdf"
 ---
 

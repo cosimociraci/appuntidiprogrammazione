@@ -5,7 +5,7 @@ date: 2027-05-24 12:00:00
 sintesi: >
   Diagnosticare problemi di performance dopo che sono avvenuti è quasi impossibile senza dati storici. JFR è uno strumento a basso overhead (<1%) da tenere sempre attivo in produzione. JFR registra eventi interni della JVM (allocazioni, lock, pause GC,
 tech: "java"
-tags: ["java", "jvm tuning & garbage collection"]
+tags: ["java"]
 pdf_file: "java-flight-recorder-jfr-in-prod.pdf"
 ---
 

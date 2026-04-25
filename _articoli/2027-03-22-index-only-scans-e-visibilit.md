@@ -5,7 +5,7 @@ date: 2027-03-22 12:00:00
 sintesi: >
   Un Index-Only Scan permette a Postgres di rispondere a una query leggendo solo l'indice, senza toccare la tabella (heap). Tuttavia, a causa di MVCC, l'indice non sa se una riga è visibile per la transazione corrente. Per confermarlo, Postgres usa la 
 tech: "sql"
-tags: ["db", "concorrenza e locking approfond"]
+tags: ["sql", "db"]
 pdf_file: "index-only-scans-e-visibilit.pdf"
 ---
 

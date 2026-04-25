@@ -5,7 +5,7 @@ date: 2027-03-15 12:00:00
 sintesi: >
   Quando un'applicazione deve acquisire un lock su una riga per modificarla, il comportamento standard è aspettare se la riga è già bloccata. In scenari interattivi (es. un utente che apre una scheda per modifica), l'attesa può sembrare un blocco del s
 tech: "sql"
-tags: ["db", "concorrenza e locking approfond"]
+tags: ["sql", "db", "postgresql"]
 pdf_file: "for-update-nowait.pdf"
 ---
 

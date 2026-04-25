@@ -5,7 +5,7 @@ date: 2027-04-12 12:00:00
 sintesi: >
   Se la memoria nativa finisce, la JVM crasha senza un java.lang.OutOfMemoryError classico. Monitorare il processo a livello di sistema operativo (RSS - Resident Set Size) è fondamentale. Se l'heap è vuoto ma il processo occupa 32GB di RAM, il colpevol
 tech: "java"
-tags: ["java", "jni & project panama"]
+tags: ["java"]
 pdf_file: "diagnostica-outofmemory-nativo.pdf"
 ---
 

@@ -5,7 +5,7 @@ sintesi: >
   ESET affronta la sicurezza dei dati con una tecnologia di browser sicuro che intercetta le interazioni dell’AI e analizza in tempo reale, proteggeto le organizzazioni dalle minacce legate all'uso di strumenti di AI. La piattaforma ESET PROTECT consente la monitorazione e blocco delle attività in conformità con le policy aziendali.
 date: 2026-04-17 12:00:00
 tech: "ia"
-tags: ["intelligenza artificiale", "sicurezza", "cybersecurity", "eset", "ai"]
+tags: ["ia"]
 link: "https://techfromthenet.it/2026/04/16/da-eset-piu-sicurezza-per-proteggere-chi-lavora-nellai/"
 ---
 ## Proteggendo la mia organizzazione dagli strumenti di intelligenza artificiale: il mio viaggio con ESET PROTECT

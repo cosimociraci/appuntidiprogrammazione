@@ -5,7 +5,7 @@ date: 2026-04-08 12:00:00
 sintesi: >
   L'uso di th:utext (unescaped) per renderizzare contenuti HTML salvati nel DB è la causa principale di XSS. Prima di passare una stringa HTML alla view, questa deve essere processata nel Service layer con un parser come OWASP Java HTML Sanitizer per r
 tech: "java"
-tags: ["thymeleaf", "security & spel expressions"]
+tags: ["java", "thymeleaf"]
 pdf_file: "escaping-avanzato-thtext-vs-thutext.pdf"
 ---
 

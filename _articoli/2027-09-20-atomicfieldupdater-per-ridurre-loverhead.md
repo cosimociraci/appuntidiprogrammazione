@@ -5,7 +5,7 @@ date: 2027-09-20 12:00:00
 sintesi: >
   Creare migliaia di oggetti AtomicInteger ha un costo in termini di memoria (overhead dell'oggetto wrapper). AtomicIntegerFieldUpdater permette di eseguire operazioni atomiche su un normale campo volatile di una classe. L'updater è statico e unico per
 tech: "java"
-tags: ["java", "concurrency & multithreading"]
+tags: ["java", "spring boot", "garbage collector", "pattern matching"]
 pdf_file: "atomicfieldupdater-per-ridurre-loverhead.pdf"
 ---
 

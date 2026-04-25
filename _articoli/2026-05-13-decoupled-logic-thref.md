@@ -5,7 +5,7 @@ date: 2026-05-13 12:00:00
 sintesi: >
   Mantenere i file HTML "puri" per i designer, separando la logica Thymeleaf in file .th.xml, permette ai grafici di lavorare su file HTML standard senza vedere attributi th:, mentre il server applica la logica di binding esternamente. I selettori CSS 
 tech: "java"
-tags: ["thymeleaf", "custom dialects & processors"]
+tags: ["java", "thymeleaf"]
 pdf_file: "decoupled-logic-thref.pdf"
 ---
 

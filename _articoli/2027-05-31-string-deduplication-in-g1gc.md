@@ -5,7 +5,7 @@ date: 2027-05-31 12:00:00
 sintesi: >
   Le stringhe duplicate sono la causa principale di spreco di memoria in Java. La funzione -XX:+UseStringDeduplication, disponibile per G1GC, analizza l'heap in background e, se trova stringhe identiche, fa sì che puntino allo stesso array di caratteri
 tech: "java"
-tags: ["java", "jvm tuning & garbage collection"]
+tags: ["java"]
 pdf_file: "string-deduplication-in-g1gc.pdf"
 ---
 

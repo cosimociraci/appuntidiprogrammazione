@@ -5,7 +5,7 @@ date: 2026-09-21 12:00:00
 sintesi: >
   Il "Replication Lag" non si misura solo in secondi, ma in byte di scarto tramite i Log Sequence Numbers (LSN). Sottraendo l'LSN di ricezione della replica dall'LSN di scrittura del Master si ottiene la distanza reale tra i due nodi. Se la differenza 
 tech: "sql"
-tags: ["db", "advanced replication & ha"]
+tags: ["sql", "db"]
 pdf_file: "monitoring-replication-lag-lsn-algebra.pdf"
 ---
 

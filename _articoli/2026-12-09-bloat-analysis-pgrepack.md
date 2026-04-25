@@ -5,7 +5,7 @@ date: 2026-12-09 12:00:00
 sintesi: >
   Il Vacuum recupera lo spazio all'interno del file, ma non lo restituisce al sistema operativo. Una tabella con molto "bloat" è come una spugna con troppi buchi: occupa molto spazio ma contiene pochi dati utili. Se il bloat è eccessivo (es. >30%), le 
 tech: "sql"
-tags: ["db", "vacuum & storage"]
+tags: ["sql", "db"]
 pdf_file: "bloat-analysis-pgrepack.pdf"
 ---
 

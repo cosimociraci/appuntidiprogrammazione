@@ -5,7 +5,7 @@ date: 2027-08-11 12:00:00
 sintesi: >
   In Java, String.substring crea una nuova copia dell'array di caratteri (dalla versione 7u6). Usando CharSequence o viste custom sul buffer originale, si possono manipolare porzioni di testo senza allocare nuova memoria. Passando interfacce CharSequen
 tech: "java"
-tags: ["java", "memory & performance"]
+tags: ["java", "pattern matching", "concurrency"]
 pdf_file: "charsequence-vs-stringsubstring.pdf"
 ---
 

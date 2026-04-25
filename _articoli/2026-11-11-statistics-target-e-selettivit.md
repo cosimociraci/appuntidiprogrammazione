@@ -5,7 +5,7 @@ date: 2026-11-11 12:00:00
 sintesi: >
   La qualità del piano dipende dalla precisione degli istogrammi salvati nelle statistiche. Per impostazione predefinita, Postgres campiona 100 valori comuni per ogni colonna. Per colonne con distribuzioni di dati molto irregolari (es. pochi clienti co
 tech: "sql"
-tags: ["db", "query opt. & planner"]
+tags: ["sql", "db", "analyze", "performance"]
 pdf_file: "statistics-target-e-selettivit.pdf"
 ---
 

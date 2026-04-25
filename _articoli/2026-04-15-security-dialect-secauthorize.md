@@ -5,7 +5,7 @@ date: 2026-04-15 12:00:00
 sintesi: >
   Nascondere elementi via CSS (display:none) non è sicurezza: l'HTML è visibile nel sorgente. L'attributo sec:authorize="hasRole(...)" impedisce fisicamente al server di generare e inviare il markup al browser se l'utente non ha i permessi. Questo ridu
 tech: "java"
-tags: ["thymeleaf", "security & spel expressions"]
+tags: ["java", "thymeleaf"]
 pdf_file: "security-dialect-secauthorize.pdf"
 ---
 

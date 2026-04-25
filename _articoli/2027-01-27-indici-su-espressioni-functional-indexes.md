@@ -5,7 +5,7 @@ date: 2027-01-27 12:00:00
 sintesi: >
   Molte query falliscono l'uso degli indici perché applicano funzioni alle colonne (es. WHERE lower(name) = 'rossi'). Un indice standard su name non serve in questo caso. La soluzione è un indice su espressione, dove il risultato della funzione viene p
 tech: "sql"
-tags: ["db", "indexing internals"]
+tags: ["sql", "db", "spring boot"]
 pdf_file: "indici-su-espressioni-functional-indexes.pdf"
 ---
 

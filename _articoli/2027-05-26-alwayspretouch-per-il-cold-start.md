@@ -5,7 +5,7 @@ date: 2027-05-26 12:00:00
 sintesi: >
   Di default, la JVM riserva la memoria all'avvio ma non la occupa realmente (lazy allocation). Questo causa un calo di performance quando l'applicazione inizia a lavorare seriamente. Il parametro -XX:+AlwaysPreTouch forza la JVM a scrivere uno zero in
 tech: "java"
-tags: ["java", "jvm tuning & garbage collection"]
+tags: ["java", "spring boot"]
 pdf_file: "alwayspretouch-per-il-cold-start.pdf"
 ---
 

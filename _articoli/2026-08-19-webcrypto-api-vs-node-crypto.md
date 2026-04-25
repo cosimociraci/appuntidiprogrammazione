@@ -5,7 +5,7 @@ date: 2026-08-19 12:00:00
 sintesi: >
   Storicamente, la crittografia nel browser era lenta e insicura. La WebCrypto API espone operazioni hardware-accelerate e isolate. La differenza fondamentale è tra CryptoKey (oggetti non estraibili dalla memoria JS) e i buffer grezzi: usare chiavi "no
 tech: "javascript"
-tags: ["js", "security & cryptography"]
+tags: ["javascript"]
 pdf_file: "webcrypto-api-vs-node-crypto.pdf"
 ---
 

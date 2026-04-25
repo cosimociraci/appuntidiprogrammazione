@@ -5,7 +5,7 @@ date: 2027-02-24 12:00:00
 sintesi: >
   Il livello di isolamento SERIALIZABLE in PostgreSQL non si limita a bloccare le righe, ma monitora le dipendenze tra le transazioni per prevenire anomalie di "vizio di scrittura" (write skew). Mentre REPEATABLE READ garantisce che i dati letti non ca
 tech: "sql"
-tags: ["db", "concorrenza e locking approfond"]
+tags: ["sql", "db"]
 pdf_file: "serializable-snapshot-isolation-ssi.pdf"
 ---
 

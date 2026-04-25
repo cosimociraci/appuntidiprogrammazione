@@ -5,7 +5,7 @@ date: 2027-07-19 12:00:00
 sintesi: >
   Se l'applicazione gestisce milioni di stringhe identiche (es. nomi di stati, codici valuta), la memoria viene sprecata. String.intern() sposta la stringa in un pool globale condiviso, permettendo a oggetti diversi di condividere la stessa istanza. La
 tech: "java"
-tags: ["java", "memory & performance"]
+tags: ["java", "garbage collector"]
 pdf_file: "stringintern-e-stringtable.pdf"
 ---
 

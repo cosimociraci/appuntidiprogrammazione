@@ -5,7 +5,7 @@ date: 2027-03-29 12:00:00
 sintesi: >
   In una configurazione Master-Replica, può succedere che una query lunga sulla replica venga interrotta perché il Master ha rimosso dei dati (tramite Vacuum) che la replica deve ancora processare. Questo è il "replication conflict". Il meccanismo hot_
 tech: "sql"
-tags: ["db", "concorrenza e locking approfond"]
+tags: ["sql", "db"]
 pdf_file: "hot-standby-feedback.pdf"
 ---
 

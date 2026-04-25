@@ -5,7 +5,7 @@ date: 2027-03-31 12:00:00
 sintesi: >
   JNI richiede la scrittura di codice C "glue" (stub) e ha un alto costo di transizione (context switch). La Foreign Function & Memory API (Java 21/22) permette di chiamare funzioni C direttamente da Java usando Linker e SymbolLookup. Questo elimina la
 tech: "java"
-tags: ["java", "jni & project panama"]
+tags: ["java"]
 pdf_file: "migrazione-a-ffm-api-panama.pdf"
 ---
 

@@ -5,7 +5,7 @@ date: 2027-07-12 12:00:00
 sintesi: >
   Leggere le annotazioni tramite Reflection a runtime rallenta lo startup dell'applicazione. Gli Annotation Processors spostano la logica a "Compile Time": framework come MapStruct o Lombok generano codice Java reale durante la compilazione. Questo eli
 tech: "java"
-tags: ["java", "advanced reflection & metaprogr"]
+tags: ["java"]
 pdf_file: "annotation-processing-jsr-269.pdf"
 ---
 

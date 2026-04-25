@@ -5,7 +5,7 @@ date: 2027-01-06 12:00:00
 sintesi: >
   Gli indici GIN (Generalized Inverted Index) sono fondamentali per la ricerca Full Text e per i campi JSONB, ma sono notoriamente lenti in fase di inserimento perché ogni riga genera molteplici voci nell'indice. Il ruolo della pending_list è centrale:
 tech: "sql"
-tags: ["db", "indexing internals"]
+tags: ["sql", "db", "analyze", "spring boot"]
 pdf_file: "gin-index-e-pending-list-tuning.pdf"
 ---
 

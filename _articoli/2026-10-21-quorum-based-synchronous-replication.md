@@ -5,7 +5,7 @@ date: 2026-10-21 12:00:00
 sintesi: >
   Dalla versione 10, PostgreSQL supporta la replica sincrona basata su quorum: la transazione è sicura se N nodi su una lista di M confermano la ricezione. Questo meccanismo evita il "Single Point of Failure" della replica sincrona classica: se uno sta
 tech: "sql"
-tags: ["db", "advanced replication & ha"]
+tags: ["sql", "db", "postgresql"]
 pdf_file: "quorum-based-synchronous-replication.pdf"
 ---
 

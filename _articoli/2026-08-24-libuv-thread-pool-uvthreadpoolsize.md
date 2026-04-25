@@ -5,7 +5,7 @@ date: 2026-08-24 12:00:00
 sintesi: >
   Non tutto in Node è single-threaded: operazioni come FS, DNS e Crypto usano un pool di thread interno. Il default è di soli 4 thread. Saturando questo pool (es. con molti fs.readFile simultanei), le performance crollano. Ottimizzare questa variabile 
 tech: "javascript"
-tags: ["js", "node.js internals & libuv"]
+tags: ["javascript"]
 pdf_file: "libuv-thread-pool-uvthreadpoolsize.pdf"
 ---
 

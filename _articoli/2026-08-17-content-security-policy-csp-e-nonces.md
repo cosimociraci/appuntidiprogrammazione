@@ -5,7 +5,7 @@ date: 2026-08-17 12:00:00
 sintesi: >
   Gli attacchi XSS iniettano script malevoli nel DOM. Una CSP rigorosa può bloccare l'esecuzione di script non autorizzati. I Nonces (numeri usati una sola volta) sono token casuali generati dal server a ogni richiesta, inclusi sia nell'header HTTP che
 tech: "javascript"
-tags: ["js", "security & cryptography"]
+tags: ["javascript"]
 pdf_file: "content-security-policy-csp-e-nonces.pdf"
 ---
 

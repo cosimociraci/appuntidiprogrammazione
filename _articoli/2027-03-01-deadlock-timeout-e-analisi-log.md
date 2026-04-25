@@ -5,7 +5,7 @@ date: 2027-03-01 12:00:00
 sintesi: >
   Il parametro deadlock_timeout (default 1s) definisce quanto tempo Postgres aspetta prima di lanciare il controllo del grafo dei lock. Abbassare troppo questo valore aumenta il carico sulla CPU, mentre alzarlo rende il sistema pigro nel risolvere i co
 tech: "sql"
-tags: ["db", "concorrenza e locking approfond"]
+tags: ["sql", "db"]
 pdf_file: "deadlock-timeout-e-analisi-log.pdf"
 ---
 

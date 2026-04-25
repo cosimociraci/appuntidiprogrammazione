@@ -214,12 +214,14 @@ def is_promotional(full_context):
     """Chiedo a Qwen di valutare se il contenuto è una notizia tecnica reale o materiale promozionale."""
     log("[Qwen] Analisi anti-promozionale in corso...")
     prompt = f"""
-Sei un editor di una rivista tecnica. Analizza il testo seguente e rispondi a questa domanda:
-si tratta di una notizia su una novità tecnologica rilevante (nuova versione di software, scoperta, 
-standard, ricerca, aggiornamento di un progetto open source, annuncio di un colosso IT come Google, 
-Microsoft, Oracle, Meta, Apple, Amazon, Red Hat) OPPURE è materiale promozionale/pubblicitario 
-(comunicato stampa aziendale, lancio di prodotto commerciale di azienda non nota, integrazione di 
-servizi a pagamento, annuncio di partnership senza valore tecnico)?
+Ruolo: Agisci come un Senior Editor Tecnico con 20 anni di esperienza nel distinguere il giornalismo d'innovazione dal marketing aziendale.
+Compito: Analizza il testo fornito e classificalo rigorosamente in una di queste due categorie:
+NOTIZIA TECNICA RILEVANTE: (Esempi: Aggiornamenti core, standard open source, scoperte scientifiche, annunci infrastrutturali di Big Tech).
+MATERIALE PROMOZIONALE: (Esempi: Marketing mascherato da news, comunicati stampa di prodotti commerciali, partnership commerciali, servizi a pagamento).
+Procedura di analisi:
+Identifica il soggetto principale: è una tecnologia o un prodotto commerciale?
+Valuta il valore tecnico: apporta un beneficio alla comunità o richiede un acquisto?
+Controlla il tono: è oggettivo o utilizza aggettivi entusiastici tipici del copywriting (es. "rivoluzionario", "leader di mercato")?
 
 TESTO:
 {full_context[:5000]}
@@ -245,8 +247,12 @@ def generate_article(full_context, source_url):
     """Mistral crea l'articolo tecnico in italiano partendo dal contesto raccolto."""
     log("[Mistral] Avvio stesura nuovo articolo tecnico...")
     prompt = f"""
-Sei un programmatore senior che scrive un articolo per il proprio blog tecnico personale.
-Scrivi in ITALIANO, in PRIMA PERSONA, come se stessi condividendo ciò che hai appreso e sperimentato direttamente.
+Ruolo: Agisci come un Senior Developer che scrive sul proprio blog tecnico. Il tuo stile è diretto, esperto e pratico.
+Compito: Riscrivi le informazioni fornite nel "CONTESTO SORGENTE" creando un post di approfondimento tecnico in ITALIANO e in PRIMA PERSONA.
+DIRETTIVE LINGUISTICHE (CRITICHE):
+ - Terminologia Tecnica: NON tradurre mai i termini tecnici che fanno parte del gergo standard della programmazione o di specifici linguaggi (es. Java).
+    NO: "metodo finale", "spazzino della memoria", "filo d'esecuzione", "costruttore di versione".
+    SÌ: "final method", "Garbage Collector", "thread", "build".
 
 CONTESTO SORGENTE:
 {full_context[:15000]}
@@ -258,10 +264,10 @@ REGOLE OBBLIGATORIE:
      ESEMPI CORRETTI:   ## Cosa cambia nel GC
      ESEMPI SBAGLIATI:  # Cosa cambia  |  ### Cosa cambia  |  Cosa cambia:
    - NON usare mai la parola "Titolo:" o "Sezione:" come prefisso.
-2. Stile: Prima persona singolare ("Ho analizzato...", "Ho scoperto che...", "A mio avviso..."). Mai tono impersonale o accademico.
+2. Stile: Scrivi in prima persona singolare ("Ho testato", "Mi sono accorto", "Uso spesso"). Evita il "noi" o le forme impersonali ("si nota che"). Mai tono impersonale o accademico.
 3. Privacy: Non citare mai nomi propri di persone fisiche. Usa espressioni come "il team di sviluppo", "gli autori", "i maintainer".
 4. Lingua: Se il materiale sorgente è in inglese, traduci accuratamente tutti i concetti. I termini tecnici consolidati (es. "thread", "query", "build") restano in inglese.
-5. Profondità: Approfondisci i concetti tecnici con esempi concreti. Non limitarti a riassumere: aggiungi contesto, confronti e implicazioni pratiche.
+5. Profondità: Approfondisci i concetti tecnici con esempi concreti. Non limitarti a riassumere: il "perché" dietro alle scelte tecnologiche e confrontale con possibili alternative, aggiungi contesto, confronti e implicazioni pratiche.
 6. Chiusura: Termina l'articolo con una riga '---' seguita da 'Fonte originale: {source_url}'.
 """
     response = ollama.chat(model='mistral', messages=[{'role': 'user', 'content': prompt}])
@@ -318,8 +324,8 @@ def extract_slides(article):
     titolo non rappresentativo per tutte le pillole."""
     log("[Qwen] Estrazione pillole carosello...")
     prompt = f"""
-Sei un content designer tecnico specializzato in divulgazione per sviluppatori.
-Analizza l'articolo seguente ed estrai esattamente 10 pillole informative in ITALIANO.
+Ruolo: Sei un Senior Technical Content Designer esperto in sistemi distribuiti e linguaggi di programmazione.
+Compito: Analizza il testo fornito ed estrai esattamente 10 pillole informative in ITALIANO. Ogni pillola deve essere un'unità di conoscenza tecnica autonoma e densa.
 
 ARTICOLO:
 {article}
@@ -331,10 +337,12 @@ REGOLE OBBLIGATORIE:
    NON il nome generico della tecnologia. Deve rispecchiare esattamente il contenuto del campo "text".
    ESEMPI CORRETTI:   "JEP 500: Final diventa Final" | "Hibernate 8.2: cascade fix" | "HTTP/3 nel client Java"
    ESEMPI SBAGLIATI:  "JAVA" | "POSTGRESQL" | "Novità Java" | "Aggiornamento"
-4. Il campo "text" ha massimo 5 righe. Frasi brevi, dirette, dense di informazione tecnica.
+4. Il campo "text" ha circa 5 righe. Frasi brevi, dirette, dense di informazione tecnica. Ogni pillola deve contenere il nome della tecnologia o del contesto per essere autosufficiente.
 5. Privilegia: numeri concreti, confronti tra versioni, impatti pratici, breaking change, casi d'uso reali.
 6. NON usare markdown nel campo "text" (no asterischi, no #, no trattini iniziali). Solo testo piano.
 7. Restituisci ESCLUSIVAMENTE un array JSON di 10 oggetti, senza alcun testo prima o dopo, senza backtick.
+8. Terminologia: NON tradurre mai i termini tecnici, le keyword di linguaggio, i nomi di parametri o pattern (es. usa "Garbage Collector", non "spazzino"; "pattern matching", non "confronto di schemi"; "overhead", non "sovraccarico").
+9. Dettaglio: Ogni pillola deve spiegare il perché o il come, non solo il "cosa". Evita generalità; usa dati, versioni e specifiche tecniche.
 
 Formato atteso:
 [

@@ -5,7 +5,7 @@ date: 2026-05-06 12:00:00
 sintesi: >
   Sostituire interi tag custom (es. <app:navbar>) con markup generato lato server permette di incapsulare logiche di navigazione complesse che appaiono come semplici tag nel file HTML. IElementTagProcessor, combinato con IModelFactory, permette di cost
 tech: "java"
-tags: ["thymeleaf", "custom dialects & processors"]
+tags: ["java", "thymeleaf"]
 pdf_file: "element-tag-processors-web-components.pdf"
 ---
 

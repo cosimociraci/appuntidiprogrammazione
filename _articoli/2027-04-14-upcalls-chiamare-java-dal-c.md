@@ -5,7 +5,7 @@ date: 2027-04-14 12:00:00
 sintesi: >
   A volte è il codice C che deve inviare una notifica a Java (callback). Panama permette di creare "stub" per le upcall tramite linker.upcallStub(). Le upcall sono più lente delle downcall (Java -> C) perché devono ricreare il contesto Java. Vanno prog
 tech: "java"
-tags: ["java", "jni & project panama"]
+tags: ["java"]
 pdf_file: "upcalls-chiamare-java-dal-c.pdf"
 ---
 

@@ -5,7 +5,7 @@ date: 2026-09-07 12:00:00
 sintesi: >
   Node.js non scala sui core per default. Il modulo cluster permette al master di creare worker e condividere con loro i file descriptor dei socket. Questo permette a più processi di ascoltare sulla stessa porta. Il master usa un algoritmo Round-Robin 
 tech: "javascript"
-tags: ["js", "node.js internals & libuv"]
+tags: ["javascript"]
 pdf_file: "nodejs-cluster-shared-sockets.pdf"
 ---
 

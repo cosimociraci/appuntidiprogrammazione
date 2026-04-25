@@ -5,7 +5,7 @@ date: 2027-04-05 12:00:00
 sintesi: >
   La memoria nativa non rispetta le regole di visibilità di Java. Due thread Java che accedono allo stesso MemorySegment possono causare data race impossibili da rilevare per la JVM (niente ConcurrentModificationException). La soluzione è usare Arena.o
 tech: "java"
-tags: ["java", "jni & project panama"]
+tags: ["java"]
 pdf_file: "thread-safety-e-native-state.pdf"
 ---
 

@@ -5,7 +5,7 @@ sintesi: >
   Riassunto delle principali notizie riguardanti JDK 26, Payara Platform, Hibernate, Quarkus, Apache Camel e Jakarta EE 12.
 date: 2026-04-09 12:00:00
 tech: "java"
-tags: ["jdk", "payara", "hibernate", "quarkus", "apache-camel", "jakarta-ee"]
+tags: ["java"]
 link: ""
 ---
  # Java News Roundup: Febbraio 2026

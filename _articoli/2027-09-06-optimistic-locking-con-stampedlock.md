@@ -5,7 +5,7 @@ date: 2027-09-06 12:00:00
 sintesi: >
   Il classico ReentrantReadWriteLock può soffrire di "write starvation" se ci sono troppi lettori. StampedLock offre una modalità di lettura ottimistica che non blocca affatto i thread di scrittura. Il trucco è validare il "ticket" (stamp) dopo la lett
 tech: "java"
-tags: ["java", "concurrency & multithreading"]
+tags: ["java", "spring boot"]
 pdf_file: "optimistic-locking-con-stampedlock.pdf"
 ---
 

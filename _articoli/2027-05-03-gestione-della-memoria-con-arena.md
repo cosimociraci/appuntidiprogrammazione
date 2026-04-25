@@ -5,7 +5,7 @@ date: 2027-05-03 12:00:00
 sintesi: >
   La memoria nativa (off-heap) non è vista dal GC: se non viene liberata correttamente, il server crasha. L'Arena di Panama definisce il ciclo di vita della memoria: quando l'Arena viene chiusa (try-with-resources), tutta la memoria allocata al suo int
 tech: "java"
-tags: ["java", "jni & project panama"]
+tags: ["java"]
 pdf_file: "gestione-della-memoria-con-arena.pdf"
 ---
 

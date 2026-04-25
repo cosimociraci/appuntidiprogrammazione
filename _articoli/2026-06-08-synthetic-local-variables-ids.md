@@ -5,7 +5,7 @@ date: 2026-06-08 12:00:00
 sintesi: >
   In loop complessi, generare ID univoci per l'accessibilità (ARIA) o per JS è difficile. L'oggetto #ids.seq('myId') genera una sequenza incrementale che persiste per tutta la richiesta. Questo garantisce che i tag label e input siano sempre sincronizz
 tech: "java"
-tags: ["thymeleaf", "advanced layout & templating"]
+tags: ["java", "thymeleaf", "pattern matching", "garbage collector"]
 pdf_file: "synthetic-local-variables-ids.pdf"
 ---
 

@@ -5,7 +5,7 @@ date: 2026-06-10 12:00:00
 sintesi: >
   Visualizzare oggetti complessi (es. Money, Coordinate, Entità) nei form richiede conversioni bidirezionali. Annotando i campi del DTO con @DateTimeFormat o @NumberFormat, Thymeleaf delega automaticamente la formattazione al sistema di conversione di 
 tech: "java"
-tags: ["thymeleaf", "spring integration & flow archi"]
+tags: ["java", "thymeleaf", "pattern matching"]
 pdf_file: "type-conversion-formatter-system.pdf"
 ---
 

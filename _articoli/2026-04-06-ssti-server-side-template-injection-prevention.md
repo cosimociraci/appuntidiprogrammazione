@@ -5,7 +5,7 @@ date: 2026-04-06 12:00:00
 sintesi: >
   Una vulnerabilità storica di Thymeleaf permette l'esecuzione di codice se il nome della vista è costruito con input utente. Concatenare parametri della request nel percorso della view (return "user/" + lang + "/index") è pericoloso. È necessario usar
 tech: "java"
-tags: ["thymeleaf", "security & spel expressions"]
+tags: ["java", "thymeleaf"]
 pdf_file: "ssti-server-side-template-injection-prevention.pdf"
 ---
 

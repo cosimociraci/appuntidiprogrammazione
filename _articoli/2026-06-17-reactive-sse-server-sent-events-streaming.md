@@ -5,7 +5,7 @@ date: 2026-06-17 12:00:00
 sintesi: >
   Aggiornare parti della pagina in tempo reale senza WebSocket complessi è possibile con SpringWebFluxThymeleafView. Usando WebFlux, si può restituire un Flux<Data> al template: Thymeleaf renderizza i frammenti man mano che i dati arrivano dallo stream
 tech: "java"
-tags: ["thymeleaf", "spring integration & flow archi"]
+tags: ["java", "thymeleaf"]
 pdf_file: "reactive-sse-server-sent-events-streaming.pdf"
 ---
 

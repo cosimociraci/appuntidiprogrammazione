@@ -5,7 +5,7 @@ date: 2026-05-18 12:00:00
 sintesi: >
   Spesso servono utility nel template (formattazione date particolari, calcoli finanziari) che non appartengono al modello dati. Registrando oggetti tramite IExpressionObjectFactory, è possibile richiamarli con la sintassi ${#myUtils...}, simile ai bui
 tech: "java"
-tags: ["thymeleaf", "custom dialects & processors"]
+tags: ["java", "thymeleaf"]
 pdf_file: "expression-objects-custom.pdf"
 ---
 

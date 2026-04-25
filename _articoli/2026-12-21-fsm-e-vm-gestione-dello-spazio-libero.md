@@ -5,7 +5,7 @@ date: 2026-12-21 12:00:00
 sintesi: >
   La Free Space Map (FSM) tiene traccia di dove c'è spazio libero nelle pagine esistenti per nuovi inserimenti. Se la FSM è corrotta o insufficiente, Postgres inizierà a creare nuove pagine anche se c'è spazio disponibile, gonfiando la tabella inutilme
 tech: "sql"
-tags: ["db", "vacuum & storage"]
+tags: ["sql", "db"]
 pdf_file: "fsm-e-vm-gestione-dello-spazio-libero.pdf"
 ---
 

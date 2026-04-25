@@ -5,7 +5,7 @@ date: 2026-06-24 12:00:00
 sintesi: >
   In progetti grandi convivono spesso diverse tecnologie (Thymeleaf per il frontend, JSP per il legacy, JSON per API). Configurando correttamente la proprietà order del ViewResolver, Spring sa quale motore interpellare per primo. Questo permette una mi
 tech: "java"
-tags: ["thymeleaf", "spring integration & flow archi"]
+tags: ["java", "thymeleaf", "pattern matching", "garbage collector", "spring boot"]
 pdf_file: "multi-layout-viewresolver-order.pdf"
 ---
 

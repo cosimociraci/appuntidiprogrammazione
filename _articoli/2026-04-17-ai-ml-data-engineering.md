@@ -5,7 +5,7 @@ sintesi: >
   Google rilascia la versione 4 di Gemma, una libreria open source per l'AI e il machine learning che introduce funzionalità multimodali e agenti locali per migliorare le inferenze.
 date: 2026-04-17 12:00:00
 tech: "ia"
-tags: ["gemma", "google", "machine-learning", "ai"]
+tags: ["ia"]
 link: "https://www.infoq.com/ai-ml-data-eng/"
 ---
 ## Come Google cambia il panorama dell'inferenza AI con la versione 4 di Gemma

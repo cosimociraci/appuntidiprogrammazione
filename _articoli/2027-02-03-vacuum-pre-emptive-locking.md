@@ -5,7 +5,7 @@ date: 2027-02-03 12:00:00
 sintesi: >
   Il Vacuum è un processo di background, ma per finalizzare la pulizia o per troncare una tabella alla fine, ha bisogno di un lock breve ma forte (Access Exclusive). Se la tabella è costantemente sotto query, il Vacuum potrebbe non riuscire mai a finir
 tech: "sql"
-tags: ["db", "concorrenza e locking approfond"]
+tags: ["sql", "db", "analyze", "spring boot"]
 pdf_file: "vacuum-pre-emptive-locking.pdf"
 ---
 

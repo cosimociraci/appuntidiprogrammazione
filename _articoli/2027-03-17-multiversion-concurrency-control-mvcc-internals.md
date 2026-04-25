@@ -5,7 +5,7 @@ date: 2027-03-17 12:00:00
 sintesi: >
   MVCC è il cuore di PostgreSQL: permette ai lettori di non bloccare gli scrittori e viceversa. Ogni riga ha dei metadati nascosti (xmin, xmax) che determinano la visibilità per una specifica transazione. Quando si esegue un UPDATE, Postgres non sovras
 tech: "sql"
-tags: ["db", "concorrenza e locking approfond"]
+tags: ["sql", "db", "query"]
 pdf_file: "multiversion-concurrency-control-mvcc-internals.pdf"
 ---
 

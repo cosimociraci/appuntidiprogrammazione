@@ -5,7 +5,7 @@ date: 2027-03-24 12:00:00
 sintesi: >
   In un sistema di produzione, i lock "silenziosi" sono i peggiori nemici delle performance. Una transazione dimenticata aperta può bloccare l'intero sistema (es. un VACUUM o una migrazione di schema). È fondamentale avere una vista chiara di chi sta b
 tech: "sql"
-tags: ["db", "concorrenza e locking approfond"]
+tags: ["sql", "db", "query"]
 pdf_file: "lock-monitoring-diagnosis.pdf"
 ---
 

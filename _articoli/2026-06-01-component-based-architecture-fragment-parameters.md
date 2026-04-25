@@ -5,7 +5,7 @@ date: 2026-06-01 12:00:00
 sintesi: >
   Passare dati semplici ai frammenti non permette di creare componenti veramente isolati. Passando interi oggetti, classi CSS e fallback ai frammenti, e usando il no-op token _, è possibile definire un valore predefinito nel mockup HTML che viene mante
 tech: "java"
-tags: ["thymeleaf", "advanced layout & templating"]
+tags: ["java", "thymeleaf", "garbage collector", "pattern matching"]
 pdf_file: "component-based-architecture-fragment-parameters.pdf"
 ---
 

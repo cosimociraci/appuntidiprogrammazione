@@ -5,7 +5,7 @@ date: 2027-01-11 12:00:00
 sintesi: >
   Quando una tabella raggiunge i terabyte, un indice B-Tree può diventare più grande della RAM disponibile. Gli indici BRIN (Block Range Indexes) nascono per questo scenario: invece di salvare ogni singola riga, memorizzano solo il valore minimo e mass
 tech: "sql"
-tags: ["db", "indexing internals"]
+tags: ["sql", "db", "spring boot"]
 pdf_file: "brin-indici-per-dataset-massivi.pdf"
 ---
 

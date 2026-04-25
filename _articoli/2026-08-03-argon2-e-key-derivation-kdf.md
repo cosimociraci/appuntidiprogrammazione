@@ -5,7 +5,7 @@ date: 2026-08-03 12:00:00
 sintesi: >
   Usare MD5 o SHA256 per le password è inutile contro le GPU moderne (Rainbow Tables). Argon2, vincitore della Password Hashing Competition, è progettato per essere "Memory-Hard": i parametri di memoria, tempo e parallelismo costringono l'attaccante a 
 tech: "javascript"
-tags: ["js", "security & cryptography"]
+tags: ["javascript"]
 pdf_file: "argon2-e-key-derivation-kdf.pdf"
 ---
 

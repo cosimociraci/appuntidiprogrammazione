@@ -5,7 +5,7 @@ date: 2026-07-06 12:00:00
 sintesi: >
   L'abuso di try...catch e controlli if(null) sporca il dominio core. Il pattern Either incapsula effetti collaterali e potenziali fallimenti: Left rappresenta l'errore, Right il successo. Questo permette di concatenare operazioni (.map, .chain) in una
 tech: "javascript"
-tags: ["js", "design patterns & architecture"]
+tags: ["javascript"]
 pdf_file: "monadi-maybe-either-per-error-handling.pdf"
 ---
 

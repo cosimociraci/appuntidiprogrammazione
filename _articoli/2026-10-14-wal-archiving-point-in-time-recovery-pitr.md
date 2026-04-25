@@ -5,7 +5,7 @@ date: 2026-10-14 12:00:00
 sintesi: >
   Il PITR permette di riportare il database a un istante preciso nel passato (es. un secondo prima di un DROP TABLE accidentale). Il flusso si basa su due componenti: un base backup periodico unito a una catena ininterrotta di file WAL archiviati. L'af
 tech: "sql"
-tags: ["db", "advanced replication & ha"]
+tags: ["sql", "db", "spring boot"]
 pdf_file: "wal-archiving-point-in-time-recovery-pitr.pdf"
 ---
 

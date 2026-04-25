@@ -5,7 +5,7 @@ date: 2026-12-07 12:00:00
 sintesi: >
   Ogni riga ha un Transaction ID (XID). Poiché il contatore è a 32 bit, dopo 2 miliardi di transazioni il database va in "wraparound" (i vecchi dati diventano invisibili). Il "Freezing" è il processo con cui il Vacuum marca le righe vecchie come "conge
 tech: "sql"
-tags: ["db", "vacuum & storage"]
+tags: ["sql", "db"]
 pdf_file: "freezing-wraparound-prevention.pdf"
 ---
 

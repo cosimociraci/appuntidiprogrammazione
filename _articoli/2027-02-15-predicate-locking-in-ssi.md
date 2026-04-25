@@ -5,7 +5,7 @@ date: 2027-02-15 12:00:00
 sintesi: >
   Il Predicate Locking è la tecnologia che permette al livello SERIALIZABLE di funzionare. A differenza dei lock normali, non blocca i dati esistenti, ma "segna" le condizioni di ricerca (i predicati). Se una transazione A legge tutti gli utenti "attiv
 tech: "sql"
-tags: ["db", "concorrenza e locking approfond"]
+tags: ["sql", "db", "concurrency", "postgresql"]
 pdf_file: "predicate-locking-in-ssi.pdf"
 ---
 

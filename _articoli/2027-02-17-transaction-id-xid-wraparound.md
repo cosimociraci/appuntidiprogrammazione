@@ -5,7 +5,7 @@ date: 2027-02-17 12:00:00
 sintesi: >
   Ogni transazione in Postgres riceve un ID numerico a 32 bit. Poiché i numeri finiscono (circa 4 miliardi), Postgres deve riutilizzarli. Se non gestito, questo porta al "wraparound", un evento catastrofico dove i vecchi dati sembrano sparire o diventa
 tech: "sql"
-tags: ["db", "concorrenza e locking approfond"]
+tags: ["sql", "db", "postgresql"]
 pdf_file: "transaction-id-xid-wraparound.pdf"
 ---
 

@@ -5,7 +5,7 @@ sintesi: >
   Able Tech ha rilasciato ARXivar Document & Workflow Platform 2.13, una versione avanzata con nuovi moduli basati su Gen AI come il Chatbot Semantico e il Chatbot Documentale, migliorando la gestione dei documenti e dei processi aziendali.
 date: 2026-04-09 12:00:00
 tech: "ia"
-tags: ["arxivardocument", "workflowplatform", "chatbots", "documentmanagement", "genai"]
+tags: ["ia"]
 link: ""
 ---
  # ARXivar Document & Workflow Platform 2.13: Un Passo Fondamentale per la Gestione dei Processi Aziendali
