@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Il ritardo dell'adozione AI in Italia e le sfide — DevLog</title>
+    <meta name="description" content="L'Italia adotta l'AI con un tasso del 8%, in contrapposizione a paesi come Germania (20%) e Francia (54%). La mancanza di formazione, competenze interne e emigrazione dei talenti sono le principali barriere.
+">
+    <link rel="stylesheet" href="/appuntidiprogrammazione/assets/css/style.css">
+
+    <script>
+        /*
+         * Applico il tema PRIMA del rendering per evitare il flash di contenuto
+         * (FOUC). Lo script è inline e bloccante di proposito: deve girare
+         * prima che il browser disegni qualsiasi elemento.
+         */
+        (function() {
+            var saved = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', saved);
+        })();
+    </script>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="logo" onclick="window.location.href='/appuntidiprogrammazione/'">
+            APPUNTI DI <span>PROGRAMMAZIONE</span>
+        </div>
+
+        <!-- 
+            Il pulsante aggiorna l'attributo data-theme sull'<html> e
+            persiste la scelta nel localStorage per le sessioni future.
+        -->
+        <button onclick="toggleTheme()" class="theme-toggle" aria-label="Cambia tema">🌓</button>
+    </header>
+
+    <!--
+    Layout post: struttura a due colonne.
+    - Sinistra (post-content): breadcrumb → tags → link PDF → link fonte → articolo MD
+    - Destra (post-sidebar): tags argomento + libro consigliato
+    
+    Ordine DOM: post-content prima, post-sidebar dopo.
+    Grid-template-areas in CSS li posiziona visivamente:
+    "content sidebar" su desktop, stacked su mobile.
+-->
+<div class="post-container">
+    <!-- COLONNA SINISTRA: contenuto principale -->
+    <main class="post-content">
+        <!-- Breadcrumb: navigazione verso la home -->
+        <nav class="post-breadcrumb" aria-label="Breadcrumb">
+            <a href="/appuntidiprogrammazione/">Appunti di Programmazione</a>
+            <span class="separator" aria-hidden="true">/</span>
+            <span>Il ritardo dell'adozione AI in Italia e le sfide</span>
+        </nav>
+        <!-- Tags legati all'articolo -->
+        
+        <div class="post-tags-header" aria-label="Argomenti">
+            
+                <span class="post-tag-chip">ai</span>
+            
+                <span class="post-tag-chip">formazione</span>
+            
+                <span class="post-tag-chip">emigrazione</span>
+            
+                <span class="post-tag-chip">innovazione</span>
+            
+        </div>
+        
+        <!-- Link al/ai PDF allegati all'articolo -->
+        
+        <!-- Corpo dell'articolo renderizzato da Kramdown -->
+        <article class="post-article-body">
+            <h2 id="che-cosa-ho-imparato-e-provato-personalmente-sulla-diffusione-dellai-in-italia">Che cosa ho imparato e provato personalmente sulla diffusione dell’AI in Italia</h2>
+
+<p>Come sviluppatore senior, ho osservato da vicino il ritardo con cui l’Italia adotta l’intelligenza artificiale (AI) e la conseguenza della mancanza di formazione e del drastico spostamento di risorse umane verso altri paesi.</p>
+
+<p>Recenti dati dell’ISTAT e Reuters mostrano che solo il 8% delle imprese italiane integra soluzioni di AI, mentre il tasso di adozione in Germania è del 20% e in Francia del 54%. Inoltre, tre su quattro professionisti dichiarano di non aver mai ricevuto una formazione specifica in questo settore.</p>
+
+<p>Il problema dell’adozione dell’AI in Italia è strutturale e demografico. Il capitale umano qualificato continua a evaporare, con oltre 21.000 giovani laureati che lasciarono il paese nel 2023, un aumento del 21% su base annua. Questa emorragia di competenze, combinata a un tasso di alfabetizzazione digitale di base fermo al 54,3%, ben lontano dall’obiettivo UE dell’80% per il 2030, impedisce la creazione di un ecosistema innovativo.</p>
+
+<p>Come confermano gli esperti della Global CEO Survey 2026, la sfida principale per l’Italia è la mancanza di competenze interne, che costituisce una barriera principale per l’innovazione. L’Italia rischia quindi di rimanere confinata a un uso ludico o frammentato della tecnologia.</p>
+
+<p>Il settore dell’audiovisivo è l’unico ad adottare punte del 57%, mentre ambiti cruciali come la sanità e la pubblica amministrazione restano indietro. La vera sfida per i prossimi anni sarà quindi trattenere i talenti e avviare un piano di aggiornamento massiccio per il lavoro, trasformando la curiosità e le capacità dei singoli in una strategia di sistema.</p>
+
+<p>Per favorire l’adozione dell’AI nelle PMI italiane, OpenAI e Confartigianato hanno lanciato un programma specificatamente dedicato a questo settore. Tuttavia, è necessario che il governo italiano investa iniziative per migliorare la formazione tecnica delle imprese e promuovere una cultura di innovazione.</p>
+
+<p>Fonte originale: https://ainews.it/litalia-e-in-ritardo-nelladozione-dellai-pesa-la-mancanza-di-formazione-e-la-fuga-di-cervelli/</p>
+
+        </article>
+        <!-- Link alla fonte originale: lo posiziono dopo il corpo perché è un
+             approfondimento opzionale, non un'azione primaria. L'icona SVG inline
+             evita dipendenze da font icon esterni. -->
+        
+        <div class="post-source-link">
+            <span class="source-link-label">Fonte originale</span>
+            <a class="source-link-anchor"
+               href="https://ainews.it/litalia-e-in-ritardo-nelladozione-dellai-pesa-la-mancanza-di-formazione-e-la-fuga-di-cervelli/"
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="Leggi la fonte originale di: Il ritardo dell'adozione AI in Italia e le sfide">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="14" height="14"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                    <polyline points="15 3 21 3 21 9"/>
+                    <line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
+                https://ainews.it/litalia-e-in-ritardo-nelladozione-dellai-pesa-la-mancanza-di-formazione-e-la-fuga-di-cervelli/
+            </a>
+        </div>
+        
+    </main>
+    <!-- COLONNA DESTRA: sidebar post -->
+    <aside class="post-sidebar">
+        <!-- Box 1: tags argomento (stessa lista dei chip sopra, ma nella sidebar) -->
+        
+        <div class="sidebar-box tags-box">
+            <span class="box-label">Argomenti</span>
+            <div class="tag-cloud-sidebar">
+                
+                    <span class="sidebar-tag">ai</span>
+                
+                    <span class="sidebar-tag">formazione</span>
+                
+                    <span class="sidebar-tag">emigrazione</span>
+                
+                    <span class="sidebar-tag">innovazione</span>
+                
+            </div>
+        </div>
+        
+        <!-- Box 2: fonte originale nella sidebar, visibile a colpo d'occhio
+             senza dover scorrere fino in fondo all'articolo. -->
+        
+        <div class="sidebar-box source-box">
+            <span class="box-label">Fonte Originale</span>
+            <a class="sidebar-source-anchor"
+               href="https://ainews.it/litalia-e-in-ritardo-nelladozione-dellai-pesa-la-mancanza-di-formazione-e-la-fuga-di-cervelli/"
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="Leggi la fonte originale di: Il ritardo dell'adozione AI in Italia e le sfide">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="14" height="14"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                    <polyline points="15 3 21 3 21 9"/>
+                    <line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
+                Leggi l'articolo originale
+            </a>
+        </div>
+        
+        <!-- Box 3: libro consigliato -->
+        <div class="sidebar-box books-box">
+            <span class="box-label">Letture Consigliate</span>
+            <div class="book-card">
+                <a href="https://www.amazon.it/Appunti-Programmazione-Pensieri-soluzioni-Applicazioni-ebook/dp/B0FMFRHKTF/"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   aria-label="Acquista Appunti di Programmazione su Amazon">
+                    <img src="https://m.media-amazon.com/images/I/61Ck5eMzGYL._SY466_.jpg"
+                         alt="Copertina: Appunti di Programmazione"
+                         width="80">
+                    <p>Appunti di Programmazione: Pensieri e soluzioni per Applicazioni WEB</p>
+                </a>
+            </div>
+        </div>
+    </aside>
+</div>
+
+    <footer class="main-footer">
+        Appunti di Programmazione &nbsp;·&nbsp; cosimociraci@gmail.com
+    </footer>
+
+    <script>
+        /*
+         * toggleTheme: legge il tema corrente dall'attributo HTML,
+         * calcola l'opposto e lo salva. Il CSS reagisce via [data-theme].
+         * Non uso classi sul body per mantenere tutto centralizzato
+         * sull'elemento radice.
+         */
+        function toggleTheme() {
+            var html = document.documentElement;
+            var current = html.getAttribute('data-theme');
+            var next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+        }
+    </script>
+
+</body>
+</html>

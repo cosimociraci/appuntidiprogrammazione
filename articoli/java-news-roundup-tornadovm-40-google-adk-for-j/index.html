@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sfida di un Senior Developer: La settimana tecnica in Java (aprile 2026) — DevLog</title>
-    <meta name="description" content="L'articolo descrive gli aggiornamenti più significativi del mondo Java della settimana, includendo la versione 4.0 di TornadoVM e Google ADK for Java 1.0.
+    <title>Riassunto delle novità tecnologiche di marzo 2026 — DevLog</title>
+    <meta name="description" content="Il post offre un'osservazione dettagliata sulle ultime versioni di TornadoVM, Google ADK for Java, Grails, Tomcat, Log4j e Gradle.
 ">
     <link rel="stylesheet" href="/appuntidiprogrammazione/assets/css/style.css">
 
@@ -50,17 +50,25 @@
         <nav class="post-breadcrumb" aria-label="Breadcrumb">
             <a href="/appuntidiprogrammazione/">Appunti di Programmazione</a>
             <span class="separator" aria-hidden="true">/</span>
-            <span>Sfida di un Senior Developer: La settimana tecnica in Java (aprile 2026)</span>
+            <span>Riassunto delle novità tecnologiche di marzo 2026</span>
         </nav>
         <!-- Tags legati all'articolo -->
         
         <div class="post-tags-header" aria-label="Argomenti">
             
+                <span class="post-tag-chip">java</span>
+            
                 <span class="post-tag-chip">tornadovm</span>
             
                 <span class="post-tag-chip">google adk</span>
             
-                <span class="post-tag-chip">java framework</span>
+                <span class="post-tag-chip">grails</span>
+            
+                <span class="post-tag-chip">tomcat</span>
+            
+                <span class="post-tag-chip">log4j</span>
+            
+                <span class="post-tag-chip">gradle</span>
             
         </div>
         
@@ -68,27 +76,31 @@
         
         <!-- Corpo dell'articolo renderizzato da Kramdown -->
         <article class="post-article-body">
-            <p># Sfida di un Senior Developer: La settimana tecnica in Java (aprile 2026)</p>
-
-<p>Ho trascorso questa settimana seguendo le notizie più importanti del mondo Java, e sono venuto a conoscenza di alcuni aggiornamenti interessanti. Ho scoperto che la versione 4.0 del framework TornadoVM è stata rilasciata ufficialmente, insieme al Google ADK for Java 1.0.</p>
+            <p>Condivido con il vostro pieno consenso i risultati della mia ricerca e delle mie esperienze sulla base dell’articolo recentemente pubblicato su InfoQ. In questo post ti porterò a conoscere la nuova versione di TornadoVM, Google ADK per Java, Grails, Tomcat, Log4j e Gradle.</p>
 
 <h2 id="tornadovm-40">TornadoVM 4.0</h2>
 
-<p>Il team di sviluppo di TornadoVM ha annunciato la versione 4.0 del loro framework di accelerazione GPU. Il rilascio include varie correzioni dei bug, aggiornamenti delle dipendenze e alcune modifiche significative, tra cui un nuovo hardware backend che supporta Apple Silicon e l’API Metal, la possibilità di utilizzare le intrinseche SIMD shuffle e reduction nel backend PTX, e una nuova funzione <code class="language-plaintext highlighter-rouge">withCUDAGraph()</code> aggiunta alla classe <code class="language-plaintext highlighter-rouge">TornadoExecutionPlan</code>. A mio avviso, queste modifiche aprono la strada a nuove possibilità di sviluppo per gli utenti che usano TornadoVM.</p>
+<p>L’ultima versione GA di TornadoVM è stata rilasciata il giorno 6 aprile del 2026 con bug fixes, aggiornamenti delle dipendenze ed alcuni cambiamenti notevoli come: un nuovo backend hardware che supporta Apple Silicon e l’API Metal; supporto PTX per le intrinseche SIMD shuffle e reduction nella riga di esecuzione di Tornado; la nuova funzione <code class="language-plaintext highlighter-rouge">withCUDAGraph()</code> aggiunta alla classe <code class="language-plaintext highlighter-rouge">TornadoExecutionPlan</code> per catturare le operazioni CUDA del graph. Ulteriori dettagli possono essere trovati nelle note della versione JDK 25 e JDK 21.</p>
 
 <h2 id="google-adk-for-java-10">Google ADK for Java 1.0</h2>
 
-<p>Google ha annunciato l’uscita della versione 1.0 del loro framework open-source Agent Development Kit (ADK) per Java. Il rilascio include varie correzioni dei bug, miglioramenti della documentazione e alcune nuove funzionalità, tra cui l’utilizzo dell’<code class="language-plaintext highlighter-rouge">InMemoryArtifactService</code> classe nella classe <code class="language-plaintext highlighter-rouge">AgentExecutorProducer</code>, per permettere la costruzione di istanze dell’<code class="language-plaintext highlighter-rouge">AgentExecutor</code>, e la capacità di utilizzare simultaneamente le feature <code class="language-plaintext highlighter-rouge">output_schema</code> e <code class="language-plaintext highlighter-rouge">tools</code> in modelli che non supportano entrambi al contempo.</p>
+<p>Google ha pubblicato la prima versione di Android Developer Kit (ADK) per Java, una libreria open source che offre correzioni dei bug, miglioramenti della documentazione e nuove funzionalità tra cui l’uso della classe <code class="language-plaintext highlighter-rouge">InMemoryArtifactService</code> nella classe <code class="language-plaintext highlighter-rouge">AgentExecutorProducer</code> per costruire un istanza di <code class="language-plaintext highlighter-rouge">AgentExecutor</code>, consentendo così di utilizzare contemporaneamente le caratteristiche, <code class="language-plaintext highlighter-rouge">output_schema</code> e <code class="language-plaintext highlighter-rouge">tools</code>. Ulteriori dettagli possono essere trovati nelle note della versione e InfoQ terrà a seguire con una storia news più dettagliata.</p>
 
-<h2 id="altri-aggiornamenti">Altri aggiornamenti</h2>
+<h2 id="grails-710">Grails 7.1.0</h2>
 
-<p>Altre notizie importanti della settimana include:</p>
-<ul>
-  <li>La versione 7.1.0 di Grails è stata rilasciata come prima release candidate, con bug fixes e modifiche significative come la configurazione del <code class="language-plaintext highlighter-rouge">Groovy invokedynamic</code> spostato dalla generata <code class="language-plaintext highlighter-rouge">build.gradle</code> file al Grails Gradle Plugin per centralizzare la configurazione, e il cambiamento dell’<code class="language-plaintext highlighter-rouge">@Service</code> annotation che ora eredita un datasource automaticamente dal mapping blocco della classe di dominio.</li>
-  <li>Google ha rilasciato le versioni 11.0.21, 10.1.54 e 9.0.117 di Apache Tomcat, con modifiche significative come la risoluzione di un problema che aveva impedito il bloccaggio della scrittura delle risposte in NIO e TLS fino alla chiusura della connessione, e miglioramenti dell’errore handling per HTTP/2 e l’intercettore <code class="language-plaintext highlighter-rouge">EncryptInterceptor</code>.</li>
-  <li>Apache Log4j ha rilasciato la versione 2.25.4 di loro framework di gestione dei log, con alcune modifiche significative come la correzione dell’allineamento tra gli attributi documentati e reali nella classe <code class="language-plaintext highlighter-rouge">Rfc5424Layout</code> dopo essere stato migrato dal metodo factory al pattern builder in versione 2.21.0, la correzione dei problemi di formattazione e sanitizzazione in XML e RFC5424 layouts, e miglioramenti nell’handling degli invalidi caratteri e valori non standard nella <code class="language-plaintext highlighter-rouge">XmlLayout</code>, <code class="language-plaintext highlighter-rouge">Log4j1XmlLayout</code> e <code class="language-plaintext highlighter-rouge">MapMessage</code> classe.</li>
-  <li>Gradle ha rilasciato la prima release candidate di Gradle 9.5.0 con varie modifiche significative, tra cui miglioramenti alla diagnosi e al reporting dei problemi delle task di build, che ora includono informazioni sulla provenienza e un logging più chiaro quando il JVM client non è compatibile, e miglioramenti alla creazione della build con una nuova funzione <code class="language-plaintext highlighter-rouge">disallowChanges()</code> aggiunta all’interfaccia <code class="language-plaintext highlighter-rouge">DomainObjectCollection</code>, che permette di impedire l’aggiunta o rimozione degli elementi dalla raccolta.</li>
-</ul>
+<p>La prima release candidate di Grails è stata pubblicata con correzioni dei bug ed alcune modifiche notevoli come: la configurazione del Groovy <code class="language-plaintext highlighter-rouge">invokedynamic</code> è stata spostata dal file generato <code class="language-plaintext highlighter-rouge">build.gradle</code> alla Plugin Gradle di Grails per centralizzare la configurazione; il cambiamento dell’annotation <code class="language-plaintext highlighter-rouge">@Service</code> che ora eredita un datasource automaticamente dalla cartella mapping della classe di dominio. Ulteriori dettagli possono essere trovati nelle note della versione.</p>
+
+<h2 id="tomcat-11021-10154-e-90117">Tomcat 11.0.21, 10.1.54 e 9.0.117</h2>
+
+<p>Sono stati rilasciati delle nuove versioni di Apache Tomcat con caratteristiche importanti come: una risoluzione del problema in cui il codice non bloccante per l’invio dei dati NIO e TLS significava che la risposta poteva non essere completamente scritta fino alla chiusura della connessione; migliori error handling per HTTP/2 e la classe di intercettazione <code class="language-plaintext highlighter-rouge">EncryptInterceptor</code>. Ulteriori dettagli possono essere trovati nelle note delle versioni 11.0.21, 10.1.54 e 9.0.117.</p>
+
+<h2 id="apache-log4j">Apache Log4j</h2>
+
+<p>La versione 2.25.4 di Apache Log4j è stata rilasciata con modifiche importanti come: il restauro dell’allineamento tra gli attributi configurati documentati e reali nella classe <code class="language-plaintext highlighter-rouge">Rfc5424Layout</code> dopo che questa fu migrata dal metodo factory al pattern builder nella versione 2.21.0; la risoluzione dei problemi di formattazione e sanitizzazione in XML e layout RFC5424; e migliori gestione dei caratteri invalidi e valori non standard nelle classi <code class="language-plaintext highlighter-rouge">XmlLayout</code>, <code class="language-plaintext highlighter-rouge">Log4j1XmlLayout</code> e <code class="language-plaintext highlighter-rouge">MapMessage</code>. Ulteriori dettagli possono essere trovati nelle note della versione.</p>
+
+<h2 id="gradle-950">Gradle 9.5.0</h2>
+
+<p>La prima release candidate di Gradle è stata pubblicata con modifiche importanti come: miglioramenti nei diagnostiche e nel reporting delle fail di task che ora includono informazioni sulle provenienze ed un logging più chiaro quando il JVM client non è compatibile; miglioramenti nella scrittura dell’authoring con la nuova funzione <code class="language-plaintext highlighter-rouge">disallowChanges()</code> aggiunta all’interfaccia <code class="language-plaintext highlighter-rouge">DomainObjectCollection</code>, in modo che gli elementi non possono più essere aggiunti o rimossi dalla raccolta. Ulteriori dettagli possono essere trovati nelle note della versione.</p>
 
 <hr />
 <p>Fonte originale: https://www.infoq.com/news/2026/04/java-news-roundup-mar30-2026/</p>
@@ -101,10 +113,10 @@
         <div class="post-source-link">
             <span class="source-link-label">Fonte originale</span>
             <a class="source-link-anchor"
-               href="https://www.infoq.com/news/2026/04/java-news-roundup-mar30-2026"
+               href="https://www.infoq.com/news/2026/04/java-news-roundup-mar30-2026/"
                target="_blank"
                rel="noopener noreferrer"
-               aria-label="Leggi la fonte originale di: Sfida di un Senior Developer: La settimana tecnica in Java (aprile 2026)">
+               aria-label="Leggi la fonte originale di: Riassunto delle novità tecnologiche di marzo 2026">
                 <svg xmlns="http://www.w3.org/2000/svg"
                      width="14" height="14"
                      viewBox="0 0 24 24"
@@ -118,7 +130,7 @@
                     <polyline points="15 3 21 3 21 9"/>
                     <line x1="10" y1="14" x2="21" y2="3"/>
                 </svg>
-                https://www.infoq.com/news/2026/04/java-news-roundup-mar30-2026
+                https://www.infoq.com/news/2026/04/java-news-roundup-mar30-2026/
             </a>
         </div>
         
@@ -131,11 +143,19 @@
             <span class="box-label">Argomenti</span>
             <div class="tag-cloud-sidebar">
                 
+                    <span class="sidebar-tag">java</span>
+                
                     <span class="sidebar-tag">tornadovm</span>
                 
                     <span class="sidebar-tag">google adk</span>
                 
-                    <span class="sidebar-tag">java framework</span>
+                    <span class="sidebar-tag">grails</span>
+                
+                    <span class="sidebar-tag">tomcat</span>
+                
+                    <span class="sidebar-tag">log4j</span>
+                
+                    <span class="sidebar-tag">gradle</span>
                 
             </div>
         </div>
@@ -146,10 +166,10 @@
         <div class="sidebar-box source-box">
             <span class="box-label">Fonte Originale</span>
             <a class="sidebar-source-anchor"
-               href="https://www.infoq.com/news/2026/04/java-news-roundup-mar30-2026"
+               href="https://www.infoq.com/news/2026/04/java-news-roundup-mar30-2026/"
                target="_blank"
                rel="noopener noreferrer"
-               aria-label="Leggi la fonte originale di: Sfida di un Senior Developer: La settimana tecnica in Java (aprile 2026)">
+               aria-label="Leggi la fonte originale di: Riassunto delle novità tecnologiche di marzo 2026">
                 <svg xmlns="http://www.w3.org/2000/svg"
                      width="14" height="14"
                      viewBox="0 0 24 24"
