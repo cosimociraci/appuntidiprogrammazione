@@ -174,18 +174,8 @@
 86
 87
 88
-89
-90
-91
-92
-93
 </pre></td><td class="rouge-code"><pre><span class="cm">/* Aggiungo OWASP Java HTML Sanitizer al pom.xml: */</span>
-<span class="c1">// &lt;dependency&gt; // &lt;groupId&gt;com.googlecode.owasp-java-html-sanitizer&lt;/groupId&gt;</span>
-    <span class="c1">// &lt;artifactId&gt;owasp-java-html-sanitizer&lt;/artifactId&gt; //</span>
-    <span class="o">&lt;</span><span class="n">version</span><span class="o">&gt;</span><span class="mf">20220608.1</span><span class="o">&lt;/</span><span class="n">version</span><span class="o">&gt;</span> <span class="c1">// &lt;/dependency&gt; /* Definisco le policy di</span>
-    <span class="n">sanitizzazione</span> <span class="n">per</span> <span class="n">diversi</span> <span class="n">contesti</span> <span class="n">di</span> <span class="n">utilizzo</span><span class="o">.</span> <span class="o">*/</span> <span class="nd">@Configuration</span> <span class="kd">public</span>
-    <span class="kd">class</span> <span class="nc">HtmlSanitizerConfig</span>
-<span class="o">{</span>
+<span class="nd">@Configuration</span> <span class="kd">public</span> <span class="kd">class</span> <span class="nc">HtmlSanitizerConfig</span> <span class="o">{</span>
     <span class="cm">/* Policy per commenti e descrizioni utente: solo formattazione base. */</span>
     <span class="nd">@Bean</span><span class="o">(</span><span class="s">"basicHtmlPolicy"</span><span class="o">)</span> <span class="kd">public</span> <span class="nc">PolicyFactory</span> <span class="nf">basicHtmlPolicy</span><span class="o">()</span> <span class="o">{</span>
         <span class="k">return</span> <span class="k">new</span> <span class="nf">HtmlPolicyBuilder</span><span class="o">()</span> <span class="o">.</span><span class="na">allowElements</span><span class="o">(</span><span class="s">"b"</span><span class="o">,</span> <span class="s">"i"</span><span class="o">,</span> <span class="s">"em"</span><span class="o">,</span> <span class="s">"strong"</span><span class="o">,</span>

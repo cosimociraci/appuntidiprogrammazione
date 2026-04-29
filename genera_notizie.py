@@ -1,5 +1,29 @@
 # pipenv run python genera_notizie.py
 
+# --date YYYY-MM-DD
+# Imposta manualmente la “data di sessione”.
+# 
+# Serve per:
+# nominare cartelle e file
+# scrivere la data nel front matter
+# Se omesso → usa la data odierna.
+# 
+# --regenerate
+# Non scarica nulla.
+# Non usa AI.
+# Non fa scraping.
+# Rigenera SOLO le immagini per tutti i file .md già presenti in output/.
+# 
+# --fix-frontmatter
+# Non scarica nulla.
+# Non genera immagini.
+# Rigenera SOLO il front matter YAML dei file .md in output/.
+# 
+# --libri
+# Non scarica nulla.
+# Non genera articoli.
+# Genera le slide “consigli di lettura” per ogni file .md in _libri/.
+
 import os
 import json
 import asyncio
@@ -7,6 +31,7 @@ import re
 import sys
 import argparse
 from datetime import datetime
+from pathlib import Path
 import requests
 from bs4 import BeautifulSoup
 import yt_dlp
@@ -15,7 +40,7 @@ import ollama
 from playwright.async_api import async_playwright
 
 # --- CONFIGURAZIONE ---
-TARGET_TOPICS = ["java", "js", "javascript", "postgresql", "postgis", "ai", "ia", "intelligenza artificiale"]
+TARGET_TOPICS = ["java", "js", "javascript", "postgresql", "postgis", "ai", "intelligenza artificiale", "machine learning", "big data"]
 BASE_URLS = [
     "https://techfromthenet.it/software/news-produttivita/",
     "https://www.infoq.com/java/news/",
@@ -95,9 +120,12 @@ def parse_arguments():
     )
     parser.add_argument(
         '--libri',
-        action='store_true',
-        help='Genera le slide "consigli di lettura" per ogni file .md in _libri/. Non scarica nulla.'
+        type=str,
+        nargs='?',
+        const='_libri',   # se l’utente scrive solo --libri, usa la cartella come fallback
+        help='Genera le slide "consigli di lettura" per un singolo file .md oppure per l’intera cartella _libri/.'
     )
+
     return parser.parse_args()
 
 
@@ -1068,6 +1096,42 @@ def fix_frontmatter_all(output_root):
     log(f"--- FIX-FRONTMATTER COMPLETATO: {fixed_count} file aggiornati, {error_count} errori ---")
 
 
+async def process_single_book(md_path):
+    with open(md_path, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    book_title  = extract_book_title(content)  or Path(md_path).stem
+    book_autore = extract_book_autore(content) or ""
+    chapter_titles = extract_chapter_titles(content)
+    chunks = chunk_titles(chapter_titles)
+
+    out_dir = os.path.join("_libri", Path(md_path).stem)
+    os.makedirs(out_dir, exist_ok=True)
+
+    # Rendering Playwright
+    await render_book_slides(book_title, book_autore, chunks, out_dir)
+
+async def render_book_slides(book_title, book_autore, chunks, out_dir):
+    async with async_playwright() as p:
+        browser = await p.chromium.launch()
+        page = await browser.new_page(viewport={'width': 1080, 'height': 1080})
+
+        # Slide 1: copertina
+        await render_book_cover(page, book_title, book_autore, os.path.join(out_dir, "slide_01.png"))
+
+        # Slide 2..N: contenuti
+        for i, chunk in enumerate(chunks, start=2):
+            await render_book_content_slide(
+                page,
+                slide_num=i,
+                total_slides=len(chunks) + 1,
+                titles_chunk=chunk,
+                output_path=os.path.join(out_dir, f"slide_{i:02d}.png")
+            )
+
+        await browser.close()
+
+
 # --- MAIN ENGINE ---
 
 async def main():
@@ -1081,8 +1145,23 @@ async def main():
         os.makedirs(output_root)
 
     if args.libri:
-        await process_libri_folder("_libri")
+        libri_path = args.libri
+
+        # Caso 1: è un singolo file
+        if os.path.isfile(libri_path):
+            await process_single_book(libri_path)
+            return
+
+        # Caso 2: è una cartella (fallback)
+        if os.path.isdir(libri_path):
+            for fname in os.listdir(libri_path):
+                if fname.endswith(".md"):
+                    await process_single_book(os.path.join(libri_path, fname))
+            return
+
+        log(f"ERRORE: il path passato a --libri non esiste: {libri_path}")
         return
+
 
     if args.regenerate:
         await regenerate_all(output_root)

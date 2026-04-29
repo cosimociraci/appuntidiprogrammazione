@@ -35,29 +35,34 @@ FONT             = "DejaVu Sans"
 # Ho separato le metriche overview da quelle focus perché le due viste
 # hanno densità e proporzioni molto diverse.
 # =============================================================================
-OV_LINE_H    = 0.28
-OV_ROW_PAD   = 0.20
-OV_CAT_GAP   = 0.60
-OV_KEY_WRAP  = 13
-OV_DESC_WRAP = 32
-OV_CAT_BOX_W = 2.3
-OV_CAT_BOX_H = 0.85
-OV_PILL_W    = 1.9
-OV_CENTER_R  = 1.4
+OV_LINE_H    = 0.35   # Aumentato per dare più spazio verticale tra righe di testo
+OV_ROW_PAD   = 0.30   # Aumentato il padding tra un item e l'altro
+OV_CAT_GAP   = 0.80   # Più spazio tra le categorie
+OV_KEY_WRAP  = 14     # Più caratteri per riga
+OV_DESC_WRAP = 35     # Più caratteri per riga
+OV_CAT_BOX_W = 3.2    # Allargato significativamente (era 2.4)
+OV_CAT_BOX_H = 1.1    # Alzato leggermente (era 0.95)
+OV_PILL_W    = 2.5    # Allargata la pillola della chiave (era 1.9)
+OV_CENTER_R  = 1.6    # Cerchio centrale leggermente più grande
 
 # =============================================================================
-# METRICHE FOCUS (vista singola categoria, canvas 1080x1080)
+# METRICHE FOCUS (vista singola categoria, canvas 1080×1080)
+#
+# Ho ridotto FO_LIMIT da 40 a 30: lo spazio coordinate è più piccolo,
+# quindi ogni elemento occupa una frazione maggiore del canvas →
+# font e box appaiono il 33% più grandi a parità di misura in unità.
+# 1 unit = 1080px / 30 = 36px  (era 27px con FO_LIMIT=40).
 # =============================================================================
-FO_LINE_H    = 1.10   
-FO_ROW_PAD   = 1.50   
-FO_KEY_WRAP  = 13
-FO_DESC_WRAP = 24     # Leggermente ridotto per sicurezza margini
-FO_CAT_BOX_W = 12.0   # Incrementato da 10 a 12
-FO_CAT_BOX_H = 4.5    # Incrementato da 3.2 a 4.5 per ospitare 2-3 righe
-FO_PILL_W    = 8.5    
-FO_DESC_W    = 14.0   # Bilanciato per evitare clipping a destra
-FO_LIMIT     = 40.0
-FO_CENTER    = FO_LIMIT / 2
+FO_LINE_H    = 1.20   # era 1.10 — altezza riga testo in unità coord (=43px)
+FO_ROW_PAD   = 1.30   # era 1.50 — padding verticale tra item (=47px)
+FO_KEY_WRAP  = 10     # era 13  — meno caratteri per riga (font più grande)
+FO_DESC_WRAP = 18     # era 24  — idem
+FO_CAT_BOX_W = 9.0   # era 12.0 — scalato ×0.75 per FO_LIMIT=30
+FO_CAT_BOX_H = 4.0   # era 4.5  — scalato + margine per 2-3 righe a 26pt
+FO_PILL_W    = 6.5   # era 8.5  — scalato ×0.75
+FO_DESC_W    = 9.5   # era 14.0 — scalato; right edge = 1013px (93.8%)
+FO_LIMIT     = 30.0  # era 40.0 — riduzione coordinate → tutto più grande
+FO_CENTER    = FO_LIMIT / 2  # 15.0
 
 # =============================================================================
 # UTILITY CONDIVISE
@@ -130,11 +135,12 @@ def _ov_center_node(ax, cx, cy, title):
     ax.add_patch(Circle((cx, cy), OV_CENTER_R, fill=False,
                          edgecolor="#7777ff", linewidth=2.5, zorder=5))
     lines = title.split("\n")
-    lh    = 0.38
+    lh    = 0.42   # era 0.38 — interlinea adeguata a font 12pt
     y0    = cy + lh * (len(lines) - 1) / 2
     for i, line in enumerate(lines):
         ax.text(cx, y0 - i * lh, line, ha="center", va="center",
-                fontsize=10, color="white", fontweight="bold",
+                fontsize=12,          # era 10
+                color="white", fontweight="bold",
                 zorder=6, fontfamily=FONT)
 
 
@@ -144,9 +150,11 @@ def _ov_cat_box(ax, cx, cy, label, color):
         boxstyle="round,pad=0.08",
         facecolor=color, edgecolor=_darken(color), linewidth=1.5, zorder=3
     ))
-    ax.text(cx, cy, "\n".join(_wrap(label, 12)),
-            ha="center", va="center", fontsize=7.5, color="white",
-            fontweight="bold", zorder=4, fontfamily=FONT, linespacing=1.3)
+    ax.text(cx, cy, "\n".join(_wrap(label, 11)),  # era 12
+            ha="center", va="center",
+            fontsize=9.5,             # era 7.5
+            color="white", fontweight="bold",
+            zorder=4, fontfamily=FONT, linespacing=1.3)
 
 
 def _ov_item_row(ax, y_top, key, desc, color,
@@ -168,12 +176,14 @@ def _ov_item_row(ax, y_top, key, desc, color,
         facecolor=ITEM_BG_COLOR, edgecolor=color, linewidth=0.9, zorder=3
     ))
     ax.text(x_key, yc, "\n".join(key_lines),
-            ha="center", va="center", fontsize=5.8,
+            ha="center", va="center",
+            fontsize=8.0,             # era 5.8
             color=CMD_TEXT_COLOR, fontfamily=FONT, zorder=4, linespacing=1.2)
 
     ha = "right" if side == "left" else "left"
     ax.text(x_desc, yc, "\n".join(desc_lines),
-            ha=ha, va="center", fontsize=5.8,
+            ha=ha, va="center",
+            fontsize=8.0,             # era 5.8
             color=ITEM_LABEL_COLOR, fontfamily=FONT, zorder=4, linespacing=1.2)
 
     pill_edge_x = x_key + (OV_PILL_W/2 if side == "right" else -OV_PILL_W/2)
@@ -185,9 +195,9 @@ def _ov_item_row(ax, y_top, key, desc, color,
 def _ov_render_side(ax, categories, tops, scale, side, cx, cy):
     """Renderizza tutte le categorie di un lato (left o right)."""
     sign   = -1 if side == "left" else 1
-    x_cat  = cx + sign * 4.6
-    x_key  = cx + sign * 7.1
-    x_desc = cx + sign * 8.9
+    x_cat  = cx + sign * 5.5  # Spostato verso l'esterno (era 4.6)
+    x_key  = cx + sign * 8.8  # Spostato verso l'esterno (era 7.1)
+    x_desc = cx + sign * 11.0 # Spostato verso l'esterno (era 8.9)
 
     for cat, y_top in zip(categories, tops):
         color        = cat["color"]
@@ -247,11 +257,16 @@ def render_overview(data: dict, output_path: str, dpi: int = 150):
 
 
 # =============================================================================
-# FOCUS — vista singola categoria (canvas quadrato 1080x1080)
-# Il box categoria è al centro, gli item si irradiano a destra.
-# Ho scelto il layout a "lisca di pesce verticale" (categoria a sinistra,
-# item a destra in colonna) perché con testi lunghi è il più leggibile
-# su formato quadrato: evita il clipping orizzontale e sfrutta l'altezza.
+# FOCUS — vista singola categoria (canvas quadrato 1080×1080)
+#
+# Layout "lisca di pesce": box categoria a sinistra-centro, item in colonna
+# a destra. Con FO_LIMIT=30 ogni unità vale 36px → font e box 33% più grandi
+# rispetto alla versione precedente (FO_LIMIT=40 → 27px/unit).
+#
+# Posizionamento orizzontale (px):
+#   cat box : [  36,  360]   (324px)
+#   pill    : [ 410,  644]   (234px, gap 50px dal cat box)
+#   desc    : [ 671, 1013]   (342px, gap 27px dalla pill)
 # =============================================================================
 
 def _fo_item_h(key: str, desc: str) -> float:
@@ -261,9 +276,13 @@ def _fo_item_h(key: str, desc: str) -> float:
 
 def render_focus(cat: dict, output_path: str, dpi: int = 100):
     """
-    Genera il PNG con box categoria più grande e spazioso.
+    Genera il PNG 1080×1080 per una singola categoria.
+    Font sizes in matplotlib points (1pt = dpi/72 px):
+      - categoria: 26pt = 36px  (era 18pt = 25px)
+      - key pill : 20pt = 28px  (era 13pt = 18px)
+      - desc     : 17pt = 24px  (era 12pt = 17px)
     """
-    IMG = 10.8
+    IMG = 10.8   # pollici; 10.8 * 100dpi = 1080px
     fig, ax = plt.subplots(figsize=(IMG, IMG))
     fig.patch.set_facecolor(BG_COLOR)
     ax.set_facecolor(BG_COLOR)
@@ -276,34 +295,42 @@ def render_focus(cat: dict, output_path: str, dpi: int = 100):
     name  = cat.get("name", "")
 
     total_items_h = sum(_fo_item_h(k, d) for k, d in items)
-    available_h   = FO_LIMIT - 4.0
+    available_h   = FO_LIMIT - 4.0   # margine top+bottom = 4 unità (144px)
     scale = min(1.0, available_h / total_items_h) if total_items_h > 0 else 1.0
 
-    # Posizionamento (cx_cat a 7.5 per bilanciare il box più largo)
-    cx_cat = 7.5 
+    # -------------------------------------------------------------------
+    # Box categoria
+    # cx_cat = 5.5 → left edge = 1.0 unit = 36px (margine sinistro 36px)
+    # Ho spostato da 7.5 a 5.5 per compensare la riduzione di FO_LIMIT.
+    # -------------------------------------------------------------------
+    cx_cat = 5.5
     cy_cat = FO_CENTER
 
-    # Box Categoria (Wrap impostato a 12 per forzare le due righe se necessario)
     ax.add_patch(FancyBboxPatch(
         (cx_cat - FO_CAT_BOX_W/2, cy_cat - FO_CAT_BOX_H/2),
         FO_CAT_BOX_W, FO_CAT_BOX_H,
         boxstyle="round,pad=0.20",
         facecolor=color, edgecolor=_darken(color), linewidth=2.5, zorder=3
     ))
-    
-    # Ho mantenuto il font a 18, ma ora ha molto più spazio intorno
     ax.text(cx_cat, cy_cat, "\n".join(_wrap(name, 12)),
-            ha="center", va="center", fontsize=18, color="white",
-            fontweight="bold", fontfamily=FONT, zorder=4, linespacing=1.3)
+            ha="center", va="center",
+            fontsize=26,          # era 18 — +44%, 36px a dpi=100
+            color="white", fontweight="bold",
+            fontfamily=FONT, zorder=4, linespacing=1.3)
 
     if not items:
         plt.savefig(output_path, dpi=dpi, facecolor=BG_COLOR)
         plt.close()
         return
 
-    # Ricalcolo distanze orizzontali per i nuovi ingombri
-    x_pill = cx_cat + FO_CAT_BOX_W/2 + 1.8 + FO_PILL_W/2
-    x_desc = x_pill + FO_PILL_W/2 + 1.0 + FO_DESC_W/2
+    # -------------------------------------------------------------------
+    # Posizioni orizzontali pill e desc (in unità FO_LIMIT=30).
+    # Ho calcolato in pixel e convertito per garantire assenza di clipping:
+    #   x_pill center = 14.65u → pill span [411px, 645px]
+    #   x_desc center = 23.4u  → desc span [671px, 1013px]
+    # -------------------------------------------------------------------
+    x_pill = cx_cat + FO_CAT_BOX_W/2 + 1.4  + FO_PILL_W/2   # 14.65u
+    x_desc = x_pill + FO_PILL_W/2    + 0.75 + FO_DESC_W/2   # 23.4u
 
     y_cursor = cy_cat + (total_items_h * scale) / 2
 
@@ -315,18 +342,21 @@ def render_focus(cat: dict, output_path: str, dpi: int = 100):
         yc         = y_cursor - row_h / 2
 
         # Pill chiave
-        pill_h = len(key_lines) * FO_LINE_H * scale + 0.35
+        # Ho aumentato il pad interno da 0.35 a 0.45 per dare respiro
+        # al testo più grande.
+        pill_h = len(key_lines) * FO_LINE_H * scale + 0.45
         ax.add_patch(FancyBboxPatch(
             (x_pill - FO_PILL_W/2, yc - pill_h/2), FO_PILL_W, pill_h,
             boxstyle="round,pad=0.12",
             facecolor=ITEM_BG_COLOR, edgecolor=color, linewidth=1.8, zorder=3
         ))
         ax.text(x_pill, yc, "\n".join(key_lines),
-                ha="center", va="center", fontsize=13,
+                ha="center", va="center",
+                fontsize=20,          # era 13 — +54%, 28px a dpi=100
                 color=CMD_TEXT_COLOR, fontfamily=FONT, zorder=4, linespacing=1.2)
 
         # Box descrizione
-        desc_h = len(desc_lines) * FO_LINE_H * scale + 0.35
+        desc_h = len(desc_lines) * FO_LINE_H * scale + 0.45
         ax.add_patch(FancyBboxPatch(
             (x_desc - FO_DESC_W/2, yc - desc_h/2), FO_DESC_W, desc_h,
             boxstyle="round,pad=0.12",
@@ -334,9 +364,11 @@ def render_focus(cat: dict, output_path: str, dpi: int = 100):
             linewidth=1.0, zorder=3
         ))
         ax.text(x_desc, yc, "\n".join(desc_lines),
-                ha="center", va="center", fontsize=12,
+                ha="center", va="center",
+                fontsize=17,          # era 12 — +42%, 24px a dpi=100
                 color=ITEM_LABEL_COLOR, fontfamily=FONT, zorder=4, linespacing=1.2)
 
+        # Connettori dashed
         _conn(ax, cx_cat + FO_CAT_BOX_W/2, yc, x_pill - FO_PILL_W/2, yc, lw=1.3)
         _conn(ax, x_pill + FO_PILL_W/2,    yc, x_desc - FO_DESC_W/2, yc, lw=1.0)
 
