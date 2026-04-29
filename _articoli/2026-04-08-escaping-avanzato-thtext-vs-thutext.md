@@ -21,12 +21,7 @@ Visualizzare correttamente descrizioni formattate (RTF) inserite dagli utenti se
 
 ```java
 /* Aggiungo OWASP Java HTML Sanitizer al pom.xml: */
-// <dependency> // <groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
-    // <artifactId>owasp-java-html-sanitizer</artifactId> //
-    <version>20220608.1</version> // </dependency> /* Definisco le policy di
-    sanitizzazione per diversi contesti di utilizzo. */ @Configuration public
-    class HtmlSanitizerConfig
-{
+@Configuration public class HtmlSanitizerConfig {
     /* Policy per commenti e descrizioni utente: solo formattazione base. */
     @Bean("basicHtmlPolicy") public PolicyFactory basicHtmlPolicy() {
         return new HtmlPolicyBuilder() .allowElements("b", "i", "em", "strong",

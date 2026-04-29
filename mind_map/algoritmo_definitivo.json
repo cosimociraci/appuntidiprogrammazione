@@ -1,0 +1,62 @@
+{
+    "title": "L'algoritmo\ndefinitivo",
+    "left": [
+        {
+            "name": "Fondamenti della Macchina",
+            "color": "#3498db",
+            "items": [
+                ["Learner vs Software", "Gli algoritmi di machine learning creano altri algoritmi partendo dai dati, superando la programmazione manuale."],
+                ["Ipotesi del Master Algorithm", "Il postulato che tutta la conoscenza possa essere derivata da un singolo algoritmo di apprendimento universale."],
+                ["Problema di Hume", "La sfida filosofica dell'induzione: come giustificare la previsione del futuro basandosi su dati passati."],
+                ["No Free Lunch", "Il teorema informatico per cui nessun learner può eccellere in ogni ambito senza conoscenze preesistenti."]
+            ]
+        },
+        {
+            "name": "Le Prime Due Tribù",
+            "color": "#9b59b6",
+            "items": [
+                ["Simbolisti", "Vedono l'apprendimento come manipolazione di simboli e utilizzano la deduzione inversa per colmare lacune logiche."],
+                ["Connessionisti", "Ispirati alle neuroscienze, emulano il cervello tramite neuroni artificiali e l'algoritmo di retropropagazione."],
+                ["Trasparenza vs Performance", "Il dibattito tra modelli comprensibili (logica) e modelli potenti ma 'scatola nera' (reti neurali)."]
+            ]
+        },
+        {
+            "name": "Problemi Algoritmici",
+            "color": "#e74c3c",
+            "items": [
+                ["Overfitting", "L'errore di scambiare il rumore casuale nei dati per un modello reale, fallendo nella generalizzazione."],
+                ["Maledizione Dimensionalità", "La difficoltà di apprendere quando i dati hanno troppi attributi, rendendo lo spazio informativo troppo vasto."],
+                ["Bias e Varianza", "Il bilanciamento necessario tra pregiudizio del modello e sensibilità ai dati specifici per ottimizzare le previsioni."]
+            ]
+        }
+    ],
+    "right": [
+        {
+            "name": "Le Altre Tre Tribù",
+            "color": "#e67e22",
+            "items": [
+                ["Evoluzionisti", "Ispirati alla selezione naturale, utilizzano la programmazione genetica per far evolvere strutture software adatte."],
+                ["Bayesiani", "Affrontano l'incertezza con il teorema di Bayes, aggiornando le probabilità delle ipotesi al ricevere nuovi dati."],
+                ["Analogisti", "Basano l'apprendimento sulla somiglianza tra casi vecchi e nuovi tramite macchine a vettori di supporto (SVM)."]
+            ]
+        },
+        {
+            "name": "Verso l'Unificazione",
+            "color": "#2ecc71",
+            "items": [
+                ["Apprendimento non supervisionato", "Tecniche come il clustering (k-medie) per scoprire strutture nei dati senza bisogno di etichette umane."],
+                ["Reti Logiche di Markov", "Un sistema sintetico che fonde la logica astratta dei simbolisti con la probabilità dei bayesiani."],
+                ["Teoria del Tutto Informatica", "La ricerca di un'architettura che unisca i cinque paradigmi in un unico learner universale."]
+            ]
+        },
+        {
+            "name": "Il Mondo di Domani",
+            "color": "#f1c40f",
+            "items": [
+                ["Specchio Digitale", "Un modello di noi stessi alimentato dai dati che agirà come assistente perfetto e filtro informativo."],
+                ["La Sfida del Cancro", "L'IA come unica arma capace di processare la complessità genetica per terapie personalizzate di precisione."],
+                ["Etica e Skynet", "La rassicurazione che gli algoritmi non hanno volontà propria e il pericolo risiede nell'uso umano, non nelle macchine."]
+            ]
+        }
+    ]
+}

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <!--
+    Ho fisso il viewport a 1080 per forzare Chromium/wkhtmltoimage
+    a renderizzare esattamente a quella larghezza senza media-query
+    di collasso. L'immagine finale è un ritaglio full-page di 1080px.
+  -->
+  <meta name="viewport" content="width=1080" />
+  <title>{{ meta.title_accent }} {{ meta.title_rest }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fira+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      font-size: 12px;
+      background: {{ meta.background | default('#FFF8DC') }};
+      color: #1a1a1a;
+      width: 1080px;
+      padding: 20px 16px 24px;
+    }
+
+    /* ── PAGE HEADER ─────────────────────────────────────────── */
+    .page-header { text-align: center; margin-bottom: 14px; }
+    .page-header__follow { font-size: 13px; font-weight: 700; color: #444; letter-spacing: 1px; margin-bottom: 3px; }
+    .page-header__title  { font-size: 38px; font-weight: 900; letter-spacing: 3px; line-height: 1.1; }
+
+    /* ── GRID ────────────────────────────────────────────────── */
+    .grid { display: flex; flex-direction: column; gap: 8px; }
+    .grid-row { display: grid; gap: 8px; align-items: stretch; }
+    .grid-row--3col { grid-template-columns: repeat(3, 1fr); }
+    .grid-row--1-2  { grid-template-columns: 1fr 2fr; }
+    .grid-row--2col { grid-template-columns: 1fr 1fr; }
+    .grid-row--full { grid-template-columns: 1fr; }
+
+    /* ── CARD ────────────────────────────────────────────────── */
+    .card { background: #fff; border: 1.5px solid #ccc; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
+    .card__header { display: flex; align-items: center; gap: 5px; padding: 5px 10px; font-weight: 800; font-size: 12.5px; color: #fff; border-bottom: 1px solid rgba(0,0,0,0.12); }
+    .card__header--orange    { background: #E07B1E; }
+    .card__header--green     { background: #218A44; }
+    .card__header--blue      { background: #2456D8; }
+    .card__header--navy      { background: #1C2B3D; }
+    .card__header--amber     { background: #B8710A; }
+    .card__header--teal      { background: #0B8A7E; }
+    .card__header--red       { background: #C0392B; }
+    .card__header--darkgreen { background: #145A2F; }
+    .card__header--purple    { background: #5B2DA8; }
+    .card__num { font-size: 11px; font-weight: 700; opacity: 0.80; flex-shrink: 0; }
+    .card__body { padding: 8px 10px; flex: 1; display: flex; flex-direction: column; gap: 6px; }
+
+    /* ── TABLE ───────────────────────────────────────────────── */
+    .tbl { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+    .tbl thead th { background: #EAECF0; font-weight: 800; padding: 3px 7px; border: 1px solid #ccc; text-align: left; font-size: 11px; letter-spacing: 0.3px; }
+    .tbl td { padding: 3px 7px; border: 1px solid #ddd; vertical-align: top; line-height: 1.4; }
+    .tbl td.tbl__key { background: #FFFBEA; font-weight: 700; white-space: nowrap; font-family: 'Fira Mono', monospace; font-size: 11px; }
+    .tbl--plain td { border: 1px solid #ddd; padding: 3px 7px; vertical-align: middle; line-height: 1.4; }
+    .tbl--plain td:first-child { font-weight: 700; color: #222; white-space: nowrap; }
+    .tbl--plain td:last-child  { color: #444; }
+
+    /* ── TAG GRID ────────────────────────────────────────────── */
+    .tag-grid { display: flex; flex-wrap: wrap; gap: 5px; }
+    .tag { flex: 1 1 calc(50% - 3px); min-width: 80px; border: 1.5px solid #2456D8; color: #2456D8; background: #fff; border-radius: 20px; padding: 4px 7px; text-align: center; font-size: 11px; font-weight: 700; white-space: nowrap; }
+
+    /* ── ARROW LIST ──────────────────────────────────────────── */
+    .arrow-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+    .arrow-list li { display: flex; gap: 5px; line-height: 1.4; font-size: 11.5px; color: #222; }
+    .arrow-list li::before { content: '→'; color: #666; flex-shrink: 0; font-weight: 700; }
+
+    /* ── BULLET LIST ─────────────────────────────────────────── */
+    .bullet-list { list-style: disc; padding-left: 16px; display: flex; flex-direction: column; gap: 2px; }
+    .bullet-list li { font-size: 11.5px; line-height: 1.4; }
+
+    /* ── NUMBERED LIST ───────────────────────────────────────── */
+    .numbered-list { list-style: decimal; padding-left: 17px; display: flex; flex-direction: column; gap: 2px; }
+    .numbered-list li { font-size: 11.5px; line-height: 1.4; }
+    .numbered-list a  { color: #2456D8; text-decoration: none; font-weight: 700; }
+
+    /* ── TEXT BOX ────────────────────────────────────────────── */
+    .text-box { background: #F7F9FB; border: 1px solid #DDE3EC; border-radius: 5px; padding: 6px 9px; font-size: 11px; line-height: 1.5; color: #333; }
+
+    /* ── SHOT GRID ───────────────────────────────────────────── */
+    .shot-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }
+    .shot-box { border-radius: 7px; padding: 8px 7px; text-align: center; font-size: 11px; line-height: 1.4; }
+    .shot-box__label { display: block; font-size: 10.5px; font-weight: 900; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .shot-box--zero { background: #D4EDDA; border: 1.5px solid #5CB87A; color: #155724; }
+    .shot-box--one  { background: #FFF3CD; border: 1.5px solid #F0C040; color: #856404; }
+    .shot-box--few  { background: #D1ECF1; border: 1.5px solid #5BC0DE; color: #0C5460; }
+
+    /* ── KV LIST ─────────────────────────────────────────────── */
+    .kv-list { list-style: none; display: flex; flex-direction: column; gap: 3px; }
+    .kv-list li { display: grid; grid-template-columns: max-content 1fr; gap: 4px; font-size: 11.5px; line-height: 1.4; }
+    .kv-list .kv-key { font-weight: 700; color: #111; }
+    .kv-list .kv-val { color: #333; }
+    .kv-list .kv-val::before { content: '→ '; color: #666; font-weight: 700; }
+
+    /* ── CHECK GRID ──────────────────────────────────────────── */
+    .check-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px 14px; }
+    .check-item { display: flex; gap: 5px; font-size: 11.5px; line-height: 1.4; align-items: flex-start; }
+    .check-item::before { content: '✓'; color: #218A44; font-weight: 900; flex-shrink: 0; }
+
+    /* ── UTILITY ─────────────────────────────────────────────── */
+    .u-bold         { font-weight: 800; }
+    .u-note         { font-size: 11px; color: #555; line-height: 1.45; }
+    .u-accent       { color: #E07B1E; font-weight: 800; }
+    .u-code         { font-family: 'Fira Mono', monospace; font-size: 10px; background: #F3F4F6; padding: 1px 4px; border-radius: 3px; }
+    .u-section-label{ font-size: 11px; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase; color: #333; margin-bottom: 2px; }
+    .u-divider      { height: 1px; background: #E5E7EB; margin: 4px 0; }
+  </style>
+</head>
+<body>
+
+{# ── MACRO: singolo blocco di contenuto ─────────────────────────────────── #}
+{# Uso 'cb' (content block) e non 'block' perché in Jinja2 'block' è una    #}
+{# built-in function per il sistema di ereditarietà dei template e          #}
+{# non può essere correttamente ombreggiata da un parametro di macro.       #}
+{%- macro render_cb(cb) -%}
+
+  {%- if cb.type == "table" -%}
+    <table class="tbl{% if not cb.get('headers') %} tbl--plain{% endif %}">
+      {%- if cb.get('headers') -%}
+      <thead><tr>{% for h in cb.headers %}<th>{{ h }}</th>{% endfor %}</tr></thead>
+      {%- endif -%}
+      <tbody>
+        {%- for row in cb.rows -%}
+        <tr>
+          {%- for cell in row -%}
+            <td{% if cb.get('key_col') and loop.index == 1 %} class="tbl__key"{% endif %}>{{ cell }}</td>
+          {%- endfor -%}
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+
+  {%- elif cb.type == "list" -%}
+    {%- set list_class = {"arrow": "arrow-list", "bullet": "bullet-list", "numbered": "numbered-list"}.get(cb.get("style", "arrow"), "arrow-list") -%}
+    {%- if cb.get('style') == 'numbered' -%}
+    <ol class="{{ list_class }}">
+      {%- for item in cb["items"] -%}
+        {%- if item is mapping -%}
+      <li>{% if item.get('href') %}<a href="{{ item.href }}">{{ item.text }}</a>{% else %}{{ item.text }}{% endif %}</li>
+        {%- else -%}
+      <li>{{ item }}</li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ol>
+    {%- else -%}
+    <ul class="{{ list_class }}">
+      {%- for item in cb["items"] -%}
+      <li>{{ item }}</li>
+      {%- endfor -%}
+    </ul>
+    {%- endif -%}
+
+  {%- elif cb.type == "kv_list" -%}
+    <ul class="kv-list">
+      {%- for item in cb["items"] -%}
+      <li><span class="kv-key">{{ item.key }}</span><span class="kv-val">{{ item.value }}</span></li>
+      {%- endfor -%}
+    </ul>
+
+  {%- elif cb.type == "text_block" -%}
+    <div class="text-box{% if cb.get('note') %} u-note{% endif %}">
+      {%- if cb.get('html') -%}{{ cb.content | safe }}{%- else -%}{{ cb.content }}{%- endif -%}
+    </div>
+
+  {%- elif cb.type == "tags" -%}
+    <div class="tag-grid">
+      {%- for item in cb["items"] -%}
+      <span class="tag">{{ item }}</span>
+      {%- endfor -%}
+    </div>
+
+  {%- elif cb.type == "check_grid" -%}
+    <div class="check-grid">
+      {%- for item in cb["items"] -%}
+      <span class="check-item">{{ item }}</span>
+      {%- endfor -%}
+    </div>
+
+  {%- elif cb.type == "shot_grid" -%}
+    <div class="shot-grid">
+      {%- for item in cb["items"] -%}
+      <div class="shot-box shot-box--{{ item.style }}">
+        <span class="shot-box__label">{{ item.label }}</span>
+        {{ item.text }}
+      </div>
+      {%- endfor -%}
+    </div>
+
+  {%- elif cb.type == "section_label" -%}
+    <p class="u-section-label">{{ cb.content }}</p>
+
+  {%- elif cb.type == "divider" -%}
+    <div class="u-divider"></div>
+
+  {%- elif cb.type == "note" -%}
+    <p class="u-note">
+      {%- if cb.get('html') -%}{{ cb.content | safe }}{%- else -%}{{ cb.content }}{%- endif -%}
+    </p>
+
+  {%- endif -%}
+{%- endmacro -%}
+
+
+{# ── MACRO: card completa ─────────────────────────────────────────────── #}
+{%- macro render_card(card, num) -%}
+<article class="card">
+  <div class="card__header card__header--{{ card.color | default('navy') }}">
+    <span class="card__num">{{ num }}.</span> {{ card.title }}
+  </div>
+  <div class="card__body">
+    {%- for cb in card.content -%}
+    {{ render_cb(cb) }}
+    {%- endfor -%}
+  </div>
+</article>
+{%- endmacro -%}
+
+
+{# ── HEADER PAGINA ─────────────────────────────────────────────────────── #}
+<header class="page-header">
+  {%- if meta.get('subtitle') -%}
+  <p class="page-header__follow">{{ meta.subtitle }}</p>
+  {%- endif -%}
+  <h1 class="page-header__title">
+    <span style="color: {{ meta.accent_color_hex | default('#E07B1E') }}">{{ meta.title_accent }}</span>
+    <span style="color: {{ meta.title_rest_color_hex | default('#2B4FBF') }}">{{ meta.title_rest }}</span>
+  </h1>
+</header>
+
+{# ── GRIGLIA PRINCIPALE ────────────────────────────────────────────────── #}
+<main class="grid">
+  {%- set card_counter = namespace(n=0) -%}
+  {%- for row in rows -%}
+  <div class="grid-row grid-row--{{ row.layout }}">
+    {%- for card in row.cards -%}
+      {%- set card_counter.n = card_counter.n + 1 -%}
+      {{ render_card(card, card_counter.n) }}
+    {%- endfor -%}
+  </div>
+  {%- endfor -%}
+</main>
+
+</body>
+</html>
