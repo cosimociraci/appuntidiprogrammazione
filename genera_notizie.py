@@ -40,7 +40,7 @@ import ollama
 from playwright.async_api import async_playwright
 
 # --- CONFIGURAZIONE ---
-TARGET_TOPICS = ["jdk", "java", "js", "javascript", "python", "postgresql", "postgis", "ai", "intelligenza artificiale", "machine learning", "llm", "big data"]
+TARGET_TOPICS = ["jdk", "java", "js", "javascript", "python", "postgresql", "postgis", "ai", "intelligenza artificiale", "machine learning", "llm", "big data", "news"]
 BASE_URLS = [
     "https://techfromthenet.it/software/news-produttivita/",
     "https://www.infoq.com/java/news/",
@@ -930,6 +930,10 @@ def generate_frontmatter(article, source_url, date_str):
     poi assemblo il blocco YAML front matter da anteporre al file .md."""
     valid_tech_keys = list(TECH_PALETTE.keys())
 
+    # Trasformo la lista globale in una stringa formattata JSON per il prompt
+    # In questo modo Qwen vede un elenco chiaro: ["jdk", "java", ...]
+    formatted_topics = json.dumps(TARGET_TOPICS)
+
     prompt = f"""
 Analizza l'articolo tecnico seguente ed estrai i metadati richiesti.
 Rispondi ESCLUSIVAMENTE con un oggetto JSON valido, senza backtick, senza testo prima o dopo.
@@ -942,10 +946,10 @@ CAMPI RICHIESTI:
 - "sintesi": riassunto dell'articolo in italiano, massimo 60 parole, max 3 righe,
              senza virgolette interne, senza newline
 - "tech": una sola stringa tra queste esatte opzioni: {json.dumps(valid_tech_keys)}
-- "tags": array JSON di 2-5 stringhe lowercase che identificano i temi principali
+- "tags": array JSON di 2-5 stringhe lowercase che identificano i temi principali tra i seguenti: {formatted_topics}
 
 Esempio formato atteso:
-{{"title": "Titolo esempio", "sintesi": "Breve riassunto senza newline.", "tech": "java", "tags": ["java", "jvm", "performance"]}}
+{{"title": "Titolo esempio", "sintesi": "Breve riassunto senza newline.", "tech": "java", "tags": ["java", "jvm", "news"]}}
 """
     try:
         response = ollama.chat(model='qwen2.5-coder', messages=[{'role': 'user', 'content': prompt}])
