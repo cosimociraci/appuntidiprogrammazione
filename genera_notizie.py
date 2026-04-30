@@ -40,7 +40,7 @@ import ollama
 from playwright.async_api import async_playwright
 
 # --- CONFIGURAZIONE ---
-TARGET_TOPICS = ["java", "js", "javascript", "postgresql", "postgis", "ai", "intelligenza artificiale", "machine learning", "big data"]
+TARGET_TOPICS = ["jdk", "java", "js", "javascript", "python", "postgresql", "postgis", "ai", "intelligenza artificiale", "machine learning", "llm", "big data"]
 BASE_URLS = [
     "https://techfromthenet.it/software/news-produttivita/",
     "https://www.infoq.com/java/news/",
