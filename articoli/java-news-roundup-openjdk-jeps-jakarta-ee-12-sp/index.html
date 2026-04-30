@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aggiornamenti tecnici Java del mese di aprile 2026 — DevLog</title>
+    <meta name="description" content="Il post discute degli aggiornamenti tecnici della JDK 27, inclusi JEPs e miglioramenti strumentali. Viene anche menzionato l'avanzamento della Jakarta EE 12.
+">
+    <link rel="stylesheet" href="/appuntidiprogrammazione/assets/css/style.css">
+
+    <script>
+        /*
+         * Applico il tema PRIMA del rendering per evitare il flash di contenuto
+         * (FOUC). Lo script è inline e bloccante di proposito: deve girare
+         * prima che il browser disegni qualsiasi elemento.
+         */
+        (function() {
+            var saved = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', saved);
+        })();
+    </script>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="logo" onclick="window.location.href='/appuntidiprogrammazione/'">
+            APPUNTI DI <span>PROGRAMMAZIONE</span>
+        </div>
+
+        <!-- 
+            Il pulsante aggiorna l'attributo data-theme sull'<html> e
+            persiste la scelta nel localStorage per le sessioni future.
+        -->
+        <button onclick="toggleTheme()" class="theme-toggle" aria-label="Cambia tema">🌓</button>
+    </header>
+
+    <!--
+    Layout post: struttura a due colonne.
+    - Sinistra (post-content): breadcrumb → tags → link PDF → link fonte → articolo MD
+    - Destra (post-sidebar): tags argomento + libro consigliato
+    
+    Ordine DOM: post-content prima, post-sidebar dopo.
+    Grid-template-areas in CSS li posiziona visivamente:
+    "content sidebar" su desktop, stacked su mobile.
+-->
+<div class="post-container">
+    <!-- COLONNA SINISTRA: contenuto principale -->
+    <main class="post-content">
+        <!-- Breadcrumb: navigazione verso la home -->
+        <nav class="post-breadcrumb" aria-label="Breadcrumb">
+            <a href="/appuntidiprogrammazione/">Appunti di Programmazione</a>
+            <span class="separator" aria-hidden="true">/</span>
+            <span>Aggiornamenti tecnici Java del mese di aprile 2026</span>
+        </nav>
+        <!-- Tags legati all'articolo -->
+        
+        <div class="post-tags-header" aria-label="Argomenti">
+            
+                <span class="post-tag-chip">jdk</span>
+            
+                <span class="post-tag-chip">java</span>
+            
+                <span class="post-tag-chip">structured concurrency</span>
+            
+                <span class="post-tag-chip">jakarta ee</span>
+            
+                <span class="post-tag-chip">performance</span>
+            
+        </div>
+        
+        <!-- Link al/ai PDF allegati all'articolo -->
+        
+        <!-- Corpo dell'articolo renderizzato da Kramdown -->
+        <article class="post-article-body">
+            <h2 id="aggiornamenti-tecnici-java-del-mese-di-aprile-2026">Aggiornamenti tecnici Java del mese di aprile 2026</h2>
+
+<p>Questo post si concentra sulle ultime novità e aggiornamenti riguardanti il mondo della programmazione Java, con una particolare attenzione alla versione JDK 27.</p>
+
+<h2 id="elevazione-di-jeps-nella-jdk-27">Elevazione di JEPs nella JDK 27</h2>
+
+<p>Il team di sviluppo della JDK ha recentemente elevato due JEPs (Java Enhancement Proposals) al status di <em>Candidate</em>: JEP 534, “Compact Object Heads by Default”, e JEP 533, “Structured Concurrency (Seventh Preview)”.</p>
+
+<p>La prima JEP introduce il layout dei record compact degli oggetti come configurazione predefinita nel JVM HotSpot. Questo cambiamento può significare maggiori effetti positivi sulla memoria e sulle prestazioni del tuo programma, ma è necessario attendere l’uscita della versione JDK 27 per sperimentarlo.</p>
+
+<p>La seconda JEP introduce la funzionalità di Structured Concurrency, che consente di trattare gruppi di compiti correlati eseguiti su diverse thread come un unico lavoro di unità, in modo da poter velocizzare l’elaborazione dei dati e migliorare il controllo delle eccezioni.</p>
+
+<h2 id="aggiornamenti-della-jakarta-ee-12">Aggiornamenti della Jakarta EE 12</h2>
+
+<p>La versione 12 della Jakarta EE sta avanzando rapidamente ed è prevista una prima rilascio dei profili principali per fine anno. Al momento, sono stati pubblicati i <em>Milestone</em> seguenti:</p>
+
+<ul>
+  <li>M4 (April 1 - May 15, 2026): Jakarta RESTful Web Services 5.0-M1 API/specification e Jakarta Contexts and Dependency Injection 5.0 Milestone/Beta.</li>
+  <li>M5 (May 16 - June 30, 2026): contenuto da definire.</li>
+  <li>M6 (July 1 - August 15, 2026): contenuto da definire.</li>
+  <li>M7 (August 15 - September 30, 2026): idealemente, l’uscita del profilo principale di Jakarta EE sarà qui o subito dopo.</li>
+  <li>M8 (October 1 - November 15, 2026): contenuto da definire.</li>
+  <li>M9 (January 1 - February 15, 2027): contenuto da definire.</li>
+</ul>
+
+<h2 id="aggiornamenti-della-jdk-27-e-dei-suoi-strumenti-di-sviluppo">Aggiornamenti della JDK 27 e dei suoi strumenti di sviluppo</h2>
+
+<p>La versione JDK 27 ha introdotto alcune nuove caratteristiche, tra cui:</p>
+
+<ul>
+  <li>Nuovo metodo <code class="language-plaintext highlighter-rouge">getTotalGcCpuTime()</code> nella interfaccia <code class="language-plaintext highlighter-rouge">MemoryMXBean</code>, che consente di contare il tempo CPU totale trascorso durante le attività di garbage collection. Questo dato può essere utilizzato per monitorare la performance del sistema in termini di utilizzo della CPU durante l’esecuzione delle operazioni di pulizia della memoria.</li>
+  <li>Migliorie al metodo <code class="language-plaintext highlighter-rouge">getQueuedTaskCount()</code> nella classe <code class="language-plaintext highlighter-rouge">ForkJoinPool</code>, che consente di controllare il numero di compiti in coda per i processi paralleli.</li>
+</ul>
+
+<h2 id="aggiornamenti-di-altri-strumenti-di-sviluppo-java">Aggiornamenti di altri strumenti di sviluppo Java</h2>
+
+<ul>
+  <li>Apache Camel: la versione 4.19.0 ha introdotto nuove componenti, tra cui Azure Functions e Spring AI Image, oltre a migliorie al componente PQC Algorithms che supporta ora l’algoritmo di criptografia ipercubica.</li>
+  <li>JBang: la versione 0.138.0 ha aggiunto la possibilità di eseguire file <code class="language-plaintext highlighter-rouge">WAR</code> con le stesse capacità dei file <code class="language-plaintext highlighter-rouge">JAR</code>. Inoltre, è stato mantenuto il metodo deprecato <code class="language-plaintext highlighter-rouge">isJar()</code> per garantire una compatibilità indietro con i programmi precedenti.</li>
+  <li>Micrometer: la versione 1.17.0 del monitoraggio di sistema ha introdotto un nuovo metrica <code class="language-plaintext highlighter-rouge">executor.delayed</code>, e ha migliorato il supporto ai metriche <code class="language-plaintext highlighter-rouge">gauge</code> nel complesso.</li>
+  <li>Eclipse Store/Serializer: la versione 4.1.0 beta include un nuovo interfaccia per la gestione delle operazioni di persistenza in batch, oltre ad alcune altre migliorie.</li>
+  <li>Grails: la versione 5.2.6 ha introdotto nuove caratteristiche e funzionalità, tra cui l’integrazione con i componenti Camel.</li>
+</ul>
+
+<h2 id="in-conclusione">In conclusione</h2>
+
+<p>Il mondo della programmazione Java continua ad evolversi rapidamente, aprendosi a nuove tecnologie e aggiornamenti che consentono di sviluppare applicazioni più performanti e scalabili. Tuttavia, la scelta del framework o strumento più adeguato dipende dall’obiettivo specifico della tua applicazione e dalla sua architettura. In questo articolo abbiamo fornito un aggiornamento sulle novità più interessanti che si sono avute nel mondo Java nell’arco del mese di aprile 2026, ma esistono molti altri framework ed strumenti disponibili che possono essere utilizzati per sviluppare applicazioni efficienti e scalabili.</p>
+
+        </article>
+        <!-- Link alla fonte originale: lo posiziono dopo il corpo perché è un
+             approfondimento opzionale, non un'azione primaria. L'icona SVG inline
+             evita dipendenze da font icon esterni. -->
+        
+        <div class="post-source-link">
+            <span class="source-link-label">Fonte originale</span>
+            <a class="source-link-anchor"
+               href="https://www.infoq.com/news/2026/04/java-news-roundup-apr13-2026/"
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="Leggi la fonte originale di: Aggiornamenti tecnici Java del mese di aprile 2026">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="14" height="14"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                    <polyline points="15 3 21 3 21 9"/>
+                    <line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
+                https://www.infoq.com/news/2026/04/java-news-roundup-apr13-2026/
+            </a>
+        </div>
+        
+    </main>
+    <!-- COLONNA DESTRA: sidebar post -->
+    <aside class="post-sidebar">
+        <!-- Box 1: tags argomento (stessa lista dei chip sopra, ma nella sidebar) -->
+        
+        <div class="sidebar-box tags-box">
+            <span class="box-label">Argomenti</span>
+            <div class="tag-cloud-sidebar">
+                
+                    <span class="sidebar-tag">jdk</span>
+                
+                    <span class="sidebar-tag">java</span>
+                
+                    <span class="sidebar-tag">structured concurrency</span>
+                
+                    <span class="sidebar-tag">jakarta ee</span>
+                
+                    <span class="sidebar-tag">performance</span>
+                
+            </div>
+        </div>
+        
+        <!-- Box 2: fonte originale nella sidebar, visibile a colpo d'occhio
+             senza dover scorrere fino in fondo all'articolo. -->
+        
+        <div class="sidebar-box source-box">
+            <span class="box-label">Fonte Originale</span>
+            <a class="sidebar-source-anchor"
+               href="https://www.infoq.com/news/2026/04/java-news-roundup-apr13-2026/"
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="Leggi la fonte originale di: Aggiornamenti tecnici Java del mese di aprile 2026">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="14" height="14"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                    <polyline points="15 3 21 3 21 9"/>
+                    <line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
+                Leggi l'articolo originale
+            </a>
+        </div>
+        
+        <!-- Box 3: libro consigliato -->
+        <div class="sidebar-box books-box">
+            <span class="box-label">Letture Consigliate</span>
+            <div class="book-card">
+                <a href="https://www.amazon.it/Appunti-Programmazione-Pensieri-soluzioni-Applicazioni-ebook/dp/B0FMFRHKTF/"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   aria-label="Acquista Appunti di Programmazione su Amazon">
+                    <img src="https://m.media-amazon.com/images/I/61Ck5eMzGYL._SY466_.jpg"
+                         alt="Copertina: Appunti di Programmazione"
+                         width="80">
+                    <p>Appunti di Programmazione: Pensieri e soluzioni per Applicazioni WEB</p>
+                </a>
+            </div>
+        </div>
+    </aside>
+</div>
+
+    <footer class="main-footer">
+        Appunti di Programmazione &nbsp;·&nbsp; cosimociraci@gmail.com
+    </footer>
+
+    <script>
+        /*
+         * toggleTheme: legge il tema corrente dall'attributo HTML,
+         * calcola l'opposto e lo salva. Il CSS reagisce via [data-theme].
+         * Non uso classi sul body per mantenere tutto centralizzato
+         * sull'elemento radice.
+         */
+        function toggleTheme() {
+            var html = document.documentElement;
+            var current = html.getAttribute('data-theme');
+            var next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+        }
+    </script>
+
+</body>
+</html>
