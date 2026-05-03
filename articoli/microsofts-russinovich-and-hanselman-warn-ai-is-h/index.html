@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La crisi del piping di sviluppatori principianti: un avvertimento sui progressi nell'AI — DevLog</title>
+    <meta name="description" content="Il seniore developer esplora come l'utilizzo di AI negli strumenti di programmazione stia creando un'imponente productivity per i senior, ma impone un 'drag AI' sui principianti. Russinovich e Hanselman propongono un programma di preceptorship per affrontare questo problema.
+">
+    <link rel="stylesheet" href="/appuntidiprogrammazione/assets/css/style.css">
+
+    <script>
+        /*
+         * Applico il tema PRIMA del rendering per evitare il flash di contenuto
+         * (FOUC). Lo script è inline e bloccante di proposito: deve girare
+         * prima che il browser disegni qualsiasi elemento.
+         */
+        (function() {
+            var saved = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', saved);
+        })();
+    </script>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="logo" onclick="window.location.href='/appuntidiprogrammazione/'">
+            APPUNTI DI <span>PROGRAMMAZIONE</span>
+        </div>
+
+        <!-- 
+            Il pulsante aggiorna l'attributo data-theme sull'<html> e
+            persiste la scelta nel localStorage per le sessioni future.
+        -->
+        <button onclick="toggleTheme()" class="theme-toggle" aria-label="Cambia tema">🌓</button>
+    </header>
+
+    <!--
+    Layout post: struttura a due colonne.
+    - Sinistra (post-content): breadcrumb → tags → link PDF → link fonte → articolo MD
+    - Destra (post-sidebar): tags argomento + libro consigliato
+    
+    Ordine DOM: post-content prima, post-sidebar dopo.
+    Grid-template-areas in CSS li posiziona visivamente:
+    "content sidebar" su desktop, stacked su mobile.
+-->
+<div class="post-container">
+    <!-- COLONNA SINISTRA: contenuto principale -->
+    <main class="post-content">
+        <!-- Breadcrumb: navigazione verso la home -->
+        <nav class="post-breadcrumb" aria-label="Breadcrumb">
+            <a href="/appuntidiprogrammazione/">Appunti di Programmazione</a>
+            <span class="separator" aria-hidden="true">/</span>
+            <span>La crisi del piping di sviluppatori principianti: un avvertimento sui progressi nell'AI</span>
+        </nav>
+        <!-- Tags legati all'articolo -->
+        
+        <div class="post-tags-header" aria-label="Argomenti">
+            
+                <span class="post-tag-chip">ai</span>
+            
+                <span class="post-tag-chip">intelligenza artificiale</span>
+            
+                <span class="post-tag-chip">machine learning</span>
+            
+                <span class="post-tag-chip">llm</span>
+            
+                <span class="post-tag-chip">big data</span>
+            
+        </div>
+        
+        <!-- Link al/ai PDF allegati all'articolo -->
+        
+        <!-- Corpo dell'articolo renderizzato da Kramdown -->
+        <article class="post-article-body">
+            <h2 id="la-crisi-del-piping-di-sviluppatori-principianti-un-avvertimento-sui-progressi-nellai">La crisi del piping di sviluppatori principianti: un avvertimento sui progressi nell’AI</h2>
+
+<p>Come Senior Developer, ho testato e letto con attenzione l’articolo pubblicato da Russinovich e Hanselman su Communications of the ACM che mette in evidenza una crisi strutturale nel mondo dello sviluppo software.</p>
+
+<p>L’autore delle parole scritte è Steef-Jan Wiggers, ma il vero punto focale sono Russinovich e Hanselman stessi, gli esperti di Microsoft che lavorano attivamente sull’AI applicato alla programmazione. Essi affermano che l’utilizzo degli strumenti AI può creare un’imponente productivity per i senior developer, ma al contempo impone un “drag AI” sui principianti che mancano della giusta esperienza e del “sapore di sistema” necessario per svolgere il lavoro correttamente.</p>
+
+<p>I dati utilizzati per supportare questa teoria sono molto sovrintendenti, come ad esempio uno studio della Harvard University che ha trovato un calo del 13% delle assunzioni di principianti nel settore dell’AI dopo la release di GPT-4. Inoltre, è stato stimato che ci sia una diminuzione di circa il 67% nelle nuove assunzioni di principianti sviluppatori rispetto al 2022.</p>
+
+<p>L’utilizzo di AI negli strumenti di programmazione può portare a risultati come la correzione di race condition con sleep call, un classico masking fix che lascia il bug sincronizzazione intatto. Un esperienzato developer sarebbe in grado di rilevare questo problema immediatamente, mentre un principiante potrebbe non. Gli agenti AI possono anche produrre codice con duplicati logic, ignorare crash come irrilevanti per la task, e implementare special-case hacks che passano i test ma falliscono in produzione.</p>
+
+<p>Il problema è che l’utilizzo di tali strumenti può portare a una nuova struttura di compensazione in cui le società assumono solo i senior developer, automatizzando gli sviluppatori principianti. Ciò, a sua volta, può portare alla chiusura del piping che produce il prossimo generazione di engineer senior.</p>
+
+<p>Per risolvere questo problema, Russinovich e Hanselman propongono un programma di preceptorship che abbina i principianti ai mentor esperto nei team di sviluppo, con l’apprendimento esplicito come obiettivo organizzativo. In questa modalità, il mentor osserva come il junior interagisce con l’AI, quello che accetta e rifiuta, come valuta la sua output, e dove la sua comprensione si spezza.</p>
+
+<p>Se ti interessa questo tema e vuoi apprendere di più sulle implicazioni pratiche e sulla maniera in cui i principianti possono sviluppare l’esperienza necessaria per lavorare correttamente con gli strumenti AI, non esitare a continuare a leggere questo articolo!</p>
+
+<p>Fonte originale: https://www.infoq.com/news/2026/04/junior-developer-pipeline-crisis/</p>
+
+        </article>
+        <!-- Link alla fonte originale: lo posiziono dopo il corpo perché è un
+             approfondimento opzionale, non un'azione primaria. L'icona SVG inline
+             evita dipendenze da font icon esterni. -->
+        
+        <div class="post-source-link">
+            <span class="source-link-label">Fonte originale</span>
+            <a class="source-link-anchor"
+               href="https://www.infoq.com/news/2026/04/junior-developer-pipeline-crisis/"
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="Leggi la fonte originale di: La crisi del piping di sviluppatori principianti: un avvertimento sui progressi nell'AI">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="14" height="14"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                    <polyline points="15 3 21 3 21 9"/>
+                    <line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
+                https://www.infoq.com/news/2026/04/junior-developer-pipeline-crisis/
+            </a>
+        </div>
+        
+    </main>
+    <!-- COLONNA DESTRA: sidebar post -->
+    <aside class="post-sidebar">
+        <!-- Box 1: tags argomento (stessa lista dei chip sopra, ma nella sidebar) -->
+        
+        <div class="sidebar-box tags-box">
+            <span class="box-label">Argomenti</span>
+            <div class="tag-cloud-sidebar">
+                
+                    <span class="sidebar-tag">ai</span>
+                
+                    <span class="sidebar-tag">intelligenza artificiale</span>
+                
+                    <span class="sidebar-tag">machine learning</span>
+                
+                    <span class="sidebar-tag">llm</span>
+                
+                    <span class="sidebar-tag">big data</span>
+                
+            </div>
+        </div>
+        
+        <!-- Box 2: fonte originale nella sidebar, visibile a colpo d'occhio
+             senza dover scorrere fino in fondo all'articolo. -->
+        
+        <div class="sidebar-box source-box">
+            <span class="box-label">Fonte Originale</span>
+            <a class="sidebar-source-anchor"
+               href="https://www.infoq.com/news/2026/04/junior-developer-pipeline-crisis/"
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="Leggi la fonte originale di: La crisi del piping di sviluppatori principianti: un avvertimento sui progressi nell'AI">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="14" height="14"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                    <polyline points="15 3 21 3 21 9"/>
+                    <line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
+                Leggi l'articolo originale
+            </a>
+        </div>
+        
+        <!-- Box 3: libro consigliato -->
+        <div class="sidebar-box books-box">
+            <span class="box-label">Letture Consigliate</span>
+            <div class="book-card">
+                <a href="https://www.amazon.it/Appunti-Programmazione-Pensieri-soluzioni-Applicazioni-ebook/dp/B0FMFRHKTF/"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   aria-label="Acquista Appunti di Programmazione su Amazon">
+                    <img src="https://m.media-amazon.com/images/I/61Ck5eMzGYL._SY466_.jpg"
+                         alt="Copertina: Appunti di Programmazione"
+                         width="80">
+                    <p>Appunti di Programmazione: Pensieri e soluzioni per Applicazioni WEB</p>
+                </a>
+            </div>
+        </div>
+    </aside>
+</div>
+
+    <footer class="main-footer">
+        Appunti di Programmazione &nbsp;·&nbsp; cosimociraci@gmail.com
+    </footer>
+
+    <script>
+        /*
+         * toggleTheme: legge il tema corrente dall'attributo HTML,
+         * calcola l'opposto e lo salva. Il CSS reagisce via [data-theme].
+         * Non uso classi sul body per mantenere tutto centralizzato
+         * sull'elemento radice.
+         */
+        function toggleTheme() {
+            var html = document.documentElement;
+            var current = html.getAttribute('data-theme');
+            var next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+        }
+    </script>
+
+</body>
+</html>

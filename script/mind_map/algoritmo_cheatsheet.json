@@ -1,0 +1,472 @@
+{
+  "meta": {
+    "title_accent": "Domingos Lalgoritmo Definitivo La Macchina",
+    "title_rest": "Che Impara Da Sola E",
+    "accent_color_hex": "#E07B1E",
+    "title_rest_color_hex": "#2B4FBF",
+    "background": "#FFF8DC"
+  },
+  "cards": [
+    {
+      "id": 1,
+      "title": "Nel machine learning",
+      "color": "orange",
+      "content": [
+        {
+          "type": "kv_list",
+          "items": [
+            {
+              "key": "Nel machine learning",
+              "value": "In Machine Learning As an Experimental Science di Pat Langley («Machine Learning», 1988) si analizza il ruolo della s..."
+            },
+            {
+              "key": "Learning",
+              "value": "From the Power Law of Practice to a General Learning Mechanism and Beyond («Tutorials in Quantitative Methods for Psy..."
+            },
+            {
+              "key": "Nel",
+              "value": "Nel prossimo capitolo vedremo come fare."
+            },
+            {
+              "key": "Naïve bayes",
+              "value": "Naïve Bayes è un buon modello concettuale di learner da utilizzare nella lettura dei giornali perché coglie la correl..."
+            },
+            {
+              "key": "Nel machine",
+              "value": "Nel machine learning, invece, sono indispensabili: se non esistessero non impareremmo nulla."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Che ogni",
+      "color": "green",
+      "content": [
+        {
+          "type": "kv_list",
+          "items": [
+            {
+              "key": "Ogni volta che",
+              "value": "Vi ricordate che l’ultima volta che l’avete invitata vi ha detto di no."
+            },
+            {
+              "key": "Ogni",
+              "value": "Ogni componente della cellula, ogni organello, ogni via metabolica, ogni gene, ogni proteina è un’entità della MLN, e..."
+            },
+            {
+              "key": "Che ogni",
+              "value": "Ogni fase è il prodotto della precedente; in ogni fase l’apprendimento è più rapido che in quella che l’ha preceduta."
+            },
+            {
+              "key": "Che con ogni",
+              "value": "Ogni fase è il prodotto della precedente; in ogni fase l’apprendimento è più rapido che in quella che l’ha preceduta."
+            },
+            {
+              "key": "Con ogni probabilità",
+              "value": "In ogni caso, l’essere umano non è molto bravo a stimare le probabilità."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Sono più che",
+      "color": "blue",
+      "content": [
+        {
+          "type": "kv_list",
+          "items": [
+            {
+              "key": "Più",
+              "value": "Il frutto di tutto ciò sarà una vita più lunga, più felice e più produttiva."
+            },
+            {
+              "key": "Sono",
+              "value": "Come sono cambiati i tempi!"
+            },
+            {
+              "key": "Molto più",
+              "value": "Unitevi alle persone che hanno molto in comune con voi: in questo modo, i modelli saranno molto più utili."
+            },
+            {
+              "key": "Più probabile che",
+              "value": "D’un tratto, lo vedete: è il Viale Più Probabile, che sale maestosamente verso la Porta della Probabilità a Posteriori."
+            },
+            {
+              "key": "Più che",
+              "value": "La prima è che più dati abbiamo, più possiamo imparare."
+            },
+            {
+              "key": "Più che con",
+              "value": "La difficoltà, però, è più apparente che reale."
+            },
+            {
+              "key": "Sono più che",
+              "value": "La difficoltà, però, è più apparente che reale."
+            },
+            {
+              "key": "Sono molto più",
+              "value": "Unitevi alle persone che hanno molto in comune con voi: in questo modo, i modelli saranno molto più utili."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Che ciò che",
+      "color": "navy",
+      "content": [
+        {
+          "type": "kv_list",
+          "items": [
+            {
+              "key": "Che",
+              "value": "Dopo di che, le loro strade si dividono."
+            },
+            {
+              "key": "Ciò che",
+              "value": "Come si fa a trovare quello che si cerca?"
+            },
+            {
+              "key": "Tutto quello che",
+              "value": "Dopo un po’, avrete visto tutto quello che c’era da vedere e quindi saprete tutto quello che c’è da conoscere."
+            },
+            {
+              "key": "Quello che",
+              "value": "Come si fa a trovare quello che si cerca?"
+            },
+            {
+              "key": "Probabilità che",
+              "value": "Il problema è che tendiamo a trascurare la probabilità a priori della causa."
+            },
+            {
+              "key": "Che fare con",
+              "value": "Dopo di che, le loro strade si dividono."
+            },
+            {
+              "key": "Probabilità che una",
+              "value": "Il problema è che tendiamo a trascurare la probabilità a priori della causa."
+            },
+            {
+              "key": "Che nel",
+              "value": "Il machine learning è come un radar che vede nel futuro."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Del machine",
+      "color": "amber",
+      "content": [
+        {
+          "type": "kv_list",
+          "items": [
+            {
+              "key": "Del machine learning",
+              "value": "Programs for Machine Learning* di J."
+            },
+            {
+              "key": "Del",
+              "value": "E come si costruisce un cervello del genere?"
+            },
+            {
+              "key": "Del machine",
+              "value": "The Second Machine Age, di Erik Brynjolfsson e Andrew McAfee (Norton, 2014; trad. it."
+            },
+            {
+              "key": "Machine",
+              "value": "Nell’articolo The Man Who Would Teach Machines to Think («Atlantic», 2013), James Somers esamina la posizione di Doug..."
+            },
+            {
+              "key": "Mondo del machine",
+              "value": "La vostra metà digitale ha un modello del mondo, e non solo del mondo in generale ma del mondo così come si correla a..."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Lalgoritmo definitivo",
+      "color": "teal",
+      "content": [
+        {
+          "type": "kv_list",
+          "items": [
+            {
+              "key": "Che lalgoritmo definitivo",
+              "value": "L’algoritmo che troveremo non sarà ancora l’Algoritmo Definitivo, per ragioni che vedremo in seguito, ma gli assomigl..."
+            },
+            {
+              "key": "Lalgoritmo definitivo",
+              "value": "L’Algoritmo Definitivo sarà molto complesso?"
+            },
+            {
+              "key": "Definitivo",
+              "value": "L’Algoritmo Definitivo sarà molto complesso?"
+            },
+            {
+              "key": "Lalgoritmo definitivo dei",
+              "value": "Dipende da quanto sarà difficile trovare l’Algoritmo Definitivo."
+            },
+            {
+              "key": "Algoritmo definitivo che",
+              "value": "L’algoritmo che troveremo non sarà ancora l’Algoritmo Definitivo, per ragioni che vedremo in seguito, ma gli assomigl..."
+            },
+            {
+              "key": "Algoritmo definitivo",
+              "value": "Quello che vorremmo è un unico strumento che combini le proprietà fondamentali di tutti quelli che abbiamo elencato: ..."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Uno dei",
+      "color": "red",
+      "content": [
+        {
+          "type": "check_grid",
+          "items": [
+            "Dei",
+            "Uno dei più",
+            "Dei dati",
+            "Uno dei",
+            "Solo",
+            "Loro",
+            "Quando"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Tutti gli",
+      "color": "orange",
+      "content": [
+        {
+          "type": "check_grid",
+          "items": [
+            "Che tutti gli",
+            "Tutti gli",
+            "Dati",
+            "Tutti",
+            "Cui",
+            "Tutti gli esempi",
+            "Tra",
+            "Tutti gli stati"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "Può essere",
+      "color": "green",
+      "content": [
+        {
+          "type": "kv_list",
+          "items": [
+            {
+              "key": "Che può essere",
+              "value": "La difficoltà, però, è più apparente che reale."
+            },
+            {
+              "key": "Essere",
+              "value": "È meglio essere cowboy o contadini?"
+            },
+            {
+              "key": "Può essere",
+              "value": "È una bella esperienza, ma non può espandersi."
+            },
+            {
+              "key": "Può",
+              "value": "L’uomo, però, può imparare senza maestri."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "title": "Che una",
+      "color": "darkgreen",
+      "content": [
+        {
+          "type": "kv_list",
+          "items": [
+            {
+              "key": "Che una",
+              "value": "Come si fa a trovare quello che si cerca?"
+            },
+            {
+              "key": "Una rete",
+              "value": "Internet, come suggerisce il nome, è una rete che connette tra loro altre reti."
+            },
+            {
+              "key": "Una cosa che",
+              "value": "La risposta alla domanda «che cosa dirà?» può essere positiva o negativa: si tratta di due scelte altrettanto legittime."
+            },
+            {
+              "key": "Con una che",
+              "value": "Come si fa a trovare quello che si cerca?"
+            },
+            {
+              "key": "Che con una",
+              "value": "È l’accordo che facciamo con Facebook per poterlo usare."
+            },
+            {
+              "key": "Una regola che",
+              "value": "Una regola non seleziona esclusivamente tutte le entità che ne soddisfano i prerequisiti, ma anche quelle che le si a..."
+            },
+            {
+              "key": "Che una rete",
+              "value": "Internet, come suggerisce il nome, è una rete che connette tra loro altre reti."
+            },
+            {
+              "key": "Una persona che",
+              "value": "E che dire di quella persona che avete conosciuto un giorno e che, segretamente, non avete mai dimenticato?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "title": "Machine learning sono",
+      "color": "purple",
+      "content": [
+        {
+          "type": "kv_list",
+          "items": [
+            {
+              "key": "Machine learning",
+              "value": "Programs for Machine Learning* di J."
+            },
+            {
+              "key": "Machine learning che",
+              "value": "In Machine Learning As an Experimental Science di Pat Langley («Machine Learning», 1988) si analizza il ruolo della s..."
+            },
+            {
+              "key": "Sul machine learning",
+              "value": "Possiamo sfruttare le decine di anni di ricerche sul machine learning."
+            },
+            {
+              "key": "Machine learning può",
+              "value": "An Artificial Intelligence Approach*, a cura di Ryszard Michalski, Jaime Carbonell, e Tom Mitchell (Tioga, 1983), fot..."
+            },
+            {
+              "key": "Machine learning sono",
+              "value": "Le sue principali riviste dedicate al machine learning sono «Machine Learning» e il «Journal of Machine Learning Rese..."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "title": "Gli algoritmi che",
+      "color": "blue",
+      "content": [
+        {
+          "type": "kv_list",
+          "items": [
+            {
+              "key": "Che gli",
+              "value": "Dal canto loro, gli scienziati, gli artisti e via dicendo sono umani e mortali, il che rafforza la validità della reg..."
+            },
+            {
+              "key": "Gli",
+              "value": "Gli erbivori sono necessari – senza di loro, gli altri non potrebbero esistere – ma i superpredatori hanno una vita m..."
+            },
+            {
+              "key": "Che gli algoritmi",
+              "value": "Da dove vengono gli algoritmi che esegue?"
+            },
+            {
+              "key": "Gli algoritmi che",
+              "value": "Da dove vengono gli algoritmi che esegue?"
+            },
+            {
+              "key": "Gli algoritmi",
+              "value": "Gli algoritmi genetici, quindi, sono innegabilmente utili, ma non rappresentano affatto il capitolo finale della storia."
+            },
+            {
+              "key": "Con gli",
+              "value": "Mentre gli esperti della prima sono impegnati a scrivere migliaia di regole per prevedere i desideri dei clienti, gli..."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "title": "Delle",
+      "color": "navy",
+      "content": [
+        {
+          "type": "kv_list",
+          "items": [
+            {
+              "key": "Della",
+              "value": "I governanti della città abitano qui."
+            },
+            {
+              "key": "Una delle",
+              "value": "Negli scacchi, una posizione da cui potete dare scacco matto in un certo numero di mosse è buona quasi quanto una pos..."
+            },
+            {
+              "key": "Delle",
+              "value": "Vi ricordate l’esempio della Nike?"
+            },
+            {
+              "key": "Una delle più",
+              "value": "L’anello più esterno, di gran lunga il più largo, è la Città dell’Ottimizzazione."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "title": "Una",
+      "color": "teal",
+      "content": [
+        {
+          "type": "check_grid",
+          "items": [
+            "Una",
+            "Con una",
+            "Alla",
+            "Una mln",
+            "Una cosa del",
+            "Solo una"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "title": "Con",
+      "color": "red",
+      "content": [
+        {
+          "type": "kv_list",
+          "items": [
+            {
+              "key": "Con",
+              "value": "Condividere o non condividere?"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
