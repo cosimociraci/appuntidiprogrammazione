@@ -42,6 +42,8 @@ from playwright.async_api import async_playwright
 # --- CONFIGURAZIONE ---
 TARGET_TOPICS = ["jdk", "java", "js", "javascript", "python", "postgresql", "postgis", "ai", "intelligenza artificiale", "machine learning", "llm", "big data", "news"]
 BASE_URLS = [
+    "https://dev.to/"
+    "https://www.mrw.it/coding/",
     "https://techfromthenet.it/software/news-produttivita/",
     "https://www.infoq.com/java/news/",
     "https://inside.java/",

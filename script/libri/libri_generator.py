@@ -1,413 +1,509 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
 """
-antigravity_processor.py
+Pipeline NLP senza LLM per la generazione di mindmap.json e cheatsheet.json
+da file .txt di libri.
 
-Ho strutturato questo script come pipeline multi-modello per elaborare
-file .txt di libri e generare tre artefatti per ognuno:
-  1. review.md     → recensione Jekyll
-  2. mindmap.json  → mappa mentale
-  3. cheatsheet.json → cheat sheet tecnico
+Dipendenze:
+    pip install spacy sentence-transformers scikit-learn numpy --break-system-packages
+    python -m spacy download it_core_news_lg   # italiano (consigliato)
+    python -m spacy download en_core_web_lg    # inglese
 
-Uso: python antigravity_processor.py [--force]
-  --force  → Rigenera tutti i file anche se già esistono
+La prima esecuzione scarica il modello sentence-transformer (~80MB) e il
+modello spaCy (~550MB per lg). Tutto viene messo in cache locale.
+
+Uso:
+    python nlp_pipeline.py              # salta i file gia' esistenti
+    python nlp_pipeline.py --force      # rigenera tutto
+    python nlp_pipeline.py --lang=en    # forza inglese (default: it)
 """
 
-import os
 import re
 import sys
 import json
-import traceback
 from pathlib import Path
-from datetime import datetime
-from openai import OpenAI
+from collections import Counter
+
+import spacy
+import numpy as np
+from sentence_transformers import SentenceTransformer
+from sklearn.cluster import KMeans
 
 # ---------------------------------------------------------------------------
-# CONFIGURAZIONE MODELLI
+# CONFIGURAZIONE
 # ---------------------------------------------------------------------------
 
-# Ho separato i due modelli per funzione: uno più "creativo" per la recensione,
-# uno più "deterministico" per i JSON strutturati.
-MODEL_CRITIC = "nvidia/nemotron-3-super-120b-a12b:free"
-KEY_CRITIC   = "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"
+# Ho alzato a 150 rispetto alla versione YAKE perché i noun chunks hanno
+# qualita' linguistica garantita: nessun rischio di function words.
+N_KEYPHRASES = 150
 
-MODEL_LOGIC  = "minimax/minimax-m2.5:free"
-KEY_LOGIC    = "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"
+N_CLUSTERS_MINDMAP = 6   # -> 3 left + 3 right
+N_CLUSTERS_CHEAT   = 15  # -> 15 card
 
-# Quanti caratteri del libro invio al modello. Ho scelto 70k per stare
-# abbondantemente sotto il limite di contesto di entrambi i modelli,
-# lasciando spazio al system prompt e alla risposta attesa.
-MAX_BOOK_CHARS = 70_000
+MIN_ITEMS_MINDMAP = 5
+MAX_ITEMS_MINDMAP = 8
+MAX_ITEMS_CHEAT   = 8
 
+MAX_CHARS = 1_000_000
 
-# ---------------------------------------------------------------------------
-# UTILITY
-# ---------------------------------------------------------------------------
+MODEL_NAME = "all-MiniLM-L6-v2"
 
-def get_client(api_key: str, label: str) -> OpenAI | None:
-    """
-    Inizializzo il client OpenRouter per il modello richiesto.
-    Ritorno None se l'inizializzazione fallisce, in modo che il chiamante
-    possa decidere se interrompere o saltare i task che dipendono da questo client.
-    """
-    try:
-        client = OpenAI(
-            api_key=api_key,
-            base_url="https://openrouter.ai/api/v1",
-            default_headers={
-                "HTTP-Referer": "https://antigravity-project.local",
-                "X-Title": "Antigravity Multi-Model Processor",
-            }
-        )
-        print(f"  [OK] Client '{label}' inizializzato.")
-        return client
-    except Exception as e:
-        # Mostro il traceback completo: voglio capire esattamente dove fallisce
-        print(f"  [ERRORE] Impossibile creare il client '{label}': {e}")
-        traceback.print_exc()
-        return None
+# 0.92 elimina quasi-duplicati senza toccare concetti distinti vicini
+DEDUP_THRESHOLD = 0.92
 
-
-def read_file(filepath: Path) -> str | None:
-    """
-    Leggo il contenuto del file in UTF-8.
-    Ritorno None in caso di errore per non interrompere la pipeline su altri libri.
-    """
-    try:
-        return filepath.read_text(encoding="utf-8")
-    except Exception as e:
-        print(f"  [ERRORE] Lettura file '{filepath.name}': {e}")
-        return None
-
-
-def clean_json_output(content: str) -> str:
-    """
-    Isolo il JSON grezzo rimuovendo i blocchi markdown che alcuni modelli
-    inseriscono nella risposta anche quando istruiti a non farlo.
-    Estraggo poi solo ciò che sta tra il primo '{' e l'ultimo '}'.
-    """
-    # Rimuovo i fence ```json ... ``` o ``` ... ```
-    content = re.sub(r"```(?:json)?\s*(.*?)\s*```", r"\1", content, flags=re.DOTALL)
-
-    start = content.find("{")
-    end   = content.rfind("}")
-
-    if start == -1 or end == -1:
-        # Il modello non ha restituito un oggetto JSON: lo segnalo e restituisco
-        # il contenuto così com'è per permettere un'analisi manuale dell'output.
-        print("  [WARN] Impossibile isolare un oggetto JSON nella risposta.")
-        return content.strip()
-
-    return content[start : end + 1].strip()
-
-
-def validate_json(content: str, task_name: str) -> bool:
-    """
-    Verifico che il contenuto sia JSON valido prima di scriverlo su disco.
-    Un file JSON malformato sarebbe inutilizzabile e difficile da diagnosticare
-    senza questo controllo esplicito.
-    """
-    try:
-        json.loads(content)
-        return True
-    except json.JSONDecodeError as e:
-        print(f"  [WARN] Il JSON per '{task_name}' non è valido: {e}")
-        return False
-
-
-def save_file(path: Path, content: str, task_name: str) -> bool:
-    """
-    Scrivo il contenuto su disco. Ho separato questa operazione in una funzione
-    dedicata per centralizzare la gestione degli errori di I/O.
-    Ritorno True se il salvataggio ha avuto successo.
-    """
-    try:
-        path.write_text(content, encoding="utf-8")
-        print(f"  [OK] Salvato: {path.name}")
-        return True
-    except Exception as e:
-        print(f"  [ERRORE] Scrittura '{path.name}': {e}")
-        traceback.print_exc()
-        return False
-
-
-# ---------------------------------------------------------------------------
-# GENERAZIONE
-# ---------------------------------------------------------------------------
-
-def generate_task_output(
-    client: OpenAI,
-    model: str,
-    task_name: str,
-    instructions: str,
-    book_content: str,
-    expected_format: str = "text",
-) -> str | None:
-    """
-    Invio il prompt al modello e restituisco il testo grezzo della risposta.
-    Gestisco tutti i possibili errori dell'API restituendo None, così il
-    chiamante può decidere se saltare o ritentare.
-    """
-    print(f"  -> Task: [{task_name}] | Modello: {model.split('/')[-1]}")
-
-    system_prompt = (
-        "Sei un assistente esperto del protocollo 'Antigravity'.\n"
-        f"Devi eseguire il seguente task:\n{instructions}\n\n"
-        "Restituisci SOLO l'output richiesto, senza preamboli o spiegazioni.\n"
-        "Se l'output è JSON, restituisci solo il codice JSON valido e nient'altro."
-    )
-
-    # Tronco il libro per non superare la finestra di contesto del modello.
-    # Ho scelto di troncare (non chunking) perché i task richiedono una visione
-    # globale del libro, non un'elaborazione sequenziale di segmenti.
-    truncated_content = book_content[:MAX_BOOK_CHARS]
-    if len(book_content) > MAX_BOOK_CHARS:
-        print(f"  [WARN] Libro troncato a {MAX_BOOK_CHARS} caratteri "
-              f"(originale: {len(book_content)}).")
-
-    try:
-        response = client.chat.completions.create(
-            model=model,
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user",   "content": f"Contenuto del libro:\n\n{truncated_content}"},
-            ],
-            temperature=0.3,
-        )
-
-        content = response.choices[0].message.content
-
-        # Alcuni modelli restituiscono None in casi di filtro o errore interno.
-        if content is None:
-            print(f"  [ERRORE] Il modello ha restituito una risposta vuota per '{task_name}'.")
-            return None
-
-        content = content.strip()
-
-        if expected_format == "json":
-            content = clean_json_output(content)
-
-        return content
-
-    except Exception as e:
-        print(f"  [ERRORE] API call fallita per '{task_name}': {e}")
-        traceback.print_exc()
-        return None
-
-
-# ---------------------------------------------------------------------------
-# ISTRUZIONI TASK
-# ---------------------------------------------------------------------------
-
-def build_instructions(data_oggi: str) -> dict:
-    """
-    Definisco le istruzioni per i tre task in un dizionario.
-    Ho separato questa logica dal main per tenere il flusso di controllo
-    pulito e le istruzioni facilmente modificabili.
-    """
-    task1 = f"""TASK 1: RECENSIONE JEKYLL (.md). Genera una recensione da critico letterario e programmatore.
-Inizia con il seguente front matter ESATTO:
----
-layout: libro
-title: TITOLO DEL LIBRO
-autore: AUTORE
-sintesi: >
-      BREVE SINTESI DI MAX 50 PAROLE
-date: {data_oggi}
-tech: SINGOLO TAG CHE IDENTIFICA IL GENERE
-link: LINK AD AMAZON DEL LIBRO
-link_img: LINK DELL'IMMAGINE DEL LIBRO PRESA DA AMAZON
----
-
-Dopo il front matter, includi 15 punti chiave (H4 + paragrafo).
-Lunghezza corpo: 1200-1800 parole.
-Tono: prima persona, divulgativo ma tecnico."""
-
-    task2 = """TASK 2: MAPPA MENTALE JSON (mindmap.json)
-Crea una mappa mentale bilanciata e profonda basata sui concetti chiave del libro.
-Suddividi gli argomenti in macro-categorie logiche (3 per il lato 'left' e 3 per il lato 'right').
-
-REGOLE STRUTTURALI OBBLIGATORIE:
-1. "title": Titolo del Libro. Se lungo, usa '\\n' per andare a capo.
-2. "left" e "right": Ciascuno deve contenere esattamente 3 oggetti categoria.
-3. Ogni categoria deve avere:
-   - "name": titolo evocativo per la macro-categoria.
-   - "color": codice esadecimale (es: #e74c3c).
-   - "items": lista di esattamente 4 sotto-punti.
-4. Ogni sotto-punto è un array di due stringhe: ["Etichetta Breve", "Descrizione di una riga"].
-
-ESEMPIO FORMATO:
-{
-  "title": "Titolo\\nLibro",
-  "left": [
-    {
-      "name": "Nome Categoria",
-      "color": "#hex",
-      "items": [["Concetto", "Spiegazione breve."]]
-    }
-  ],
-  "right": [...]
+SPACY_MODELS = {
+    "it": ["it_core_news_lg", "it_core_news_sm"],
+    "en": ["en_core_web_lg",  "en_core_web_sm"],
 }
 
-Restituisci SOLO il JSON valido."""
+COLORS_MINDMAP = [
+    "#e74c3c", "#3498db", "#2ecc71",
+    "#f39c12", "#9b59b6", "#1abc9c",
+]
 
-    task3 = """TASK 3: LOGIC TABLES JSON (cheatsheet.json)
-Genera un cheat sheet tecnico in formato JSON basato sui concetti pratici del libro.
+COLORS_CHEAT = [
+    "orange", "green",    "blue",  "navy",  "amber",
+    "teal",   "red",      "orange","green", "darkgreen",
+    "purple", "blue",     "navy",  "teal",  "red",
+]
 
-REGOLE DI STRUTTURA:
-1. "meta": titoli e colori.
-   - "title_accent", "title_rest", "accent_color_hex", "title_rest_color_hex", "background".
+# ---------------------------------------------------------------------------
+# CARICAMENTO SPACY CON FALLBACK
+# ---------------------------------------------------------------------------
 
-2. "cards": esattamente 15 card numerate, ognuna con "id", "title", "color" e "content".
-   - Colori disponibili: orange, green, blue, navy, amber, teal, red, darkgreen, purple.
+def load_spacy(lang: str) -> spacy.Language:
+    """
+    Carico il modello spaCy per la lingua indicata.
+    Provo prima "lg" (vettori migliori), poi "sm" come fallback.
+    Se nessuno e' installato, stampo il comando corretto e interrompo:
+    un errore esplicito e' meglio di un generico ImportError.
+    """
+    candidates = SPACY_MODELS.get(lang, SPACY_MODELS["it"])
+    for model_name in candidates:
+        try:
+            nlp = spacy.load(model_name)
+            print(f"  [spaCy] Modello '{model_name}' caricato.")
+            return nlp
+        except OSError:
+            continue
+    install_cmd = f"python -m spacy download {candidates[0]}"
+    raise SystemExit(
+        f"\n[ERRORE] Nessun modello spaCy per lang='{lang}'.\n"
+        f"Installa con:\n    {install_cmd}\n"
+    )
 
-3. COMPONENTI SUPPORTATI:
-   - {"type": "table", "headers": [...], "rows": [[...]], "key_col": true}
-   - {"type": "list", "style": "arrow|bullet|numbered", "items": [...]}
-   - {"type": "kv_list", "items": [{"key": "...", "value": "..."}]}
-   - {"type": "shot_grid", "items": [{"label": "TAG", "style": "zero|one|few", "text": "..."}]}
-   - {"type": "check_grid", "items": [...]}
-   - {"type": "note", "content": "...", "html": true}
-   - {"type": "section_label", "content": "..."}
-   - {"type": "divider"}
+# ---------------------------------------------------------------------------
+# PREPROCESSING TESTO
+# ---------------------------------------------------------------------------
 
-4. Se una card ha molti contenuti, aggiungi "force_layout": "full" alla card.
+_BIBLIOGRAPHY_PATTERNS = [
+    re.compile(r'https?://\S+'),
+    re.compile(r'^\s*\*\s+'),
+    re.compile(r'^\s*\d{1,4}\.\s+[A-Z]'),
+    re.compile(r'\bpp?\.\s*\d+'),
+    re.compile(r'\b(doi|isbn|issn)\b', re.I),
+    re.compile(r'«[^»]{3,60}»,\s*\d{4}'),
+]
 
-Restituisci SOLO il JSON valido."""
+def strip_support_sections(text: str) -> str:
+    """
+    Rimuovo blocchi bibliografici/note analizzando finestre di 20 righe.
+    Se piu' del 60% delle righe in una finestra corrisponde ai pattern
+    bibliografici, scarto l'intero blocco.
+    Ho scelto la finestra invece della singola riga per evitare di
+    eliminare frasi del corpo che per caso contengono un anno o un numero.
+    """
+    lines = text.splitlines()
+    clean_lines = []
+    window = 20
+    i = 0
+    while i < len(lines):
+        block = lines[i : i + window]
+        dirty = sum(
+            1 for line in block
+            if any(p.search(line) for p in _BIBLIOGRAPHY_PATTERNS)
+        )
+        if dirty / max(len(block), 1) > 0.60:
+            i += window
+        else:
+            clean_lines.append(lines[i])
+            i += 1
+    return "\n".join(clean_lines)
 
-    return {"review": task1, "mindmap": task2, "cheatsheet": task3}
 
+def split_sentences(text: str) -> list[str]:
+    """
+    Split regex su . ! ? + maiuscola: robusto su italiano e inglese
+    senza toccare abbreviazioni tipo "Dr." o "fig. 3".
+    """
+    text = re.sub(r'\s+', ' ', text).strip()
+    sentences = re.split(r'(?<=[.!?])\s+(?=[A-ZA-Za-zÀ-ÜÀ-Ö])', text)
+    return [s.strip() for s in sentences if 30 < len(s.strip()) < 450]
+
+# ---------------------------------------------------------------------------
+# ESTRAZIONE NOUN CHUNKS CON SPACY
+# ---------------------------------------------------------------------------
+
+# POS non accettabili come testa del chunk: eliminano pronomi, congiunzioni,
+# avverbi e preposizioni che erano il problema principale nella versione YAKE.
+_INVALID_ROOT_POS = {
+    "PRON", "CCONJ", "SCONJ", "ADV", "DET",
+    "ADP", "PUNCT", "AUX", "VERB", "NUM", "PART"
+}
+
+# Stopword editoriali non filtrate da spaCy ma prive di valore come keyphrases
+_EXTRA_STOPWORDS = {
+    "capitolo", "pagina", "figura", "esempio", "caso", "modo", "tipo",
+    "parte", "libro", "autore", "edizione", "anno", "volta", "cosa",
+    "fatto", "punto", "senso", "forma", "numero",
+}
+
+def is_valid_chunk(chunk: spacy.tokens.Span) -> bool:
+    """
+    Valido il noun chunk su 5 criteri cumulativi:
+    1. Testa NOUN o PROPN: garantisce che nomini un concetto.
+    2. 2-5 token: scarto singoli sostantivi ambigui e frasi intere.
+    3. Non inizia con ADP/DET: elimina "del machine learning" -> "machine learning".
+    4. Almeno un token non-stopword.
+    5. Testa non in blacklist editoriale.
+    """
+    if chunk.root.pos_ not in {"NOUN", "PROPN"}:
+        return False
+    tokens = [t for t in chunk if not t.is_space]
+    if len(tokens) < 2 or len(tokens) > 5:
+        return False
+    if tokens[0].pos_ in {"ADP", "DET"}:
+        return False
+    if all(t.is_stop for t in tokens):
+        return False
+    if chunk.root.lemma_.lower() in _EXTRA_STOPWORDS:
+        return False
+    return True
+
+
+def normalize_chunk(chunk: spacy.tokens.Span) -> str:
+    """
+    Normalizzo in stringa capitalizzata.
+    Uso il testo originale (non i lemmi) per leggibilita':
+    "machine learning" e' piu' chiaro di "machine learn" dai lemmi inglesi.
+    """
+    text = re.sub(r'\s+', ' ', chunk.text).strip()
+    text = re.sub(r'[^\w\s\-àèéìòùÀÈÉÌÒÙ]', '', text).strip()
+    return text.capitalize() if text else ""
+
+
+def extract_keyphrases_spacy(text: str, nlp: spacy.Language, n: int) -> list[str]:
+    """
+    Estraggo noun chunks e li ranko per frequenza.
+    Perche' frequenza e non TF-IDF: su singolo documento senza corpus
+    di riferimento, la frequenza e' il proxy piu' robusto di rilevanza.
+    Processo a blocchi da 100k per non saturare la RAM di spaCy.
+    Deduplicazione lessicale: tengo il piu' lungo tra coppie dove uno
+    e' sottostringa dell'altro ("machine learning" vs "il machine learning").
+    """
+    nlp.max_length = MAX_CHARS + 10_000
+    raw_chunks: list[str] = []
+
+    for start in range(0, len(text), 100_000):
+        block = text[start : start + 100_000]
+        doc   = nlp(block)
+        for chunk in doc.noun_chunks:
+            normalized = normalize_chunk(chunk)
+            if normalized and is_valid_chunk(chunk):
+                raw_chunks.append(normalized.lower())
+
+    if not raw_chunks:
+        return []
+
+    freq   = Counter(raw_chunks)
+    ranked = [kp.capitalize() for kp, _ in freq.most_common(n * 3)]
+
+    # Deduplicazione lessicale per sottostringa
+    final: list[str] = []
+    seen_lower: set[str] = set()
+    for kp in ranked:
+        kp_l = kp.lower()
+        dominated = False
+        for existing in list(seen_lower):
+            if kp_l in existing or existing in kp_l:
+                if len(kp_l) > len(existing):
+                    seen_lower.discard(existing)
+                    final = [x for x in final if x.lower() != existing]
+                else:
+                    dominated = True
+                    break
+        if not dominated:
+            seen_lower.add(kp_l)
+            final.append(kp)
+        if len(final) >= n * 2:
+            break
+
+    return final[:n]
+
+# ---------------------------------------------------------------------------
+# EMBEDDINGS
+# ---------------------------------------------------------------------------
+
+def embed(model: SentenceTransformer, texts: list[str]) -> np.ndarray:
+    """
+    Embeddings L2-normalizzati: dot product = cosine similarity.
+    Batch size 64 e' un buon compromesso tra velocita' e uso di RAM su CPU.
+    """
+    vecs  = model.encode(texts, show_progress_bar=False, batch_size=64)
+    norms = np.linalg.norm(vecs, axis=1, keepdims=True)
+    return vecs / np.maximum(norms, 1e-9)
+
+# ---------------------------------------------------------------------------
+# DEDUPLICAZIONE EMBEDDING-BASED
+# ---------------------------------------------------------------------------
+
+def deduplicate_by_embedding(
+    keyphrases: list[str],
+    embeddings: np.ndarray,
+    threshold: float = DEDUP_THRESHOLD
+) -> tuple[list[str], np.ndarray]:
+    """
+    Rimuovo sinonimi semantici che la deduplicazione lessicale non vede.
+    Approccio greedy: scorro in ordine di rilevanza e scarto ogni keyphrase
+    con similarity > threshold rispetto a una gia' accettata.
+    """
+    if not keyphrases:
+        return [], np.array([])
+    kept_idx = [0]
+    for i in range(1, len(keyphrases)):
+        sims = embeddings[kept_idx] @ embeddings[i]
+        if np.max(sims) < threshold:
+            kept_idx.append(i)
+    return ([keyphrases[i] for i in kept_idx],
+            embeddings[kept_idx])
+
+# ---------------------------------------------------------------------------
+# CLUSTERING
+# ---------------------------------------------------------------------------
+
+def cluster_keyphrases(embeddings: np.ndarray, n_clusters: int) -> tuple[np.ndarray, np.ndarray]:
+    n  = min(n_clusters, len(embeddings))
+    km = KMeans(n_clusters=n, random_state=42, n_init=10)
+    return km.fit_predict(embeddings), km.cluster_centers_
+
+
+def find_cluster_name(keyphrases: list[str], embeddings: np.ndarray, centroid: np.ndarray) -> str:
+    c_norm = centroid / (np.linalg.norm(centroid) + 1e-9)
+    return keyphrases[int(np.argmax(embeddings @ c_norm))]
+
+# ---------------------------------------------------------------------------
+# RETRIEVAL DESCRIZIONI ESTRATTIVE
+# ---------------------------------------------------------------------------
+
+def find_best_sentence(kp_emb: np.ndarray, sent_embs: np.ndarray,
+                       sentences: list[str], max_len: int = 120) -> str:
+    """
+    La frase piu' vicina alla keyphrase nello spazio embedding diventa
+    la descrizione: e' estrattiva (dal testo originale) e attinente al
+    contesto per costruzione, non per generazione.
+    """
+    best = sentences[int(np.argmax(sent_embs @ kp_emb))].strip()
+    return best if len(best) <= max_len else best[:max_len - 3] + "..."
+
+# ---------------------------------------------------------------------------
+# SELEZIONE AUTOMATICA TIPO CARD
+# ---------------------------------------------------------------------------
+
+def select_card_type(items: list[tuple[str, str]]) -> str:
+    if not items:
+        return "kv_list"
+    avg_lbl = sum(len(l.split()) for l, _ in items) / len(items)
+    avg_dsc = sum(len(d.split()) for _, d in items) / len(items)
+    if avg_lbl <= 2 and len(items) >= 6:
+        return "check_grid"
+    if avg_dsc > 10:
+        return "kv_list"
+    if len(items) >= 5:
+        return "list"
+    return "kv_list"
+
+
+def build_content_block(card_type: str, items: list[tuple[str, str]]) -> list[dict]:
+    if card_type == "kv_list":
+        return [{"type": "kv_list",
+                 "items": [{"key": l, "value": d} for l, d in items]}]
+    if card_type == "check_grid":
+        return [{"type": "check_grid", "items": [l for l, _ in items]}]
+    # list arrow
+    return [{"type": "list", "style": "arrow",
+             "items": [f"{l}: {d}" if d else l for l, d in items]}]
+
+# ---------------------------------------------------------------------------
+# COSTRUZIONE MINDMAP.JSON
+# ---------------------------------------------------------------------------
+
+def build_mindmap(keyphrases, kp_embs, labels, centroids,
+                  sent_embs, sentences, book_title) -> dict:
+    nodes = []
+    for cid in range(N_CLUSTERS_MINDMAP):
+        mask  = labels == cid
+        c_kps = [kp for kp, m in zip(keyphrases, mask) if m]
+        c_emb = kp_embs[mask]
+        if len(c_kps) < MIN_ITEMS_MINDMAP:
+            continue
+        name  = find_cluster_name(c_kps, c_emb, centroids[cid])
+        items = [
+            [kp, find_best_sentence(emb, sent_embs, sentences)]
+            for kp, emb in zip(c_kps[:MAX_ITEMS_MINDMAP], c_emb[:MAX_ITEMS_MINDMAP])
+        ]
+        nodes.append({"name": name, "color": COLORS_MINDMAP[cid % 6], "items": items})
+
+    while len(nodes) < 6:
+        nodes.append(nodes[-1].copy() if nodes else
+                     {"name": "Generale", "color": "#999999",
+                      "items": [["N/D", "Testo insufficiente."]]})
+
+    title = book_title
+    if len(title) > 20:
+        mid   = len(title) // 2
+        space = title.rfind(' ', 0, mid)
+        if space > 0:
+            title = title[:space] + "\\n" + title[space + 1:]
+
+    return {"title": title, "left": nodes[:3], "right": nodes[3:6]}
+
+# ---------------------------------------------------------------------------
+# COSTRUZIONE CHEATSHEET.JSON
+# ---------------------------------------------------------------------------
+
+def build_cheatsheet(keyphrases, kp_embs, labels, centroids,
+                     sent_embs, sentences, book_title) -> dict:
+    cards = []
+    for cid in range(N_CLUSTERS_CHEAT):
+        mask  = labels == cid
+        c_kps = [kp for kp, m in zip(keyphrases, mask) if m]
+        c_emb = kp_embs[mask]
+        if not c_kps:
+            continue
+        name  = find_cluster_name(c_kps, c_emb, centroids[cid])
+        items = [
+            (kp, find_best_sentence(emb, sent_embs, sentences))
+            for kp, emb in zip(c_kps[:MAX_ITEMS_CHEAT], c_emb[:MAX_ITEMS_CHEAT])
+        ]
+        cards.append({
+            "id": cid + 1, "title": name,
+            "color":   COLORS_CHEAT[cid % len(COLORS_CHEAT)],
+            "content": build_content_block(select_card_type(items), items)
+        })
+
+    words = book_title.split()
+    mid   = max(1, len(words) // 2)
+    return {
+        "meta": {
+            "title_accent":         " ".join(words[:mid]),
+            "title_rest":           " ".join(words[mid:]),
+            "accent_color_hex":     "#E07B1E",
+            "title_rest_color_hex": "#2B4FBF",
+            "background":           "#FFF8DC"
+        },
+        "cards": cards
+    }
 
 # ---------------------------------------------------------------------------
 # MAIN
 # ---------------------------------------------------------------------------
 
 def main():
-    # Leggo il flag --force: se presente, rigenero tutti gli artefatti
-    # anche se i file esistono già. Utile per aggiornare dopo modifiche ai prompt.
-    force_regenerate = "--force" in sys.argv
-
-    if force_regenerate:
-        print("[INFO] Modalità --force attiva: i file esistenti verranno sovrascritti.\n")
+    force = "--force" in sys.argv
+    lang  = "it"
+    for arg in sys.argv[1:]:
+        if arg.startswith("--lang="):
+            lang = arg.split("=", 1)[1]
 
     base_dir  = Path(__file__).parent
     libri_dir = base_dir / "libri"
     out_dir   = base_dir / "output"
-
-    libri_dir.mkdir(parents=True, exist_ok=True)
     out_dir.mkdir(parents=True, exist_ok=True)
 
     txt_files = list(libri_dir.glob("*.txt"))
     if not txt_files:
-        print(f"[INFO] Nessun file .txt trovato in '{libri_dir}'. Termino.")
+        print("[ERRORE] Nessun file .txt trovato in ./libri")
         return
 
-    print(f"[INFO] Trovati {len(txt_files)} file da elaborare.\n")
+    print(f"[INIT] Carico modello spaCy (lang={lang})...")
+    nlp = load_spacy(lang)
 
-    # Inizializzo i client una sola volta fuori dal loop.
-    # Se un client non riesce ad avviarsi, lo segnalo ma non blocco l'intera pipeline:
-    # i task che dipendono da quel client verranno saltati con un messaggio chiaro.
-    print("[SETUP] Inizializzazione client API...")
-    client_critic = get_client(KEY_CRITIC, "critic")
-    client_logic  = get_client(KEY_LOGIC,  "logic")
-    print()
-
-    data_oggi    = datetime.now().strftime("%Y-%m-%d")
-    instructions = build_instructions(data_oggi)
+    print(f"[INIT] Carico sentence-transformer '{MODEL_NAME}'...")
+    st_model = SentenceTransformer(MODEL_NAME)
+    print("[INIT] Modelli pronti.\n")
 
     for filepath in txt_files:
-        book_name = filepath.stem
-        print(f"{'='*60}")
-        print(f"--- ELABORAZIONE: {book_name} ---")
-        print(f"{'='*60}")
+        book_name  = filepath.stem
+        book_title = book_name.replace("_", " ").replace("-", " ").title()
+        print(f"{'='*60}\nPROCESSO: {book_name}\n{'='*60}")
 
-        book_content = read_file(filepath)
-        if book_content is None:
-            print(f"  [SKIP] Salto '{book_name}' per errore di lettura.\n")
+        book_out = out_dir / book_name
+        book_out.mkdir(parents=True, exist_ok=True)
+
+        mm_path = book_out / "mindmap.json"
+        cs_path = book_out / "cheatsheet.json"
+
+        if mm_path.exists() and cs_path.exists() and not force:
+            print("  [SKIP] Entrambi i file esistono. Usa --force per rigenerare.\n")
             continue
 
-        if not book_content.strip():
-            print(f"  [SKIP] Il file '{filepath.name}' è vuoto.\n")
+        raw_text = filepath.read_text(encoding="utf-8")[:MAX_CHARS]
+
+        # 1 — PREPROCESSING
+        print("  [1/6] Preprocessing...")
+        clean_text  = strip_support_sections(raw_text)
+        removed_pct = round((1 - len(clean_text) / len(raw_text)) * 100, 1)
+        print(f"        Rimosso {removed_pct}% come sezioni di supporto.")
+
+        # 2 — SPLIT FRASI
+        print("  [2/6] Split frasi...")
+        sentences = split_sentences(clean_text)
+        print(f"        {len(sentences)} frasi estratte.")
+        if len(sentences) < 10:
+            print("  [WARN] Testo troppo corto. Salto.")
             continue
 
-        print(f"  [INFO] Lunghezza libro: {len(book_content):,} caratteri.")
+        # 3 — ESTRAZIONE NOUN CHUNKS
+        print("  [3/6] Estrazione noun chunks con spaCy...")
+        keyphrases = extract_keyphrases_spacy(clean_text, nlp, N_KEYPHRASES)
+        print(f"        {len(keyphrases)} keyphrases dopo filtraggio lessicale.")
+        if len(keyphrases) < N_CLUSTERS_CHEAT:
+            print(f"  [WARN] Solo {len(keyphrases)} keyphrases: cluster potrebbero essere poco distinti.")
 
-        book_out_dir = out_dir / book_name
-        book_out_dir.mkdir(parents=True, exist_ok=True)
+        # 4 — EMBEDDINGS + DEDUP SEMANTICA
+        print("  [4/6] Embeddings e deduplicazione semantica...")
+        kp_embs_raw        = embed(st_model, keyphrases)
+        sent_embs          = embed(st_model, sentences)
+        keyphrases, kp_embs = deduplicate_by_embedding(keyphrases, kp_embs_raw)
+        print(f"        {len(keyphrases)} keyphrases dopo dedup semantica. "
+              f"Frasi: {sent_embs.shape[0]}.")
 
-        # ------------------------------------------------------------------
-        # TASK 1: RECENSIONE
-        # Uso il client "critic" perché questo modello è ottimizzato per
-        # testo narrativo e analisi critica con stile coerente.
-        # ------------------------------------------------------------------
-        md_path = book_out_dir / "review.md"
-        if force_regenerate or not md_path.exists():
-            if client_critic is None:
-                print("  [SKIP] Task Review: client 'critic' non disponibile.")
-            else:
-                result = generate_task_output(
-                    client_critic, MODEL_CRITIC,
-                    "Review", instructions["review"],
-                    book_content, "text"
-                )
-                if result:
-                    save_file(md_path, result, "Review")
-                else:
-                    print("  [WARN] Review non generata: risposta vuota o errore API.")
+        # 5 — MINDMAP
+        if not mm_path.exists() or force:
+            print("  [5/6] Clustering mindmap...")
+            mm_labels, mm_ctr = cluster_keyphrases(kp_embs, min(N_CLUSTERS_MINDMAP, len(keyphrases)))
+            mm_path.write_text(
+                json.dumps(build_mindmap(keyphrases, kp_embs, mm_labels, mm_ctr,
+                                         sent_embs, sentences, book_title),
+                           ensure_ascii=False, indent=2),
+                encoding="utf-8"
+            )
+            print(f"  [OK] mindmap.json -> {mm_path}")
         else:
-            print(f"  [SKIP] review.md già esistente (usa --force per rigenerare).")
+            print("  [5/6] mindmap.json gia' presente.")
 
-        # ------------------------------------------------------------------
-        # TASK 2: MINDMAP
-        # Uso il client "logic" perché questo modello segue in modo più
-        # rigoroso gli schemi JSON strutturati rispetto al critic.
-        # ------------------------------------------------------------------
-        mm_path = book_out_dir / "mindmap.json"
-        if force_regenerate or not mm_path.exists():
-            if client_logic is None:
-                print("  [SKIP] Task Mindmap: client 'logic' non disponibile.")
-            else:
-                result = generate_task_output(
-                    client_logic, MODEL_LOGIC,
-                    "Mindmap", instructions["mindmap"],
-                    book_content, "json"
-                )
-                if result:
-                    if validate_json(result, "Mindmap"):
-                        save_file(mm_path, result, "Mindmap")
-                    else:
-                        # Salvo comunque con estensione .broken per analisi manuale
-                        broken_path = mm_path.with_suffix(".broken.json")
-                        save_file(broken_path, result, "Mindmap (broken)")
-                else:
-                    print("  [WARN] Mindmap non generata: risposta vuota o errore API.")
+        # 6 — CHEATSHEET
+        if not cs_path.exists() or force:
+            print("  [6/6] Clustering cheatsheet...")
+            cs_labels, cs_ctr = cluster_keyphrases(kp_embs, min(N_CLUSTERS_CHEAT, len(keyphrases)))
+            cs_path.write_text(
+                json.dumps(build_cheatsheet(keyphrases, kp_embs, cs_labels, cs_ctr,
+                                             sent_embs, sentences, book_title),
+                           ensure_ascii=False, indent=2),
+                encoding="utf-8"
+            )
+            print(f"  [OK] cheatsheet.json -> {cs_path}")
         else:
-            print(f"  [SKIP] mindmap.json già esistente (usa --force per rigenerare).")
-
-        # ------------------------------------------------------------------
-        # TASK 3: CHEATSHEET
-        # ------------------------------------------------------------------
-        cs_path = book_out_dir / "cheatsheet.json"
-        if force_regenerate or not cs_path.exists():
-            if client_logic is None:
-                print("  [SKIP] Task Cheatsheet: client 'logic' non disponibile.")
-            else:
-                result = generate_task_output(
-                    client_logic, MODEL_LOGIC,
-                    "Cheatsheet", instructions["cheatsheet"],
-                    book_content, "json"
-                )
-                if result:
-                    if validate_json(result, "Cheatsheet"):
-                        save_file(cs_path, result, "Cheatsheet")
-                    else:
-                        broken_path = cs_path.with_suffix(".broken.json")
-                        save_file(broken_path, result, "Cheatsheet (broken)")
-                else:
-                    print("  [WARN] Cheatsheet non generata: risposta vuota o errore API.")
-        else:
-            print(f"  [SKIP] cheatsheet.json già esistente (usa --force per rigenerare).")
+            print("  [6/6] cheatsheet.json gia' presente.")
 
         print()
 
