@@ -48,7 +48,11 @@ BASE_URLS = [
     "https://www.infoq.com/java/news/",
     "https://inside.java/",
     "https://www.zeusnews.it/",
-    "https://ainews.it/ultime-notizie/"
+    "https://ainews.it/ultime-notizie/",
+    "https://developer.mozilla.org/en-US/blog/"
+    "https://developers.googleblog.com/",
+    "https://dev.java/news/",
+    "https://inside.java/"
 ]
 
 CACHE_FILE = "output/processed_urls.json"
