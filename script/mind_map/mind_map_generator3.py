@@ -1,458 +1,419 @@
 #!/usr/bin/env python3
 """
-mindmap_render.py
------------------
-Leggo un file JSON con la struttura della mappa mentale,
-genero l'HTML completo iniettando i dati nel template,
-e cattura il risultato come PNG 1080×1080 via Playwright headless.
+mind_map_generator.py  v4.0
+
+Output:
+  mind_map/<nome_json>/overview.png          — mappa globale completa
+  mind_map/<nome_json>/<01_nome_cat>.png     — un file per ogni categoria,
+                                               con il box categoria al centro
+                                               e gli item disposti intorno.
 """
 
-import argparse
-import json
 import sys
-from io import BytesIO
-from pathlib import Path
+import os
+import json
+import textwrap
+import shutil
 
-# ─── Costanti ─────────────────────────────────────────────────────────────────
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+from matplotlib.patches import FancyBboxPatch, Circle
 
-OUTPUT_SIZE = (1080, 1080)
-BG_COLOR    = (13, 13, 16)    # #0d0d10
+# =============================================================================
+# STILE
+# =============================================================================
+BG_COLOR         = "#12122a"
+ITEM_BG_COLOR    = "#1a1a38"
+ITEM_LABEL_COLOR = "#9999bb"
+CMD_TEXT_COLOR   = "#ffffff"
+CONN_COLOR       = "#3a3a6a"
+FONT             = "DejaVu Sans"
 
-# ─── Template HTML ────────────────────────────────────────────────────────────
+# =============================================================================
+# METRICHE OVERVIEW
+# Ho separato le metriche overview da quelle focus perché le due viste
+# hanno densità e proporzioni molto diverse.
+# =============================================================================
+OV_LINE_H    = 0.35   # Aumentato per dare più spazio verticale tra righe di testo
+OV_ROW_PAD   = 0.30   # Aumentato il padding tra un item e l'altro
+OV_CAT_GAP   = 0.80   # Più spazio tra le categorie
+OV_KEY_WRAP  = 14     # Più caratteri per riga
+OV_DESC_WRAP = 35     # Più caratteri per riga
+OV_CAT_BOX_W = 3.2    # Allargato significativamente (era 2.4)
+OV_CAT_BOX_H = 1.1    # Alzato leggermente (era 0.95)
+OV_PILL_W    = 2.5    # Allargata la pillola della chiave (era 1.9)
+OV_CENTER_R  = 1.6    # Cerchio centrale leggermente più grande
 
-HTML_TEMPLATE = r"""<!DOCTYPE html>
-<html lang="it">
-<head>
-  <meta charset="UTF-8" />
-  <title>Mindmap</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      /* Variabili centralizzate per i font-size */
-      --fs-page-title: 1.5rem;
-      --fs-page-subtitle: 0.78rem;
-      --fs-center-title: 0.9rem;
-      --fs-center-icon: 1.6rem;
-      --fs-hub-title: 0.95rem;
-      --fs-hub-icon: 2rem;
-      --fs-pill: 0.82rem;
-    }
+# =============================================================================
+# METRICHE FOCUS (vista singola categoria, canvas 1080×1080)
+#
+# Ho ridotto FO_LIMIT da 40 a 30: lo spazio coordinate è più piccolo,
+# quindi ogni elemento occupa una frazione maggiore del canvas →
+# font e box appaiono il 33% più grandi a parità di misura in unità.
+# 1 unit = 1080px / 30 = 36px  (era 27px con FO_LIMIT=40).
+# =============================================================================
+FO_LINE_H    = 1.20   # era 1.10 — altezza riga testo in unità coord (=43px)
+FO_ROW_PAD   = 1.30   # era 1.50 — padding verticale tra item (=47px)
+FO_KEY_WRAP  = 10     # era 13  — meno caratteri per riga (font più grande)
+FO_DESC_WRAP = 18     # era 24  — idem
+FO_CAT_BOX_W = 9.0   # era 12.0 — scalato ×0.75 per FO_LIMIT=30
+FO_CAT_BOX_H = 4.0   # era 4.5  — scalato + margine per 2-3 righe a 26pt
+FO_PILL_W    = 6.5   # era 8.5  — scalato ×0.75
+FO_DESC_W    = 9.5   # era 14.0 — scalato; right edge = 1013px (93.8%)
+FO_LIMIT     = 30.0  # era 40.0 — riduzione coordinate → tutto più grande
+FO_CENTER    = FO_LIMIT / 2  # 15.0
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+# =============================================================================
+# UTILITY CONDIVISE
+# =============================================================================
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #0d0d10;
-      color: #e8e8f0;
-      padding: 0;
-    }
-
-    #content-root {
-      display: inline-block;
-      padding: 36px 40px 36px;
-    }
-
-    .hub-card {
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center; text-align: center;
-      border-radius: 18px; border: 2px solid;
-      padding: 22px 18px 18px; width: 190px; min-height: 130px;
-      gap: 8px; flex-shrink: 0; cursor: default;
-      transition: min-height 0s;
-    }
-    .hub-card .hub-icon  { font-size: var(--fs-hub-icon); line-height: 1; display: block; }
-    .hub-card .hub-title {
-      font-family: 'Outfit', sans-serif; font-size: var(--fs-hub-title);
-      font-weight: 700; line-height: 1.3;
-    }
-
-    .hub-green  { background:linear-gradient(135deg,#1a3d2b,#1e4d32); border-color:#2d7a4f; box-shadow:0 8px 28px #2d7a4f20; }
-    .hub-green  .hub-title { color:#6ee09a; }
-    .hub-blue   { background:linear-gradient(135deg,#1a2a45,#1e3358); border-color:#3362a0; box-shadow:0 8px 28px #3362a020; }
-    .hub-blue   .hub-title { color:#7ab4f5; }
-    .hub-dark   { background:linear-gradient(135deg,#1e1e28,#252535); border-color:#8855dd; box-shadow:0 8px 28px #8855dd30; }
-    .hub-dark   .hub-title { color:#cc99ff; }
-    .hub-orange { background:linear-gradient(135deg,#3a2010,#4a2a14); border-color:#c97e28; box-shadow:0 8px 28px #c97e2820; }
-    .hub-orange .hub-title { color:#f5b55a; }
-    .hub-purple { background:linear-gradient(135deg,#2a1a40,#33204e); border-color:#9966cc; box-shadow:0 8px 28px #9966cc20; }
-    .hub-purple .hub-title { color:#cc99ff; }
-    .hub-teal   { background:linear-gradient(135deg,#0e2e30,#133840); border-color:#2a9090; box-shadow:0 8px 28px #2a909020; }
-    .hub-teal   .hub-title { color:#66d4d4; }
-
-    .hub-center {
-      width: 150px; min-height: 150px; border-radius: 50%;
-      border: 3px solid #8855dd;
-      background: radial-gradient(ellipse at 40% 35%, #2a1a40, #1a1028);
-      box-shadow: 0 0 0 4px #8855dd35, 0 0 50px #8855dd45;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      text-align: center; padding: 20px; flex-shrink: 0;
-    }
-    .hub-center .center-title {
-      font-family: 'Outfit', sans-serif; font-size: var(--fs-center-title);
-      font-weight: 800; color: #cc99ff; line-height: 1.3; white-space: pre-line;
-    }
-    .hub-center .center-icon { font-size: var(--fs-center-icon); margin-bottom: 8px; display: block; }
-
-    .pill {
-      display: inline-flex; align-items: center;
-      border-radius: 9px; border: 1px solid; padding: 7px 16px;
-      font-size: var(--fs-pill); font-weight: 600; white-space: nowrap; cursor: default;
-    }
-    .pill-green  { background:#0e2618; border-color:#2d7a4f; color:#6ee09a; }
-    .pill-blue   { background:#0e1a2e; border-color:#3362a0; color:#7ab4f5; }
-    .pill-dark   { background:#16101e; border-color:#6644bb; color:#cc99ff; }
-    .pill-orange { background:#1e1000; border-color:#996622; color:#f5b55a; }
-    .pill-purple { background:#180e28; border-color:#7755aa; color:#cc99ff; }
-    .pill-teal   { background:#071e1e; border-color:#2a8080; color:#66d4d4; }
-
-    .map-section { display:flex; align-items:center; gap:28px; }
-    .section-left .pills-col  { display:flex; flex-direction:column; align-items:flex-end;   gap:7px; }
-    .section-right .pills-col { display:flex; flex-direction:column; align-items:flex-start; gap:7px; }
-
-    .map-wrapper { position: relative; }
-
-    #map-svg {
-      position:absolute; top:0; left:0; width:100%; height:100%;
-      pointer-events:none; z-index:0; overflow:visible;
-    }
-    .mindmap {
-      display:grid; grid-template-columns:1fr auto 1fr;
-      column-gap:56px; row-gap:52px;
-      align-items:center; justify-items:center;
-      position:relative; z-index:1;
-    }
-    .cell-left   { grid-column:1; justify-self:end; }
-    .cell-center { grid-column:2; }
-    .cell-right  { grid-column:3; justify-self:start; }
-
-    .page-header { text-align:center; margin-bottom:36px; }
-    .page-header h1 {
-      font-family:'Outfit', sans-serif; font-size: var(--fs-page-title);
-      font-weight:700; color:#f0ede8; margin-bottom:6px;
-    }
-    .page-header p { font-size: var(--fs-page-subtitle); color:#555; }
-  </style>
-</head>
-<body>
-  <script id="map-data" type="application/json">
-%%MAP_DATA_JSON%%
-  </script>
-
-  <div id="content-root">
-    <div class="page-header">
-      <h1 id="page-title"></h1>
-      <p>Mappa mentale generata automaticamente</p>
-    </div>
-    <div class="map-wrapper" id="map-wrapper">
-      <svg id="map-svg" aria-hidden="true"></svg>
-      <div class="mindmap" id="mindmap"></div>
-    </div>
-  </div>
-
-  <script>
-    var STYLE_COLOR = {
-      'hub-green':'#2d7a4f','hub-blue':'#3362a0','hub-dark':'#8855dd',
-      'hub-orange':'#c97e28','hub-purple':'#9966cc','hub-teal':'#2a9090',
-    };
-    var PILL_CLASS = {
-      'hub-green':'pill-green','hub-blue':'pill-blue','hub-dark':'pill-dark',
-      'hub-orange':'pill-orange','hub-purple':'pill-purple','hub-teal':'pill-teal',
-    };
-    var LEFT_ICONS  = ['🤖','🏆','📊','🔬','🧠','💡'];
-    var RIGHT_ICONS = ['🌿','🚀','🌐','⚙️','📡','🔮'];
-
-    var data    = JSON.parse(document.getElementById('map-data').textContent);
-    var mindmap = document.getElementById('mindmap');
-    document.getElementById('page-title').textContent = data.title.replace('\n',' — ');
-
-    function makePill(item, hubStyle) {
-      var p = document.createElement('div');
-      p.className = 'pill ' + (PILL_CLASS[hubStyle] || 'pill-dark');
-      p.textContent = item[0];
-      return p;
-    }
-    function makeHub(section, side, idx) {
-      var h = document.createElement('div');
-      h.className = 'hub-card ' + section.style;
-      h.id = 'hub-' + side + '-' + idx;
-      var ic = document.createElement('span'); ic.className = 'hub-icon';
-      ic.textContent = side === 'left' ? (LEFT_ICONS[idx]||'●') : (RIGHT_ICONS[idx]||'●');
-      var ti = document.createElement('span'); ti.className = 'hub-title';
-      ti.textContent = section.name;
-      h.appendChild(ic); h.appendChild(ti);
-      return h;
-    }
-    function makeSection(section, side, idx) {
-      var w = document.createElement('div');
-      w.className = 'map-section section-' + side;
-      var pc = document.createElement('div'); pc.className = 'pills-col';
-      section.items.forEach(function(it){ pc.appendChild(makePill(it, section.style)); });
-      var hub = makeHub(section, side, idx);
-      if (side === 'left') { w.appendChild(pc); w.appendChild(hub); }
-      else                 { w.appendChild(hub); w.appendChild(pc); }
-      return w;
-    }
-
-    var rows = Math.max(data.left.length, data.right.length);
-    var centerRow = Math.floor(rows / 2);
-
-    for (var r = 0; r < rows; r++) {
-      var cL = document.createElement('div');
-      if (data.left[r]) {
-        cL.className = 'cell-left'; cL.style.gridRow = r+1;
-        cL.appendChild(makeSection(data.left[r],'left',r));
-      } else { cL.style.gridColumn='1'; cL.style.gridRow=r+1; }
-      mindmap.appendChild(cL);
-
-      if (r === centerRow) {
-        var cc = document.createElement('div');
-        cc.className = 'cell-center'; cc.style.gridRow = r+1;
-        var ch = document.createElement('div');
-        ch.className = 'hub-center'; ch.id = 'hub-center';
-        var ci = document.createElement('span'); ci.className='center-icon'; ci.textContent='⚡';
-        var ct = document.createElement('span'); ct.className='center-title'; ct.textContent=data.title;
-        ch.appendChild(ci); ch.appendChild(ct); cc.appendChild(ch);
-        mindmap.appendChild(cc);
-      } else {
-        var sp = document.createElement('div');
-        sp.style.gridColumn='2'; sp.style.gridRow=r+1;
-        mindmap.appendChild(sp);
-      }
-
-      var cR = document.createElement('div');
-      if (data.right[r]) {
-        cR.className = 'cell-right'; cR.style.gridRow = r+1;
-        cR.appendChild(makeSection(data.right[r],'right',r));
-      } else { cR.style.gridColumn='3'; cR.style.gridRow=r+1; }
-      mindmap.appendChild(cR);
-    }
-
-    function squarify() {
-      var root = document.getElementById('content-root');
-      var W = root.offsetWidth;
-      var H = root.offsetHeight;
-      var delta = W - H;
-      if (delta <= 0) return;
-      var numRows = Math.max(data.left.length, data.right.length);
-      var numGaps = numRows - 1;
-      if (numGaps > 0) {
-        var mindmapEl   = document.querySelector('.mindmap');
-        var currentGap = parseFloat(getComputedStyle(mindmapEl).rowGap) || 52;
-        var newGap      = currentGap + (delta * 0.4 / numGaps);
-        mindmapEl.style.rowGap = newGap + 'px';
-      }
-      var extraHub = delta * 0.6 / numRows;
-      document.querySelectorAll('.hub-card').forEach(function(hub) {
-        var curH = hub.offsetHeight;
-        hub.style.minHeight = (curH + extraHub) + 'px';
-      });
-      var centerHub = document.getElementById('hub-center');
-      if (centerHub) {
-        var curSize = centerHub.offsetWidth;
-        var newSize = curSize + extraHub;
-        centerHub.style.width     = newSize + 'px';
-        centerHub.style.minHeight = newSize + 'px';
-      }
-    }
-
-    var svg     = document.getElementById('map-svg');
-    var wrapper = document.getElementById('map-wrapper');
-
-    function rel(el) {
-      var wr=wrapper.getBoundingClientRect(), er=el.getBoundingClientRect();
-      return { cx:er.left-wr.left+er.width/2,  cy:er.top-wr.top+er.height/2,
-               left:er.left-wr.left,            right:er.right-wr.left,
-               my:er.top-wr.top+er.height/2 };
-    }
-    function addPath(d,col,dash,w,op){
-      var p=document.createElementNS('http://www.w3.org/2000/svg','path');
-      p.setAttribute('d',d); p.setAttribute('stroke',col);
-      p.setAttribute('stroke-width',String(w)); p.setAttribute('stroke-dasharray',dash);
-      p.setAttribute('fill','none'); p.setAttribute('opacity',String(op));
-      svg.appendChild(p);
-    }
-    function buildLines(){
-      while(svg.firstChild) svg.removeChild(svg.firstChild);
-      var W=wrapper.offsetWidth, H=wrapper.offsetHeight;
-      svg.setAttribute('viewBox','0 0 '+W+' '+H);
-      svg.setAttribute('width',W); svg.setAttribute('height',H);
-      var C=rel(document.getElementById('hub-center'));
-      ['left','right'].forEach(function(side){
-        data[side].forEach(function(sec,i){
-          var hub=document.getElementById('hub-'+side+'-'+i); if(!hub) return;
-          var col=STYLE_COLOR[sec.style]||'#fff'; // <-- Fix: aggiunti apici
-          var P=rel(hub), mx=(P.cx+C.cx)/2;
-          addPath('M '+P.cx+' '+P.cy+' C '+mx+' '+P.cy+' '+mx+' '+C.cy+' '+C.cx+' '+C.cy,
-                  col,'5,8',1.5,0.4);
-        });
-      });
-      document.querySelectorAll('.map-section').forEach(function(sec){
-        var hub=sec.querySelector('.hub-card'); if(!hub) return;
-        var col=STYLE_COLOR[Array.from(hub.classList).find(function(c){return STYLE_COLOR[c];})]||'#fff';
-        var isLeft = hub.previousElementSibling !== null &&
-                     hub.previousElementSibling.classList.contains('pills-col');
-        var HH=rel(hub);
-        sec.querySelectorAll('.pill').forEach(function(pill){
-          var PP=rel(pill);
-          addPath('M '+(isLeft?PP.right:PP.left)+' '+PP.my+' L '+(isLeft?HH.left:HH.right)+' '+HH.my,
-                  col,'3,5',1,0.35);
-        });
-      });
-    }
-
-    window.__mindmapReady = false;
-    function init() {
-      squarify();
-      requestAnimationFrame(function(){
-        buildLines();
-        requestAnimationFrame(function(){
-          buildLines();
-          window.__mindmapReady = true;
-        });
-      });
-    }
-    if (document.fonts && document.fonts.ready) { document.fonts.ready.then(init); }
-    else { setTimeout(init, 500); }
-  </script>
-</body>
-</html>
-"""
+def _darken(hex_color: str, factor: float = 0.65) -> str:
+    """Scurisco un colore hex per ricavare il colore bordo dei box."""
+    h = hex_color.lstrip("#")
+    r, g, b = int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
+    return f"#{int(r*factor):02x}{int(g*factor):02x}{int(b*factor):02x}"
 
 
-# ─── Validazione ──────────────────────────────────────────────────────────────
-
-def validate_map_data(data: dict) -> None:
-    missing = {"title", "left", "right"} - data.keys()
-    if missing:
-        raise ValueError(f"Chiavi mancanti nel JSON: {missing}")
-    for side in ("left", "right"):
-        if not isinstance(data[side], list):
-            raise ValueError(f"'{side}' deve essere una lista.")
-        for i, s in enumerate(data[side]):
-            if not all(k in s for k in ("name", "style", "items")):
-                raise ValueError(f"'{side}[{i}]' mancante di 'name', 'style' o 'items'.")
+def _wrap(text: str, width: int) -> list:
+    return textwrap.wrap(text, width=width) or [text]
 
 
-# ─── Generazione HTML ─────────────────────────────────────────────────────────
+def _conn(ax, x1, y1, x2, y2, lw=0.75):
+    """Disegno una linea tratteggiata di connessione."""
+    ax.plot([x1, x2], [y1, y2],
+            color=CONN_COLOR, linewidth=lw, linestyle="--", zorder=1)
 
-def generate_html(data: dict) -> str:
-    json_str = json.dumps(data, ensure_ascii=False, indent=2)
-    return HTML_TEMPLATE.replace("%%MAP_DATA_JSON%%", json_str)
+
+# =============================================================================
+# OVERVIEW — misuratori di altezza
+# =============================================================================
+
+def _ov_item_h(key: str, desc: str) -> float:
+    n = max(len(_wrap(key, OV_KEY_WRAP)), len(_wrap(desc, OV_DESC_WRAP)))
+    return n * OV_LINE_H + OV_ROW_PAD
 
 
-# ─── Screenshot + resize 1080×1080 ───────────────────────────────────────────
+def _ov_cat_h(cat: dict) -> float:
+    return sum(_ov_item_h(k, d) for k, d in cat.get("items", []))
 
-def render_to_png(html: str, output_path: Path, viewport_width: int) -> None:
+
+# =============================================================================
+# OVERVIEW — motore di layout
+# =============================================================================
+
+def _ov_scale(categories: list, canvas_h: float) -> float:
+    """Calcolo la scala che fa stare tutte le categorie nel canvas."""
+    total = sum(_ov_cat_h(c) for c in categories)
+    total += OV_CAT_GAP * max(0, len(categories) - 1)
+    return min(1.0, (canvas_h * 0.95) / total) if total > 0 else 1.0
+
+
+def _ov_layout_tops(categories: list, canvas_cy: float, scale: float) -> list:
     """
-    Pipeline di rendering:
-
-    1. Playwright apre la pagina e aspetta window.__mindmapReady.
-       A quel punto squarify() ha già modificato il DOM e il layout
-       è quadrato (W ≈ H).
-
-    2. element.screenshot() cattura #content-root al millimetro
-       con device_scale_factor=2 (HiDPI).
-
-    3. Pillow fa il resize a 1080×1080. Poiché il contenuto è già
-       circa quadrato, lo stretch non uniforme residuo è impercettibile
-       (< 2% in ciascun asse per la piccola differenza rimanente dopo
-       il layout recalc del browser).
-
-    Ho scelto di NON fare letterbox qui: l'obiettivo è riempire
-    interamente il quadrato, non preservare l'aspect ratio esatto.
+    Calcolo i bordi superiori di ogni categoria centrando il blocco intero
+    rispetto a canvas_cy, così il contenuto è sempre verticalmente centrato.
     """
-    from playwright.sync_api import sync_playwright
-    from PIL import Image
-
-    RENDER_SCALE = 2
-
-    with sync_playwright() as pw:
-        browser = pw.chromium.launch(headless=True)
-        context = browser.new_context(
-            viewport={"width": viewport_width, "height": 1400},
-            device_scale_factor=RENDER_SCALE,
-        )
-        page = context.new_page()
-        page.goto("about:blank")
-        page.set_content(html, wait_until="domcontentloaded")
-
-        try:
-            page.wait_for_function("document.fonts.status === 'loaded'", timeout=10_000)
-        except Exception:
-            pass
-
-        page.wait_for_function("window.__mindmapReady === true", timeout=15_000)
-        page.wait_for_timeout(400)  # margine per CSS compositing (box-shadow, gradienti)
-
-        raw_bytes = page.locator("#content-root").screenshot(type="png")
-
-        context.close()
-        browser.close()
-
-    # ── Resize diretto a 1080×1080 ────────────────────────────────────────
-    # squarify() ha già reso il contenuto ~quadrato in JS, quindi questo
-    # resize è quasi uniforme. LANCZOS è il kernel migliore per downscale.
-    content_img = Image.open(BytesIO(raw_bytes)).convert("RGB")
-    final = content_img.resize(OUTPUT_SIZE, Image.LANCZOS)
-    final.save(str(output_path), "PNG", optimize=True)
-
-
-# ─── Entry point ──────────────────────────────────────────────────────────────
-
-def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Genera un PNG 1080×1080 di una mappa mentale da un file JSON."
+    total_scaled = (
+        sum(_ov_cat_h(c) for c in categories) * scale
+        + OV_CAT_GAP * scale * max(0, len(categories) - 1)
     )
-    parser.add_argument("input_json")
-    parser.add_argument("output_png", nargs="?", default=None)
-    parser.add_argument("--width", type=int, default=1000,
-                        help="Larghezza viewport (default: 1000). "
-                             "Valori più bassi = elementi più grandi nell'output.")
-    parser.add_argument("--keep-html", action="store_true",
-                        help="Salva anche l'HTML generato accanto al PNG.")
-    args = parser.parse_args()
+    y = canvas_cy + total_scaled / 2
+    tops = []
+    for cat in categories:
+        tops.append(y)
+        y -= _ov_cat_h(cat) * scale + OV_CAT_GAP * scale
+    return tops
 
-    input_path = Path(args.input_json)
-    if not input_path.exists():
-        print(f"[ERRORE] File non trovato: {input_path}", file=sys.stderr)
+
+# =============================================================================
+# OVERVIEW — disegno
+# =============================================================================
+
+def _ov_center_node(ax, cx, cy, title):
+    ax.add_patch(Circle((cx, cy), OV_CENTER_R, color="#1e1e4a", zorder=4))
+    ax.add_patch(Circle((cx, cy), OV_CENTER_R, fill=False,
+                         edgecolor="#7777ff", linewidth=2.5, zorder=5))
+    lines = title.split("\n")
+    lh    = 0.42   # era 0.38 — interlinea adeguata a font 12pt
+    y0    = cy + lh * (len(lines) - 1) / 2
+    for i, line in enumerate(lines):
+        ax.text(cx, y0 - i * lh, line, ha="center", va="center",
+                fontsize=12,          # era 10
+                color="white", fontweight="bold",
+                zorder=6, fontfamily=FONT)
+
+
+def _ov_cat_box(ax, cx, cy, label, color):
+    ax.add_patch(FancyBboxPatch(
+        (cx - OV_CAT_BOX_W/2, cy - OV_CAT_BOX_H/2), OV_CAT_BOX_W, OV_CAT_BOX_H,
+        boxstyle="round,pad=0.08",
+        facecolor=color, edgecolor=_darken(color), linewidth=1.5, zorder=3
+    ))
+    ax.text(cx, cy, "\n".join(_wrap(label, 11)),  # era 12
+            ha="center", va="center",
+            fontsize=9.5,             # era 7.5
+            color="white", fontweight="bold",
+            zorder=4, fontfamily=FONT, linespacing=1.3)
+
+
+def _ov_item_row(ax, y_top, key, desc, color,
+                 side, x_cat, x_key, x_desc, scale) -> float:
+    """
+    Disegno una riga item con altezza variabile (dipende dal wrapping).
+    Restituisco l'altezza consumata per aggiornare il cursore verticale.
+    """
+    key_lines  = _wrap(key,  OV_KEY_WRAP)
+    desc_lines = _wrap(desc, OV_DESC_WRAP)
+    n_lines    = max(len(key_lines), len(desc_lines))
+    row_h      = (n_lines * OV_LINE_H + OV_ROW_PAD) * scale
+    yc         = y_top - row_h / 2
+
+    pill_h = len(key_lines) * OV_LINE_H * scale + 0.12
+    ax.add_patch(FancyBboxPatch(
+        (x_key - OV_PILL_W/2, yc - pill_h/2), OV_PILL_W, pill_h,
+        boxstyle="round,pad=0.04",
+        facecolor=ITEM_BG_COLOR, edgecolor=color, linewidth=0.9, zorder=3
+    ))
+    ax.text(x_key, yc, "\n".join(key_lines),
+            ha="center", va="center",
+            fontsize=8.0,             # era 5.8
+            color=CMD_TEXT_COLOR, fontfamily=FONT, zorder=4, linespacing=1.2)
+
+    ha = "right" if side == "left" else "left"
+    ax.text(x_desc, yc, "\n".join(desc_lines),
+            ha=ha, va="center",
+            fontsize=8.0,             # era 5.8
+            color=ITEM_LABEL_COLOR, fontfamily=FONT, zorder=4, linespacing=1.2)
+
+    pill_edge_x = x_key + (OV_PILL_W/2 if side == "right" else -OV_PILL_W/2)
+    cat_edge_x  = x_cat + (-OV_CAT_BOX_W/2 if side == "left" else OV_CAT_BOX_W/2)
+    _conn(ax, cat_edge_x, yc, pill_edge_x, yc)
+    return row_h
+
+
+def _ov_render_side(ax, categories, tops, scale, side, cx, cy):
+    """Renderizza tutte le categorie di un lato (left o right)."""
+    sign   = -1 if side == "left" else 1
+    x_cat  = cx + sign * 5.5  # Spostato verso l'esterno (era 4.6)
+    x_key  = cx + sign * 8.8  # Spostato verso l'esterno (era 7.1)
+    x_desc = cx + sign * 11.0 # Spostato verso l'esterno (era 8.9)
+
+    for cat, y_top in zip(categories, tops):
+        color        = cat["color"]
+        cat_h_scaled = _ov_cat_h(cat) * scale
+        cat_cy       = y_top - cat_h_scaled / 2
+
+        center_edge  = cx + sign * OV_CENTER_R
+        cat_edge     = x_cat + (-OV_CAT_BOX_W/2 if side == "right" else OV_CAT_BOX_W/2)
+        _conn(ax, center_edge, cy, cat_edge, cat_cy)
+
+        _ov_cat_box(ax, x_cat, cat_cy, cat["name"], color)
+
+        y_cursor = y_top
+        for key, desc in cat.get("items", []):
+            consumed = _ov_item_row(
+                ax, y_cursor, key, desc, color,
+                side, x_cat, x_key, x_desc, scale
+            )
+            y_cursor -= consumed
+
+
+def render_overview(data: dict, output_path: str, dpi: int = 150):
+    """
+    Genera la mappa globale completa con tutte le categorie su due colonne.
+    Ho scelto 30x20 pollici come proporzione panoramica standard:
+    bilancia bene testo e spazio negativo su tutti i dataset testati.
+    """
+    fig_w, fig_h = 30, 20
+    fig, ax = plt.subplots(figsize=(fig_w, fig_h))
+    fig.patch.set_facecolor(BG_COLOR)
+    ax.set_facecolor(BG_COLOR)
+    ax.set_xlim(0, fig_w)
+    ax.set_ylim(0, fig_h)
+    ax.axis("off")
+
+    cx, cy    = fig_w / 2, fig_h / 2
+    canvas_h  = fig_h - 1.6
+    left_cats  = data.get("left",  [])
+    right_cats = data.get("right", [])
+
+    # Ho preso il minimo tra i due lati per avere la stessa densità visiva
+    scale = min(_ov_scale(left_cats,  canvas_h),
+                _ov_scale(right_cats, canvas_h))
+
+    _ov_center_node(ax, cx, cy, data["title"])
+    _ov_render_side(ax, left_cats,  _ov_layout_tops(left_cats,  cy, scale), scale, "left",  cx, cy)
+    _ov_render_side(ax, right_cats, _ov_layout_tops(right_cats, cy, scale), scale, "right", cx, cy)
+
+    ax.text(0.5, fig_h - 0.25, data["title"].replace("\n", " "),
+            fontsize=14, color="white", fontweight="bold",
+            va="top", fontfamily=FONT)
+
+    plt.savefig(output_path, dpi=dpi, bbox_inches="tight",
+                facecolor=BG_COLOR, pad_inches=0.2)
+    plt.close()
+    print(f"  ✓ overview: {output_path}")
+
+
+# =============================================================================
+# FOCUS — vista singola categoria (canvas quadrato 1080×1080)
+#
+# Layout "lisca di pesce": box categoria a sinistra-centro, item in colonna
+# a destra. Con FO_LIMIT=30 ogni unità vale 36px → font e box 33% più grandi
+# rispetto alla versione precedente (FO_LIMIT=40 → 27px/unit).
+#
+# Posizionamento orizzontale (px):
+#   cat box : [  36,  360]   (324px)
+#   pill    : [ 410,  644]   (234px, gap 50px dal cat box)
+#   desc    : [ 671, 1013]   (342px, gap 27px dalla pill)
+# =============================================================================
+
+def _fo_item_h(key: str, desc: str) -> float:
+    n = max(len(_wrap(key, FO_KEY_WRAP)), len(_wrap(desc, FO_DESC_WRAP)))
+    return n * FO_LINE_H + FO_ROW_PAD
+
+
+def render_focus(cat: dict, output_path: str, dpi: int = 100):
+    """
+    Genera il PNG 1080×1080 per una singola categoria.
+    Font sizes in matplotlib points (1pt = dpi/72 px):
+      - categoria: 26pt = 36px  (era 18pt = 25px)
+      - key pill : 20pt = 28px  (era 13pt = 18px)
+      - desc     : 17pt = 24px  (era 12pt = 17px)
+    """
+    IMG = 10.8   # pollici; 10.8 * 100dpi = 1080px
+    fig, ax = plt.subplots(figsize=(IMG, IMG))
+    fig.patch.set_facecolor(BG_COLOR)
+    ax.set_facecolor(BG_COLOR)
+    ax.set_xlim(0, FO_LIMIT)
+    ax.set_ylim(0, FO_LIMIT)
+    ax.axis("off")
+
+    color = cat.get("color", "#555577")
+    items = cat.get("items", [])
+    name  = cat.get("name", "")
+
+    total_items_h = sum(_fo_item_h(k, d) for k, d in items)
+    available_h   = FO_LIMIT - 4.0   # margine top+bottom = 4 unità (144px)
+    scale = min(1.0, available_h / total_items_h) if total_items_h > 0 else 1.0
+
+    # -------------------------------------------------------------------
+    # Box categoria
+    # cx_cat = 5.5 → left edge = 1.0 unit = 36px (margine sinistro 36px)
+    # Ho spostato da 7.5 a 5.5 per compensare la riduzione di FO_LIMIT.
+    # -------------------------------------------------------------------
+    cx_cat = 5.5
+    cy_cat = FO_CENTER
+
+    ax.add_patch(FancyBboxPatch(
+        (cx_cat - FO_CAT_BOX_W/2, cy_cat - FO_CAT_BOX_H/2),
+        FO_CAT_BOX_W, FO_CAT_BOX_H,
+        boxstyle="round,pad=0.20",
+        facecolor=color, edgecolor=_darken(color), linewidth=2.5, zorder=3
+    ))
+    ax.text(cx_cat, cy_cat, "\n".join(_wrap(name, 12)),
+            ha="center", va="center",
+            fontsize=26,          # era 18 — +44%, 36px a dpi=100
+            color="white", fontweight="bold",
+            fontfamily=FONT, zorder=4, linespacing=1.3)
+
+    if not items:
+        plt.savefig(output_path, dpi=dpi, facecolor=BG_COLOR)
+        plt.close()
+        return
+
+    # -------------------------------------------------------------------
+    # Posizioni orizzontali pill e desc (in unità FO_LIMIT=30).
+    # Ho calcolato in pixel e convertito per garantire assenza di clipping:
+    #   x_pill center = 14.65u → pill span [411px, 645px]
+    #   x_desc center = 23.4u  → desc span [671px, 1013px]
+    # -------------------------------------------------------------------
+    x_pill = cx_cat + FO_CAT_BOX_W/2 + 1.4  + FO_PILL_W/2   # 14.65u
+    x_desc = x_pill + FO_PILL_W/2    + 0.75 + FO_DESC_W/2   # 23.4u
+
+    y_cursor = cy_cat + (total_items_h * scale) / 2
+
+    for key, desc in items:
+        key_lines  = _wrap(key,  FO_KEY_WRAP)
+        desc_lines = _wrap(desc, FO_DESC_WRAP)
+        n_lines    = max(len(key_lines), len(desc_lines))
+        row_h      = (n_lines * FO_LINE_H + FO_ROW_PAD) * scale
+        yc         = y_cursor - row_h / 2
+
+        # Pill chiave
+        # Ho aumentato il pad interno da 0.35 a 0.45 per dare respiro
+        # al testo più grande.
+        pill_h = len(key_lines) * FO_LINE_H * scale + 0.45
+        ax.add_patch(FancyBboxPatch(
+            (x_pill - FO_PILL_W/2, yc - pill_h/2), FO_PILL_W, pill_h,
+            boxstyle="round,pad=0.12",
+            facecolor=ITEM_BG_COLOR, edgecolor=color, linewidth=1.8, zorder=3
+        ))
+        ax.text(x_pill, yc, "\n".join(key_lines),
+                ha="center", va="center",
+                fontsize=20,          # era 13 — +54%, 28px a dpi=100
+                color=CMD_TEXT_COLOR, fontfamily=FONT, zorder=4, linespacing=1.2)
+
+        # Box descrizione
+        desc_h = len(desc_lines) * FO_LINE_H * scale + 0.45
+        ax.add_patch(FancyBboxPatch(
+            (x_desc - FO_DESC_W/2, yc - desc_h/2), FO_DESC_W, desc_h,
+            boxstyle="round,pad=0.12",
+            facecolor=ITEM_BG_COLOR, edgecolor=_darken(color, 0.85),
+            linewidth=1.0, zorder=3
+        ))
+        ax.text(x_desc, yc, "\n".join(desc_lines),
+                ha="center", va="center",
+                fontsize=17,          # era 12 — +42%, 24px a dpi=100
+                color=ITEM_LABEL_COLOR, fontfamily=FONT, zorder=4, linespacing=1.2)
+
+        # Connettori dashed
+        _conn(ax, cx_cat + FO_CAT_BOX_W/2, yc, x_pill - FO_PILL_W/2, yc, lw=1.3)
+        _conn(ax, x_pill + FO_PILL_W/2,    yc, x_desc - FO_DESC_W/2, yc, lw=1.0)
+
+        y_cursor -= row_h
+
+    plt.savefig(output_path, dpi=dpi, facecolor=BG_COLOR)
+    plt.close()
+
+
+# =============================================================================
+# MAIN
+# =============================================================================
+
+def main():
+    if len(sys.argv) < 2:
+        print("Uso: python mind_map_generator.py <file.json>")
         sys.exit(1)
 
-    try:
-        with open(input_path, encoding="utf-8") as f:
-            data = json.load(f)
-    except json.JSONDecodeError as e:
-        print(f"[ERRORE] JSON non valido: {e}", file=sys.stderr)
-        sys.exit(1)
+    input_file  = sys.argv[1]
+    json_name   = os.path.splitext(os.path.basename(input_file))[0]
 
-    try:
-        validate_map_data(data)
-    except ValueError as e:
-        print(f"[ERRORE] Struttura JSON non valida: {e}", file=sys.stderr)
-        sys.exit(1)
+    # Ho costruito il percorso di output come _output/<nome_json>/
+    out_dir = os.path.join("_output", json_name)
+    if os.path.exists(out_dir):
+        shutil.rmtree(out_dir)
+    os.makedirs(out_dir)
 
-    output_path = Path(args.output_png) if args.output_png else input_path.with_suffix(".png")
+    with open(input_file, encoding="utf-8-sig") as f:
+        data = json.load(f)
 
-    print(f"[1/3] Genero HTML da: {input_path}")
-    html = generate_html(data)
+    print(f"🚀 Generazione in '{out_dir}/'")
 
-    if args.keep_html:
-        html_path = output_path.with_suffix(".html")
-        html_path.write_text(html, encoding="utf-8")
-        print(f"      HTML salvato in: {html_path}")
+    # 1. Mappa globale
+    render_overview(data, os.path.join(out_dir, "overview.png"))
 
-    print(f"[2/3] Rendering Chromium headless + squarify + resize {OUTPUT_SIZE[0]}×{OUTPUT_SIZE[1]}px...")
-    try:
-        render_to_png(html, output_path, viewport_width=args.width)
-    except Exception as e:
-        print(f"[ERRORE] Render fallito: {e}", file=sys.stderr)
-        sys.exit(1)
+    # 2. Un PNG per ogni categoria (left + right in ordine)
+    all_cats = data.get("left", []) + data.get("right", [])
+    for i, cat in enumerate(all_cats, start=1):
+        safe_name = cat["name"].lower().replace(" ", "_").replace("&", "e")
+        filename  = f"{i:02d}_{safe_name}.png"
+        out_path  = os.path.join(out_dir, filename)
+        render_focus(cat, out_path)
+        print(f"  ✓ focus {i:02d}: {cat['name']}")
 
-    print(f"[3/3] PNG salvato in: {output_path}")
-    size_kb = output_path.stat().st_size // 1024
-    print(f"      Dimensione: {size_kb} KB  |  Risoluzione: {OUTPUT_SIZE[0]}×{OUTPUT_SIZE[1]} px")
+    print(f"\n✨ Completato — {1 + len(all_cats)} file in '{out_dir}/'")
 
 
 if __name__ == "__main__":

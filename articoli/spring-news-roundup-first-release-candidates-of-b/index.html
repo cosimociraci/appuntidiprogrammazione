@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aggiornamenti tecnici del mio stack Spring — DevLog</title>
+    <meta name="description" content="Il post descrive i primi release candidate di varie librerie Spring come Boot, Security, Integration, Modulith, AMQP, Kafka e Vault.
+">
+    <link rel="stylesheet" href="/appuntidiprogrammazione/assets/css/style.css">
+
+    <script>
+        /*
+         * Applico il tema PRIMA del rendering per evitare il flash di contenuto
+         * (FOUC). Lo script è inline e bloccante di proposito: deve girare
+         * prima che il browser disegni qualsiasi elemento.
+         */
+        (function() {
+            var saved = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', saved);
+        })();
+    </script>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="logo" onclick="window.location.href='/appuntidiprogrammazione/'">
+            APPUNTI DI <span>PROGRAMMAZIONE</span>
+        </div>
+
+        <!-- 
+            Il pulsante aggiorna l'attributo data-theme sull'<html> e
+            persiste la scelta nel localStorage per le sessioni future.
+        -->
+        <button onclick="toggleTheme()" class="theme-toggle" aria-label="Cambia tema">🌓</button>
+    </header>
+
+    <!--
+    Layout post: struttura a due colonne.
+    - Sinistra (post-content): breadcrumb → tags → link PDF → link fonte → articolo MD
+    - Destra (post-sidebar): tags argomento + libro consigliato
+    
+    Ordine DOM: post-content prima, post-sidebar dopo.
+    Grid-template-areas in CSS li posiziona visivamente:
+    "content sidebar" su desktop, stacked su mobile.
+-->
+<div class="post-container">
+    <!-- COLONNA SINISTRA: contenuto principale -->
+    <main class="post-content">
+        <!-- Breadcrumb: navigazione verso la home -->
+        <nav class="post-breadcrumb" aria-label="Breadcrumb">
+            <a href="/appuntidiprogrammazione/">Appunti di Programmazione</a>
+            <span class="separator" aria-hidden="true">/</span>
+            <span>Aggiornamenti tecnici del mio stack Spring</span>
+        </nav>
+        <!-- Tags legati all'articolo -->
+        
+        <div class="post-tags-header" aria-label="Argomenti">
+            
+                <span class="post-tag-chip">spring</span>
+            
+                <span class="post-tag-chip">boot</span>
+            
+                <span class="post-tag-chip">security</span>
+            
+                <span class="post-tag-chip">integration</span>
+            
+                <span class="post-tag-chip">modulith</span>
+            
+        </div>
+        
+        <!-- Link al/ai PDF allegati all'articolo -->
+        
+        <!-- Corpo dell'articolo renderizzato da Kramdown -->
+        <article class="post-article-body">
+            <h2 id="aggiornamenti-tecnici-del-mio-stack-spring-dopo-l18-aprile-2026">Aggiornamenti tecnici del mio stack Spring dopo l’18 Aprile 2026</h2>
+
+<p>Ho assistito ad una serie di aggiornamenti interessanti nel mio stack Spring quest’ultima settimana. Ho visto il rilascio dei primi candidati di versione per Boot, Security, Integration, Modulith, AMQP, Kafka e Vault.</p>
+
+<h2 id="spring-boot-410-rc-primo-release-candidate">Spring Boot 4.1.0 RC (Primo Release Candidate)</h2>
+
+<p>L’ultima versione candidate di Spring Boot porta correzioni dei bug, migliorie della documentazione, aggiornamenti delle dipendenze e nuove caratteristiche come la supporta per il protocollo OpenTelemetry Protocol (OTLP) SDK esportatore environment variables, oltre alla classe <code class="language-plaintext highlighter-rouge">Spring Framework LazyConnectionDataSourceProxy</code> per un migliore gestione delle transazioni. <a href="URL_NOTE_DI_RILASCIO">Altre informazioni nel dettaglio sulle note di rilascio</a>.</p>
+
+<h2 id="spring-security-710-rc-primo-release-candidate">Spring Security 7.1.0 RC (Primo Release Candidate)</h2>
+
+<p>Il primo release candidate di Spring Security include correzioni dei bug, aggiornamenti delle dipendenze e nuove caratteristiche come un metodo <code class="language-plaintext highlighter-rouge">anyOf()</code> nella classe <code class="language-plaintext highlighter-rouge">AllRequiredFactorsAuthorizationManager</code>, che concede l’accesso ad una risorsa tramite l’interfaccia <code class="language-plaintext highlighter-rouge">AuthorizationManager</code>. Inoltre, supporta il filtro servlet <code class="language-plaintext highlighter-rouge">PreFlightRequestFilter</code> di nuova generazione che gestisce le richieste pre-flight. <a href="URL_NOTE_DI_RILASCIO">Altre informazioni sulle note di rilascio</a>.</p>
+
+<h2 id="spring-session-410-rc-primo-release-candidate">Spring Session 4.1.0 RC (Primo Release Candidate)</h2>
+
+<p>Il primo release candidate di Spring Session fornisce migliorie alla documentazione per riflettere la compatibilità con Spring Boot 4.x. <a href="URL_NOTE_DI_RILASCIO">Altre informazioni sulle note di rilascio</a>.</p>
+
+<h2 id="spring-integration-710-rc-primo-release-candidate">Spring Integration 7.1.0 RC (Primo Release Candidate)</h2>
+
+<p>Il primo release candidate di Spring Integration porta correzioni dei bug, migliorie della documentazione, aggiornamenti delle dipendenze e nuove caratteristiche come una rifinitura della classe <code class="language-plaintext highlighter-rouge">RedisLockRegistry</code> che utilizza i comandi Compare-and-Set (CAS) e Compare-and-Delete (CAD) di Redis 8.4+ per il rinnovo e la rilascio delle chiavi di blocco. Inoltre, ci sono migliorie alla classe <code class="language-plaintext highlighter-rouge">JmsChannelFactoryBean</code> che consente ai utenti di impostare un’istanza personalizzata della classe Spring Framework <code class="language-plaintext highlighter-rouge">JmsTemplate</code>. <a href="URL_NOTE_DI_RILASCIO_E_SUL_WHATS_NEW">Altre informazioni sulle note di rilascio e su questa pagina</a>.</p>
+
+<h2 id="spring-modulith-210-rc-primo-release-candidate">Spring Modulith 2.1.0 RC (Primo Release Candidate)</h2>
+
+<p>Il primo release candidate di Spring Modulith fornisce correzioni dei bug, aggiornamenti delle dipendenze e migliorie come un nuovo annotazione <code class="language-plaintext highlighter-rouge">@ModuleSlicing</code> che elimina i fallimenti nelle prove di integrazione per più tipi annotati con <code class="language-plaintext highlighter-rouge">@SpringBootApplication</code>. Inoltre, ci sono migliorie nella gestione delle transazioni in JobRunr attraverso la decorazione dell’interfaccia Java <code class="language-plaintext highlighter-rouge">DataSource</code>, che viene inserito nell’interfaccia JobRunr <code class="language-plaintext highlighter-rouge">StorageProvider</code> per garantire che le transazioni Spring siano considerate come previsto durante l’esterternalizzazione degli eventi. <a href="URL_NOTE_DI_RILASCIO">Altre informazioni sulle note di rilascio</a>.</p>
+
+<h2 id="spring-amqp-410-rc-primo-release-candidate">Spring AMQP 4.1.0 RC (Primo Release Candidate)</h2>
+
+<p>Il primo release candidate di Spring AMQP porta correzioni dei bug, aggiornamenti delle dipendenze e nuove caratteristiche come un metodo <code class="language-plaintext highlighter-rouge">setStopListenerOnFatal()</code> nella classe <code class="language-plaintext highlighter-rouge">ConditionalRejectingErrorHandler</code>, che ora tratta gli errori fatali come “fatal” per il listener, non del messaggio. Inoltre, ci sono migliorie all’annotazione <code class="language-plaintext highlighter-rouge">@EnableAmqp</code> che si allinea semanticamente con la sua controparte <code class="language-plaintext highlighter-rouge">@EnableRabbit</code>. <a href="URL_NOTE_DI_RILASCIO">Altre informazioni sulle note di rilascio</a>.</p>
+
+<h2 id="spring-per-apache-kafka-410-rc-primo-release-candidate">Spring per Apache Kafka 4.1.0 RC (Primo Release Candidate)</h2>
+
+<p>Il primo release candidate di Spring per Apache Kafka fornisce correzioni dei bug, migliorie della documentazione, aggiornamenti delle dipendenze e nuove caratteristiche come un enum <code class="language-plaintext highlighter-rouge">ContainerProperties.ShareAckMode</code> che mappa i casi d’uso (implicito mode, explicit mode and manual) a nomi chiari per le consumer condivise; inoltre, supporta l’interfaccia Apache Kafka <code class="language-plaintext highlighter-rouge">AcknowledgementCommitCallback</code>, che fornisce visibilità sul successo o sui fallimenti degli commit asincroni. <a href="URL_NOTE_DI_RILASCIO_E_SUL_WHATS_NEW">Altre informazioni sulle note di rilascio e su questa pagina</a>.</p>
+
+<h2 id="spring-ldap-410-rc-primo-release-candidate">Spring LDAP 4.1.0 RC (Primo Release Candidate)</h2>
+
+<p>Il primo release candidate di Spring LDAP include una correzione dei bug, aggiornamenti delle dipendenze e due nuove caratteristiche: la rimozione delle restrizioni riguardo alla dipendenza JUnit 4; inoltre, ci sono rifiniture sulla classe <code class="language-plaintext highlighter-rouge">LdapClient</code> che aggiunge varie metodi singolo, facoltativo, lista e stream per allineare con l’interfaccia Spring Framework <code class="language-plaintext highlighter-rouge">JdbcClient</code>. <a href="URL_NOTE_DI_RILASCIO">Altre informazioni sulle note di rilascio</a>.</p>
+
+<h2 id="spring-vault-410-rc-primo-release-candidate">Spring Vault 4.1.0 RC (Primo Release Candidate)</h2>
+
+<p>Il primo release candidate di Spring Vault fornisce correzioni dei bug, aggiornamenti delle dipendenze e una nuova caratteristica che si basa sulla recente rilascio di HashiCorp Vault 2.0. <a href="URL_NOTE_DI_RILASCIO">Altre informazioni sulle note di rilascio</a>.</p>
+
+<hr />
+
+<p>Fonte originale: https://www.infoq.com/news/2026/04/spring-news-roundup-apr20-2026/</p>
+
+        </article>
+        <!-- Link alla fonte originale: lo posiziono dopo il corpo perché è un
+             approfondimento opzionale, non un'azione primaria. L'icona SVG inline
+             evita dipendenze da font icon esterni. -->
+        
+        <div class="post-source-link">
+            <span class="source-link-label">Fonte originale</span>
+            <a class="source-link-anchor"
+               href="https://www.infoq.com/news/2026/04/spring-news-roundup-apr20-2026/"
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="Leggi la fonte originale di: Aggiornamenti tecnici del mio stack Spring">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="14" height="14"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                    <polyline points="15 3 21 3 21 9"/>
+                    <line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
+                https://www.infoq.com/news/2026/04/spring-news-roundup-apr20-2026/
+            </a>
+        </div>
+        
+    </main>
+    <!-- COLONNA DESTRA: sidebar post -->
+    <aside class="post-sidebar">
+        <!-- Box 1: tags argomento (stessa lista dei chip sopra, ma nella sidebar) -->
+        
+        <div class="sidebar-box tags-box">
+            <span class="box-label">Argomenti</span>
+            <div class="tag-cloud-sidebar">
+                
+                    <span class="sidebar-tag">spring</span>
+                
+                    <span class="sidebar-tag">boot</span>
+                
+                    <span class="sidebar-tag">security</span>
+                
+                    <span class="sidebar-tag">integration</span>
+                
+                    <span class="sidebar-tag">modulith</span>
+                
+            </div>
+        </div>
+        
+        <!-- Box 2: fonte originale nella sidebar, visibile a colpo d'occhio
+             senza dover scorrere fino in fondo all'articolo. -->
+        
+        <div class="sidebar-box source-box">
+            <span class="box-label">Fonte Originale</span>
+            <a class="sidebar-source-anchor"
+               href="https://www.infoq.com/news/2026/04/spring-news-roundup-apr20-2026/"
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="Leggi la fonte originale di: Aggiornamenti tecnici del mio stack Spring">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="14" height="14"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                    <polyline points="15 3 21 3 21 9"/>
+                    <line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
+                Leggi l'articolo originale
+            </a>
+        </div>
+        
+        <!-- Box 3: libro consigliato -->
+        <div class="sidebar-box books-box">
+            <span class="box-label">Letture Consigliate</span>
+            <div class="book-card">
+                <a href="https://www.amazon.it/Appunti-Programmazione-Pensieri-soluzioni-Applicazioni-ebook/dp/B0FMFRHKTF/"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   aria-label="Acquista Appunti di Programmazione su Amazon">
+                    <img src="https://m.media-amazon.com/images/I/61Ck5eMzGYL._SY466_.jpg"
+                         alt="Copertina: Appunti di Programmazione"
+                         width="80">
+                    <p>Appunti di Programmazione: Pensieri e soluzioni per Applicazioni WEB</p>
+                </a>
+            </div>
+        </div>
+    </aside>
+</div>
+
+    <footer class="main-footer">
+        Appunti di Programmazione &nbsp;·&nbsp; cosimociraci@gmail.com
+    </footer>
+
+    <script>
+        /*
+         * toggleTheme: legge il tema corrente dall'attributo HTML,
+         * calcola l'opposto e lo salva. Il CSS reagisce via [data-theme].
+         * Non uso classi sul body per mantenere tutto centralizzato
+         * sull'elemento radice.
+         */
+        function toggleTheme() {
+            var html = document.documentElement;
+            var current = html.getAttribute('data-theme');
+            var next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+        }
+    </script>
+
+</body>
+</html>
