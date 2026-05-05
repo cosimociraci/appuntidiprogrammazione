@@ -1,0 +1,45 @@
+┌─────────────────────────────────────────────────────────────┐
+│                    STREAMLIT FRONTEND                        │
+│         (Upload · Config · Visualize · Export)              │
+└──────────────────────┬──────────────────────────────────────┘
+                       │
+┌──────────────────────▼──────────────────────────────────────┐
+│                  ORCHESTRATION LAYER                         │
+│              (LangChain / LlamaIndex)                        │
+│   PipelineCoordinator  ·  StateManager  ·  CacheStore        │
+└────┬──────────┬──────────┬──────────────┬───────────────────┘
+     │          │          │              │
+┌────▼───┐ ┌───▼────┐ ┌───▼──────┐ ┌────▼────────────┐
+│INGEST  │ │EXTRACT │ │  GRAPH   │ │  VISUALIZATION  │
+│MODULE  │ │MODULE  │ │  MODULE  │ │  MODULE         │
+└────────┘ └────────┘ └──────────┘ └─────────────────┘
+     │          │          │              │
+     └──────────┴──────────┴──────────────┘
+                       │
+              ┌────────▼────────┐
+              │  LOCAL LLM      │
+              │  (Ollama)       │
+              └─────────────────┘
+
+DOCUMENTO
+    │
+    ▼ chunk_0 (800 token)
+[LLM Extract] → entities_0: ["Python", "LangChain", "RAG"]
+    │                              │
+    ▼                              │ anchor injection
+chunk_1 + anchor=["Python","LangChain","RAG"]
+[LLM Extract] → entities_1: ["Python", "Vector DB", "Embeddings"]
+    │                              │
+    ▼                              ▼
+chunk_2 + anchor=[last 5 entities] ...
+
+→ EntityResolver deduplicates: "python" = "Python" = "python 3"
+→ Graph accumula tutti gli archi cross-chunk
+→ Louvain trova cluster tematici globali sul grafo completo
+
+
+Ottimizzazioni prioritarie per CPU-only:
+
+Usa mistral:7b-instruct-q4_K_M (quantizzazione 4-bit bilanciata) invece di Q8
+Abilita num_thread in Ollama pari ai core fisici (non logici)
+Implementa un layer di cache disco (pickle) sui risultati di estrazione per chunk già processati — un re-run su documento modificato rigenera solo i chunk cambiati

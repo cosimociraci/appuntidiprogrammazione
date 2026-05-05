@@ -56,9 +56,14 @@ OV_CENTER_R  = 1.6
 # METRICHE FOCUS (sistema coordinate W=H=FO_LIMIT=30 unita -> 36px/unita)
 # =============================================================================
 FO_LINE_H    = 1.20
-FO_ROW_PAD   = 1.30
-FO_KEY_WRAP  = 10
-FO_DESC_WRAP = 18
+FO_ROW_PAD   = 1.40
+# Ho ricalcolato i wrap con la formula: box_width_px / (fontsize_px * 0.58)
+# dove fontsize_px = pt * (dpi/72) e 0.58 e la larghezza media di un carattere
+# rispetto all'em-size di DejaVu Sans.
+# pill: 6.5u * 36px/u = 234px / (20pt * 1.389 * 0.58) = 234 / 16.1 = 14.5 -> 14
+# desc: 9.5u * 36px/u = 342px / (17pt * 1.389 * 0.58) = 342 / 13.7 = 24.9 -> 24
+FO_KEY_WRAP  = 14
+FO_DESC_WRAP = 24
 FO_CAT_BOX_W = 9.0
 FO_CAT_BOX_H = 4.0
 FO_PILL_W    = 6.5
@@ -338,15 +343,50 @@ def render_focus(cat: dict, output_path: str, dpi: int = 100):
 
     x_pill = cx_cat + FO_CAT_BOX_W/2 + 1.4 + FO_PILL_W/2
     x_desc = x_pill + FO_PILL_W/2    + 0.75 + FO_DESC_W/2
-    y_cursor = cy_cat + (total_items_h * scale) / 2
+
+    # Scalo i fontsize proporzionalmente a scale per evitare che il testo
+    # resti della stessa dimensione mentre i box si comprimono.
+    # Il min garantisce leggibilita anche con molti item.
+    # La formula e: fontsize_base * scale, clampato a un minimo accettabile.
+    px_per_unit = 36.0   # 10.8in * 100dpi / 30 unita
+    fs_pill = max(9.0,  20.0 * scale)
+    fs_desc = max(8.0,  17.0 * scale)
+
+    # Ricalcolo i wrap in funzione del fontsize scalato:
+    # chars_per_line = box_width_px / (fontsize_px * char_width_ratio)
+    # char_width_ratio = 0.58 (misurato su DejaVu Sans maiuscole medie)
+    char_w_ratio = 0.58
+    pill_px  = FO_PILL_W * px_per_unit
+    desc_px  = FO_DESC_W * px_per_unit
+    key_wrap  = max(8,  int(pill_px / (fs_pill * (100.0/72.0) * char_w_ratio)))
+    desc_wrap = max(12, int(desc_px / (fs_desc * (100.0/72.0) * char_w_ratio)))
+
+    # Ricalcolo il layout con i wrap aggiornati perche total_items_h e gia stato
+    # calcolato con FO_KEY_WRAP/FO_DESC_WRAP nei costanti: se scale != 1.0 i wrap
+    # cambiano, quindi ricalcolo y_cursor sul conteggio righe effettivo.
+    def _real_item_h(k: str, d: str) -> float:
+        n = max(len(_wrap(k, key_wrap)), len(_wrap(d, desc_wrap)))
+        return n * FO_LINE_H + FO_ROW_PAD
+
+    real_total_h = sum(_real_item_h(k, d) for k, d in items)
+    real_scale   = min(1.0, available_h / real_total_h) if real_total_h > 0 else 1.0
+
+    # Aggiorno scale se il ricalcolo produce un valore piu favorevole
+    # (puo succedere se i wrap piu larghi riducono il numero di righe).
+    scale = real_scale
+
+    y_cursor = cy_cat + (real_total_h * scale) / 2
 
     for key, desc in items:
-        key_lines  = _wrap(key,  FO_KEY_WRAP)
-        desc_lines = _wrap(desc, FO_DESC_WRAP)
+        key_lines  = _wrap(key,  key_wrap)
+        desc_lines = _wrap(desc, desc_wrap)
         n_lines    = max(len(key_lines), len(desc_lines))
         row_h      = (n_lines * FO_LINE_H + FO_ROW_PAD) * scale
         yc         = y_cursor - row_h / 2
 
+        # Altezza box = righe * altezza_riga_scalata + padding fisso.
+        # Il padding 0.45 rimane fisso perche e il pad del FancyBboxPatch
+        # e non dipende dal contenuto testuale.
         pill_h = len(key_lines) * FO_LINE_H * scale + 0.45
         ax.add_patch(FancyBboxPatch(
             (x_pill - FO_PILL_W/2, yc - pill_h/2), FO_PILL_W, pill_h,
@@ -354,7 +394,7 @@ def render_focus(cat: dict, output_path: str, dpi: int = 100):
             facecolor=ITEM_BG_COLOR, edgecolor=color, linewidth=1.8, zorder=3
         ))
         ax.text(x_pill, yc, "\n".join(key_lines),
-                ha="center", va="center", fontsize=20,
+                ha="center", va="center", fontsize=fs_pill,
                 color=CMD_TEXT_COLOR, fontfamily=FONT, zorder=4, linespacing=1.2)
 
         desc_h = len(desc_lines) * FO_LINE_H * scale + 0.45
@@ -365,7 +405,7 @@ def render_focus(cat: dict, output_path: str, dpi: int = 100):
             linewidth=1.0, zorder=3
         ))
         ax.text(x_desc, yc, "\n".join(desc_lines),
-                ha="center", va="center", fontsize=17,
+                ha="center", va="center", fontsize=fs_desc,
                 color=ITEM_LABEL_COLOR, fontfamily=FONT, zorder=4, linespacing=1.2)
 
         _conn_mpl(ax, cx_cat + FO_CAT_BOX_W/2, yc, x_pill - FO_PILL_W/2, yc, lw=1.3)

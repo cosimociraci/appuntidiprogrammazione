@@ -282,27 +282,25 @@ def generate_article(full_context, source_url):
     log("[Mistral] Avvio stesura nuovo articolo tecnico...")
     prompt = f"""
 Ruolo: Agisci come un Senior Developer che scrive sul proprio blog tecnico. Il tuo stile è diretto, esperto e pratico.
-Compito: Riscrivi le informazioni fornite nel "CONTESTO SORGENTE" creando un post di approfondimento tecnico in ITALIANO e in PRIMA PERSONA.
+Compito: Riscrivi le informazioni del "CONTESTO SORGENTE" creando un post di approfondimento tecnico in ITALIANO.
+
+DIRETTIVE DI VOCE E PERSONA:
+1. Narrazione: Scrivi in PRIMA PERSONA SINGOLARE ("Analizzo", "Osservo", "Voglio approfondire") per quanto riguarda l'esposizione e il ragionamento tecnico.
+2. Attribuzione Azioni: Se nel testo sorgente l'autore descrive azioni personali (es. "Ho sviluppato questa libreria", "Ho partecipato al meeting"), NON attribuirle a te stesso. Traducile in forma impersonale o collettiva (es. "È stata sviluppata", "Il team ha deciso", "L'approccio scelto è"). 
+3. Focus: Mantieni il focus sull'aspetto tecnico. Trasforma i racconti di vita vissuta dell'autore in casi studio o analisi di design pattern.
+
 DIRETTIVE LINGUISTICHE (CRITICHE):
- - Terminologia Tecnica: NON tradurre mai i termini tecnici che fanno parte del gergo standard della programmazione o di specifici linguaggi (es. Java).
-    NO: "metodo finale", "spazzino della memoria", "filo d'esecuzione", "costruttore di versione".
-    SÌ: "final method", "Garbage Collector", "thread", "build".
+ - Terminologia Tecnica: NON tradurre mai i termini tecnici standard (es. "Garbage Collector", "thread", "build", "deployment", "middleware").
 
 CONTESTO SORGENTE:
 {full_context[:15000]}
 
 REGOLE OBBLIGATORIE:
-1. Formato output: Markdown (.md) puro. NON scrivere mai un titolo H1 (riga con "#").
-   Il titolo è già gestito dal sistema: inizia direttamente con la prima sezione.
-   - Le sezioni DEVONO iniziare con "## " (due cancelletti seguiti da spazio).
-     ESEMPI CORRETTI:   ## Cosa cambia nel GC
-     ESEMPI SBAGLIATI:  # Cosa cambia  |  ### Cosa cambia  |  Cosa cambia:
-   - NON usare mai la parola "Titolo:" o "Sezione:" come prefisso.
-2. Stile: Scrivi in prima persona singolare ("Ho testato", "Mi sono accorto", "Uso spesso"). Evita il "noi" o le forme impersonali ("si nota che"). Mai tono impersonale o accademico.
-3. Privacy: Non citare mai nomi propri di persone fisiche. Usa espressioni come "il team di sviluppo", "gli autori", "i maintainer".
-4. Lingua: Se il materiale sorgente è in inglese, traduci accuratamente tutti i concetti. I termini tecnici consolidati (es. "thread", "query", "build") restano in inglese.
-5. Profondità: Approfondisci i concetti tecnici con esempi concreti. Non limitarti a riassumere: il "perché" dietro alle scelte tecnologiche e confrontale con possibili alternative, aggiungi contesto, confronti e implicazioni pratiche.
-6. Chiusura: Termina l'articolo con una riga '---' seguita da 'Fonte originale: {source_url}'.
+1. Formato output: Markdown (.md) puro. NON scrivere titoli H1 ("#"). Inizia direttamente con "## ".
+2. Stile: Evita il tono accademico. Sii un professionista che spiega a un altro professionista perché una certa tecnologia funziona in un certo modo.
+3. Privacy: Non citare mai nomi propri di persone fisiche. Usa "gli autori", "i maintainer" o "il team".
+4. Profondità: Non limitarti a riassumere. Analizza il "perché" dietro alle scelte, confrontale con alternative e spiega le implicazioni pratiche.
+5. Chiusura: Termina con una riga '---' seguita da 'Fonte originale: {source_url}'.
 """
     response = ollama.chat(model='mistral', messages=[{'role': 'user', 'content': prompt}])
     return sanitize_article_headings(response['message']['content'])
